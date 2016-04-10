@@ -1,0 +1,3 @@
+ticker/settings_secret.py
+*.pyc
+*.sqlite3
