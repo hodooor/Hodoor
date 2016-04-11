@@ -1,3 +1,5 @@
 from django.contrib import admin
+from attendance.models import Session, Swipe
 
-# Register your models here.
+admin.site.register(Session)
+admin.site.register(Swipe)

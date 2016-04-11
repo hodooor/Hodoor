@@ -19,9 +19,9 @@ class Swipe(models.Model):
 	'''
 
 	SWIPE_TYPES = (
-					("IN","Incoming"),
-					("OUT","Outcoming"),
-					("TBR","To Break"),
+					("IN","Login"),
+					("OUT","Logout"),
+					("OBR","On Break"),
 					("FBR","From Break")		
 	)
 
@@ -30,7 +30,6 @@ class Swipe(models.Model):
 
 	swipe_type = models.CharField(max_length=3, choices = SWIPE_TYPES)
 
-	session = ForeignKey(Session)
+	session = models.ForeignKey(Session)
 	def __str__(self):
-		return str(self.id) + " " + self.user.username + 
-		" " + self.swipe_type
+		return str(self.id) + " " + self.user.username + " " + self.swipe_type
