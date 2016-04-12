@@ -30,6 +30,6 @@ class Swipe(models.Model):
 
 	swipe_type = models.CharField(max_length=3, choices = SWIPE_TYPES)
 
-	session = models.ForeignKey(Session)
+	session = models.ForeignKey(Session,null = True, blank = True)
 	def __str__(self):
 		return str(self.id) + " " + self.user.username + " " + self.swipe_type
