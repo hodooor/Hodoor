@@ -16,4 +16,4 @@ class SwipeViewSet(viewsets.ModelViewSet):
 	'''
 	queryset = Swipe.objects.all()
 	serializer_class = SwipeSerializer
-	#http_method_names = ['get', 'post']
+	http_method_names = ['post','get']
