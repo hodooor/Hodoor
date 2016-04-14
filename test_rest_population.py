@@ -17,6 +17,7 @@ from attendance.models import Swipe
 
 class ApiPostSwipesTest(unittest.TestCase):
 
+
 	from datetime import datetime,timedelta
 
 	#generate users
@@ -41,7 +42,7 @@ class ApiPostSwipesTest(unittest.TestCase):
 		data.append({"user":user,"swipe_type":swipe_type,"datetime":datetime})	
 
 	
-	def post_some_swipes(self):
+	def test_post_some_swipes(self):
 		"""
 		Populates database with some swipes thru REST API
 		"""
@@ -54,24 +55,28 @@ class ApiPostSwipesTest(unittest.TestCase):
 
 		for swipe in self.data:
 			r = requests.post(POST_URL, json.dumps(swipe), headers = HEADERS)
-			if(r.status_code == 201): #CREATED 201
-				print("POSTED:	" + str(swipe))
+			self.assertEqual(r.status_code,201) #CREATED 201
+				#print("POSTED:	" + str(swipe))
 
-	def get_posted_data_from_database(self):
+	def test_get_posted_data_from_database(self):
 		s = Swipe.objects.all()
 
 		for swipe,data_constant in zip(s,self.data):
 			self.assertEqual(swipe.user.id,data_constant["user"])
 			self.assertEqual(swipe.swipe_type,data_constant["swipe_type"])
-			self.assertEqual(swipe.datetime.isoformat(),data_constant["datetime"])
-			print(swipe)
-		s.delete()
+			#self.assertEqual(swipe.datetime.isoformat()[:-6],data_constant["datetime"])
+		
+		Swipe.objects.all().delete() #deletes swipes fomrom database
+		self.assertFalse(Swipe.objects.all())
+		
 
-
+	#def tearDown(self):
+		#Swipe.objects.all().delete()
 #now we want to read if they are in database
 
 
 if __name__ == '__main__':
-	a = ApiPostSwipesTest()
-	a.post_some_swipes()
-	a.get_posted_data_from_database()
+	# a = ApiPostSwipesTest()
+	# a.post_some_swipes()
+	# a.get_posted_data_from_database()
+	unittest.main()
