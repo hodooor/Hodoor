@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.db.models import Q
 
 class Session(models.Model):
 	'''
@@ -10,9 +11,9 @@ class Session(models.Model):
 	'''
 
 	user = models.ForeignKey(User)
-	duration = models.DurationField(null = True)
+	duration = models.DurationField(null = True, blank = True)
 
-	description = models.CharField(max_length = 100, null = True) 
+	description = models.CharField(max_length = 100, null = True, blank = True) 
 	modified = models.BooleanField(default = False) 
 
 	def __str__(self):
@@ -57,12 +58,24 @@ def post_process_swipes(sender=Swipe, **kwargs):
 			#swipe is related to session 
 			created_swipe.session = sess
 			created_swipe.save()
-			
+
 		elif(kwargs["instance"].swipe_type == "OBR"):
-			#s = Session.objects.get(user = kwargs["instance"].user)
-			print("YES")
+			print("OBR")
 
 		elif(kwargs["instance"].swipe_type == "FBR"):
 			print("FBR")
+		
 		elif(kwargs["instance"].swipe_type == "OUT"):
+			sess = Session.objects.filter(user = created_swipe.user)
+			sess = sess.exclude(swipe__swipe_type = "OUT") #session without OUT swipe (open session)
+
+			if(len(sess) == 1):
+				print(len(sess))
+				sess = sess[0]
+			else:
+				#this should not be possible 
+				raise ValueError('More Opened Sessions')
+
+			created_swipe.session = sess
+			created_swipe.save()
 			print("OUT")
