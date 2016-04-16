@@ -8,3 +8,6 @@ from attendance.models import Swipe,Session
 
 Swipe.objects.all().delete()
 Session.objects.all().delete()
+
+if(not (Swipe.objects.all() and Swipe.objects.all())):
+	print("Swipes and Sessions deleted from database.")

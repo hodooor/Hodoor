@@ -43,28 +43,26 @@ class Swipe(models.Model):
 
 @receiver(post_save, sender = Swipe)
 def post_process_swipes(sender=Swipe, **kwargs):
-	if(kwargs["instance"].swipe_type == "IN"):
-		#create new session with incomming user
-		sess = Session(user = User.objects.get(id =kwargs["instance"].user.id))
-		swip = Swipe.objects.get(id = kwargs["instance"].id)
+	if(kwargs['created']): # trigering only when swipe was created
 		
-		#and save that session to swipe
-		if(not swip.session):
+		#swipe object that was just created
+		created_swipe = kwargs["instance"] 
+
+		if(created_swipe.swipe_type == "IN"):
+			
+			#session has same user as swipe
+			sess = Session(user = created_swipe.user)
 			sess.save()
-			swip.session = sess
+
+			#swipe is related to session 
+			created_swipe.session = sess
+			created_swipe.save()
 			
-			swip.save()
-			
+		elif(kwargs["instance"].swipe_type == "OBR"):
+			#s = Session.objects.get(user = kwargs["instance"].user)
+			print("YES")
 
-
-
-
-		print(Session.objects.all())
-	elif(kwargs["instance"].swipe_type == "OBR"):
-		#s = Session.objects.get(user = kwargs["instance"].user)
-		print("YES")
-
-	elif(kwargs["instance"].swipe_type == "FBR"):
-		print("FBR")
-	elif(kwargs["instance"].swipe_type == "OUT"):
-		print("OUT")
+		elif(kwargs["instance"].swipe_type == "FBR"):
+			print("FBR")
+		elif(kwargs["instance"].swipe_type == "OUT"):
+			print("OUT")
