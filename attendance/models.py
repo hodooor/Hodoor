@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db.models import Q
+import datetime
 
 class Session(models.Model):
 	'''
@@ -15,6 +16,45 @@ class Session(models.Model):
 
 	description = models.CharField(max_length = 100, null = True, blank = True) 
 	modified = models.BooleanField(default = False) 
+	def num_of_breaks (self):
+		'''
+		Returns number of completed breaks during session
+		'''
+
+		obr = self.swipe_set.filter(swipe_type = "OBR")
+		fbr = self.swipe_set.filter(swipe_type = "FBR")
+		if len(obr) != len(fbr):
+			print("Some breaks are not complete")
+		return len(fbr)
+
+	def breaks_duration (self):
+		'''
+		Returns timedelta duration of all breaks
+		'''
+		
+		obr = self.swipe_set.filter(swipe_type = "OBR")
+		fbr = self.swipe_set.filter(swipe_type = "FBR")
+
+		duration = datetime.timedelta(0)
+
+		for obr_object, fbr_object  in zip(obr,fbr):
+			duration += fbr_object.datetime - obr_object.datetime
+		
+		return duration
+	def session_duration_overall (self):
+		'''
+		Returns time delta duration of session(including breaks)
+		'''
+		login_datetime = self.swipe_set.get(swipe_type = "IN").datetime
+		logout_datetime = self.swipe_set.get(swipe_type = "OUT").datetime
+
+		return logout_datetime - login_datetime
+
+	def session_duration(self):
+		'''
+		Returns time delta duration of session(excluding breaks)
+		'''
+		return self.session_duration_overall() - self.breaks_duration() 
 
 	def __str__(self):
 		return str(self.id) + " " + str(self.user)
@@ -79,5 +119,3 @@ def post_process_swipes(sender=Swipe, **kwargs):
 
 				sess.duration = logout_time - login_time
 				sess.save()
-
-				print(str(login_time), str(logout_time))

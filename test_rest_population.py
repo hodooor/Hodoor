@@ -26,7 +26,7 @@ class ApiPostSwipesTest(unittest.TestCase):
 	#generate swipetypes
 	#swipe_types = ["IN","OBR","FBR","OUT","IN","OUT","IN","OBR",
 	#	"FBR","OBR","FBR","OUT"]
-	swipe_types = ["IN","OBR", "FBR","OUT"]
+	swipe_types = ["IN","OBR", "FBR","OBR", "FBR","OUT"]
 	hours_increment = 4
 
 		#generte datetimes
