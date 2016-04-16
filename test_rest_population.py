@@ -21,11 +21,12 @@ class ApiPostSwipesTest(unittest.TestCase):
 	from datetime import datetime,timedelta
 
 	#generate users
-	user = 1 #ondrej.vicar
+	user = 2 #ondrej.vicar
 	
 	#generate swipetypes
-	swipe_types = ["IN","OBR","FBR","OUT","IN","OUT","IN","OBR",
-		"FBR","OBR","FBR","OUT"]
+	#swipe_types = ["IN","OBR","FBR","OUT","IN","OUT","IN","OBR",
+	#	"FBR","OBR","FBR","OUT"]
+	swipe_types = ["IN",]
 	hours_increment = 1
 
 		#generte datetimes
@@ -57,21 +58,21 @@ class ApiPostSwipesTest(unittest.TestCase):
 			r = requests.post(POST_URL, json.dumps(swipe), headers = HEADERS)
 			self.assertEqual(r.status_code,201) #CREATED 201
 				#print("POSTED:	" + str(swipe))
-
+	@unittest.skip("demonstrating skipping")
 	def test_get_posted_data_from_database(self):
 		s = Swipe.objects.all()
 
 		for swipe,data_constant in zip(s,self.data):
 			self.assertEqual(swipe.user.id,data_constant["user"])
 			self.assertEqual(swipe.swipe_type,data_constant["swipe_type"])
-			#self.assertEqual(swipe.datetime.isoformat()[:-6],data_constant["datetime"])
-		
+			self.assertEqual(swipe.datetime.isoformat()[:-6],data_constant["datetime"])
+	
 		Swipe.objects.all().delete() #deletes swipes fomrom database
+
 		self.assertFalse(Swipe.objects.all())
 		
-
-	#def tearDown(self):
-		#Swipe.objects.all().delete()
+	# def tearDown(self):
+	# 	Swipe.objects.all().delete()
 #now we want to read if they are in database
 
 
