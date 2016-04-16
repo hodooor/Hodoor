@@ -114,8 +114,5 @@ def post_process_swipes(sender=Swipe, **kwargs):
 			created_swipe.session = sess
 			created_swipe.save()
 			if(created_swipe.swipe_type == "OUT"):
-				login_time = sess.swipe_set.all().get(swipe_type = "IN").datetime
-				logout_time = created_swipe.datetime
-
-				sess.duration = logout_time - login_time
+				sess.duration = sess.session_duration()
 				sess.save()
