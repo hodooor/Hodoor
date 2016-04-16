@@ -26,8 +26,8 @@ class ApiPostSwipesTest(unittest.TestCase):
 	#generate swipetypes
 	#swipe_types = ["IN","OBR","FBR","OUT","IN","OUT","IN","OBR",
 	#	"FBR","OBR","FBR","OUT"]
-	swipe_types = ["IN","OUT"]
-	hours_increment = 1
+	swipe_types = ["IN","OBR", "FBR","OUT"]
+	hours_increment = 4
 
 		#generte datetimes
 	datetimes = []
@@ -35,7 +35,7 @@ class ApiPostSwipesTest(unittest.TestCase):
 
 	for swipe in swipe_types:
 		datetimes.append((t + timedelta(hours = hours_increment)).isoformat())
-		hours_increment += 1 
+		hours_increment += 4
 	
 	data = []
 

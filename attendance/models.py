@@ -49,6 +49,7 @@ def post_process_swipes(sender=Swipe, **kwargs):
 		#swipe object that was just created
 		created_swipe = kwargs["instance"] 
 
+		#open new session 
 		if(created_swipe.swipe_type == "IN"):
 			
 			#session has same user as swipe
@@ -59,23 +60,24 @@ def post_process_swipes(sender=Swipe, **kwargs):
 			created_swipe.session = sess
 			created_swipe.save()
 
-		elif(kwargs["instance"].swipe_type == "OBR"):
-			print("OBR")
-
-		elif(kwargs["instance"].swipe_type == "FBR"):
-			print("FBR")
-		
-		elif(kwargs["instance"].swipe_type == "OUT"):
+		#updated oppened session
+		else:
 			sess = Session.objects.filter(user = created_swipe.user)
 			sess = sess.exclude(swipe__swipe_type = "OUT") #session without OUT swipe (open session)
 
 			if(len(sess) == 1):
-				print(len(sess))
 				sess = sess[0]
 			else:
 				#this should not be possible 
 				raise ValueError('More Opened Sessions')
-
+					
 			created_swipe.session = sess
 			created_swipe.save()
-			print("OUT")
+			if(created_swipe.swipe_type == "OUT"):
+				login_time = sess.swipe_set.all().get(swipe_type = "IN").datetime
+				logout_time = created_swipe.datetime
+
+				sess.duration = logout_time - login_time
+				sess.save()
+
+				print(str(login_time), str(logout_time))
