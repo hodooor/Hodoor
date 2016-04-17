@@ -1,5 +1,5 @@
 from django.contrib import admin
-from attendance.models import Session, Swipe
+from attendance.models import Session, Swipe, Key
 from django.forms import ModelForm
 
 class SwipeInline(admin.TabularInline):
@@ -12,3 +12,4 @@ class SessionAdmin(admin.ModelAdmin):
 
 admin.site.register(Session, SessionAdmin)
 admin.site.register(Swipe)
+admin.site.register(Key)

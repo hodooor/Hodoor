@@ -23,10 +23,14 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 router.register(r'swipes', views.SwipeViewSet)
 
+router2 = routers.DefaultRouter()
+router.register(r'keys',views.KeyViewSet)
+
 
 urlpatterns = [
     url(r'^$', views.home_page, name = 'home'),
     url(r'^admin/', admin.site.urls),
     url(r'^', include(router.urls)),
-    url(r'^plate/', include('django_spaghetti.urls')),  
+    url(r'^plate/', include('django_spaghetti.urls')), 
+    url(r'^', include(router2.urls)), 
 ]

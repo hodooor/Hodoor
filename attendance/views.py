@@ -2,8 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 from rest_framework import viewsets
-from .serializers import SwipeSerializer
-from .models import Swipe
+from .serializers import SwipeSerializer,UserSerializer,KeySerializer
+from .models import Swipe, Key
+from django.contrib.auth.models import User
 
 def home_page(request):
 	return HttpResponse(
@@ -17,3 +18,9 @@ class SwipeViewSet(viewsets.ModelViewSet):
 	queryset = Swipe.objects.all()
 	serializer_class = SwipeSerializer
 	http_method_names = ['post','get']
+
+class KeyViewSet(viewsets.ModelViewSet):
+	queryset = Key.objects.all()
+	serializer_class = KeySerializer
+	http_method_names = ['get',]
+
