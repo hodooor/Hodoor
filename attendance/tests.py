@@ -47,15 +47,14 @@ class SessionTestCase(TestCase):
 			{"username":"lukas.krcma", "id":"3"},
 			{"username":"david.binko", "id":"4"},
 		]
-
-		SWIPE_TYPES = ("IN","OBR", "FBR","OBR", "FBR","OUT")
+		self.SWIPE_TYPES = ("IN","OBR", "FBR","OBR", "FBR","OUT")
 		#now generate swipe list of dictionaries
 		self.SWIPES = []
 		for user_id in (d['id'] for d in self.USERS):
 			
-			datetime = generate_random_datetimes_for_swipes(SWIPE_TYPES)
+			datetime = generate_random_datetimes_for_swipes(self.SWIPE_TYPES)
 			
-			for swipe_type,datetime in zip(SWIPE_TYPES,datetime):
+			for swipe_type,datetime in zip(self.SWIPE_TYPES,datetime):
 				self.SWIPES.append({
 					"user":user_id,
 					"swipe_type":swipe_type,
@@ -65,6 +64,19 @@ class SessionTestCase(TestCase):
 		dict_to_database(UserSerializer,self.USERS)
 		dict_to_database(SwipeSerializer,self.SWIPES)
 
-	def test_(self):
+	def test_session_duration_methods(self):
+		for session in Session.objects.all():
+			self.assertEqual(
+				session.session_duration(),
+				session.session_duration_overall() - session.breaks_duration()
+			)
+	def test_number_of_breaks_method(self):
+		for session in Session.objects.all():
+			self.assertEqual(
+				session.num_of_breaks(),
+				self.SWIPE_TYPES.count("FBR")
+			)
+
+
 
 		self.assertTrue(True)
