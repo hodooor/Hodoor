@@ -88,9 +88,23 @@ class Swipe(models.Model):
 		blank = True, 
 		on_delete = models.SET_NULL,
 		)
+	source = models.CharField(max_length = 5,null = True, blank = True)
 
 	def __str__(self):
 		return str(self.id) + " " + self.user.username + " " + self.swipe_type
+
+class Key(models.Model):
+	'''
+	Saves information data about keys.
+	'''
+	id = models.CharField(max_length = 10, primary_key = True) 
+	key_type = models.CharField(max_length = 4, null = True, blank = True)
+	user = models.ForeignKey(User)
+
+	def __str__(self):
+		return self.id + " " + self.user.username + " " + self.key_type
+
+
 
 
 
