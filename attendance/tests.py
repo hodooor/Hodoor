@@ -26,25 +26,35 @@ class HomePageTest(TestCase):
 
 class SessionTestCase(TestCase):
 	'''
-	Tests isolated Sessions
+	Tests isolated Sessions and Swipes
 	'''
 	def setUp(self):
 		
 		#generate imput data
-		USERNAMES = ["ondrej.vicar","lukas.krcma","jaroslav malec"]
-		SWIPE_TYPES = ["IN","OBR", "FBR","OBR", "FBR","OUT"]
-	
-		#now posting thoes swipes
-		for username_ in USERNAMES:
-			u = User.objects.create(username = username_)
-			datetimes = generate_random_datetimes_for_swipes(SWIPE_TYPES)
+		USERNAMES = ("ondrej.vicar","lukas.krcma","jaroslav.malec")
+		SWIPE_TYPES = ("IN","OBR", "FBR","OBR", "FBR","OUT")
+		DATE_TIMES = generate_random_datetimes_for_swipes(SWIPE_TYPES)
+		
+		self.INPUT_DATA = []
 
-			for s_t, dt in zip(SWIPE_TYPES, datetimes):
+		for user in USERNAMES:
+			self.INPUT_DATA.append({
+				"username":user,
+				"swipe_types":SWIPE_TYPES,
+				"datetimes":generate_random_datetimes_for_swipes(SWIPE_TYPES),
+			})
+		
+		print(self.INPUT_DATA)
+		#now posting thoes swipes
+		for user in self.INPUT_DATA:
+			u = User.objects.create(username = user["username"])
+	
+			for swipe_type, datetime in zip(user["swipe_types"],user["datetimes"]):
 
 				swip = Swipe.objects.create(
 					user = u,
-					datetime = dt,
-					swipe_type = s_t,
+					datetime = datetime,
+					swipe_type = swipe_type,
 				)
 		
 		print(Session.objects.all())	
