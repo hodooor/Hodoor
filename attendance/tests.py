@@ -7,6 +7,9 @@ from django.http import HttpRequest
 from .models import Session, Swipe
 from django.utils import timezone
 from datetime import timedelta
+from random import randint
+from rest_population import generate_random_datetimes_for_swipes
+
 class HomePageTest(TestCase):
 
 	def test_root_url_resolvers_to_home_page_view(self):
@@ -28,29 +31,23 @@ class SessionTestCase(TestCase):
 	def setUp(self):
 		
 		#generate imput data
+		USERNAMES = ["ondrej.vicar","lukas.krcma","jaroslav malec"]
 		SWIPE_TYPES = ["IN","OBR", "FBR","OBR", "FBR","OUT"]
-		DATETIMES = []
-		
-		t = timezone.now()
+	
+		#now posting thoes swipes
+		for username_ in USERNAMES:
+			u = User.objects.create(username = username_)
+			datetimes = generate_random_datetimes_for_swipes(SWIPE_TYPES)
 
-		hours_increment = 4
+			for s_t, dt in zip(SWIPE_TYPES, datetimes):
 
-		for swipe in SWIPE_TYPES:
-			DATETIMES.append(
-				(t + timedelta(hours = hours_increment)).isoformat()
+				swip = Swipe.objects.create(
+					user = u,
+					datetime = dt,
+					swipe_type = s_t,
 				)
-			hours_increment += 4
-
-		print(SWIPE_TYPES)
-		print(DATETIMES)
-
-		u = User.objects.create(username = "ondrej.vicar")
-		swip = Swipe.objects.create(
-			user = u, 
-			datetime= timezone.now(),
-			swipe_type = "IN" 
-			)
-		print(swip,Session.objects.all())	
+		
+		print(Session.objects.all())	
 
 	def test_(self):
 

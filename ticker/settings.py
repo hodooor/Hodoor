@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'attendance',
     'rest_framework',
+    'django_spaghetti',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -119,4 +120,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+
+SPAGHETTI_SAUCE = {
+  'apps':['auth','attendance',],
+  'show_fields':True,
+  'exclude':{}
+}
 

@@ -11,3 +11,4 @@ Session.objects.all().delete()
 
 if(not (Swipe.objects.all() and Swipe.objects.all())):
 	print("Swipes and Sessions deleted from database.")
+print("Was not deleted")

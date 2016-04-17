@@ -14,7 +14,12 @@ class Session(models.Model):
 	user = models.ForeignKey(User)
 	duration = models.DurationField(null = True, blank = True)
 
-	description = models.CharField(max_length = 100, null = True, blank = True) 
+	description = models.CharField(
+		max_length = 100, 
+		null = True, 
+		blank = True
+	)
+
 	modified = models.BooleanField(default = False) 
 	def num_of_breaks (self):
 		'''
@@ -78,7 +83,12 @@ class Swipe(models.Model):
 
 	swipe_type = models.CharField(max_length=3, choices = SWIPE_TYPES)
 
-	session = models.ForeignKey(Session,null = True, blank = True)
+	session = models.ForeignKey(Session,
+		null = True, 
+		blank = True, 
+		on_delete = models.SET_NULL,
+		)
+
 	def __str__(self):
 		return str(self.id) + " " + self.user.username + " " + self.swipe_type
 
@@ -88,7 +98,7 @@ class Swipe(models.Model):
 def post_process_swipes(sender=Swipe, **kwargs):
 	if(kwargs['created']): # trigering only when swipe was created
 		
-		print("\n post_process_swipes trigered")
+		print(" post_process_swipes trigered")
 		#swipe object that was just created
 		created_swipe = kwargs["instance"] 
 
