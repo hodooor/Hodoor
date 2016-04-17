@@ -12,7 +12,7 @@ def home_page(request):
 
 class SwipeViewSet(viewsets.ModelViewSet):
 	'''
-	API end point for posting users
+	API end point for posting swipes
 	'''
 	queryset = Swipe.objects.all()
 	serializer_class = SwipeSerializer

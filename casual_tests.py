@@ -6,9 +6,7 @@ django.setup()
 
 from attendance.models import Swipe,Session
 
-SESSION_ID = 68
-
-s = Session.objects.get(id = SESSION_ID)
+s = Session.objects.all()[0]
 
 dur = s.session_duration
 over = s.session_duration_overall

@@ -45,6 +45,7 @@ class Session(models.Model):
 		'''
 		Returns time delta duration of session(including breaks)
 		'''
+
 		login_datetime = self.swipe_set.get(swipe_type = "IN").datetime
 		logout_datetime = self.swipe_set.get(swipe_type = "OUT").datetime
 
@@ -54,6 +55,7 @@ class Session(models.Model):
 		'''
 		Returns time delta duration of session(excluding breaks)
 		'''
+
 		return self.session_duration_overall() - self.breaks_duration() 
 
 	def __str__(self):
@@ -86,12 +88,13 @@ class Swipe(models.Model):
 def post_process_swipes(sender=Swipe, **kwargs):
 	if(kwargs['created']): # trigering only when swipe was created
 		
+		print("\n post_process_swipes trigered")
 		#swipe object that was just created
 		created_swipe = kwargs["instance"] 
 
 		#open new session 
 		if(created_swipe.swipe_type == "IN"):
-			
+			print("created in swipe")
 			#session has same user as swipe
 			sess = Session(user = created_swipe.user)
 			sess.save()
@@ -102,6 +105,7 @@ def post_process_swipes(sender=Swipe, **kwargs):
 
 		#updated oppened session
 		else:
+			print("session updated")
 			sess = Session.objects.filter(user = created_swipe.user)
 			sess = sess.exclude(swipe__swipe_type = "OUT") #session without OUT swipe (open session)
 
