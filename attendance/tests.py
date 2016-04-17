@@ -5,10 +5,20 @@ from django.contrib.auth.models import User
 
 from django.http import HttpRequest
 from .models import Session, Swipe
-from django.utils import timezone
-from datetime import timedelta
-from random import randint
 from rest_population import generate_random_datetimes_for_swipes
+from .serializers import SwipeSerializer, UserSerializer
+
+def dict_to_database(serializer_class, list_of_dict):
+	'''
+	Input is serializer class type object and list of dictionaries
+	save to database
+	'''
+	print(type(serializer_class), type(list_of_dict))
+	for diction in list_of_dict:
+		ser = serializer_class(data = diction)
+		ser.is_valid()
+		ser.save()
+
 
 class HomePageTest(TestCase):
 
@@ -30,36 +40,31 @@ class SessionTestCase(TestCase):
 	'''
 	def setUp(self):
 		
-		#generate imput data
-		USERNAMES = ("ondrej.vicar","lukas.krcma","jaroslav.malec")
+		
+		self.USERS = [
+			{"username":"ondrej.vicar", "id":"1"},
+			{"username":"jaroslav.malec", "id":"2"},
+			{"username":"lukas.krcma", "id":"3"},
+			{"username":"david.binko", "id":"4"},
+		]
+
 		SWIPE_TYPES = ("IN","OBR", "FBR","OBR", "FBR","OUT")
-		DATE_TIMES = generate_random_datetimes_for_swipes(SWIPE_TYPES)
-		
-		self.INPUT_DATA = []
+		#now generate swipe list of dictionaries
+		self.SWIPES = []
+		for user_id in (d['id'] for d in self.USERS):
+			
+			datetime = generate_random_datetimes_for_swipes(SWIPE_TYPES)
+			
+			for swipe_type,datetime in zip(SWIPE_TYPES,datetime):
+				self.SWIPES.append({
+					"user":user_id,
+					"swipe_type":swipe_type,
+					"datetime":datetime,
+				})
 
-		for user in USERNAMES:
-			self.INPUT_DATA.append({
-				"username":user,
-				"swipe_types":SWIPE_TYPES,
-				"datetimes":generate_random_datetimes_for_swipes(SWIPE_TYPES),
-			})
-		
-		print(self.INPUT_DATA)
-		#now posting thoes swipes
-		for user in self.INPUT_DATA:
-			u = User.objects.create(username = user["username"])
-	
-			for swipe_type, datetime in zip(user["swipe_types"],user["datetimes"]):
-
-				swip = Swipe.objects.create(
-					user = u,
-					datetime = datetime,
-					swipe_type = swipe_type,
-				)
-		
-		print(Session.objects.all())	
+		dict_to_database(UserSerializer,self.USERS)
+		dict_to_database(SwipeSerializer,self.SWIPES)
 
 	def test_(self):
-
 
 		self.assertTrue(True)

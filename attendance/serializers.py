@@ -9,3 +9,9 @@ class SwipeSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Swipe
 		fields = ('user','datetime', 'swipe_type','id') #should add users
+
+class UserSerializer(serializers.ModelSerializer):
+
+	class Meta:
+		model = User
+		fields = ('username','id')
