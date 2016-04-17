@@ -1,17 +1,20 @@
-'''
-For testing posting swipes over REST API
-'''
+# '''
+# For testing posting swipes over REST API
+# '''
 from django.conf import settings
 import requests
 import json
 import unittest
+
+import time
+
 
 import os, django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ticker.settings")
 django.setup()
 
 
-from attendance.models import Swipe
+from attendance.models import Swipe,Session
 
 
 
@@ -41,7 +44,16 @@ class ApiPostSwipesTest(unittest.TestCase):
 
 	for swipe_type,datetime, in zip(swipe_types,datetimes):
 		data.append({"user":user,"swipe_type":swipe_type,"datetime":datetime})	
-
+	
+	def setUp(self):
+		Swipe.objects.all().delete()
+		print("Swipes deleted from database")
+		Session.objects.all().delete()
+		print("Sessions deleted from database")
+	
+	def tearDown(self):
+		print("Tore Down!")	
+			
 	
 	def test_post_some_swipes(self):
 		"""
@@ -51,29 +63,18 @@ class ApiPostSwipesTest(unittest.TestCase):
 		POST_URL = "http://127.0.0.1:8000/swipes/"
 		HEADERS = {'Content-Type': 'application/json'}
 
-		#need to crete list of dictionaries:
-		
-
 		for swipe in self.data:
 			r = requests.post(POST_URL, json.dumps(swipe), headers = HEADERS)
 			self.assertEqual(r.status_code,201) #CREATED 201
-				#print("POSTED:	" + str(swipe))
-	@unittest.skip("demonstrating skipping")
-	def test_get_posted_data_from_database(self):
+		
 		s = Swipe.objects.all()
-
+		
+		#self.assertEqual(1,500)
 		for swipe,data_constant in zip(s,self.data):
 			self.assertEqual(swipe.user.id,data_constant["user"])
+			
 			self.assertEqual(swipe.swipe_type,data_constant["swipe_type"])
 			self.assertEqual(swipe.datetime.isoformat()[:-6],data_constant["datetime"])
-	
-		Swipe.objects.all().delete() #deletes swipes fomrom database
-
-		self.assertFalse(Swipe.objects.all())
-		
-	# def tearDown(self):
-	# 	Swipe.objects.all().delete()
-#now we want to read if they are in database
 
 
 if __name__ == '__main__':
@@ -81,3 +82,4 @@ if __name__ == '__main__':
 	# a.post_some_swipes()
 	# a.get_posted_data_from_database()
 	unittest.main()
+	#print(Session.objects.all(),Swipe.objects.all())

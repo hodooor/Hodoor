@@ -1,9 +1,9 @@
 from selenium import webdriver
-import unittest
+from django.unittest import TestCase
 
 SERVER_URL = "http://localhost:8000"
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(TestCase):
 
 	def setUp(self):
 		self.browser = webdriver.Firefox()
