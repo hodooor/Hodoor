@@ -3,8 +3,9 @@ from django.http import HttpResponse
 
 from rest_framework import viewsets
 from .serializers import SwipeSerializer,UserSerializer,KeySerializer
-from .models import Swipe, Key
+from .models import Swipe, Key, Session
 from django.contrib.auth.models import User
+from django.views.generic import ListView
 
 def home_page(request):
 	return HttpResponse(
@@ -24,3 +25,5 @@ class KeyViewSet(viewsets.ModelViewSet):
 	serializer_class = KeySerializer
 	http_method_names = ['get',]
 
+class SessionList(ListView):
+	model = Session
