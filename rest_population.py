@@ -8,6 +8,7 @@ import unittest
 import time
 from datetime import timedelta,datetime
 from random import randint
+from const_data import USERS, SWIPES
 
 
 import os, django
@@ -22,6 +23,7 @@ def generate_random_datetimes_for_swipes(swipes):
 	Generates pseudorandom list of datetimes in chronological order for testing 
 	purposes in string isoformat.
 	'''
+	from datetime import timedelta,datetime
 	datetimes = []
 	t = datetime.now()
 
@@ -76,7 +78,7 @@ class ApiPostSwipesTest(unittest.TestCase):
 		POST_URL = "http://127.0.0.1:8000/swipes/"
 		HEADERS = {'Content-Type': 'application/json'}
 
-		for swipe in self.data:
+		for swipe in SWIPES:
 			r = requests.post(POST_URL, json.dumps(swipe), headers = HEADERS)
 			self.assertEqual(r.status_code,201) #CREATED 201
 		
@@ -96,5 +98,7 @@ if __name__ == '__main__':
 	# a = ApiPostSwipesTest()
 	# a.post_some_swipes()
 	# a.get_posted_data_from_database()
+	print(USERS)
+	print(SWIPES)
 	unittest.main()
 	#print(Session.objects.all(),Swipe.objects.all())

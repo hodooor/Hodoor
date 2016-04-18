@@ -7,6 +7,7 @@ from django.http import HttpRequest
 from .models import Session, Swipe
 from rest_population import generate_random_datetimes_for_swipes
 from .serializers import SwipeSerializer, UserSerializer
+from const_data import USERS, SWIPES, SWIPE_TYPES
 
 def dict_to_database(serializer_class, list_of_dict):
 	'''
@@ -40,26 +41,12 @@ class SessionTestCase(TestCase):
 	'''
 	def setUp(self):
 		
-		
-		self.USERS = [
-			{"username":"ondrej.vicar", "id":"1"},
-			{"username":"jaroslav.malec", "id":"2"},
-			{"username":"lukas.krcma", "id":"3"},
-			{"username":"david.binko", "id":"4"},
-		]
-		self.SWIPE_TYPES = ("IN","OBR", "FBR","OBR", "FBR","OUT")
-		#now generate swipe list of dictionaries
-		self.SWIPES = []
-		for user_id in (d['id'] for d in self.USERS):
-			
-			datetime = generate_random_datetimes_for_swipes(self.SWIPE_TYPES)
-			
-			for swipe_type,datetime in zip(self.SWIPE_TYPES,datetime):
-				self.SWIPES.append({
-					"user":user_id,
-					"swipe_type":swipe_type,
-					"datetime":datetime,
-				})
+		self.USERS = USERS
+		self.SWIPES = SWIPES
+		self.SWIPE_TYPES = SWIPE_TYPES
+
+		print(USERS)
+		print(SWIPES)
 
 		dict_to_database(UserSerializer,self.USERS)
 		dict_to_database(SwipeSerializer,self.SWIPES)
