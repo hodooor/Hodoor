@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 from django.http import HttpRequest
 from .models import Session, Swipe
-from rest_population import generate_random_datetimes_for_swipes
+from const_data import generate_random_datetimes_for_swipes
 from .serializers import SwipeSerializer, UserSerializer
 from const_data import USERS, SWIPES, SWIPE_TYPES
 
