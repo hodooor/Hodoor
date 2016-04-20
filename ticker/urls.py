@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url,include
 from django.contrib import admin
-from attendance.views import SessionList
+from attendance.views import SessionList, SessionDetail
 
 from attendance import views
 
@@ -34,5 +34,6 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^plate/', include('django_spaghetti.urls')), 
     url(r'^', include(router2.urls)), 
-    url(r'^sessions/', SessionList.as_view()), 
+    url(r'^sessions/', SessionList.as_view()),
+    url(r'^session/', SessionDetail.as_view()),
 ]   
