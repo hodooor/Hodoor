@@ -27,19 +27,22 @@ th {
 	    	<th>USERNAME</th>
 	    	<th>DURATION</th>
 	    	<th>DESCRIPTION</th>
-	    	<th>MODIFIED</th>
-	    	<th>ID<th>
+	    	<th>NUMBER_OF_BREAKS</th>
+	    	<th>BREAKS_DURATION</th>
+
 	  	</tr>
-        {% for session in my_favorite_sessions %}
+        {% for session in session_list%}
         <tr>	
         		<td>{{ session.id }}</td>
             	<td>{{ session.user.username }}</td>
             	<td>{{ session.duration }}</td>
             	<td>{{ session.description }}</td>
-            	<td>{{ session.modifed }}</td>
-            	<td>{{ swipe.}}</td>>
+            	<td>{{ session.num_of_breaks }}</td>
+            	<td>{{ session.breaks_duration }}</td>
+            	<td>{{ session.session_duration_overall }}</td>
         </tr>
         {% endfor %}
     </table>
+    {{session_with_swipes}}
 {% endblock %}
 </body>

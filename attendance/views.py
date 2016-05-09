@@ -25,21 +25,16 @@ class KeyViewSet(viewsets.ModelViewSet):
 	serializer_class = KeySerializer
 	http_method_names = ['get',]
 
-class SessionList(ListView):
-	queryset = Session.objects.all()
-	context_object_name = 'my_favorite_sessions'
-	# def get_context_data(self, **kwargs):
-	# #     # Call the base implementation first to get a context
-	#      context = super(SessionList, self).get_context_data(**kwargs)
-	# #     # Add in the publisher
-	#      context['swipe'] = self..swipe_set.all()
-	#      return context
+def sessions(request):
+	sessions_with_swipes  = list()
+	sessions = Session.objects.all()
+	
+	for session in sessions:
+		sessions_with_swipes.append([session, session.swipe_set.all()])
 
-class SessionDetail(DetailView):
-	#model = Session
-	queryset = Session.objects.get(id= 73)
-	# context_object_name = 'session'
-	# def get_context_data(self, **kwargs):
- # 		context = super(PublisherDetail, self).get_context_data(**kwargs)
- # 		context['swipe_list'] = Swipe.objects.all()
- # 		return context
+	print(sessions_with_swipes)
+
+	session_list = Session.objects.all()
+	context = {"session_list": session_list, "session_with_swipes": sessions_with_swipes}
+	return render(request, "attendance/session_list.html", context)
+	
