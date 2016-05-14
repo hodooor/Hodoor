@@ -4,11 +4,19 @@ from django.contrib.auth.models import User
 
 class SwipeSerializer(serializers.ModelSerializer):
 	'''
-	Serializer for sending swipes.. Hyperlink serializer does not work with user foreign key
+	Serializer for recieving swipes from client.. Hyperlink serializer does not work with user foreign key
 	'''
 	class Meta:
 		model = Swipe
 		fields = ('user','datetime', 'swipe_type','id') #should add users
+
+class SwipeSerializerLight(serializers.ModelSerializer):
+	'''
+	Serializer for  swipes.. Light version without user information
+	'''
+	class Meta:
+		model = Swipe
+		fields = ('datetime', 'swipe_type','id') #should add users
 
 class UserSerializer(serializers.ModelSerializer):
 	'''
@@ -21,8 +29,10 @@ class UserSerializer(serializers.ModelSerializer):
 		fields = ('username','id','last_swipe_type')
 
 	def get_last_swipe_type(self,obj): 
+		#if current user has some swipes
 		if(Swipe.objects.all().filter(user=obj)):
-			return Swipe.objects.all().filter(user=obj).latest('datetime').swipe_type
+			serializer = SwipeSerializerLight(obj.swipe_set.latest('datetime'))
+			return serializer.data
 		else:
 			return 0
 
