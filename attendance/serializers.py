@@ -1,4 +1,4 @@
-from .models import Swipe,Key
+from .models import Swipe,Key, UserMethods
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
@@ -14,9 +14,17 @@ class UserSerializer(serializers.ModelSerializer):
 	'''
 	Serializer used for prepopulating database and geting key information by client
 	'''
+	last_swipe_type = serializers.SerializerMethodField()
+
 	class Meta:
 		model = User
-		fields = ('username','id')
+		fields = ('username','id','last_swipe_type')
+
+	def get_last_swipe_type(self,obj): 
+		if(Swipe.objects.all().filter(user=obj)):
+			return Swipe.objects.all().filter(user=obj).latest('datetime').swipe_type
+		else:
+			return 0
 
 class KeySerializer(serializers.ModelSerializer):
 	'''

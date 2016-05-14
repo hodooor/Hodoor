@@ -75,7 +75,9 @@ class Swipe(models.Model):
 					("IN","Login"),
 					("OUT","Logout"),
 					("OBR","On Break"),
-					("FBR","From Break")		
+					("FBR","From Break"),
+					("OTR","On Trip"),
+					("FTR","From Trip")		
 	)
 
 	user = models.ForeignKey(User)
@@ -144,3 +146,12 @@ def post_process_swipes(sender=Swipe, **kwargs):
 			if(created_swipe.swipe_type == "OUT"):
 				sess.duration = sess.session_duration()
 				sess.save()
+class UserMethods(User):
+	def get_last_swipe(self):
+		"""
+		Returns latest swipe for user
+		"""
+		return self.swipe_set.latest('datetime') 
+		
+	class Meta:
+		proxy = True 
