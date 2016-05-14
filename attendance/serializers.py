@@ -22,13 +22,13 @@ class UserSerializer(serializers.ModelSerializer):
 	'''
 	Serializer used for prepopulating database and geting key information by client
 	'''
-	last_swipe_type = serializers.SerializerMethodField()
+	last_swipe = serializers.SerializerMethodField()
 
 	class Meta:
 		model = User
-		fields = ('username','id','last_swipe_type')
+		fields = ('username','id','last_swipe')
 
-	def get_last_swipe_type(self,obj): 
+	def get_last_swipe(self,obj): 
 		#if current user has some swipes
 		if(Swipe.objects.all().filter(user=obj)):
 			serializer = SwipeSerializerLight(obj.swipe_set.latest('datetime'))
