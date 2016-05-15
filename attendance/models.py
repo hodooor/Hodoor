@@ -146,6 +146,8 @@ def post_process_swipes(sender=Swipe, **kwargs):
 			if(created_swipe.swipe_type == "OUT"):
 				sess.duration = sess.session_duration()
 				sess.save()
+				print("session finished")
+
 class UserMethods(User):
 	def get_last_swipe(self):
 		"""
