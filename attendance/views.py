@@ -16,7 +16,7 @@ class SwipeViewSet(viewsets.ModelViewSet):
 	'''
 	API end point for posting swipes
 	'''
-	queryset = Swipe.objects.all()
+	queryset = Swipe.objects.all().order_by("-datetime")[:20]
 	serializer_class = SwipeSerializer
 	http_method_names = ['post','get']
 
