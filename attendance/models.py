@@ -147,13 +147,3 @@ def post_process_swipes(sender=Swipe, **kwargs):
 				sess.duration = sess.session_duration()
 				sess.save()
 				print("session finished")
-
-class UserMethods(User):
-	def get_last_swipe(self):
-		"""
-		Returns latest swipe for user
-		"""
-		return self.swipe_set.latest('datetime') 
-		
-	class Meta:
-		proxy = True 

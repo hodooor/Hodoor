@@ -2,6 +2,7 @@ Django==1.9.5
 django-spaghetti-and-meatballs==0.2.0
 django-tables2==1.1.6
 djangorestframework==3.3.3
+pytz==2016.4
 requests==2.9.1
 selenium==2.53.1
 six==1.10.0
