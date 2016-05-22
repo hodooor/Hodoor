@@ -40,12 +40,16 @@ class UserSerializer(serializers.ModelSerializer):
 			return 0
 	def get_hours_this_month(self,obj):
 		#all in swipes for current user this month
-		swipes = Swipe.objects.filter(swipe_type="IN", user=obj, datetime__day=datetime.now().day).values_list('id', flat=True)
+		swipes = Swipe.objects.filter(swipe_type="IN", user=obj, datetime__month=datetime.now().month)
+		if swipes:
+			swipes = swipes.values_list('id', flat=True)
 		
-		sessions = Session.objects.filter(swipe__in = swipes) #why not swipe_set??
+			sessions = Session.objects.filter(swipe__in = swipes) #why not swipe_set??
 
-		duration_seconds = sessions.aggregate(Sum('duration'))["duration__sum"].total_seconds()
-		return duration_seconds/3600 #hours
+			duration_seconds = sessions.aggregate(Sum('duration'))["duration__sum"].total_seconds()
+			return duration_seconds/3600 #hours
+		else:
+			return 0
 
 
 class KeySerializer(serializers.ModelSerializer):
