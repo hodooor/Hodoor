@@ -39,4 +39,9 @@ def sessions(request):
 	session_list = Session.objects.all()
 	context = {"session_list": session_list, "session_with_swipes": sessions_with_swipes}
 	return render(request, "attendance/session_list.html", context)
-	
+
+def user(request, username):
+	u = User.objects.get(username = username)
+	s = Session.objects.filter(user__id = u.id)
+	context = {"user" : u, "session_list":s}
+	return render(request, "attendance/user_page.html", context)
