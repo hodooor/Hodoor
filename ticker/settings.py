@@ -127,3 +127,4 @@ SPAGHETTI_SAUCE = {
   'exclude':{}
 }
 
+LOGIN_REDIRECT_URL = "/"

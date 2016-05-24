@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url,include
 from django.contrib import admin
 
+
 from attendance import views
 
 from rest_framework import routers
@@ -34,4 +35,5 @@ urlpatterns = [
     url(r'^plate/', include('django_spaghetti.urls')), 
     url(r'^', include(router2.urls)), 
     url(r'^sessions/', views.sessions, name = "sessions"),
+    url('^', include('django.contrib.auth.urls')),
 ]   

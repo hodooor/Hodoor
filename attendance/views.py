@@ -1,16 +1,18 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 
+from django.core.urlresolvers import reverse
 from rest_framework import viewsets
 from .serializers import SwipeSerializer,UserSerializer,KeySerializer
 from .models import Swipe, Key, Session
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView
+from django.contrib.auth.decorators import login_required
 
+@login_required(login_url='/login/')
 def home_page(request):
-	return HttpResponse(
-		'<html><head><title>ticker</title></head><body><h1>Swipes</h1></body></html>'
-	)
+	return HttpResponseRedirect(
+		reverse(sessions, args=[request.user.username]))
 
 class SwipeViewSet(viewsets.ModelViewSet):
 	'''
