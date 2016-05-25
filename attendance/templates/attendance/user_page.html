@@ -1,8 +1,9 @@
-
 {{user.id}}</br>
 {{user.username}}</br>
+
 {% block content %}
     <h2>Sessions</h2>
+    <h3>Hours this month: {{ hours_this_month|floatformat:2}}</h3>
 	    <table>
 	     <tr>
 	    	<th>ID</th>

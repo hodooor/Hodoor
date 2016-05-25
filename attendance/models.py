@@ -22,13 +22,10 @@ class SessionManager(models.Manager):
 		Returns number of hours for given user id this month
 		"""
 		sessions = self.get_sessions_this_month().filter(user=user)
-		duration_seconds = sessions.aggregate(Sum('duration'))["duration__sum"]
-		if(duration_seconds):
-			duration_seconds = duration_seconds.total_seconds()
-		else:
-			return 0
-		return duration_seconds/3600 #hours
-		
+		new_dur = timedelta(0)
+		for session in sessions:
+			new_dur += session.session_duration()
+		return new_dur.total_seconds()/3600	
 
 class Session(models.Model):
 	'''
