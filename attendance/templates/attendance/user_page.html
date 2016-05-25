@@ -1,3 +1,4 @@
+
 {{user.id}}</br>
 {{user.username}}</br>
 {% block content %}
@@ -6,22 +7,26 @@
 	     <tr>
 	    	<th>ID</th>
 	    	<th>USERNAME</th>
-	    	<th>DURATION</th>
+	    	
 	    	<th>DESCRIPTION</th>
 	    	<th>NUMBER_OF_BREAKS</th>
 	    	<th>BREAKS_DURATION</th>
 	    	<th>DURATION_OVERALL</th>
+	    	<th>DURATION</th>
+	    	<th>SESSION_COMPLETE</th>
 
 	  	</tr>
         {% for session in session_list%}
         <tr>	
         		<td>{{ session.id }}</td>
             	<td>{{ session.user.username }}</td>
-            	<td>{{ session.duration }}</td>
+            	
             	<td>{{ session.description }}</td>
             	<td>{{ session.num_of_breaks }}</td>
             	<td>{{ session.breaks_duration }}</td>
             	<td>{{ session.session_duration_overall }}</td>
+            	<td>{{ session.session_duration }}</td>
+            	<td>{{ session.is_session_complete|yesno:"Yes,No" }}</td>
         </tr>
         {% endfor %}
     </table>

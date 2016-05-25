@@ -21,19 +21,19 @@ def dict_to_database(serializer_class, list_of_dict):
 		ser.save()
 
 
-class HomePageTest(TestCase):
+# class HomePageTest(TestCase):
 
-	def test_root_url_resolvers_to_home_page_view(self):
-		found = resolve('/')
-		self.assertEqual(found.func, home_page)
+# 	def test_root_url_resolvers_to_home_page_view(self):
+# 		found = resolve('/')
+# 		self.assertEqual(found.func, home_page)
 
-	def test_home_page_returns_correct_html(self):
-		request = HttpRequest()
-		response = home_page(request)
-		self.assertTrue(response.content.startswith(b'<html>'))
-		self.assertIn(b'<title>ticker</title>', response.content)
-		self.assertIn(b'<h1>', response.content)
-		self.assertTrue(response.content.endswith(b'</html>'))
+# 	def test_home_page_returns_correct_html(self):
+# 		request = HttpRequest()
+# 		response = home_page(request)
+# 		self.assertTrue(response.content.startswith(b'<html>'))
+# 		self.assertIn(b'<title>ticker</title>', response.content)
+# 		self.assertIn(b'<h1>', response.content)
+# 		self.assertTrue(response.content.endswith(b'</html>'))
 
 class SessionTestCase(TestCase):
 	'''

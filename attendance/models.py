@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db.models import Q
-import datetime
+from datetime import datetime, timezone, timedelta
 
 class Session(models.Model):
 	'''
@@ -12,6 +12,7 @@ class Session(models.Model):
 	'''
 
 	user = models.ForeignKey(User)
+	#this is saved field and exists only for finished sessions
 	duration = models.DurationField(null = True, blank = True)
 
 	description = models.CharField(
@@ -39,29 +40,41 @@ class Session(models.Model):
 		
 		obr = self.swipe_set.filter(swipe_type = "OBR")
 		fbr = self.swipe_set.filter(swipe_type = "FBR")
-
-		duration = datetime.timedelta(0)
+		duration = timedelta(0)
 
 		for obr_object, fbr_object  in zip(obr,fbr):
 			duration += fbr_object.datetime - obr_object.datetime
-		
+
+		if len(obr) > len(fbr): #if we are on break
+			duration += datetime.now(timezone.utc) - obr.latest("datetime").datetime
+	
 		return duration
+			
 	def session_duration_overall (self):
 		'''
 		Returns time delta duration of session(including breaks)
 		'''
 
 		login_datetime = self.swipe_set.get(swipe_type = "IN").datetime
-		logout_datetime = self.swipe_set.get(swipe_type = "OUT").datetime
-
-		return logout_datetime - login_datetime
+		
+		if(self.is_session_complete()):
+			end_datetime = self.swipe_set.get(swipe_type = "OUT").datetime
+		else:
+			end_datetime = datetime.now(timezone.utc)
+		return end_datetime - login_datetime
 
 	def session_duration(self):
 		'''
 		Returns time delta duration of session(excluding breaks)
 		'''
 
-		return self.session_duration_overall() - self.breaks_duration() 
+		return self.session_duration_overall() - self.breaks_duration()
+
+	def is_session_complete(self):
+		if(self.swipe_set.filter(swipe_type = "OUT").exists()):
+			return True
+		else:
+			return False
 
 	def __str__(self):
 		return str(self.id) + " " + str(self.user)
