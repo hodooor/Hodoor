@@ -45,8 +45,11 @@ class UserSerializer(serializers.ModelSerializer):
 			swipes = swipes.values_list('id', flat=True)
 		
 			sessions = Session.objects.filter(swipe__in = swipes) #why not swipe_set??
-
-			duration_seconds = sessions.aggregate(Sum('duration'))["duration__sum"].total_seconds()
+			duration_seconds = sessions.aggregate(Sum('duration'))["duration__sum"]
+			if(duration_seconds):
+				duration_seconds = duration_seconds.total_seconds()
+			else:
+				return 0
 			return duration_seconds/3600 #hours
 		else:
 			return 0
