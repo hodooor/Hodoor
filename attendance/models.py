@@ -4,6 +4,31 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db.models import Q
 from datetime import datetime, timezone, timedelta
+from django.db.models import Sum
+
+class SessionManager(models.Manager):
+	def get_sessions_this_month(self):
+		"""
+		returns List of sessions made this month
+		"""
+		swipes_this_month = Swipe.objects.filter(swipe_type="IN", datetime__month=datetime.now().month)
+		if swipes_this_month:
+			swipes_list = swipes_this_month.values_list('id', flat=True)
+			sessions = Session.objects.filter(swipe__in = swipes_list) #why not swipe_set??
+		return sessions
+
+	def get_hours_this_month(self, user):
+		"""
+		Returns number of hours for given user id this month
+		"""
+		sessions = self.get_sessions_this_month().filter(user=user)
+		duration_seconds = sessions.aggregate(Sum('duration'))["duration__sum"]
+		if(duration_seconds):
+			duration_seconds = duration_seconds.total_seconds()
+		else:
+			return 0
+		return duration_seconds/3600 #hours
+		
 
 class Session(models.Model):
 	'''
@@ -21,7 +46,8 @@ class Session(models.Model):
 		blank = True
 	)
 
-	modified = models.BooleanField(default = False) 
+	modified = models.BooleanField(default = False)
+	objects = SessionManager() 
 	def num_of_breaks (self):
 		'''
 		Returns number of completed breaks during session
@@ -160,3 +186,4 @@ def post_process_swipes(sender=Swipe, **kwargs):
 				sess.duration = sess.session_duration()
 				sess.save()
 				print("session finished")
+

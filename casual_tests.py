@@ -21,5 +21,9 @@ def print_doc_str_and_return_value(functions_iterable):
 		print(function.__doc__.strip(), str(function()))
 
 print_doc_str_and_return_value([dur,over,num,bdur])
+print(Session.objects.get_hours_this_month(1))
+print(Session.objects.get_hours_this_month(2))
+print(Session.objects.get_hours_this_month(3))
+print(Session.objects.get_hours_this_month(4))
 
 
