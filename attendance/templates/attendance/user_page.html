@@ -1,9 +1,8 @@
-{{user.id}}</br>
-{{user.username}}</br>
+
+<h1>Sessions</h1>
+<h2>{{user.username}}</h2>
 
 {% block content %}
-    <h2>Sessions</h2>
-    <h3>Hours this month: {{ hours_this_month|floatformat:2}}</h3>
 	    <table>
 	     <tr>
 	    	<th>ID</th>
@@ -33,7 +32,7 @@
     </table>
     {{session_with_swipes}}
 {% endblock %}
-
+<h3>Hours this month: {{ hours_this_month|floatformat:2}}</h3>
 
 <head>
 <style>

@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 @login_required(login_url='/login/')
 def home_page(request):
 	return HttpResponseRedirect(
-		reverse(sessions, args=[request.user.username]))
+		reverse(user, args=[request.user.username]))
 
 class SwipeViewSet(viewsets.ModelViewSet):
 	'''
@@ -42,7 +42,16 @@ def sessions(request):
 				"session_with_swipes": sessions_with_swipes,}
 	return render(request, "attendance/session_list.html", context)
 
+def user_check(request, username):
+	if request.user.username == username or request.user.is_superuser:
+		return True
+	else:
+		return False
+
+@login_required(login_url='/login/')
 def user(request, username):
+	if not user_check(request, username): 
+		return HttpResponse("Restricted to " + username)
 	u = User.objects.get(username = username)
 	s = Session.objects.filter(user__id = u.id)
 	context = {	"user" : u, 
