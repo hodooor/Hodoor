@@ -1,9 +1,9 @@
 from selenium import webdriver
-from django.unittest import TestCase
+import unittest
 
-SERVER_URL = "http://localhost:8000"
+SERVER_URL = "http://10.0.0.200:8000/"
 
-class NewVisitorTest(TestCase):
+class NewVisitorTest(unittest.TestCase):
 
 	def setUp(self):
 		self.browser = webdriver.Firefox()
@@ -12,33 +12,25 @@ class NewVisitorTest(TestCase):
 	def tearDown(self):
 		self.browser.quit()
 
-	def test_home_page_full_of_swipes_with_heaer(self):
+	def test_home_page_login(self):
 		self.browser.get(SERVER_URL)
 
 		#page title is ticker
-		self.assertIn('ticker', self.browser.title)
+		self.assertIn('Ticker', self.browser.title)
 
-		#header text on page containts Swipes - page should be swipes table
-		header_text = self.browser.find_element_by_tag_name('h1').text
-		self.assertIn("Swipes", header_text)
+		#ẅe should see login page
+		header_text = self.browser.find_element_by_tag_name('p').text
+		self.assertIn("login", header_text)
 
-		self.fail('Finish the test!')
+		username = self.browser.find_element_by_id("id_username")
+		password = self.browser.find_element_by_id("id_password")
 
-	#page /attendance/user/sessions/ - should be table with sessions for logged in user
+		username.send_keys("ondrej.vicar")
+		password.send_keys("admin1234")
+		self.browser.find_element_by_css_selector("input[value='login']").click()
 
-	#page /attendance/user/sessions/1 - should be detailed editable form session
-
-	#page /attendance/api/ this url should be for post request with swipes
-
-	#models.. there will redefined user profiles,
-			#and sessions  should have foreigh key also users and should be completed after logout
-			#and swipes.. swipes should have forgeinkez sessions and user and should be instantly assigned 
-			#after post request tru api
-
-			#maybe use django.db.models.signals.post_save
-
-
-
-
+		sessions_header = self.browser.find_element_by_tag_name("h1").text
+		self.assertIn("Sessions", sessions_header)
+		
 if __name__ == '__main__':
 	unittest.main()

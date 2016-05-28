@@ -20,21 +20,6 @@ def dict_to_database(serializer_class, list_of_dict):
 		ser.is_valid()
 		ser.save()
 
-
-# class HomePageTest(TestCase):
-
-# 	def test_root_url_resolvers_to_home_page_view(self):
-# 		found = resolve('/')
-# 		self.assertEqual(found.func, home_page)
-
-# 	def test_home_page_returns_correct_html(self):
-# 		request = HttpRequest()
-# 		response = home_page(request)
-# 		self.assertTrue(response.content.startswith(b'<html>'))
-# 		self.assertIn(b'<title>ticker</title>', response.content)
-# 		self.assertIn(b'<h1>', response.content)
-# 		self.assertTrue(response.content.endswith(b'</html>'))
-
 class SessionTestCase(TestCase):
 	'''
 	Tests isolated Sessions and Swipes
@@ -63,7 +48,3 @@ class SessionTestCase(TestCase):
 				session.num_of_breaks(),
 				self.SWIPE_TYPES.count("FBR")
 			)
-
-
-
-		self.assertTrue(True)
