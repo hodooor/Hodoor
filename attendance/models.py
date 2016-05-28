@@ -25,7 +25,7 @@ class SessionManager(models.Manager):
 		"""
 		sessions_this_month = self.get_sessions_this_month()
 		if(sessions_this_month):
-			sessions = sessions.filter(user=user)
+			sessions = sessions_this_month.filter(user=user)
 			new_dur = timedelta(0)
 			for session in sessions:
 				new_dur += session.session_duration()

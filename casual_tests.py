@@ -1,3 +1,8 @@
+"""
+This file is meant for quick "shell-like" testing during functions
+building
+"""
+
 from django.conf import settings
 
 import os, django
@@ -5,13 +10,9 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ticker.settings")
 django.setup()
 
 from attendance.models import Swipe,Session
+from django.contrib.auth.models import User
 
-s = Session.objects.all()[0]
 
-dur = s.session_duration
-over = s.session_duration_overall
-num = s.num_of_breaks
-bdur = s.breaks_duration
 
 def print_doc_str_and_return_value(functions_iterable):
 	'''
@@ -20,7 +21,17 @@ def print_doc_str_and_return_value(functions_iterable):
 	for function in functions_iterable:
 		print(function.__doc__.strip(), str(function()))
 
-print_doc_str_and_return_value([dur,over,num,bdur])
+s = Session.objects.all()
+if(s):
+	s = s[0]
+	dur = s.session_duration
+	over = s.session_duration_overall
+	num = s.num_of_breaks
+	bdur = s.breaks_duration
+
+	print_doc_str_and_return_value([dur,over,num,bdur])
+
+
 print(Session.objects.get_hours_this_month(1))
 print(Session.objects.get_hours_this_month(2))
 print(Session.objects.get_hours_this_month(3))
