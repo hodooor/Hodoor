@@ -15,17 +15,23 @@ class SessionManager(models.Manager):
 		if swipes_this_month:
 			swipes_list = swipes_this_month.values_list('id', flat=True)
 			sessions = Session.objects.filter(swipe__in = swipes_list) #why not swipe_set??
-		return sessions
+			return sessions
+		else:
+			return 0
 
 	def get_hours_this_month(self, user):
 		"""
 		Returns number of hours for given user id this month
 		"""
-		sessions = self.get_sessions_this_month().filter(user=user)
-		new_dur = timedelta(0)
-		for session in sessions:
-			new_dur += session.session_duration()
-		return new_dur.total_seconds()/3600	
+		sessions_this_month = self.get_sessions_this_month()
+		if(sessions_this_month):
+			sessions = sessions.filter(user=user)
+			new_dur = timedelta(0)
+			for session in sessions:
+				new_dur += session.session_duration()
+			return new_dur.total_seconds()/3600
+		else:
+			return 0	
 
 class Session(models.Model):
 	'''
