@@ -5,6 +5,8 @@ from attendance.tests import dict_to_database
 from attendance.serializers import UserSerializer, SwipeSerializer
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.contrib.auth import logout
+from django.http import HttpRequest
 
 def populate_database(what_pop):
 	what_pop.USERS = USERS
@@ -31,7 +33,7 @@ class NewVisitorTest(LiveServerTestCase):
 		self.browser.implicitly_wait(3)
 
 	def tearDown(self):
-		self.browser.quit()
+		self.browser.close()
 
 	def test_home_page_login(self):
 		
@@ -49,7 +51,9 @@ class NewVisitorTest(LiveServerTestCase):
 		populate_database(self)
 
 		for user in self.USERS:
+			print("USER............................")
 			self.browser.get(self.live_server_url)
+			#print(type(self.live_server_url))
 			username = self.browser.find_element_by_id("id_username")
 			password = self.browser.find_element_by_id("id_password")
 			
@@ -59,5 +63,6 @@ class NewVisitorTest(LiveServerTestCase):
 
 			sessions_header = self.browser.find_element_by_tag_name("h1").text
 			self.assertIn("Sessions", sessions_header)
-
-			self.browser.get(self.live_server_url+ "/logout/")
+			self.browser.implicitly_wait(3)
+			self.browser.get("%s%s" % (self.live_server_url, '/logout/'))
+			self.assertIn('Logged out', self.browser.title)
