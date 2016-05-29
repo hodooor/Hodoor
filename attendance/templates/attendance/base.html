@@ -8,10 +8,47 @@
     <title>Ticker</title>
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/base.css" rel="stylesheet">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+
 </head>
 
 <body>
+	<nav class="navbar navbar-inverse">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class = "navbar-brand" href="http://10.0.0.200:8000">Ticker</a>
+			</div>
 
+			<div class="collapse navbar-collapse" id="topNavBar">
+				<ul class="nav navbar-nav">
+					<li class="">
+						<a href="http://10.0.0.200:8000">
+							<span class="glyphicon glyphicon-time" aria-hidden="true"</span> Sessions
+						</a>
+					</li>
+					<li class="">
+						<a href="http://10.0.0.200:8000">
+							<span class="glyphicon glyphicon-list-alt" aria-hidden="true"</span> Swipes
+						</a>
+					</li>
+				</ul>
+
+				<ul class="nav navbar-nav navbar-right">
+					<li class="">
+						<a href="http://10.0.0.200:8000/logout/">
+							<span class="glyphicon glyphicon-log-out" aria-hidden="true"</span> Logout
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
     <div class="col-md-6 col-md-offset-3">
         <div class="text-center">
             <h1>{% block header_text %}{% endblock %}</h1>
