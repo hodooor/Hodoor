@@ -7,8 +7,8 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from selenium.webdriver.support.wait import WebDriverWait
 from django.test.utils import override_settings
-from django.conf import settings
 from django.test import TestCase
+import sys
 
 def populate_database(what_pop):
 	what_pop.USERS = USERS
@@ -49,7 +49,14 @@ class NewVisitorTest(StaticLiveServerTestCase, TestCase):
 	
 	@classmethod
 	def setUpClass(cls):
+		for arg in sys.argv:
+			if 'liveserver' in arg:
+				cls.server_url = 'http://' + arg.split('=')[1]
+				cls.browser = webdriver.Firefox()
+				cls.browser.implicitly_wait(3)
+				return
 		super(NewVisitorTest, cls).setUpClass()
+		cls.server_url = cls.live_server_url
 		cls.browser = webdriver.Firefox()
 		cls.browser.implicitly_wait(3)
 
@@ -60,7 +67,7 @@ class NewVisitorTest(StaticLiveServerTestCase, TestCase):
 
 	def test_home_page_login(self):
 		
-		self.browser.get(self.live_server_url)
+		self.browser.get(self.server_url)
 
 		#page title is ticker
 		self.assertIn('Ticker', self.browser.title)
@@ -74,7 +81,7 @@ class NewVisitorTest(StaticLiveServerTestCase, TestCase):
 		timeout = 2
 		#populate_database(self)
 		for user in self.USERS[:1]:
-			self.browser.get(self.live_server_url)
+			self.browser.get(self.server_url)
 			#print(type(self.live_server_url))
 			username = self.browser.find_element_by_id("id_username")
 			password = self.browser.find_element_by_id("id_password")
@@ -87,6 +94,6 @@ class NewVisitorTest(StaticLiveServerTestCase, TestCase):
 			
 			sessions_header = self.browser.find_element_by_tag_name("h1").text
 			self.assertIn("Sessions", sessions_header)
-			self.browser.get("%s%s" % (self.live_server_url, '/logout/'))
+			self.browser.get("%s%s" % (self.server_url, '/logout/'))
 			WebDriverWait(self.browser, timeout).until( lambda driver: driver.find_element_by_tag_name('body'))
 			self.assertIn('Logged out', self.browser.title)
