@@ -1,26 +1,7 @@
-<head>
-<style>
-table {
-    border-collapse: collapse;
-    width: 100%;
-}
+{% extends 'attendance/base.html' %}
+{% block header_text %}All Sessions{% endblock %}
 
-th, td {
-    text-align: left;
-    padding: 8px;
-}
-
-tr:nth-child(even){background-color: #f2f2f2}
-
-th {
-    background-color: #4CAF50;
-    color: white;
-}
-</style>
-</head>
-<body>
 {% block content %}
-    <h2>Sessions</h2>
 	    <table>
 	     <tr>
 	    	<th>ID</th>
@@ -45,4 +26,3 @@ th {
     </table>
     {{session_with_swipes}}
 {% endblock %}
-</body>
