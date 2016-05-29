@@ -5,8 +5,9 @@ from attendance.tests import dict_to_database
 from attendance.serializers import UserSerializer, SwipeSerializer
 from django.contrib.auth.models import User
 from django.conf import settings
-from django.contrib.auth import logout
-from django.http import HttpRequest
+from selenium.webdriver.support.wait import WebDriverWait
+from django.test.utils import override_settings
+from django.conf import settings
 
 def populate_database(what_pop):
 	what_pop.USERS = USERS
@@ -46,9 +47,10 @@ class NewVisitorTest(LiveServerTestCase):
 		header_text = self.browser.find_element_by_tag_name('p').text
 		self.assertIn("login", header_text)
 
-
+	@override_settings(DEBUG=True)
 	def test_login_and_logut_users(self):
 		populate_database(self)
+		timeout = 2
 
 		for user in self.USERS:
 			print("USER............................")
@@ -60,9 +62,10 @@ class NewVisitorTest(LiveServerTestCase):
 			username.send_keys(user["username"])
 			password.send_keys(self.TEST_PASSWORD)
 			self.browser.find_element_by_css_selector("input[value='login']").click()
+			
 
 			sessions_header = self.browser.find_element_by_tag_name("h1").text
 			self.assertIn("Sessions", sessions_header)
-			self.browser.implicitly_wait(3)
 			self.browser.get("%s%s" % (self.live_server_url, '/logout/'))
+		
 			self.assertIn('Logged out', self.browser.title)
