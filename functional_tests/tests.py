@@ -96,7 +96,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 			WebDriverWait(self.browser, timeout).until( lambda driver: driver.find_element_by_tag_name('body'))
 			
 			sessions_header = self.browser.find_element_by_tag_name("h1").text
-			self.assertIn("Sessions", sessions_header)
+			self.assertIn("Profile", sessions_header)
 			self.browser.get("%s%s" % (self.server_url, '/logout/'))
 			WebDriverWait(self.browser, timeout).until( lambda driver: driver.find_element_by_tag_name('body'))
 			self.assertIn('Logged out', self.browser.title)
