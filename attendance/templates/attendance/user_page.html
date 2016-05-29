@@ -1,27 +1,28 @@
 {% extends 'attendance/base.html' %}
-{% block header_text %}User Sessions{% endblock %}
+{% block header_text %}
+Profile
+{% endblock %}
 
-{% block content %}
-<h2>{{user.username}}</h2>
-	    <table>
+{% block table%}
+	  	<thead>
 	     <tr>
 	    	<th>ID</th>
-	    	<th>USERNAME</th>
-	    	
+
 	    	<th>DESCRIPTION</th>
-	    	<th>NUMBER_OF_BREAKS</th>
-	    	<th>BREAKS_DURATION</th>
-	    	<th>DURATION_OVERALL</th>
+	    	<th>DATE</th>
+	    	<th>NUMBER OF BREAKS</th>
+	    	<th>BREAKS DURATION</th>
+	    	<th>DURATION OVERALL</th>
 	    	<th>DURATION</th>
-	    	<th>SESSION_COMPLETE</th>
+	    	<th>SESSION COMPLETE</th>
 
 	  	</tr>
+	  	</thead>
         {% for session in session_list%}
         <tr>	
-        		<td>{{ session.id }}</td>
-            	<td>{{ session.user.username }}</td>
-            	
+        		<td>{{ session.id }}</td> 
             	<td>{{ session.description }}</td>
+            	<td></td>
             	<td>{{ session.num_of_breaks }}</td>
             	<td>{{ session.breaks_duration }}</td>
             	<td>{{ session.session_duration_overall }}</td>
@@ -29,7 +30,8 @@
             	<td>{{ session.is_session_complete|yesno:"Yes,No" }}</td>
         </tr>
         {% endfor %}
-    </table>
-    {{session_with_swipes}}
 {% endblock %}
-<h3>Hours this month: {{ hours_this_month|floatformat:2}}</h3>
+{% block content %}
+<h3>{{user.username}}</h3>
+<h4>Hours this month: {{ hours_this_month|floatformat:2}}</h4>
+{% endblock %}
