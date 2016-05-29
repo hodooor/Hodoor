@@ -1,4 +1,4 @@
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from const_data import USERS, SWIPES, SWIPE_TYPES
 from attendance.tests import dict_to_database
@@ -8,6 +8,7 @@ from django.conf import settings
 from selenium.webdriver.support.wait import WebDriverWait
 from django.test.utils import override_settings
 from django.conf import settings
+from django.test import TestCase
 
 def populate_database(what_pop):
 	what_pop.USERS = USERS
@@ -24,10 +25,28 @@ def populate_database(what_pop):
 		user.set_password(what_pop.TEST_PASSWORD)
 		user.save()
 
-class NewVisitorTest(LiveServerTestCase):
-		#Prepopulate database with test data
+class NewVisitorTest(StaticLiveServerTestCase, TestCase):
+	
+	@classmethod
+	def setUpTestData(cls):
+		
+		cls.USERS = USERS
+		cls.SWIPES = SWIPES
+		cls.SWIPE_TYPES = SWIPE_TYPES
+		cls.TEST_PASSWORD = "user1234"
 
+		dict_to_database(UserSerializer,cls.USERS)
+		dict_to_database(SwipeSerializer,cls.SWIPES)
 
+		users = User.objects.all()
+	
+		for user in users:
+			user.set_password(cls.TEST_PASSWORD)
+			print(cls.TEST_PASSWORD)
+			user.save()
+		print(users)
+		super().setUpTestData()
+	
 	def setUp(self):
 
 		self.browser = webdriver.Firefox()
@@ -47,13 +66,11 @@ class NewVisitorTest(LiveServerTestCase):
 		header_text = self.browser.find_element_by_tag_name('p').text
 		self.assertIn("login", header_text)
 
-	@override_settings(DEBUG=True)
 	def test_login_and_logut_users(self):
-		populate_database(self)
+		from selenium.webdriver.support.wait import WebDriverWait
 		timeout = 2
-
+		#populate_database(self)
 		for user in self.USERS:
-			print("USER............................")
 			self.browser.get(self.live_server_url)
 			#print(type(self.live_server_url))
 			username = self.browser.find_element_by_id("id_username")
@@ -61,11 +78,13 @@ class NewVisitorTest(LiveServerTestCase):
 			
 			username.send_keys(user["username"])
 			password.send_keys(self.TEST_PASSWORD)
-			self.browser.find_element_by_css_selector("input[value='login']").click()
 			
-
+			self.browser.find_element_by_css_selector("input[value='login']").click()
+			WebDriverWait(self.browser, timeout).until( lambda driver: driver.find_element_by_tag_name('body'))
+			
 			sessions_header = self.browser.find_element_by_tag_name("h1").text
 			self.assertIn("Sessions", sessions_header)
 			self.browser.get("%s%s" % (self.live_server_url, '/logout/'))
-		
-			self.assertIn('Logged out', self.browser.title)
+			#WebDriverWait(self.browser, timeout).until( lambda driver: driver.find_element_by_tag_name('body'))
+			#self.browser.implicitly_wait(3)
+			#self.assertIn('Logged out', self.browser.title)

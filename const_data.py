@@ -28,6 +28,10 @@ USERS = [
 	{"username":"jaroslav.malec", "id":"2"},
 	{"username":"lukas.krcma", "id":"3"},
 	{"username":"david.binko", "id":"4"},
+	#{"username":"lucie.svobodu", "id":"5"},
+	#{"username":"petr.cejka", "id":"6"},
+	#{"username":"stanislav.starec", "id":"7"},
+	#{"username":"petr.chmelar", "id":"8"}
 ]
 SWIPE_TYPES = ("IN","OBR", "FBR","OBR", "FBR","OUT")
 #now generate swipe list of dictionaries
