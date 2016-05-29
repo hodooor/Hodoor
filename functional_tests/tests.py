@@ -47,13 +47,16 @@ class NewVisitorTest(StaticLiveServerTestCase, TestCase):
 		print(users)
 		super().setUpTestData()
 	
-	def setUp(self):
+	@classmethod
+	def setUpClass(cls):
+		super(NewVisitorTest, cls).setUpClass()
+		cls.browser = webdriver.Firefox()
+		cls.browser.implicitly_wait(3)
 
-		self.browser = webdriver.Firefox()
-		self.browser.implicitly_wait(3)
-
-	def tearDown(self):
-		self.browser.close()
+	@classmethod
+	def tearDownClass(cls):
+		cls.browser.close()
+		super(NewVisitorTest, cls).tearDownClass()
 
 	def test_home_page_login(self):
 		
@@ -70,7 +73,7 @@ class NewVisitorTest(StaticLiveServerTestCase, TestCase):
 		from selenium.webdriver.support.wait import WebDriverWait
 		timeout = 2
 		#populate_database(self)
-		for user in self.USERS:
+		for user in self.USERS[:1]:
 			self.browser.get(self.live_server_url)
 			#print(type(self.live_server_url))
 			username = self.browser.find_element_by_id("id_username")
@@ -85,6 +88,5 @@ class NewVisitorTest(StaticLiveServerTestCase, TestCase):
 			sessions_header = self.browser.find_element_by_tag_name("h1").text
 			self.assertIn("Sessions", sessions_header)
 			self.browser.get("%s%s" % (self.live_server_url, '/logout/'))
-			#WebDriverWait(self.browser, timeout).until( lambda driver: driver.find_element_by_tag_name('body'))
-			#self.browser.implicitly_wait(3)
-			#self.assertIn('Logged out', self.browser.title)
+			WebDriverWait(self.browser, timeout).until( lambda driver: driver.find_element_by_tag_name('body'))
+			self.assertIn('Logged out', self.browser.title)
