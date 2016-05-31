@@ -33,9 +33,6 @@ class SessionManager(models.Manager):
 		else:
 			return 0	
 class Project(models.Model):
-	'''
-	Caries information about work projects
-	'''
 	name = models.CharField(max_length = 20)
 
 	#so we can define private projects (hours in this project does not count)
@@ -159,6 +156,16 @@ class Swipe(models.Model):
 		on_delete = models.SET_NULL,
 		)
 	source = models.CharField(max_length = 5,null = True, blank = True)
+
+	#this points to swipe that is correction of this one
+	correct_swipe = models.ForeignKey(
+		"self",
+		on_delete=models.CASCADE,
+		blank = True,
+		null = True, #if blank, this swipe is the right one 
+		)
+	#indicates if this swipe is correction of another
+	correction = models.BooleanField(default = False)
 
 	def __str__(self):
 		return str(self.id) + " " + self.user.username + " " + self.swipe_type
