@@ -32,6 +32,19 @@ class SessionManager(models.Manager):
 			return new_dur.total_seconds()/3600
 		else:
 			return 0	
+class Project(models.Model):
+	'''
+	Caries information about work projects
+	'''
+	name = models.CharField(max_length = 20)
+
+	#so we can define private projects (hours in this project does not count)
+	private = models.BooleanField(default = False)
+	
+	#maybe worked hours? or will be calculated dynamicaly?
+	
+	def __str__(self):
+		return self.name
 
 class Session(models.Model):
 	'''
@@ -50,6 +63,9 @@ class Session(models.Model):
 	)
 
 	modified = models.BooleanField(default = False)
+	
+	project = models.ManyToManyField(Project, through = "ProjectSeparation")
+
 	objects = SessionManager() 
 	def num_of_breaks (self):
 		'''
@@ -108,6 +124,16 @@ class Session(models.Model):
 	def __str__(self):
 		return str(self.id) + " " + str(self.user)
 
+class ProjectSeparation(models.Model):
+	'''
+	So we can time divide our session into more projects
+	'''
+	session = models.ForeignKey(Session)
+	project = models.ForeignKey(Project)
+
+	#maybe entered in percentages
+	time_spend = models.DurationField() 
+
 class Swipe(models.Model):
 	'''
 	Swipes are individual key scans of each user
@@ -147,7 +173,6 @@ class Key(models.Model):
 
 	def __str__(self):
 		return self.id + " " + self.user.username + " " + self.key_type
-
 
 
 
