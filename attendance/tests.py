@@ -96,3 +96,6 @@ class SessionTestCase(TestCase):
 	
 	def test_session_swipes_cant_break_time_integrity(self):
 		pass
+
+	def test_cant_break_swipes_integrity(self):
+		pass
