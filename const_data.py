@@ -33,7 +33,7 @@ USERS = [
 	#{"username":"stanislav.starec", "id":"7"},
 	#{"username":"petr.chmelar", "id":"8"}
 ]
-SWIPE_TYPES = ("IN","OBR", "FBR","OBR", "FBR","OUT")
+SWIPE_TYPES = ("IN","OBR", "FBR","OBR", "FBR","OTR","FTR","OUT")
 #now generate swipe list of dictionaries
 SWIPES = []
 for user_id in (d['id'] for d in USERS):
