@@ -190,20 +190,23 @@ def post_process_swipes(sender=Swipe, **kwargs):
 		#print(" post_process_swipes trigered")
 		#swipe object that was just created
 		created_swipe = kwargs["instance"] 
+		
 		if created_swipe.correction_of_swipe: 
-			created_swipe.correction_of_swipe.session
-			#print(sess)
+
 			orig_swipe = Swipe.objects.get(id = created_swipe.correction_of_swipe.id)
 			orig_swipe.session = None;
 			orig_swipe.save()
-			
+
 			created_swipe.session = created_swipe.correction_of_swipe.session
 			created_swipe.save()
+			
+			created_swipe.session.duration = created_swipe.session.session_duration()
+			created_swipe.session.save()
+
+
 		#open new session if created swipe is not correction of old one 
 		else:
 			if created_swipe.swipe_type == "IN":
-				#print("created in swipe")
-					#new session
 				sess = Session(user = created_swipe.user)
 				sess.save()
 
@@ -218,14 +221,10 @@ def post_process_swipes(sender=Swipe, **kwargs):
 
 				#session without OUT swipe (open session)
 				sess = sess.exclude(swipe__swipe_type = "OUT")
-				print(len(sess))
 				if len(sess) == 1:
 					sess = sess[0]
 				else:
-					#this should not be possible 
 					raise ValueError('More Opened Sessions')
-					#getting this, because correcting swipe is when there are no
-					#sessions opened
 						
 				created_swipe.session = sess
 				created_swipe.save()
