@@ -150,6 +150,7 @@ class Swipe(models.Model):
 
 	swipe_type = models.CharField(max_length=3, choices = SWIPE_TYPES)
 
+	#session should be specified for correcting swipe
 	session = models.ForeignKey(Session,
 		null = True, 
 		blank = True, 
@@ -186,16 +187,25 @@ class Key(models.Model):
 def post_process_swipes(sender=Swipe, **kwargs):
 	if kwargs['created']: # trigering only when swipe was created
 		
-		print(" post_process_swipes trigered")
+		#print(" post_process_swipes trigered")
 		#swipe object that was just created
 		created_swipe = kwargs["instance"] 
 
 		#open new session if created swipe is not correction of old one 
 		if created_swipe.swipe_type == "IN":
-			print("created in swipe")
-			#session has same user as swipe
-			sess = Session(user = created_swipe.user)
-			sess.save()
+			#print("created in swipe")
+			
+			
+			if created_swipe.correction_of_swipe: 
+				sess = created_swipe.correction_of_swipe.session
+				#print(sess)
+				orig_swipe = Swipe.objects.get(id = created_swipe.correction_of_swipe.id)
+				orig_swipe.session = None;
+				orig_swipe.save()
+			else:
+				#new session
+				sess = Session(user = created_swipe.user)
+				sess.save()
 
 			#swipe is related to session 
 			created_swipe.session = sess
@@ -203,7 +213,7 @@ def post_process_swipes(sender=Swipe, **kwargs):
 
 		#updated oppened session
 		else:
-			print("session updated")
+			#print("session updated")
 			sess = Session.objects.filter(user = created_swipe.user)
 			sess = sess.exclude(swipe__swipe_type = "OUT") #session without OUT swipe (open session)
 
@@ -218,5 +228,5 @@ def post_process_swipes(sender=Swipe, **kwargs):
 			if created_swipe.swipe_type == "OUT":
 				sess.duration = sess.session_duration()
 				sess.save()
-				print("session finished")
+				#print("session finished")
 
