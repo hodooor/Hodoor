@@ -2,6 +2,7 @@ from django.core.urlresolvers import resolve
 from django.test import TestCase
 from attendance.views import home_page
 from django.contrib.auth.models import User
+from unittest import skip
 
 from django.http import HttpRequest
 from .models import Session, Swipe
@@ -66,8 +67,24 @@ class SessionTestCase(TestCase):
 		original_in_swipe = session.swipe_set.get(swipe_type = "IN")
 
 		new_in_swipe = Swipe.objects.create(
-			user = User.objects.get(id = original_in_swipe.id),
+			user = User.objects.get(id = original_in_swipe.user.id),
 			datetime = original_in_swipe.datetime - timedelta(hours=1),
 			swipe_type = "IN",
 			correction_of_swipe = original_in_swipe)
 		self.assertEqual(session.swipe_set.filter(swipe_type = "IN").count(), 1)
+		
+	def test_only_one_swipe_out_closed_session(self):
+		session = Session.objects.get(id = 1)
+		original_out_swipe = session.swipe_set.get(swipe_type = "OUT")
+		new_out_swipe = Swipe.objects.create(
+			user = User.objects.get(id = original_out_swipe.user.id),
+			datetime = original_out_swipe.datetime - timedelta(hours=1),
+			swipe_type = "OUT",
+			correction_of_swipe = original_out_swipe)	
+		
+		self.assertEqual(session.swipe_set.filter(swipe_type = "OUT").count(), 1)
+	
+	def session_duration_is_recalculated_for_correcting_swipe(self):
+		pass
+	def session_swipes_cant_break_time_integrity(self):
+		pass
