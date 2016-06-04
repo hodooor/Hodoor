@@ -5,11 +5,15 @@ from attendance.tests import dict_to_database
 from attendance.serializers import UserSerializer, SwipeSerializer
 from django.contrib.auth.models import User
 from django.conf import settings
+from attendance.models import Key
 from selenium.webdriver.support.wait import WebDriverWait
 from django.test.utils import override_settings
 from django.test import TestCase
+from rest_framework import status
 import sys
 import re
+from rest_framework.test import APIClient
+from unittest import skip
 
 def populate_database(what_pop):
 	what_pop.USERS = USERS
@@ -27,27 +31,7 @@ def populate_database(what_pop):
 		user.save()
 
 class NewVisitorTest(StaticLiveServerTestCase):
-	
-	# @classmethod
-	# def setUpTestData(cls):
-		
-	# 	cls.USERS = USERS
-	# 	cls.SWIPES = SWIPES
-	# 	cls.SWIPE_TYPES = SWIPE_TYPES
-	# 	cls.TEST_PASSWORD = "user1234"
 
-	# 	dict_to_database(UserSerializer,cls.USERS)
-	# 	dict_to_database(SwipeSerializer,cls.SWIPES)
-
-	# 	users = User.objects.all()
-	
-	# 	for user in users:
-	# 		user.set_password(cls.TEST_PASSWORD)
-	# 		print(cls.TEST_PASSWORD)
-	# 		user.save()
-	# 	print(users)
-	# 	super().setUpTestData()
-	
 	@classmethod
 	def setUpClass(cls):
 		for arg in sys.argv:
@@ -108,3 +92,24 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		color = self.browser.find_element_by_id("header").value_of_css_property('background-color')
 
 		self.assertEqual(color, "rgba(65, 118, 144, 1)")
+
+class APITestCase(StaticLiveServerTestCase):
+
+	def test_keys_are_available(self):
+		client = APIClient()
+		response = client.get("/keys/")
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+	def test_swipes_are_available(self):
+		client = APIClient()
+		response = client.get("/swipes/")
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+	def test_swipe_can_be_posted(self):
+		user = User.objects.create(username = "ondrej.vicar")
+
+		client = APIClient()
+		data = {"user": user.id, "swipe_type": "IN", "datetime":"2016-06-04T13:40Z"}
+		response = self.client.post("/swipes/",data, format="json")
+		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+		print(response.data)
