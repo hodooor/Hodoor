@@ -170,7 +170,7 @@ class Swipe(models.Model):
 		Returns tupple of types that can be used in next swipe
 		"""
 		if self.swipe_type == "IN":
-			return "OBR", "OTR","OUT"
+			return "OBR", "OTR","OUT",
 		elif self.swipe_type == "OUT":
 			return "IN",
 		elif self.swipe_type == "OBR":
@@ -180,7 +180,7 @@ class Swipe(models.Model):
 		elif self.swipe_type == "OTR":
 			return "FTR",
 		elif self.swipe_type == "FTR": 
-			return "OBR", "OTR","OUT"
+			return "OBR", "OTR","OUT",
 		else:
 			return "0"
 

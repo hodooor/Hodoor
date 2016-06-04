@@ -104,33 +104,27 @@ class SessionTestCase(TestCase):
 				datetime = timezone.now() + timedelta(hours=offset),
 				swipe_type = type
 			)
+		#we are testing swipes if every last swipe in tupple exists
+		SWIPE_SEQUENCE = [
+			("IN","IN",),
+			("OBR", "OBR",),
+			("FBR", "FBR",),
+			("OTR", "OTR",),
+			("FTR", "FTR",),
+			("OUT", "OUT",),
+			("FTR",),
+			("FBR",),
+			("IN","FTR",),
+			("FBR",),
+		]
 		
-
-		create_swipe("IN", 1, 50)
-		create_swipe("IN", 2, 51)
+		offset, id = 1, 50
 		
-		create_swipe("OBR", 3, 52)
-		create_swipe("OBR", 4, 53)
-		
-		create_swipe("FBR", 5, 54)
-		create_swipe("FBR", 6, 55)
-		
-		create_swipe("OTR", 7, 56)
-		create_swipe("OTR", 8, 57)
-		
-		create_swipe("FTR", 9, 58)
-		create_swipe("FTR", 10, 59)
-		
-		create_swipe("OUT",11, 60)
-		create_swipe("OUT",12, 61)
-
-		self.assertTrue(Swipe.objects.all().filter(id = 50))
-		self.assertFalse(Swipe.objects.all().filter(id = 51))
-		self.assertFalse(Swipe.objects.all().filter(id = 53))
-		self.assertFalse(Swipe.objects.all().filter(id = 55))
-		self.assertFalse(Swipe.objects.all().filter(id = 57))
-		self.assertFalse(Swipe.objects.all().filter(id = 59))
-		self.assertFalse(Swipe.objects.all().filter(id = 61))
+		for tuple_assert in SWIPE_SEQUENCE:
+			for swipe_type in tuple_assert:
+				create_swipe(swipe_type, offset, id)
+				offset, id = offset + 1, id + 1
+			self.assertFalse(Swipe.objects.all().filter(id = id))
 
 	def test_allowed_types_returns_tupple(self):
 		in_return = Swipe.objects.filter(swipe_type = "IN")[0].get_next_allowed_types()
