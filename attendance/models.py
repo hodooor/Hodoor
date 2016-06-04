@@ -170,13 +170,16 @@ class Swipe(models.Model):
 		return str(self.id) + " " + self.user.username + " " + self.swipe_type
 
 	def save(self, *args, **kwargs):
-		user_swipes = Swipe.objects.filter(user = self.user)
-		if user_swipes and self._state.adding == True:
-		 	latest_swipe = user_swipes.last()
-			
-		 	if latest_swipe.swipe_type == self.swipe_type:
-		 		return
-		
+		if(self._state.adding == True):
+			try:
+				latest_swipe = Swipe.objects.filter(user = self.user).order_by("-pk")[0]
+				if latest_swipe.swipe_type == self.swipe_type:
+					return
+			except IndexError:
+				#if we have no records for given user...
+				pass
+				
+
 		super(Swipe, self).save(*args, **kwargs)
 
 
