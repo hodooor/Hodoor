@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.db.models import Q
 from datetime import datetime, timezone, timedelta
@@ -169,6 +169,17 @@ class Swipe(models.Model):
 	def __str__(self):
 		return str(self.id) + " " + self.user.username + " " + self.swipe_type
 
+	def save(self, *args, **kwargs):
+		user_swipes = Swipe.objects.filter(user = self.user)
+		if user_swipes and self._state.adding == True:
+		 	latest_swipe = user_swipes.last()
+			
+		 	if latest_swipe.swipe_type == self.swipe_type:
+		 		return
+		
+		super(Swipe, self).save(*args, **kwargs)
+
+
 class Key(models.Model):
 	'''
 	Saves information data about keys.
@@ -187,9 +198,8 @@ class Key(models.Model):
 def post_process_swipes(sender=Swipe, **kwargs):
 	if kwargs['created']: # trigering only when swipe was created
 		
-		#print(" post_process_swipes trigered")
 		#swipe object that was just created
-		created_swipe = kwargs["instance"] 
+		created_swipe = kwargs["instance"]		
 		
 		if created_swipe.correction_of_swipe: 
 
@@ -231,5 +241,4 @@ def post_process_swipes(sender=Swipe, **kwargs):
 				if created_swipe.swipe_type == "OUT":
 					sess.duration = sess.session_duration()
 					sess.save()
-					#print("session finished")
 

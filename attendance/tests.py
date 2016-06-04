@@ -84,7 +84,6 @@ class SessionTestCase(TestCase):
 		session = Session.objects.get(id = 2)
 		self.create_swipe_new_swipe_with_time_offset(session,-1,"OUT")		
 		self.assertEqual(session.swipe_set.filter(swipe_type = "OUT").count(), 1)
-		print(session.swipe_set.all())
 	
 	def test_session_duration_is_recalculated_for_correcting_swipe(self):
 		session = Session.objects.get(id = 1)
@@ -98,4 +97,15 @@ class SessionTestCase(TestCase):
 		pass
 
 	def test_cant_break_swipes_integrity(self):
-		pass
+		s1 = Swipe.objects.create(user = User.objects.get(id= 1),
+		datetime = timezone.now() + timedelta(hours=1),
+		swipe_type = "IN")
+		id = s1.id + 1
+
+		s2 = Swipe.objects.create(
+		id = id,
+		user = User.objects.get(id= 1),
+		datetime = timezone.now() + timedelta(hours=2),
+		swipe_type = "IN")
+
+		self.assertFalse(Swipe.objects.all().filter(id = id))
