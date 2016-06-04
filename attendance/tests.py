@@ -111,12 +111,17 @@ class SwipeTestCase(TestCase):
 				swipe_type = "IN"
 			)
 		self.assertTrue(Swipe.objects.all().filter(id = 100))
-		s2 = Swipe.objects.create(
-			id = 101,
-			user = User.objects.get(id= 1),
-			datetime = timezone.now() + timedelta(hours=149),
-			swipe_type = "OUT"
-		)
+		try:
+			s2 = Swipe.objects.create(
+				id = 101,
+				user = User.objects.get(id= 1),
+				datetime = timezone.now() + timedelta(hours=149),
+				swipe_type = "OUT"
+			)
+			self.fail("We cant write new swipe with less datetime")
+		except ValueError:
+			pass
+
 		self.assertTrue(Swipe.objects.all().filter(id = 100))
 		self.assertFalse(Swipe.objects.all().filter(id = 101))
 
@@ -155,7 +160,11 @@ class SwipeTestCase(TestCase):
 		offset, id = 50, 50
 		
 		for tuple_assert in SWIPE_SEQUENCE:
-			for swipe_type in tuple_assert:
-				create_swipe(swipe_type, offset, id)
-				offset, id = offset + 1, id + 1
+			try:
+				for swipe_type in tuple_assert:
+					create_swipe(swipe_type, offset, id)
+					offset, id = offset + 1, id + 1
+				self.fail("It should be imposible to write this swipe_type")
+			except ValueError:
+					pass
 			self.assertFalse(Swipe.objects.all().filter(id = id))
