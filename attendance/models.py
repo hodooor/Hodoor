@@ -188,15 +188,21 @@ class Swipe(models.Model):
 		return str(self.id) + " " + self.user.username + " " + self.swipe_type
 
 	def save(self, *args, **kwargs):
-		if(self._state.adding == True):
+		if(self._state.adding and not self.correction_of_swipe):
 			try:
 				latest_swipe = Swipe.objects.filter(user = self.user).order_by("-pk")[0]
 
+
 				if self.swipe_type not in latest_swipe.get_next_allowed_types():
+					raise ValueError("Wrong swipe_type field")
+					return
+
+				if self.datetime < latest_swipe.datetime:
+					raise ValueError("Wrong datetime field")
 					return
 
 			except IndexError:
-				#we have no records for given user, this is faster than "if"
+				#we have no records for given user, this is probably faster than "if"
 				pass
 
 		super(Swipe, self).save(*args, **kwargs)

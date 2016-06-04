@@ -24,7 +24,7 @@ def dict_to_database(serializer_class, list_of_dict):
 
 class SessionTestCase(TestCase):
 	'''
-	Tests isolated Sessions and Swipes
+	Tests isolated Sessions
 	'''
 	def setUp(self):
 		
@@ -63,13 +63,12 @@ class SessionTestCase(TestCase):
 
 	def test_only_one_in_swipe_in_opened_session(self):
 		s1 = Swipe.objects.create(user = User.objects.get(id= 1),
-			datetime = timezone.now() + timedelta(hours=1),
+			datetime = timezone.now() + timedelta(hours=50),
 			swipe_type = "IN")
 		original_session = s1.session
 		self.assertTrue(s1.session)
-
 		s2 = Swipe.objects.create(user = User.objects.get(id= 1),
-			datetime = timezone.now() + timedelta(hours=2),
+			datetime = timezone.now() + timedelta(hours=60),
 			swipe_type = "IN",
 			correction_of_swipe = s1)
 
@@ -77,12 +76,12 @@ class SessionTestCase(TestCase):
 		
 	def test_only_one_in_swipe_in_closed_session(self):
 		session = Session.objects.get(id = 1)
-		self.create_swipe_new_swipe_with_time_offset(session,1.5,"IN")	
+		self.create_swipe_new_swipe_with_time_offset(session,50,"IN")
 		self.assertEqual(session.swipe_set.filter(swipe_type = "IN").count(), 1)
 
 	def test_only_one_swipe_out_closed_session(self):
 		session = Session.objects.get(id = 2)
-		self.create_swipe_new_swipe_with_time_offset(session,-1,"OUT")		
+		self.create_swipe_new_swipe_with_time_offset(session,-1,"OUT")
 		self.assertEqual(session.swipe_set.filter(swipe_type = "OUT").count(), 1)
 	
 	def test_session_duration_is_recalculated_for_correcting_swipe(self):
@@ -93,10 +92,45 @@ class SessionTestCase(TestCase):
 	def test_is_at_work(self):
 		pass
 	
-	def test_session_swipes_cant_break_time_integrity(self):
-		pass
+
+class SwipeTestCase(TestCase):
+	def setUp(self):
+		
+		self.USERS = USERS
+		self.SWIPES = SWIPES
+		self.SWIPE_TYPES = SWIPE_TYPES
+
+		dict_to_database(UserSerializer,self.USERS)
+		dict_to_database(SwipeSerializer,self.SWIPES)
+
+	def test_swipes_cant_break_time_integrity(self):
+		s1 = Swipe.objects.create(
+				id = 100,
+				user = User.objects.get(id= 1),
+				datetime = timezone.now() + timedelta(hours=150),
+				swipe_type = "IN"
+			)
+		self.assertTrue(Swipe.objects.all().filter(id = 100))
+		s2 = Swipe.objects.create(
+			id = 101,
+			user = User.objects.get(id= 1),
+			datetime = timezone.now() + timedelta(hours=149),
+			swipe_type = "OUT"
+		)
+		self.assertTrue(Swipe.objects.all().filter(id = 100))
+		self.assertFalse(Swipe.objects.all().filter(id = 101))
+
+	def test_allowed_types_returns_tupple(self):
+		in_return = Swipe.objects.filter(swipe_type = "IN")[0].get_next_allowed_types()
+		self.assertIn("tuple", str(type(in_return)))
+		in_return = Swipe.objects.filter(swipe_type = "OUT")[0].get_next_allowed_types()
+		self.assertIn("tuple", str(type(in_return)))
 
 	def test_cant_break_swipes_integrity(self):
+		"""
+		Only some sequences of swipes are allowed (IN after IN is not allowed 
+		and so on)
+		"""
 		def create_swipe(type, offset, id):
 			return Swipe.objects.create(
 				id = id,
@@ -118,16 +152,10 @@ class SessionTestCase(TestCase):
 			("FBR",),
 		]
 		
-		offset, id = 1, 50
+		offset, id = 50, 50
 		
 		for tuple_assert in SWIPE_SEQUENCE:
 			for swipe_type in tuple_assert:
 				create_swipe(swipe_type, offset, id)
 				offset, id = offset + 1, id + 1
 			self.assertFalse(Swipe.objects.all().filter(id = id))
-
-	def test_allowed_types_returns_tupple(self):
-		in_return = Swipe.objects.filter(swipe_type = "IN")[0].get_next_allowed_types()
-		self.assertIn("tuple", str(type(in_return)))
-		in_return = Swipe.objects.filter(swipe_type = "OUT")[0].get_next_allowed_types()
-		self.assertIn("tuple", str(type(in_return)))
