@@ -97,15 +97,43 @@ class SessionTestCase(TestCase):
 		pass
 
 	def test_cant_break_swipes_integrity(self):
-		s1 = Swipe.objects.create(user = User.objects.get(id= 1),
-		datetime = timezone.now() + timedelta(hours=1),
-		swipe_type = "IN")
-		id = s1.id + 1
+		def create_swipe(type, offset, id):
+			return Swipe.objects.create(
+				id = id,
+				user = User.objects.get(id= 1),
+				datetime = timezone.now() + timedelta(hours=offset),
+				swipe_type = type
+			)
+		
 
-		s2 = Swipe.objects.create(
-		id = id,
-		user = User.objects.get(id= 1),
-		datetime = timezone.now() + timedelta(hours=2),
-		swipe_type = "IN")
+		create_swipe("IN", 1, 50)
+		create_swipe("IN", 2, 51)
+		
+		create_swipe("OBR", 3, 52)
+		create_swipe("OBR", 4, 53)
+		
+		create_swipe("FBR", 5, 54)
+		create_swipe("FBR", 6, 55)
+		
+		create_swipe("OTR", 7, 56)
+		create_swipe("OTR", 8, 57)
+		
+		create_swipe("FTR", 9, 58)
+		create_swipe("FTR", 10, 59)
+		
+		create_swipe("OUT",11, 60)
+		create_swipe("OUT",12, 61)
 
-		self.assertFalse(Swipe.objects.all().filter(id = id))
+		self.assertTrue(Swipe.objects.all().filter(id = 50))
+		self.assertFalse(Swipe.objects.all().filter(id = 51))
+		self.assertFalse(Swipe.objects.all().filter(id = 53))
+		self.assertFalse(Swipe.objects.all().filter(id = 55))
+		self.assertFalse(Swipe.objects.all().filter(id = 57))
+		self.assertFalse(Swipe.objects.all().filter(id = 59))
+		self.assertFalse(Swipe.objects.all().filter(id = 61))
+
+	def test_allowed_types_returns_tupple(self):
+		in_return = Swipe.objects.filter(swipe_type = "IN")[0].get_next_allowed_types()
+		self.assertIn("tuple", str(type(in_return)))
+		in_return = Swipe.objects.filter(swipe_type = "OUT")[0].get_next_allowed_types()
+		self.assertIn("tuple", str(type(in_return)))

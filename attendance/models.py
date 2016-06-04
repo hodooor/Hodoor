@@ -165,6 +165,24 @@ class Swipe(models.Model):
 		blank = True,
 		null = True, #if blank, this swipe is the right one 
 		)
+	def get_next_allowed_types(self):
+		"""
+		Returns tupple of types that can be used in next swipe
+		"""
+		if self.swipe_type == "IN":
+			return "OBR", "OTR","OUT"
+		elif self.swipe_type == "OUT":
+			return "IN",
+		elif self.swipe_type == "OBR":
+			return "FBR",
+		elif self.swipe_type == "FBR":
+			return "OBR", "OTR","OUT",
+		elif self.swipe_type == "OTR":
+			return "FTR",
+		elif self.swipe_type == "FTR": 
+			return "OBR", "OTR","OUT"
+		else:
+			return "0"
 
 	def __str__(self):
 		return str(self.id) + " " + self.user.username + " " + self.swipe_type
@@ -173,12 +191,13 @@ class Swipe(models.Model):
 		if(self._state.adding == True):
 			try:
 				latest_swipe = Swipe.objects.filter(user = self.user).order_by("-pk")[0]
-				if latest_swipe.swipe_type == self.swipe_type:
+
+				if self.swipe_type not in latest_swipe.get_next_allowed_types():
 					return
+
 			except IndexError:
-				#if we have no records for given user...
+				#we have no records for given user, this is faster than "if"
 				pass
-				
 
 		super(Swipe, self).save(*args, **kwargs)
 
