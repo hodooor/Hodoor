@@ -29,7 +29,7 @@ router.register(r'keys',views.KeyViewSet)
 
 
 urlpatterns = [
-    url(r'^$', views.home_page, name = 'home'),
+    url(r'^$', views.home_page, name ='home'),
     url(r'^admin/', admin.site.urls),
     url(r'^', include(router.urls)),
     url(r'^plate/', include('django_spaghetti.urls')), 
