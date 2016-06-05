@@ -154,6 +154,17 @@ class NewVisitorTest(StaticLiveServerTestCase):
 			self.browser.current_url
 		)
 
+	def test_click_on_swipes(self):
+		user = UserFactory.create()
+		self.browser.find_element_by_class_name('a-logout').click()		
+		login_by_form(user.username,"password", self.browser)
+		self.browser.find_element_by_class_name('a-swipes').click()
+		
+		self.assertEqual(
+			self.server_url + "/swipes/" + user.username + "/",
+			self.browser.current_url
+		)
+
 	def test_user_cant_access_another_profile(self):
 		pass
 
@@ -168,14 +179,14 @@ class APITestCase(StaticLiveServerTestCase):
 		self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
 
 	def test_keys_are_available(self):
-		response = self.client.get("/keys/")
+		response = self.client.get("/api/keys/")
 		self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
 
 	def test_swipes_are_available(self):
-		response = self.client.get("/swipes/")
+		response = self.client.get("/api/swipes/")
 		self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
 
 	def test_swipe_can_be_posted(self):
 		data = {"user": self.user.id, "swipe_type": "IN", "datetime":"2016-06-04T13:40Z"}
-		response = self.client.post("/swipes/",data, format="json")
+		response = self.client.post("/api/swipes/",data, format="json")
 		self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.data)

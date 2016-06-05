@@ -66,5 +66,11 @@ def user(request, username):
 def sessionsuser(request, username):
 	if not user_check(request, username): 
 		return HttpResponse("Restricted to " + username)
-	context = {"ahoj":"nazdar"}
+	context = {}
 	return render(request, "attendance/sessions.html", context)
+
+def swipesuser(request, username):
+	if not user_check(request, username): 
+		return HttpResponse("Restricted to " + username)
+	context = {}
+	return render(request, "attendance/swipes.html", context)

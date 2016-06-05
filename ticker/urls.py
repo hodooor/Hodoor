@@ -22,10 +22,10 @@ from attendance import views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'swipes', views.SwipeViewSet)
+router.register(r'api/swipes', views.SwipeViewSet)
 
 router2 = routers.DefaultRouter()
-router.register(r'keys',views.KeyViewSet)
+router.register(r'api/keys',views.KeyViewSet)
 
 
 urlpatterns = [
@@ -38,4 +38,5 @@ urlpatterns = [
     url(r'^', include('django.contrib.auth.urls')),
     url(r'^user/(?P<username>[\w.@+-]+)/$', views.user, name='user'),
     url(r'^sessions/(?P<username>[\w.@+-]+)/$', views.sessionsuser, name='sessionsuser'),
+    url(r'^swipes/(?P<username>[\w.@+-]+)/$', views.swipesuser, name='swipesuser'),
 ]   

@@ -34,7 +34,8 @@
 						</a>
 					</li>
 					<li class="">
-						<a href="http://10.0.0.200:8000">
+						<a href="{% if user.is_authenticated %}{% url 'swipesuser' user.username %}{% else %}{% url 'login' %}{% endif %}", class="a-swipes">
+							<span class="glyphicon glyphicon-time" aria-hidden="true"</span>
 							<span class="glyphicon glyphicon-list-alt" aria-hidden="true"</span> Swipes
 						</a>
 					</li>
