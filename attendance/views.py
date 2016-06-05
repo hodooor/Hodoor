@@ -45,7 +45,8 @@ def sessions(request):
 	return render(request, "attendance/session_list.html", context)
 
 def user_check(request, username):
-	if request.user.username == username or request.user.is_superuser:
+	#superuser should be able to see all profiles
+	if request.user.get_username() == username or request.user.is_superuser:
 		return True
 	else:
 		return False
@@ -60,3 +61,10 @@ def user(request, username):
 				"session_list":s,
 				"hours_this_month": Session.objects.get_hours_this_month(u.id),}
 	return render(request, "attendance/user_page.html", context)
+
+#@login_required(login_url='/login/')
+def sessionsuser(request, username):
+	if not user_check(request, username): 
+		return HttpResponse("Restricted to " + username)
+	context = {"ahoj":"nazdar"}
+	return render(request, "attendance/sessions.html", context)

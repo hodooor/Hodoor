@@ -76,7 +76,11 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
 	def test_login_and_logut_users(self):
 		
-		user = UserFactory.create(first_name = "Ondřej", last_name= "Vičar", password = "admin1324")
+		user = UserFactory.create(
+			first_name = "Ondřej", 
+			last_name= "Vičar", 
+			password = "admin1324"
+		)
 		check_password("admin1324", user.password)
 		self.browser.get(self.server_url)
 
@@ -102,18 +106,56 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
 		user = UserFactory.create()
 
+		#logged out - just refreshing page
 		self.browser.get(self.server_url)
 		self.browser.find_element_by_class_name('navbar-brand').click()
-		self.assertEqual(self.server_url + "/login/?next=/",self.browser.current_url)
+		self.assertEqual(
+			self.server_url + "/login/?next=/",
+			self.browser.current_url
+		)
 
+		#login - logo taking us to profile page
 		login_by_form(user.username,"password", self.browser)
-		self.assertEqual(self.server_url + "/user/" + user.username + "/",self.browser.current_url
-
+		self.assertEqual(
+			self.server_url + "/user/" + user.username + "/",
+			self.browser.current_url
+		)
+		self.browser.find_element_by_class_name('navbar-brand').click()
+		self.assertEqual(
+			self.server_url + "/user/" + user.username + "/",
+			self.browser.current_url
+		)
 
 	def test_click_on_logout(self):
+
+		#logged out - just refreshing page 
 		self.browser.get(self.server_url)
 		self.browser.find_element_by_class_name('a-logout').click()
 		self.assertIn(self.server_url + "/login/",self.browser.current_url)
+
+
+		user = UserFactory.create()		
+		login_by_form(user.username,"password", self.browser)
+		self.assertEqual(
+			self.server_url + "/user/" + user.username + "/",
+			self.browser.current_url
+		)
+		self.browser.find_element_by_class_name('a-logout').click()
+		self.assertIn(self.server_url + "/login/",self.browser.current_url)
+
+
+	def test_click_on_sessions(self):
+		user = UserFactory.create()		
+		login_by_form(user.username,"password", self.browser)
+		self.browser.find_element_by_class_name('a-sessions').click()
+		
+		self.assertEqual(
+			self.server_url + "/sessions/" + user.username + "/",
+			self.browser.current_url
+		)
+
+	def test_user_cant_access_another_profile(self):
+		pass
 
 class APITestCase(StaticLiveServerTestCase):
 	'''

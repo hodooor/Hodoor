@@ -34,7 +34,8 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^plate/', include('django_spaghetti.urls')), 
     url(r'^', include(router2.urls)), 
-    url(r'^sessions/', views.sessions, name = "sessions"),
+    url(r'^sessions/$', views.sessions, name = "sessions"),
     url(r'^', include('django.contrib.auth.urls')),
     url(r'^user/(?P<username>[\w.@+-]+)/$', views.user, name='user'),
+    url(r'^sessions/(?P<username>[\w.@+-]+)/$', views.sessionsuser, name='sessionsuser'),
 ]   

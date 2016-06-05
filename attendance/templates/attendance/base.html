@@ -28,7 +28,8 @@
 			<div class="collapse navbar-collapse" id="topNavBar">
 				<ul class="nav navbar-nav">
 					<li class="">
-						<a href="http://10.0.0.200:8000">
+
+						<a href="{% if user.is_authenticated %}{% url 'sessionsuser' user.username %}{% else %}{% url 'login' %}{% endif %}", class="a-sessions">
 							<span class="glyphicon glyphicon-time" aria-hidden="true"</span> Sessions
 						</a>
 					</li>
