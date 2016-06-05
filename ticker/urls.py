@@ -21,22 +21,36 @@ from attendance import views
 
 from rest_framework import routers
 
-router = routers.DefaultRouter()
-router.register(r'api/swipes', views.SwipeViewSet)
+swipes_router = routers.DefaultRouter()
+swipes_router.register(r'api/swipes', views.SwipeViewSet)
 
-router2 = routers.DefaultRouter()
-router.register(r'api/keys',views.KeyViewSet)
+keys_router = routers.DefaultRouter()
+keys_router.register(r'api/keys',views.KeyViewSet)
 
 
 urlpatterns = [
+	#/
     url(r'^$', views.home_page, name ='home'),
+    
+    #/admin/
     url(r'^admin/', admin.site.urls),
-    url(r'^', include(router.urls)),
-    url(r'^plate/', include('django_spaghetti.urls')), 
-    url(r'^', include(router2.urls)), 
-    url(r'^sessions/$', views.sessions, name = "sessions"),
+    
+    #/api/swipes/
+    url(r'^', include(swipes_router.urls)),
+    #/api/keys/
+    url(r'^', include(keys_router.urls)), 
+    
+    #/plate/
+    url(r'^plate/', include('django_spaghetti.urls')),
+
+    #/login/  #/logout/ etc... https://docs.djangoproject.com/ja/1.9/topics/auth/default/
     url(r'^', include('django.contrib.auth.urls')),
+    
+    #/user/username/
     url(r'^user/(?P<username>[\w.@+-]+)/$', views.user, name='user'),
-    url(r'^sessions/(?P<username>[\w.@+-]+)/$', views.sessionsuser, name='sessionsuser'),
-    url(r'^swipes/(?P<username>[\w.@+-]+)/$', views.swipesuser, name='swipesuser'),
+    
+    #/sessions/username/
+    url(r'^sessions/(?P<username>[\w.@+-]+)/$', views.sessions, name='sessions'),
+    #/swipes/username/
+    url(r'^swipes/(?P<username>[\w.@+-]+)/$', views.swipes, name='swipes'),
 ]   

@@ -63,13 +63,13 @@ def user(request, username):
 	return render(request, "attendance/user_page.html", context)
 
 #@login_required(login_url='/login/')
-def sessionsuser(request, username):
+def sessions(request, username):
 	if not user_check(request, username): 
 		return HttpResponse("Restricted to " + username)
 	context = {}
 	return render(request, "attendance/sessions.html", context)
 
-def swipesuser(request, username):
+def swipes(request, username):
 	if not user_check(request, username): 
 		return HttpResponse("Restricted to " + username)
 	context = {}

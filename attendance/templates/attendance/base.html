@@ -29,12 +29,12 @@
 				<ul class="nav navbar-nav">
 					<li class="">
 
-						<a href="{% if user.is_authenticated %}{% url 'sessionsuser' user.username %}{% else %}{% url 'login' %}{% endif %}", class="a-sessions">
+						<a href="{% if user.is_authenticated %}{% url 'sessions' user.username %}{% else %}{% url 'login' %}{% endif %}", class="a-sessions">
 							<span class="glyphicon glyphicon-time" aria-hidden="true"</span> Sessions
 						</a>
 					</li>
 					<li class="">
-						<a href="{% if user.is_authenticated %}{% url 'swipesuser' user.username %}{% else %}{% url 'login' %}{% endif %}", class="a-swipes">
+						<a href="{% if user.is_authenticated %}{% url 'swipes' user.username %}{% else %}{% url 'login' %}{% endif %}", class="a-swipes">
 							<span class="glyphicon glyphicon-time" aria-hidden="true"</span>
 							<span class="glyphicon glyphicon-list-alt" aria-hidden="true"</span> Swipes
 						</a>
