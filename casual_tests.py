@@ -21,20 +21,8 @@ def print_doc_str_and_return_value(functions_iterable):
 	for function in functions_iterable:
 		print(function.__doc__.strip(), str(function()))
 
-s = Session.objects.all()
-if(s):
-	s = s[0]
-	dur = s.session_duration
-	over = s.session_duration_overall
-	num = s.num_of_breaks
-	bdur = s.breaks_duration
+from rest_framework.authtoken.models import Token
 
-	print_doc_str_and_return_value([dur,over,num,bdur])
-
-
-print(Session.objects.get_hours_this_month(1))
-print(Session.objects.get_hours_this_month(2))
-print(Session.objects.get_hours_this_month(3))
-print(Session.objects.get_hours_this_month(4))
-
+token = Token.objects.get(user=User.objects.get(id=1))
+print(token.key)
 

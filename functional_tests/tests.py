@@ -14,6 +14,7 @@ import sys
 import re
 from rest_framework.test import APIClient
 from unittest import skip
+from rest_framework.authtoken.models import Token
 
 def populate_database(what_pop):
 	what_pop.USERS = USERS
@@ -93,20 +94,21 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		self.assertEqual(color, "rgba(65, 118, 144, 1)")
 
 class APITestCase(StaticLiveServerTestCase): #works with TestCase or with --reverse flag during tests
+	def setUp(self):
+		self.user = User.objects.create(username = "ondrej.vicar", password = "user1234")
+		self.token = Token.objects.create(user=self.user)
+		self.client = APIClient()
+		self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
+
 	def test_keys_are_available(self):
-		client = APIClient()
-		response = client.get("/keys/")
-		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		response = self.client.get("/keys/")
+		self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
 
 	def test_swipes_are_available(self):
-		client = APIClient()
-		response = client.get("/swipes/")
-		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		response = self.client.get("/swipes/")
+		self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
 
 	def test_swipe_can_be_posted(self):
-		user = User.objects.create(username = "ondrej.vicar", password = "user1234")
-
-		client = APIClient()
-		data = {"user": user.id, "swipe_type": "IN", "datetime":"2016-06-04T13:40Z"}
+		data = {"user": self.user.id, "swipe_type": "IN", "datetime":"2016-06-04T13:40Z"}
 		response = self.client.post("/swipes/",data, format="json")
-		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+		self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.data)

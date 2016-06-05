@@ -8,6 +8,7 @@ from .models import Swipe, Key, Session
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.decorators import login_required
+from rest_framework import permissions
 
 @login_required(login_url='/login/')
 def home_page(request):
@@ -21,11 +22,13 @@ class SwipeViewSet(viewsets.ModelViewSet):
 	queryset = Swipe.objects.all().order_by("-datetime")[:20]
 	serializer_class = SwipeSerializer
 	http_method_names = ['post','get']
+	permission_classes = (permissions.IsAuthenticated,)
 
 class KeyViewSet(viewsets.ModelViewSet):
 	queryset = Key.objects.all()
 	serializer_class = KeySerializer
 	http_method_names = ['get',]
+	permission_classes = (permissions.IsAuthenticated,)
 
 def sessions(request):
 	sessions_with_swipes  = list()

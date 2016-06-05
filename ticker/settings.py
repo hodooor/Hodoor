@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'attendance',
     'rest_framework',
     'django_spaghetti',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -130,3 +131,9 @@ SPAGHETTI_SAUCE = {
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
