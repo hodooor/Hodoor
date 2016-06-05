@@ -101,7 +101,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 	def test_click_on_logout(self):
 		self.browser.get(self.server_url)
 		self.browser.find_element_by_class_name('a-logout').click()
-		self.assertEqual(self.server_url + "/logout/",self.browser.current_url)
+		self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
 class APITestCase(StaticLiveServerTestCase): #works with TestCase or with --reverse flag during tests
 	def setUp(self):
