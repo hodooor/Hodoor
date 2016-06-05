@@ -29,13 +29,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+	'attendance', # need to be before admin, so logout redirects to attendance
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
-    'attendance',
     'rest_framework',
     'django_spaghetti',
     'rest_framework.authtoken'

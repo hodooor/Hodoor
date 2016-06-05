@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-
 from django.core.urlresolvers import reverse
 from rest_framework import viewsets
 from .serializers import SwipeSerializer,UserSerializer,KeySerializer

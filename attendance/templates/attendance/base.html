@@ -22,7 +22,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class = "navbar-brand" href="{% url "home" %}">Hodoor</a>
+				<a class = "navbar-brand" href="{% url 'home' %}">Hodoor</a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="topNavBar">
@@ -41,9 +41,8 @@
 
 				<ul class="nav navbar-nav navbar-right">
 					<li class="">
-						<a href="http://10.0.0.200:8000/logout/">
-							<span class="glyphicon glyphicon-log-out" aria-hidden="true"</span> Logout
-						</a>
+						<a href="{%url 'logout' %}" class="a-logout">
+							<span class="glyphicon glyphicon-log-out" aria-hidden="true"</span> Logout</a>
 					</li>
 				</ul>
 			</div>
