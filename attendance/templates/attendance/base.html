@@ -32,19 +32,22 @@
 				<ul class="nav navbar-nav navbar-right">
 					<li class="">
 						<a href="{%url 'logout' %}?next=/" class="a-logout">
-						<span class="glyphicon glyphicon-log-out" aria-hidden="true"</span> Logout</a>
+							<span class="glyphicon glyphicon-log-out" aria-hidden="true"</span>
+							Logout
+						</a>
 					</li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li class="">
 						<a href="{% url 'sessions' user.username %}", class="a-sessions">
-							<span class="glyphicon glyphicon-time" aria-hidden="true"</span> Sessions
+							<span class="glyphicon glyphicon-time" aria-hidden="true"</span>
+							Sessions
 						</a>
 					</li>
 					<li class="">
 						<a href="{% url 'swipes' user.username %}", class="a-swipes">
-							<span class="glyphicon glyphicon-time" aria-hidden="true"</span>
-							<span class="glyphicon glyphicon-list-alt" aria-hidden="true"</span> Swipes
+							<span class="glyphicon glyphicon-list-alt" aria-hidden="true"</span>
+							Swipes
 						</a>
 					</li>
 				</ul>
