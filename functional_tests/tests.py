@@ -15,6 +15,7 @@ import re
 from rest_framework.test import APIClient
 from unittest import skip
 from rest_framework.authtoken.models import Token
+from selenium.webdriver.support.wait import WebDriverWait
 
 def populate_database(what_pop):
 	what_pop.USERS = USERS
@@ -30,6 +31,15 @@ def populate_database(what_pop):
 	for user in users:
 		user.set_password(what_pop.TEST_PASSWORD)
 		user.save()
+
+def login_by_form(usr, pswd, webdriver):
+	username = webdriver.find_element_by_id("id_username")
+	password = webdriver.find_element_by_id("id_password")
+
+	username.send_keys(usr)
+	password.send_keys(pswd)
+
+	webdriver.find_element_by_css_selector("input[value='login']").click()
 
 class NewVisitorTest(StaticLiveServerTestCase):
 	
@@ -63,24 +73,18 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		self.assertIn("login", header_text)
 
 	def test_login_and_logut_users(self):
-		from selenium.webdriver.support.wait import WebDriverWait
+		
 		timeout = 2
 		populate_database(self) #only local server
 
 		for user in self.USERS[:1]:
 			self.browser.get(self.server_url)
-			#print(type(self.live_server_url))
-			username = self.browser.find_element_by_id("id_username")
-			password = self.browser.find_element_by_id("id_password")
 			
-			username.send_keys(user["username"])
-			password.send_keys(self.TEST_PASSWORD)
-			
-			self.browser.find_element_by_css_selector("input[value='login']").click()
-			WebDriverWait(self.browser, timeout).until( lambda driver: driver.find_element_by_tag_name('body'))
-			
+			login_by_form(user['username'],self.TEST_PASSWORD, self.browser)
+
 			sessions_header = self.browser.find_element_by_tag_name("h1").text
 			self.assertIn("Profile", sessions_header)
+			self.assertEqual(self.server_url + "/user/" + user['username']+ "/",self.browser.current_url)
 			self.browser.get("%s%s" % (self.server_url, '/logout/'))
 			WebDriverWait(self.browser, timeout).until( lambda driver: driver.find_element_by_tag_name('body'))
 			self.assertIn('Logged out', self.browser.title)
@@ -93,15 +97,27 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
 		self.assertEqual(color, "rgba(65, 118, 144, 1)")
 
-	def test_click_on_logo_returns_index_page(self):
+	def test_click_on_logo_returns_home_page(self):
+
+		#us = User.objects.create(username = "ondrej.vicar", password = "user1234")
+
 		self.browser.get(self.server_url)
 		self.browser.find_element_by_class_name('navbar-brand').click()
 		self.assertEqual(self.server_url + "/login/?next=/",self.browser.current_url)
+		#self.browser.get(self.server_url)
+		#login_by_form(us.username,us.password, self.browser)
+		#self.assertEqual(self.server_url + "/user/" + us.username + "/",self.browser.current_url)
+		#pass
+
 
 	def test_click_on_logout(self):
 		self.browser.get(self.server_url)
 		self.browser.find_element_by_class_name('a-logout').click()
 		self.assertIn(self.server_url + "/login/",self.browser.current_url)
+
+
+
+
 
 class APITestCase(StaticLiveServerTestCase): #works with TestCase or with --reverse flag during tests
 	def setUp(self):
