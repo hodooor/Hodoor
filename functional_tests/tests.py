@@ -1,11 +1,11 @@
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase, LiveServerTestCase
 from selenium import webdriver
 from const_data import USERS, SWIPES, SWIPE_TYPES
 from attendance.tests import dict_to_database
 from attendance.serializers import UserSerializer, SwipeSerializer
 from django.contrib.auth.models import User
 from django.conf import settings
-from attendance.models import Key
+from attendance.models import Key, Swipe
 from selenium.webdriver.support.wait import WebDriverWait
 from django.test.utils import override_settings
 from django.test import TestCase
@@ -31,7 +31,7 @@ def populate_database(what_pop):
 		user.save()
 
 class NewVisitorTest(StaticLiveServerTestCase):
-
+	
 	@classmethod
 	def setUpClass(cls):
 		for arg in sys.argv:
@@ -64,7 +64,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 	def test_login_and_logut_users(self):
 		from selenium.webdriver.support.wait import WebDriverWait
 		timeout = 2
-
+		print(Swipe.objects.all())
 		populate_database(self) #only local server
 
 		for user in self.USERS[:1]:
@@ -93,8 +93,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
 		self.assertEqual(color, "rgba(65, 118, 144, 1)")
 
-class APITestCase(StaticLiveServerTestCase):
-
+class APITestCase(TestCase): #works with TestCase or with --reverse flag during tests
 	def test_keys_are_available(self):
 		client = APIClient()
 		response = client.get("/keys/")
@@ -106,10 +105,9 @@ class APITestCase(StaticLiveServerTestCase):
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 	def test_swipe_can_be_posted(self):
-		user = User.objects.create(username = "ondrej.vicar")
+		user = User.objects.create(username = "ondrej.vicar", password = "user1234")
 
 		client = APIClient()
 		data = {"user": user.id, "swipe_type": "IN", "datetime":"2016-06-04T13:40Z"}
 		response = self.client.post("/swipes/",data, format="json")
 		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-		print(response.data)

@@ -32,6 +32,7 @@ class SessionTestCase(TestCase):
 		self.SWIPES = SWIPES
 		self.SWIPE_TYPES = SWIPE_TYPES
 
+		print(User.objects.all())
 		dict_to_database(UserSerializer,self.USERS)
 		dict_to_database(SwipeSerializer,self.SWIPES)
 
