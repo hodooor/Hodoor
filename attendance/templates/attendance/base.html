@@ -28,6 +28,7 @@
 			<div class="collapse navbar-collapse" id="topNavBar">
 				
 				{% if user.is_authenticated %}
+				<p class="navbar-text navbar-right">{{user.username}}</p> 
 				<ul class="nav navbar-nav navbar-right">
 					<li class="">
 						<a href="{%url 'logout' %}?next=/" class="a-logout">
