@@ -17,6 +17,7 @@ from unittest import skip
 from rest_framework.authtoken.models import Token
 from selenium.webdriver.support.wait import WebDriverWait
 from attendance.factories import UserFactory
+from django.contrib.auth.hashers import check_password
 
 def populate_database(what_pop):
 	what_pop.USERS = USERS
@@ -75,11 +76,12 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
 	def test_login_and_logut_users(self):
 		
-		timeout = 2
-		user = UserFactory.create(first_name = "Ondřej", last_name= "Vičar")
+		user = UserFactory.create(first_name = "Ondřej", last_name= "Vičar", password = "admin1324")
+		check_password("admin1324", user.password)
 		self.browser.get(self.server_url)
+
 		
-		login_by_form(user.username,"password", self.browser)
+		login_by_form(user.username,"admin1324", self.browser)
 
 		sessions_header = self.browser.find_element_by_tag_name("h1").text
 	
@@ -98,15 +100,14 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
 	def test_click_on_logo_returns_home_page(self):
 
-		#us = User.objects.create(username = "ondrej.vicar", password = "user1234")
+		user = UserFactory.create()
 
 		self.browser.get(self.server_url)
 		self.browser.find_element_by_class_name('navbar-brand').click()
 		self.assertEqual(self.server_url + "/login/?next=/",self.browser.current_url)
-		#self.browser.get(self.server_url)
-		#login_by_form(us.username,us.password, self.browser)
-		#self.assertEqual(self.server_url + "/user/" + us.username + "/",self.browser.current_url)
-		#pass
+
+		login_by_form(user.username,"password", self.browser)
+		self.assertEqual(self.server_url + "/user/" + user.username + "/",self.browser.current_url
 
 
 	def test_click_on_logout(self):
@@ -114,9 +115,12 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		self.browser.find_element_by_class_name('a-logout').click()
 		self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
-class APITestCase(StaticLiveServerTestCase): #works with TestCase or with --reverse flag during tests
+class APITestCase(StaticLiveServerTestCase):
+	'''
+	Testing API for posting and receiving swipes - for clients
+	'''
 	def setUp(self):
-		self.user = User.objects.create(username = "ondrej.vicar", password = "user1234")
+		self.user = UserFactory.create()
 		self.token = Token.objects.create(user=self.user)
 		self.client = APIClient()
 		self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
