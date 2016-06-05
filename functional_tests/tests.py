@@ -64,7 +64,6 @@ class NewVisitorTest(StaticLiveServerTestCase):
 	def test_login_and_logut_users(self):
 		from selenium.webdriver.support.wait import WebDriverWait
 		timeout = 2
-		print(Swipe.objects.all())
 		populate_database(self) #only local server
 
 		for user in self.USERS[:1]:
@@ -93,7 +92,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
 		self.assertEqual(color, "rgba(65, 118, 144, 1)")
 
-class APITestCase(TestCase): #works with TestCase or with --reverse flag during tests
+class APITestCase(StaticLiveServerTestCase): #works with TestCase or with --reverse flag during tests
 	def test_keys_are_available(self):
 		client = APIClient()
 		response = client.get("/keys/")
