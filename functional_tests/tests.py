@@ -16,6 +16,7 @@ from rest_framework.test import APIClient
 from unittest import skip
 from rest_framework.authtoken.models import Token
 from selenium.webdriver.support.wait import WebDriverWait
+from attendance.factories import UserFactory
 
 def populate_database(what_pop):
 	what_pop.USERS = USERS
@@ -75,19 +76,17 @@ class NewVisitorTest(StaticLiveServerTestCase):
 	def test_login_and_logut_users(self):
 		
 		timeout = 2
-		populate_database(self) #only local server
+		user = UserFactory.create(first_name = "Ondřej", last_name= "Vičar")
+		self.browser.get(self.server_url)
+		
+		login_by_form(user.username,"password", self.browser)
 
-		for user in self.USERS[:1]:
-			self.browser.get(self.server_url)
-			
-			login_by_form(user['username'],self.TEST_PASSWORD, self.browser)
-
-			sessions_header = self.browser.find_element_by_tag_name("h1").text
-			self.assertIn("Profile", sessions_header)
-			self.assertEqual(self.server_url + "/user/" + user['username']+ "/",self.browser.current_url)
-			self.browser.get("%s%s" % (self.server_url, '/logout/'))
-			WebDriverWait(self.browser, timeout).until( lambda driver: driver.find_element_by_tag_name('body'))
-			self.assertIn('Logged out', self.browser.title)
+		sessions_header = self.browser.find_element_by_tag_name("h1").text
+	
+		self.assertIn("Profile", sessions_header)
+		self.assertEqual(self.server_url + "/user/" + user.username+ "/",self.browser.current_url)
+		self.browser.get("%s%s" % (self.server_url, '/logout/'))
+		
 
 	def test_admin_layout_and_styling(self):
 		self.browser.get(self.server_url+"/admin/")
@@ -114,10 +113,6 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		self.browser.get(self.server_url)
 		self.browser.find_element_by_class_name('a-logout').click()
 		self.assertIn(self.server_url + "/login/",self.browser.current_url)
-
-
-
-
 
 class APITestCase(StaticLiveServerTestCase): #works with TestCase or with --reverse flag during tests
 	def setUp(self):

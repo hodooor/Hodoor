@@ -21,8 +21,10 @@ def print_doc_str_and_return_value(functions_iterable):
 	for function in functions_iterable:
 		print(function.__doc__.strip(), str(function()))
 
-from rest_framework.authtoken.models import Token
+from attendance.factories import UserFactory
 
-token = Token.objects.get(user=User.objects.get(id=1))
-print(token.key)
-
+user = UserFactory(first_name = "Ondřej", last_name = "Vičar")
+print(user.id, user.username, user.email, user.password)
+print (type(user))
+user = UserFactory(first_name = "Tomáš", last_name = "Matějka")
+print(user.id, user.username, user.email, user.password)
