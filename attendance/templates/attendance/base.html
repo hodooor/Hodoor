@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Ticker</title>
+    <title>Hodoor</title>
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/base.css" rel="stylesheet">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -26,27 +26,28 @@
 			</div>
 
 			<div class="collapse navbar-collapse" id="topNavBar">
-				<ul class="nav navbar-nav">
+				
+				{% if user.is_authenticated %}
+				<ul class="nav navbar-nav navbar-right">
 					<li class="">
-
-						<a href="{% if user.is_authenticated %}{% url 'sessions' user.username %}{% else %}{% url 'login' %}{% endif %}", class="a-sessions">
+						<a href="{%url 'logout' %}?next=/" class="a-logout">
+						<span class="glyphicon glyphicon-log-out" aria-hidden="true"</span> Logout</a>
+					</li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li class="">
+						<a href="{% url 'sessions' user.username %}", class="a-sessions">
 							<span class="glyphicon glyphicon-time" aria-hidden="true"</span> Sessions
 						</a>
 					</li>
 					<li class="">
-						<a href="{% if user.is_authenticated %}{% url 'swipes' user.username %}{% else %}{% url 'login' %}{% endif %}", class="a-swipes">
+						<a href="{% url 'swipes' user.username %}", class="a-swipes">
 							<span class="glyphicon glyphicon-time" aria-hidden="true"</span>
 							<span class="glyphicon glyphicon-list-alt" aria-hidden="true"</span> Swipes
 						</a>
 					</li>
 				</ul>
-
-				<ul class="nav navbar-nav navbar-right">
-					<li class="">
-						<a href="{%url 'logout' %}?next=/" class="a-logout">
-							<span class="glyphicon glyphicon-log-out" aria-hidden="true"</span> Logout</a>
-					</li>
-				</ul>
+				{% endif %}
 			</div>
 		</div>
 	</nav>
