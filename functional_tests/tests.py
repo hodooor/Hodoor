@@ -68,7 +68,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		self.browser.get(self.server_url)
 
 		#page title is ticker
-		self.assertIn('Ticker', self.browser.title)
+		self.assertIn('Hodoor', self.browser.title)
 
 		#ẅe should see login page
 		header_text = self.browser.find_element_by_tag_name('p').text
@@ -91,7 +91,9 @@ class NewVisitorTest(StaticLiveServerTestCase):
 	
 		self.assertIn("Profile", sessions_header)
 		self.assertEqual(self.server_url + "/user/" + user.username+ "/",self.browser.current_url)
-		self.browser.get("%s%s" % (self.server_url, '/logout/'))
+		self.browser.find_element_by_class_name('a-logout').click()
+		header_text = self.browser.find_element_by_tag_name('p').text
+		self.assertIn("login", header_text)
 		
 
 	def test_admin_layout_and_styling(self):
@@ -125,14 +127,11 @@ class NewVisitorTest(StaticLiveServerTestCase):
 			self.server_url + "/user/" + user.username + "/",
 			self.browser.current_url
 		)
+		self.browser.find_element_by_class_name('a-logout').click()	
+		header_text = self.browser.find_element_by_tag_name('p').text
+		self.assertIn("login", header_text)
 
 	def test_click_on_logout(self):
-
-		#logged out - just refreshing page 
-		self.browser.get(self.server_url)
-		self.browser.find_element_by_class_name('a-logout').click()
-		self.assertIn(self.server_url + "/login/",self.browser.current_url)
-
 
 		user = UserFactory.create()		
 		login_by_form(user.username,"password", self.browser)
@@ -153,10 +152,13 @@ class NewVisitorTest(StaticLiveServerTestCase):
 			self.server_url + "/sessions/" + user.username + "/",
 			self.browser.current_url
 		)
+		self.browser.find_element_by_class_name('a-logout').click()
+		header_text = self.browser.find_element_by_tag_name('p').text
+		self.assertIn("login", header_text)
 
 	def test_click_on_swipes(self):
 		user = UserFactory.create()
-		self.browser.find_element_by_class_name('a-logout').click()		
+			
 		login_by_form(user.username,"password", self.browser)
 		self.browser.find_element_by_class_name('a-swipes').click()
 		
@@ -164,6 +166,9 @@ class NewVisitorTest(StaticLiveServerTestCase):
 			self.server_url + "/swipes/" + user.username + "/",
 			self.browser.current_url
 		)
+		self.browser.find_element_by_class_name('a-logout').click()
+		header_text = self.browser.find_element_by_tag_name('p').text
+		self.assertIn("login", header_text)	
 
 	def test_user_cant_access_another_profile(self):
 		pass
