@@ -171,6 +171,18 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		self.assertIn("login", header_text)	
 
 	def test_user_cant_access_another_profile(self):
+		user1 = UserFactory.create()
+		user2 = UserFactory.create()
+		login_by_form(user1.username,"password", self.browser)
+		self.browser.get(self.server_url + "/sessions/" + user2.username + "/")
+		self.assertIn("Restricted", self.browser.page_source)
+		self.browser.get(self.server_url + "/swipes/" + user2.username + "/")
+		self.assertIn("Restricted", self.browser.page_source)
+		self.browser.get(self.server_url + "/user/" + user2.username + "/")
+		self.assertIn("Restricted", self.browser.page_source)			
+
+
+	def test_admin_can_acces_another_profile(self):
 		pass
 
 class APITestCase(StaticLiveServerTestCase):

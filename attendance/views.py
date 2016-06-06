@@ -62,7 +62,7 @@ def user(request, username):
 				"hours_this_month": Session.objects.get_hours_this_month(u.id),}
 	return render(request, "attendance/user_page.html", context)
 
-#@login_required(login_url='/login/')
+@login_required(login_url='/login/')
 def sessions(request, username):
 	if not user_check(request, username): 
 		return HttpResponse("Restricted to " + username)
