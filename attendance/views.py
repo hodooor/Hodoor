@@ -46,7 +46,7 @@ def sessions(request):
 
 def user_check(request, username):
 	#superuser should be able to see all profiles
-	if request.user.get_username() == username or request.user.is_superuser:
+	if request.user.get_username() == username or request.user.is_superuser or request.user.is_staff:
 		return True
 	else:
 		return False

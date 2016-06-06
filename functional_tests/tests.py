@@ -180,10 +180,20 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		self.assertIn("Restricted", self.browser.page_source)
 		self.browser.get(self.server_url + "/user/" + user2.username + "/")
 		self.assertIn("Restricted", self.browser.page_source)			
+		self.browser.get(self.server_url + "/logout/")
+		self.assertIn("Logged out", self.browser.page_source)
 
-
-	def test_admin_can_acces_another_profile(self):
-		pass
+	def test_admin_can_access_another_profile(self):
+		user1 = UserFactory.create(
+			first_name = "Fratišek", 
+			last_name= "Vičar", 
+			is_staff = True,
+		)
+		user2 = UserFactory.create()
+		self.browser.get(self.server_url)
+		login_by_form(user1.username,"password", self.browser)
+		self.browser.get(self.server_url + "/user/" + user2.username + "/")
+		self.assertIn("Hours", self.browser.page_source)
 
 class APITestCase(StaticLiveServerTestCase):
 	'''

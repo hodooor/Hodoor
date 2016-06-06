@@ -16,3 +16,5 @@ class UserFactory(DjangoModelFactory):
 	username = lazy_attribute(lambda o: slugify(o.first_name) + "." + slugify(o.last_name))
 	email = lazy_attribute(lambda o: o.username + "@eledus.cz")
 	password = PostGenerationMethodCall('set_password', 'password')
+	is_staff = lazy_attribute(lambda o: False)
+	is_superuser = lazy_attribute(lambda o: False)
