@@ -43,6 +43,9 @@ urlpatterns = [
     #/plate/
     url(r'^plate/', include('django_spaghetti.urls')),
 
+    url(r'^logout/$', 'django.contrib.auth.views.logout',
+    {'next_page': '/login/'}),
+
     #/login/  #/logout/ etc... https://docs.djangoproject.com/ja/1.9/topics/auth/default/
     url(r'^', include('django.contrib.auth.urls')),
     
