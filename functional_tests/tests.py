@@ -92,8 +92,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		self.assertIn("Profile", sessions_header)
 		self.assertEqual(self.server_url + "/user/" + user.username+ "/",self.browser.current_url)
 		self.browser.find_element_by_class_name('a-logout').click()
-		header_text = self.browser.find_element_by_tag_name('p').text
-		self.assertIn("login", header_text)
+		self.assertIn(self.server_url + "/login/",self.browser.current_url)
 		
 
 	def test_admin_layout_and_styling(self):
@@ -128,8 +127,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 			self.browser.current_url
 		)
 		self.browser.find_element_by_class_name('a-logout').click()	
-		header_text = self.browser.find_element_by_tag_name('p').text
-		self.assertIn("login", header_text)
+		self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
 	def test_click_on_logout(self):
 
@@ -153,8 +151,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 			self.browser.current_url
 		)
 		self.browser.find_element_by_class_name('a-logout').click()
-		header_text = self.browser.find_element_by_tag_name('p').text
-		self.assertIn("login", header_text)
+		self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
 	def test_click_on_swipes(self):
 		user = UserFactory.create()
@@ -167,8 +164,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 			self.browser.current_url
 		)
 		self.browser.find_element_by_class_name('a-logout').click()
-		header_text = self.browser.find_element_by_tag_name('p').text
-		self.assertIn("login", header_text)	
+		self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
 	def test_user_cant_access_another_profile(self):
 		user1 = UserFactory.create()
@@ -181,7 +177,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		self.browser.get(self.server_url + "/user/" + user2.username + "/")
 		self.assertIn("Restricted", self.browser.page_source)			
 		self.browser.get(self.server_url + "/logout/")
-		self.assertIn("Logged out", self.browser.page_source)
+		self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
 	def test_admin_can_access_another_profile(self):
 		user1 = UserFactory.create(

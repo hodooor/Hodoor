@@ -18,7 +18,7 @@ from django.contrib import admin
 
 
 from attendance import views
-
+from django.contrib.auth.views import logout
 from rest_framework import routers
 
 swipes_router = routers.DefaultRouter()
@@ -43,8 +43,7 @@ urlpatterns = [
     #/plate/
     url(r'^plate/', include('django_spaghetti.urls')),
 
-    url(r'^logout/$', 'django.contrib.auth.views.logout',
-    {'next_page': '/login/'}),
+    url(r'^logout/$', logout,{'next_page': '/login/'}),
 
     #/login/  #/logout/ etc... https://docs.djangoproject.com/ja/1.9/topics/auth/default/
     url(r'^', include('django.contrib.auth.urls')),
