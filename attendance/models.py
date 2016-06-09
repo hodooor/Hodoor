@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.db.models import Q
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone, timedelta, date
 from django.db.models import Sum
 
 class SessionManager(models.Manager):
@@ -115,7 +115,10 @@ class Session(models.Model):
 			return True
 		else:
 			return False
-
+	def get_date(self):
+		in_datetime = self.swipe_set.all()[0].datetime
+		return in_datetime
+		
 	def __str__(self):
 		return str(self.id) + " " + str(self.user)
 

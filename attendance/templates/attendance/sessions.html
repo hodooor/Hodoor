@@ -1,5 +1,8 @@
 {% extends 'attendance/base.html' %}
-{% block header_text %}{{ user.username }} Sessions{% endblock %}
+{% block header_text %}
+{{ user.username }} Sessions 
+{{month}}-{{year}}
+{% endblock %}
 {% block content %}
 {% endblock %}
 
@@ -19,7 +22,7 @@
 <tbody>
 {% for session in sessions%}
         <tr>	
-        	<td>{{session.id }}</td>
+        	<td>{{session.get_date|date:'d.m.'}}</td>
         	<td>
         		<table class = "table-condensed">
         			{% for sep in session.projectseparation_set.all %}
@@ -43,7 +46,7 @@
         	</td> 
         	<td>{{ session.duration }}</td> 
         	<td>{{ session.breaks_duration }}</td> 
-        	<td>{{ session.id }}</td>
+        	<td>{{ session.is_session_complete |yesno:"Complete, Open" }}</td>
         	<td>{{ session.id }}</td>
         </tr>
 {% endfor %}

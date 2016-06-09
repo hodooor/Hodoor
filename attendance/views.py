@@ -73,6 +73,7 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
 	sessions = Session.objects.filter(user__username = username)
 	context = {
 		"sessions":sessions,
-		
+		"year":year,
+		"month":month
 	}
 	return render(request, "attendance/sessions.html", context)

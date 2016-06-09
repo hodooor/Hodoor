@@ -92,6 +92,14 @@ class SessionTestCase(TestCase):
 	def test_is_at_work(self):
 		pass
 	
+	def test_get_date(self):
+		session = Session.objects.get(id = 1)
+		swipe = Swipe.objects.get(id = 1)
+
+		self.assertEqual(swipe.swipe_type, "IN")
+		self.assertEqual(session, swipe.session)
+		self.assertEqual("<class 'datetime.datetime'>", str(type(session.get_date())))
+		self.assertEqual(session.get_date(), swipe.datetime)
 
 class SwipeTestCase(TestCase):
 	def setUp(self):
