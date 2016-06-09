@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from rest_framework import viewsets
@@ -77,3 +77,17 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
 		"month":month
 	}
 	return render(request, "attendance/sessions.html", context)
+
+@login_required(login_url='/login/')
+def session_detail(request, username, id):
+	if not user_check(request, username): 
+		return HttpResponse("Restricted to " + username)
+	session= get_object_or_404(Session, pk = int(id))
+	
+	if session.user.username == username: #write test for this!!
+		context = {
+			"session":session
+		}
+		return render(request, "attendance/session_detail.html", context)
+	else:
+		return HttpResponse("Restricted to " + username) 
