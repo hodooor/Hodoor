@@ -3,34 +3,6 @@
 Profile
 {% endblock %}
 
-{% block table%}
-	  	<thead>
-	     <tr>
-	    	<th>ID</th>
-
-	    	<th>DESCRIPTION</th>
-	    	<th>DATE</th>
-	    	<th>NUMBER OF BREAKS</th>
-	    	<th>BREAKS DURATION</th>
-	    	<th>DURATION OVERALL</th>
-	    	<th>DURATION</th>
-	    	<th>SESSION COMPLETE</th>
-
-	  	</tr>
-	  	</thead>
-        {% for session in session_list%}
-        <tr>	
-        		<td>{{ session.id }}</td> 
-            	<td>{{ session.description }}</td>
-            	<td></td>
-            	<td>{{ session.num_of_breaks }}</td>
-            	<td>{{ session.breaks_duration }}</td>
-            	<td>{{ session.session_duration_overall }}</td>
-            	<td>{{ session.session_duration }}</td>
-            	<td>{{ session.is_session_complete|yesno:"Yes,No" }}</td>
-        </tr>
-        {% endfor %}
-{% endblock %}
 {% block content %}
 <h3>{{user.username}}</h3>
 <h4>Hours this month: {{ hours_this_month|floatformat:2}}</h4>

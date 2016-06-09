@@ -67,10 +67,8 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		
 		self.browser.get(self.server_url)
 
-		#page title is ticker
 		self.assertIn('Hodoor', self.browser.title)
 
-		#ẅe should see login page
 		header_text = self.browser.find_element_by_tag_name('p').text
 		self.assertIn("login", header_text)
 

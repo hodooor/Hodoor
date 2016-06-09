@@ -4,5 +4,28 @@
 {% endblock %}
 
 {% block table %}
-
+<thead>
+	     <tr>
+	    	<th>DATE</th>
+	    	<th>PROJECT</th>
+	    	<th>DESCRIPTION</th>
+	    	<th>DURATION</th>
+	    	<th>BREAKS</th>>
+	    	<th>OVERALL DURATION</th>
+	    	<th>STATUS</th>
+	    	<th>ID</th>
+	  	</tr>
+	  	</thead>
+    <!--    {% for session in session_list%}
+        <tr>	
+        		<td>{{ session.id }}</td> 
+            	<td>{{ session.description }}</td>
+            	<td></td>
+            	<td>{{ session.num_of_breaks }}</td>
+            	<td>{{ session.breaks_duration }}</td>
+            	<td>{{ session.session_duration_overall }}</td>
+            	<td>{{ session.session_duration }}</td>
+            	<td>{{ session.is_session_complete|yesno:"Yes,No" }}</td>
+        </tr>
+        {% endfor %}-->
 {% endblock %}
