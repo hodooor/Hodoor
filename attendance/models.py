@@ -134,7 +134,9 @@ class ProjectSeparation(models.Model):
 	)
 	#maybe entered in percentages
 	time_spend = models.DurationField() 
-
+	
+	def __str__(self):
+		return  "Session: " + str(self.session) + " Project: " + str(self.project)
 class Swipe(models.Model):
 	'''
 	Swipes are individual key scans of each user

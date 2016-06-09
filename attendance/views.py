@@ -29,20 +29,20 @@ class KeyViewSet(viewsets.ModelViewSet):
 	http_method_names = ['get',]
 	permission_classes = (permissions.IsAuthenticated,)
 
-def sessions(request):
-	sessions_with_swipes  = list()
-	sessions = Session.objects.all()
+# def sessions(request):
+# 	sessions_with_swipes  = list()
+# 	sessions = Session.objects.all()
 	
-	for session in sessions:
-		sessions_with_swipes.append([session, session.swipe_set.all()])
+# 	for session in sessions:
+# 		sessions_with_swipes.append([session, session.swipe_set.all()])
 
-	print(sessions_with_swipes)
+# 	print(sessions_with_swipes)
 
-	session_list = Session.objects.all()
-	context = {
-				"session_list": session_list,
-				"session_with_swipes": sessions_with_swipes,}
-	return render(request, "attendance/session_list.html", context)
+# 	session_list = Session.objects.all()
+# 	context = {
+# 				"session_list": session_list,
+# 				"session_with_swipes": sessions_with_swipes,}
+# 	return render(request, "attendance/session_list.html", context)
 
 def user_check(request, username):
 	#superuser should be able to see all profiles
@@ -66,7 +66,11 @@ def user(request, username):
 def sessions(request, username):
 	if not user_check(request, username): 
 		return HttpResponse("Restricted to " + username)
-	context = {}
+	sessions = Session.objects.filter(user__username = username)
+	context = {
+		"sessions":sessions,
+		
+	}
 	return render(request, "attendance/sessions.html", context)
 
 def swipes(request, username):

@@ -4,28 +4,50 @@
 {% endblock %}
 
 {% block table %}
-<thead>
+<thead class = "thead-inverse">
 	     <tr>
 	    	<th>DATE</th>
 	    	<th>PROJECT</th>
+	    	<th>TIME SPEND</th>
 	    	<th>DESCRIPTION</th>
 	    	<th>DURATION</th>
 	    	<th>BREAKS</th>>
-	    	<th>OVERALL DURATION</th>
 	    	<th>STATUS</th>
 	    	<th>ID</th>
 	  	</tr>
-	  	</thead>
-    <!--    {% for session in session_list%}
+</thead>
+<tbody>
+{% for session in sessions%}
         <tr>	
-        		<td>{{ session.id }}</td> 
-            	<td>{{ session.description }}</td>
-            	<td></td>
-            	<td>{{ session.num_of_breaks }}</td>
-            	<td>{{ session.breaks_duration }}</td>
-            	<td>{{ session.session_duration_overall }}</td>
-            	<td>{{ session.session_duration }}</td>
-            	<td>{{ session.is_session_complete|yesno:"Yes,No" }}</td>
+        	<td>{{session.id }}</td>
+        	<td>
+        		<table class = "table-condensed">
+        			{% for sep in session.projectseparation_set.all %}
+        			<tr><td>{{sep.project.name}}</td></tr>
+        			{% endfor %}
+        		</table>
+        	</td>
+        	<td>
+        		<table class = "table-condensed">
+        			{% for sep in session.projectseparation_set.all %}
+        			<tr><td>{{sep.time_spend}}</td></tr>
+        			{% endfor %}
+        		</table>
+        	</td>  
+        	<td>
+        		<table class = "table-condensed">
+        			{% for sep in session.projectseparation_set.all %}
+        			<tr><td>{{sep.description}}</td></tr>
+        			{% endfor %}
+        		</table>
+        	</td> 
+        	<td>{{ session.duration }}</td> 
+        	<td>{{ session.breaks_duration }}</td> 
+        	<td>{{ session.id }}</td>
+        	<td>{{ session.id }}</td>
+        	<td>{{ session.id }}</td>  
         </tr>
-        {% endfor %}-->
+{% endfor %}
+</tbody>
+
 {% endblock %}
