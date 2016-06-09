@@ -37,7 +37,11 @@ class Project(models.Model):
 
 	#so we can define private projects (hours in this project does not count)
 	private = models.BooleanField(default = False)
-	
+	description = models.CharField(
+		max_length = 100, 
+		null = True, 
+		blank = True
+	)
 	#maybe worked hours? or will be calculated dynamicaly?
 	
 	def __str__(self):
@@ -52,12 +56,6 @@ class Session(models.Model):
 	user = models.ForeignKey(User)
 	#this is saved field and exists only for finished sessions
 	duration = models.DurationField(null = True, blank = True)
-
-	description = models.CharField(
-		max_length = 100, 
-		null = True, 
-		blank = True
-	)
 
 	modified = models.BooleanField(default = False)
 	
@@ -128,6 +126,12 @@ class ProjectSeparation(models.Model):
 	session = models.ForeignKey(Session)
 	project = models.ForeignKey(Project)
 
+	#this describes the activity
+	description = models.CharField(
+		max_length = 100, 
+		null = True, 
+		blank = True
+	)
 	#maybe entered in percentages
 	time_spend = models.DurationField() 
 
