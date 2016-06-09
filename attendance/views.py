@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.decorators import login_required
 from rest_framework import permissions
+from datetime import datetime
 
 @login_required(login_url='/login/')
 def home_page(request):
@@ -28,21 +29,6 @@ class KeyViewSet(viewsets.ModelViewSet):
 	serializer_class = KeySerializer
 	http_method_names = ['get',]
 	permission_classes = (permissions.IsAuthenticated,)
-
-# def sessions(request):
-# 	sessions_with_swipes  = list()
-# 	sessions = Session.objects.all()
-	
-# 	for session in sessions:
-# 		sessions_with_swipes.append([session, session.swipe_set.all()])
-
-# 	print(sessions_with_swipes)
-
-# 	session_list = Session.objects.all()
-# 	context = {
-# 				"session_list": session_list,
-# 				"session_with_swipes": sessions_with_swipes,}
-# 	return render(request, "attendance/session_list.html", context)
 
 def user_check(request, username):
 	#superuser should be able to see all profiles
@@ -66,15 +52,27 @@ def user(request, username):
 def sessions(request, username):
 	if not user_check(request, username): 
 		return HttpResponse("Restricted to " + username)
+	now =datetime.now()
+	year_str = str(now.year)
+	month_str = "{:02}".format(now.month)
+	return HttpResponseRedirect(
+		reverse(sessions_month, args=[request.user.username, year_str, month_str]))
+
+
+@login_required(login_url='/login/')
+def swipes(request, username):
+	if not user_check(request, username): 
+		return HttpResponse("Restricted to " + username)
+	context = {}
+	return render(request, "attendance/swipes.html", context)
+
+@login_required(login_url='/login/')
+def sessions_month(request, username, year=datetime.now().year, month = datetime.now().month):
+	if not user_check(request, username): 
+		return HttpResponse("Restricted to " + username)
 	sessions = Session.objects.filter(user__username = username)
 	context = {
 		"sessions":sessions,
 		
 	}
 	return render(request, "attendance/sessions.html", context)
-
-def swipes(request, username):
-	if not user_check(request, username): 
-		return HttpResponse("Restricted to " + username)
-	context = {}
-	return render(request, "attendance/swipes.html", context)

@@ -53,6 +53,9 @@ urlpatterns = [
     
     #/sessions/username/
     url(r'^sessions/(?P<username>[\w.@+-]+)/$', views.sessions, name='sessions'),
+    url(r'^sessions/(?P<username>[\w.@+-]+)/(?P<year>[0-9]{4})/(?P<month>[0-9]{2})/$',
+    	views.sessions_month, 
+    	name='sessions_month'),
     #/swipes/username/
     url(r'^swipes/(?P<username>[\w.@+-]+)/$', views.swipes, name='swipes'),
 ]   

@@ -144,7 +144,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		login_by_form(user.username,"password", self.browser)
 		self.browser.find_element_by_class_name('a-sessions').click()
 		
-		self.assertEqual(
+		self.assertIn(
 			self.server_url + "/sessions/" + user.username + "/",
 			self.browser.current_url
 		)
@@ -169,11 +169,11 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		user2 = UserFactory.create()
 		login_by_form(user1.username,"password", self.browser)
 		self.browser.get(self.server_url + "/sessions/" + user2.username + "/")
-		self.assertIn("Restricted", self.browser.page_source)
+		self.assertIn("Restricted", self.browser.page_source, 1)
 		self.browser.get(self.server_url + "/swipes/" + user2.username + "/")
-		self.assertIn("Restricted", self.browser.page_source)
+		self.assertIn("Restricted", self.browser.page_source, 2)
 		self.browser.get(self.server_url + "/user/" + user2.username + "/")
-		self.assertIn("Restricted", self.browser.page_source)			
+		self.assertIn("Restricted", self.browser.page_source, 3)			
 		self.browser.get(self.server_url + "/logout/")
 		self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
