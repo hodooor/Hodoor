@@ -101,7 +101,11 @@ class Session(models.Model):
 			end_datetime = self.swipe_set.get(swipe_type = "OUT").datetime
 		else:
 			end_datetime = datetime.now(timezone.utc)
-		return end_datetime - login_datetime
+			
+			
+		bla = end_datetime - login_datetime 
+		bla = bla - timedelta(microseconds=bla.microseconds)
+		return bla
 
 	def session_duration(self):
 		'''
