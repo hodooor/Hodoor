@@ -48,6 +48,7 @@
         	<td>{{ session.breaks_duration }}</td> 
         	<td>{{ session.is_session_complete |yesno:"Complete, Open" }}</td>
         	<td>{{ session.id }}</td>
+        	<td><button type="button" class="btn btn-info">Edit</button></td>
         </tr>
 {% endfor %}
 </tbody>

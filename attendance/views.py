@@ -82,7 +82,7 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
 def session_detail(request, username, id):
 	if not user_check(request, username): 
 		return HttpResponse("Restricted to " + username)
-	session= get_object_or_404(Session, pk = int(id))
+	session = get_object_or_404(Session, pk = int(id))
 	
 	if session.user.username == username: #write test for this!!
 		context = {
@@ -90,4 +90,4 @@ def session_detail(request, username, id):
 		}
 		return render(request, "attendance/session_detail.html", context)
 	else:
-		return HttpResponse("Restricted to " + username) 
+		return HttpResponse("Restricted to " + session.user.username) 
