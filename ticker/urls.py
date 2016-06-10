@@ -62,7 +62,7 @@ urlpatterns = [
     #/sessions/username/2015/05
     url(r'^sessions/(?P<username>[\w.@+-]+)/id(?P<id>\d+)/$',
     	views.session_detail, 
-    	name='sessions_detail'),
+    	name='session_detail'),
     #/swipes/username/
     url(r'^swipes/(?P<username>[\w.@+-]+)/$', views.swipes, name='swipes'),
 ]   

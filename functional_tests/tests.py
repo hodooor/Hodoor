@@ -1,5 +1,6 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase, LiveServerTestCase
 from selenium import webdriver
+#from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from const_data import USERS, SWIPES, SWIPE_TYPES
 from attendance.tests import dict_to_database
 from attendance.serializers import UserSerializer, SwipeSerializer
@@ -18,6 +19,12 @@ from rest_framework.authtoken.models import Token
 from selenium.webdriver.support.wait import WebDriverWait
 from attendance.factories import UserFactory
 from django.contrib.auth.hashers import check_password
+
+
+#firefox_capabilities = DesiredCapabilities.FIREFOX
+#firefox_capabilities['marionette'] = True
+#firefox_capabilities['binary'] = '/home/ondra/Documents/'
+
 
 def populate_database(what_pop):
 	what_pop.USERS = USERS
