@@ -72,7 +72,7 @@ Session {{ id }} Detail
 		<td>{{swipe.datetime| date:'H:i:s'}}
 		<td>{{swipe.datetime| date:'D d.m.Y'}}
 		</td><td>{{swipe.id}}</td>
-		</td><td>{{swipe.correction_of_swipe}}</td>    
+		</td><td>{{swipe.correction_of_swipe.id}}</td>    
 	</tr>
 	{% endfor %}
 </tbody>
@@ -94,13 +94,14 @@ Session {{ id }} Detail
 		<td>{{separation.project}}</td><td>{{separation.time_spend}}</td><td>{{separation.description}}</td>  
 	</tr>
 	{% endfor %}
+	<form method='POST' action=''>{% csrf_token %}
+		{{ project_separation_form.as_table }}
+		<input type='submit' value = 'Save'/>
+	</form>
 </tbody>
 </table>
 
 
-<form method='POST' action=''>{% csrf_token %}
-{{ project_separation_form.as_p }}
-<input type='submit' value = 'Save'/>
-</form>
+
 
 {% endblock %}

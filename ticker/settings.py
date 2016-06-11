@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'rest_framework',
     'django_spaghetti',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'crispy_forms',
 ]
 
 MIDDLEWARE_CLASSES = [
