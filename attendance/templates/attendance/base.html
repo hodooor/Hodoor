@@ -55,16 +55,19 @@
 			</div>
 		</div>
 	</nav>
-    <div class="col-md-6 col-md-offset-3">
-        <div class="text-center">
-            <h1>{% block header_text %}{% endblock %}</h1>
-        </div>
-    </div>
-    <table class="table">
-            {% block table %}
-            {% endblock %}
-    </table>
-    {% block content %}
-	{% endblock %}
+	<div class="container">
+	    <div class="col-md-6 col-md-offset-3">
+	        <div class="text-center">
+	            <h1>{% block header_text %}{% endblock %}</h1>
+	        </div>
+	    </div>
+	    <table class="table">
+	            {% block table %}
+	            {% endblock %}
+	    </table>
+
+	    {% block content %}
+		{% endblock %}
+	</div>
 
 </body>
