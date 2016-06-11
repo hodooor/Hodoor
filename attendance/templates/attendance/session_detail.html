@@ -1,11 +1,62 @@
 {% extends 'attendance/base.html' %}
 {% block header_text %}
-Session Detail
+Session {{ id }} Detail
 {% endblock %}
 
 {% block table%}
 	  	
 {% endblock %}
 {% block content %}
+
+<h2>Swipes</h2>
+<table class="table">
+<thead>
+  <tr>
+    <th>TYPE</th>
+    <th>TIME</th>
+    <th>DATE</th>
+    <th>ID</th>
+  </tr>
+</thead>
+<tbody>
+	{% for swipe in swipes %}
+	<tr>
+		<td>{{swipe.swipe_type}}</td>
+		<td>{{swipe.datetime| date:'H:i:s'}}
+		<td>{{swipe.datetime| date:'D d.m.Y'}}
+		</td><td>{{swipe.id}}</td>  
+	</tr>
+	{% endfor %}
+</tbody>
+</table>
+
+
+<h2>Projects</h2>
+<table class="table">
+<thead>
+  <tr>
+    <th>PROJECT</th>
+    <th>TIME SPEND</th>
+    <th>DESCRIPTION</th>
+  </tr>
+</thead>
+<tbody>
+	{% for separation in separations %}
+	<tr>
+		<td>{{separation.project}}</td><td>{{separation.time_spend}}</td><td>{{separation.description}}</td>  
+	</tr>
+	{% endfor %}
+</tbody>
+</table>
+
+<ul>
+{% for separation in separations %}
+	<li>{{separation.project}} -{{separation.description}} - {{separation.time_spend}}</li>
+{% endfor %}
+</ul>
+<form method='POST' action=''>{% csrf_token %}
+{{ project_separation_form.as_p }}
+<input type='submit' value = 'Save'/>
+</form>
 
 {% endblock %}

@@ -3,12 +3,13 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from rest_framework import viewsets
 from .serializers import SwipeSerializer,UserSerializer,KeySerializer
-from .models import Swipe, Key, Session
+from .models import Swipe, Key, Session,ProjectSeparation
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.decorators import login_required
 from rest_framework import permissions
 from datetime import datetime
+from .forms import ProjectSeparationForm
 
 @login_required(login_url='/login/')
 def home_page(request):
@@ -83,10 +84,18 @@ def session_detail(request, username, id):
 	if not user_check(request, username): 
 		return HttpResponse("Restricted to " + username)
 	session = get_object_or_404(Session, pk = int(id))
-	
+	separations =  ProjectSeparation.objects.filter(session = session)
+	swipes = Swipe.objects.filter(session = session)
+
 	if session.user.username == username: #write test for this!!
+
+		form = ProjectSeparationForm()
 		context = {
-			"session":session
+			"session":session,
+			"id":id,
+			"project_separation_form": form,
+			"separations":separations,
+			"swipes":swipes
 		}
 		return render(request, "attendance/session_detail.html", context)
 	else:

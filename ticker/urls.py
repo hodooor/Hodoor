@@ -59,7 +59,8 @@ urlpatterns = [
     	views.sessions_month, 
     	name='sessions_month'),
 
-    #/sessions/username/2015/05
+    #/sessions/username/id1
+    #/sessions/username/id354
     url(r'^sessions/(?P<username>[\w.@+-]+)/id(?P<id>\d+)/$',
     	views.session_detail, 
     	name='session_detail'),
