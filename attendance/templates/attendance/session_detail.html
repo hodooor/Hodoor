@@ -11,30 +11,46 @@ Session {{ id }} Detail
 <table class="table table-hover">
 	<thead>
 	<tr>
-	  <th class="col-md-3"></th>
-	  <th class="col-md-9"></th>
+	  <th class="col-md-2">PARAMETER</th>
+	  <th class="col-md-2">VALUE</th>
+	  <th class="col-md-8">DESCRIPTION</th>
 	</tr>
 	</thead>
 	<tbody>	
     <tr>
         <td data-field="key" class="key">Overall Duration</td>
         <td data-field="value">{{session.session_duration_overall}}</td>
+        <td data-field="description">Duration of whole session from incomming to outgoing swipe.<td>
     </tr>
     <tr>
         <td data-field="key" class="key">Work Duration</td>
         <td data-field="value">{{session.session_duration}}</td>
+        <td data-field="description">Clean work time. This value should be assigned to projects.<td>
+    </tr>
+    <tr>
+        <td data-field="key" class="key">Not Assigned Duration</td>
+        <td data-field="value"></td>
+        <td data-field="description">Time, that was not assigned to projects. Should be 0 after end of month<td>
     </tr>
     <tr>
         <td data-field="key" class="key">Number of Breaks</td>
         <td data-field="value">{{session.num_of_breaks}}</td>
+        <td data-field="description">Number of breaks during this session.<td>
     </tr>
     <tr>
         <td data-field="key" class="key">Breaks Duration</td>
         <td data-field="value">{{session.breaks_duration}}</td>
+        <td data-field="description">Sum of duration of all breaks during this session.<td>
+    </tr>
+    <tr>
+        <td data-field="key" class="key">Session Status</td>
+        <td data-field="value">{{ session.is_session_complete |yesno:"Complete, Open" }}</td>
+        <td data-field="description">Session is open, if there is no outgoing swipe<td>
     </tr>
     <tr>
         <td data-field="key" class="key">Session Modified</td>
-        <td data-field="value">{{session.modified}}</td>
+        <td data-field="value">{{ session.is_session_complete }}</td>
+        <td data-field="description">Session is modified, if some of it's swipes were corrected.<td>
     </tr>
     </tbody>
 </table>
@@ -46,6 +62,7 @@ Session {{ id }} Detail
     <th>TIME</th>
     <th>DATE</th>
     <th>ID</th>
+  	<th>CORRECTION OF</th>
   </tr>
 </thead>
 <tbody>
@@ -54,7 +71,8 @@ Session {{ id }} Detail
 		<td>{{swipe.swipe_type}}</td>
 		<td>{{swipe.datetime| date:'H:i:s'}}
 		<td>{{swipe.datetime| date:'D d.m.Y'}}
-		</td><td>{{swipe.id}}</td>  
+		</td><td>{{swipe.id}}</td>
+		</td><td>{{swipe.correction_of_swipe}}</td>    
 	</tr>
 	{% endfor %}
 </tbody>
@@ -65,9 +83,9 @@ Session {{ id }} Detail
 <table class="table">
 <thead>
   <tr>
-    <th>PROJECT</th>
-    <th>TIME SPEND</th>
-    <th>DESCRIPTION</th>
+    <th class="col-md-2">PROJECT</th>
+    <th class="col-md-2">TIME SPEND</th>
+    <th class="col-md-8">DESCRIPTION</th>
   </tr>
 </thead>
 <tbody>
