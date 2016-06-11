@@ -9,4 +9,7 @@ class SessionForm(forms.ModelForm):
 class ProjectSeparationForm(forms.ModelForm):
 	class Meta:
 		model = ProjectSeparation
-		fields = ['project', 'description', 'time_spend']
+		fields = ['project','time_spend','description']
+		widgets = {
+			'description': forms.Textarea(attrs={'cols': 80, 'rows': 2}),
+		}

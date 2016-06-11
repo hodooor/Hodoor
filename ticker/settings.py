@@ -138,3 +138,5 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     )
 }
+
+CRISPY_TEMPLATE_PACK = "bootstrap3"

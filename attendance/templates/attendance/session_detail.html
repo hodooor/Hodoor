@@ -1,4 +1,6 @@
 {% extends 'attendance/base.html' %}
+{% load crispy_forms_tags %}
+
 {% block header_text %}
 Session {{ id }} Detail
 {% endblock %}
@@ -85,7 +87,8 @@ Session {{ id }} Detail
   <tr>
     <th class="col-md-2">PROJECT</th>
     <th class="col-md-2">TIME SPEND</th>
-    <th class="col-md-8">DESCRIPTION</th>
+    <th class="col-md-6">DESCRIPTION</th>
+    <th class="col-md-2"></th>
   </tr>
 </thead>
 <tbody>
@@ -95,9 +98,14 @@ Session {{ id }} Detail
 	</tr>
 	{% endfor %}
 	<form method='POST' action=''>{% csrf_token %}
-		{{ project_separation_form.as_table }}
+	<tr>
+		{% for form in project_separation_form %}
+			<td>{{form}}</td>
+		{% endfor %}
 		<input type='submit' value = 'Save'/>
+	</tr>	
 	</form>
+	
 </tbody>
 </table>
 
