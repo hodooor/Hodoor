@@ -7,7 +7,37 @@ Session {{ id }} Detail
 	  	
 {% endblock %}
 {% block content %}
-
+<h2>Info</h2>
+<table class="table table-hover">
+	<thead>
+	<tr>
+	  <th class="col-md-3"></th>
+	  <th class="col-md-9"></th>
+	</tr>
+	</thead>
+	<tbody>	
+    <tr>
+        <td data-field="key" class="key">Overall Duration</td>
+        <td data-field="value">{{session.session_duration_overall}}</td>
+    </tr>
+    <tr>
+        <td data-field="key" class="key">Work Duration</td>
+        <td data-field="value">{{session.session_duration}}</td>
+    </tr>
+    <tr>
+        <td data-field="key" class="key">Number of Breaks</td>
+        <td data-field="value">{{session.num_of_breaks}}</td>
+    </tr>
+    <tr>
+        <td data-field="key" class="key">Breaks Duration</td>
+        <td data-field="value">{{session.breaks_duration}}</td>
+    </tr>
+    <tr>
+        <td data-field="key" class="key">Session Modified</td>
+        <td data-field="value">{{session.modified}}</td>
+    </tr>
+    </tbody>
+</table>
 <h2>Swipes</h2>
 <table class="table">
 <thead>
@@ -49,11 +79,7 @@ Session {{ id }} Detail
 </tbody>
 </table>
 
-<ul>
-{% for separation in separations %}
-	<li>{{separation.project}} -{{separation.description}} - {{separation.time_spend}}</li>
-{% endfor %}
-</ul>
+
 <form method='POST' action=''>{% csrf_token %}
 {{ project_separation_form.as_p }}
 <input type='submit' value = 'Save'/>

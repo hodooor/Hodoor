@@ -48,7 +48,7 @@
         	<td>{{ session.breaks_duration }}</td> 
         	<td>{{ session.is_session_complete |yesno:"Complete, Open" }}</td>
         	<td>{{ session.id }}</td>
-        	<td><a href="{% url 'session_detail' username=user.username id=session.id %}" type="button" class="btn btn-info">Edit</a></td>
+        	<td><a href="{% url 'session_detail' username=user.username id=session.id %}" type="button" class="btn btn-info">Detail</a></td>
         </tr>
 {% endfor %}
 </tbody>
