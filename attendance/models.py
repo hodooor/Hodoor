@@ -122,6 +122,17 @@ class Session(models.Model):
 	def get_date(self):
 		in_datetime = self.swipe_set.all()[0].datetime
 		return in_datetime
+
+	def get_assigned_duration(self):
+		time_spend_sum = timedelta()
+		for sep in self.projectseparation_set.all():
+			time_spend_sum += sep.time_spend
+		return time_spend_sum
+
+	def get_not_assigned_duration(self):
+		return self.session_duration() - self.get_assigned_duration()
+
+
 		
 	def __str__(self):
 		return str(self.id) + " " + str(self.user)

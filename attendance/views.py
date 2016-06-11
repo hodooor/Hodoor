@@ -89,7 +89,11 @@ def session_detail(request, username, id):
 
 	if session.user.username == username: #write test for this!!
 
-		form = ProjectSeparationForm()
+		form = ProjectSeparationForm(
+			initial={
+				"time_spend":session.get_not_assigned_duration()
+			}
+		)
 		context = {
 			"session":session,
 			"id":id,
