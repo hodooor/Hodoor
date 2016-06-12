@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db.models import Q
 from datetime import datetime, timezone, timedelta, date
@@ -31,7 +31,10 @@ class SessionManager(models.Manager):
 				new_dur += session.session_duration()
 			return new_dur.total_seconds()/3600
 		else:
-			return 0	
+			return 0
+
+	def get_sessions(month = datetime.now().month, year = datetime.now().year):
+		pass	
 class Project(models.Model):
 	name = models.CharField(max_length = 20)
 

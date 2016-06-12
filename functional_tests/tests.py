@@ -204,7 +204,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		user = UserFactory.create()
 		swipe = SwipeFactory(user = user, swipe_type = "IN")
 		login_by_form(user.username,"password", self.browser)
-		
+		self.assertEqual(Session.objects.count(), 1)
 		SESSION_URL = self.server_url + "/sessions/" + user.username + "/2014/06/"
 		
 		self.browser.get(SESSION_URL)
@@ -247,7 +247,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 			user = user,
 			swipe_type = "OUT",
 			datetime = timezone.now() + timedelta(hours = 24*32))
-
+		self.assertEqual(Session.objects.count(), 3)
 		for session in Session.objects.all():
 			self.browser.get(self.server_url)
 			login_by_form(user.username,"password", self.browser)
@@ -257,7 +257,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 				session.get_date().year,
 				session.get_date().month,
 			)
-		
+			
 			self.browser.get(session_url)
 			try: 
 				self.browser.find_element_by_link_text("Detail")

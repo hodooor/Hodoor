@@ -23,4 +23,4 @@ def print_doc_str_and_return_value(functions_iterable):
 
 from attendance.factories import SwipeFactory, UserFactory
 swipe = SwipeFactory(swipe_type = "IN")
-print(swipe.user.id)
+print(Session.objects.filter(user= swipe.user))

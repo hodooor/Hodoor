@@ -118,6 +118,9 @@ class SessionTestCase(TestCase):
 		)
 		self.assertTrue(swipe.session.modified)
 
+	def test_get_sessions_this_month(self):
+		pass
+
 class SwipeTestCase(TestCase):
 	def setUp(self):
 		
