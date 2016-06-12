@@ -21,10 +21,6 @@ def print_doc_str_and_return_value(functions_iterable):
 	for function in functions_iterable:
 		print(function.__doc__.strip(), str(function()))
 
-from attendance.factories import UserFactory
-
-user = UserFactory(first_name = "Ondřej", last_name = "Vičar")
-print(user.id, user.username, user.email, user.password)
-print (type(user))
-user = UserFactory(first_name = "Tomáš", last_name = "Matějka")
-print(user.id, user.username, user.email, user.password)
+from attendance.factories import SwipeFactory, UserFactory
+swipe = SwipeFactory(swipe_type = "IN")
+print(swipe.user.id)

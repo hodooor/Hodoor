@@ -90,6 +90,7 @@ class SessionTestCase(TestCase):
 		self.assertEqual(session.duration, session.session_duration())
 
 	def test_is_at_work(self):
+		#not implemented function yet
 		pass
 	
 	def test_get_date(self):

@@ -17,7 +17,7 @@ from rest_framework.test import APIClient
 from unittest import skip
 from rest_framework.authtoken.models import Token
 from selenium.webdriver.support.wait import WebDriverWait
-from attendance.factories import UserFactory
+from attendance.factories import UserFactory, SwipeFactory
 from django.contrib.auth.hashers import check_password
 
 
@@ -195,6 +195,15 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		login_by_form(user1.username,"password", self.browser)
 		self.browser.get(self.server_url + "/user/" + user2.username + "/")
 		self.assertIn("Hours", self.browser.page_source)
+
+	def test_there_should_be_no_session_long_time_ago(self):
+		user = UserFactory.create()
+		swipe = SwipeFactory(user = user, swipe_type = "IN")
+		login_by_form(user.username,"password", self.browser)
+		self.browser.find_element_by_class_name('a-sessions').click()
+		
+		self.browser.get(self.server_url + "/logout/")
+		self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
 class APITestCase(StaticLiveServerTestCase):
 	'''
