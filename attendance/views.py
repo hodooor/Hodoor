@@ -62,7 +62,13 @@ def sessions(request, username):
 def swipes(request, username):
 	if not user_check(request, username): 
 		return HttpResponse("Restricted to " + username)
-	context = {}
+	swipes = Swipe.objects.filter( 
+		user__username = username,
+		session__isnull = False,
+	)
+
+
+	context = {"swipes":swipes}
 	return render(request, "attendance/swipes.html", context)
 
 @login_required(login_url='/login/')
@@ -114,5 +120,20 @@ def session_detail(request, username, id):
 			"swipes":swipes
 		}
 		return render(request, "attendance/session_detail.html", context)
+	else:
+		return HttpResponse("Restricted to " + session.user.username) 
+
+@login_required(login_url='/login/')
+def swipe_detail(request, username, id):
+	if not user_check(request, username): 
+		return HttpResponse("Restricted to " + username)
+	swipe = get_object_or_404(Swipe, pk = int(id))
+	
+	if swipe.user.username == username: #write test for this!!
+		context={
+			"swipe":swipe,
+			"id": id,
+		}
+		return render(request, "attendance/swipe_detail.html", context)
 	else:
 		return HttpResponse("Restricted to " + session.user.username) 
