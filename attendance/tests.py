@@ -14,6 +14,9 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 from rest_framework import status
 
+from attendance.views import sessions_month
+from attendance.factories import UserFactory
+
 def dict_to_database(serializer_class, list_of_dict):
 	'''
 	Input is serializer class type object and list of dictionaries
@@ -201,7 +204,6 @@ class ViewTestCase(TestCase):
 
 	def test_resolve_session_month(self):
 		match = resolve("/sessions/bla.bla/2015/05/")
-		print(match.kwargs)
 		self.assertEqual(match.kwargs["username"],"bla.bla")
 		self.assertEqual(match.kwargs["year"],"2015")
 		self.assertEqual(match.kwargs["month"],"05")

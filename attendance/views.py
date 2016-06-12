@@ -69,7 +69,15 @@ def swipes(request, username):
 def sessions_month(request, username, year=datetime.now().year, month = datetime.now().month):
 	if not user_check(request, username): 
 		return HttpResponse("Restricted to " + username)
-	sessions = Session.objects.filter(user__username = username)
+	#swipes_this_month = Swipe.objects.filter(swipe_type="IN", datetime__month=datetime.now().month)
+	in_swipes_ids = Swipe.objects.filter(
+		swipe_type = "IN", 
+		user__username = username,
+		datetime__month = int(month),
+		datetime__year = int(year), 
+	).values_list('id', flat=True)
+	
+	sessions = Session.objects.filter(pk__in = in_swipes_ids)
 	context = {
 		"sessions":sessions,
 		"year":year,
