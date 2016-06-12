@@ -1,12 +1,12 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase, LiveServerTestCase
 from selenium import webdriver
 #from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from const_data import USERS, SWIPES, SWIPE_TYPES
+from const_data import USERS, SWIPES, SWIPE_TYPES, generate_random_datetimes_for_swipes
 from attendance.tests import dict_to_database
 from attendance.serializers import UserSerializer, SwipeSerializer
 from django.contrib.auth.models import User
 from django.conf import settings
-from attendance.models import Key, Swipe
+from attendance.models import Key, Swipe, Session
 from selenium.webdriver.support.wait import WebDriverWait
 from django.test.utils import override_settings
 from django.test import TestCase
@@ -20,7 +20,9 @@ from selenium.webdriver.support.wait import WebDriverWait
 from attendance.factories import UserFactory, SwipeFactory
 from django.contrib.auth.hashers import check_password
 from selenium.common.exceptions import NoSuchElementException
-
+from django.utils import timezone
+from datetime import timedelta, datetime
+import time
 
 #firefox_capabilities = DesiredCapabilities.FIREFOX
 #firefox_capabilities['marionette'] = True
@@ -216,6 +218,57 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		finally:
 			self.browser.get(self.server_url + "/logout/")
 			self.assertIn(self.server_url + "/login/",self.browser.current_url)
+	
+	def test_user_can_look_up_his_sessions_months(self):
+		user = UserFactory.create()
+
+		
+		swipe = SwipeFactory(
+			user = user,
+			swipe_type = "IN",
+			datetime = timezone.now() - timedelta(hours = 24*32))
+		swipe = SwipeFactory(
+			user = user,
+			swipe_type = "OUT",
+			datetime = timezone.now() - timedelta(hours = 24*31))
+		swipe = SwipeFactory(
+			user = user,
+			swipe_type = "IN",
+			datetime = timezone.now() + timedelta(hours = 1))
+		swipe = SwipeFactory(
+			user = user,
+			swipe_type = "OUT",
+			datetime = timezone.now() + timedelta(hours = 2))
+		swipe = SwipeFactory(
+			user = user,
+			swipe_type = "IN",
+			datetime = timezone.now() + timedelta(hours = 24*31))
+		swipe = SwipeFactory(
+			user = user,
+			swipe_type = "OUT",
+			datetime = timezone.now() + timedelta(hours = 24*32))
+
+		for session in Session.objects.all():
+			self.browser.get(self.server_url)
+			login_by_form(user.username,"password", self.browser)
+			session_url = "{0}/sessions/{1}/{2}/{3:0>2}/".format(
+				self.server_url,
+				user.username,
+				session.get_date().year,
+				session.get_date().month,
+			)
+		
+			self.browser.get(session_url)
+			try: 
+				self.browser.find_element_by_link_text("Detail")
+			except NoSuchElementException:
+				self.fail("Can't find Detail on page {}, session date: {}".format(
+					session_url,
+					session.get_date(),
+				))
+			finally:
+				self.browser.get(self.server_url + "/logout/")
+				self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
 class APITestCase(StaticLiveServerTestCase):
 	'''

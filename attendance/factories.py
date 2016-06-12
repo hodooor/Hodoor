@@ -33,4 +33,3 @@ class SwipeFactory(DjangoModelFactory):
 	datetime = LazyFunction(timezone.now)
 	swipe_type = fuzzy.FuzzyChoice(swipe_types)
 	correction_of_swipe = None
-	

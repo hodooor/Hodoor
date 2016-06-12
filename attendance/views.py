@@ -75,9 +75,9 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
 		user__username = username,
 		datetime__month = int(month),
 		datetime__year = int(year), 
-	).values_list('id', flat=True)
-	
+	).values_list('session', flat=True)
 	sessions = Session.objects.filter(pk__in = in_swipes_ids)
+
 	context = {
 		"sessions":sessions,
 		"year":year,
