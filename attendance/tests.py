@@ -101,6 +101,17 @@ class SessionTestCase(TestCase):
 		self.assertEqual("<class 'datetime.datetime'>", str(type(session.get_date())))
 		self.assertEqual(session.get_date(), swipe.datetime)
 
+	def test_session_is_marked_as_modified(self):
+		swipe = Swipe.objects.get(id = 1)
+		self.assertFalse(swipe.session.modified)
+		Swipe.objects.create(
+			user = swipe.user,
+			datetime = swipe.datetime - timedelta(hours = 1),
+			swipe_type = swipe.swipe_type,
+			correction_of_swipe = swipe
+		)
+		self.assertTrue(swipe.session.modified)
+
 class SwipeTestCase(TestCase):
 	def setUp(self):
 		

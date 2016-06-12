@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from rest_framework import viewsets
@@ -84,15 +84,21 @@ def session_detail(request, username, id):
 	if not user_check(request, username): 
 		return HttpResponse("Restricted to " + username)
 	session = get_object_or_404(Session, pk = int(id))
-	separations =  ProjectSeparation.objects.filter(session = session)
-	swipes = Swipe.objects.filter(session = session)
-
+	
 	if session.user.username == username: #write test for this!!
 
+		separations =  ProjectSeparation.objects.filter(session = session)
+		swipes = Swipe.objects.filter(session = session)
+		if request.method == "POST":
+			form = ProjectSeparationForm(request.POST)			
+			if form.is_valid():
+				form.save()
+			
 		form = ProjectSeparationForm(
 			initial={
-				"time_spend":session.get_not_assigned_duration()
-			}
+				"time_spend":session.get_not_assigned_duration(),
+				"session": session.id #hidden form 
+			},
 		)
 		context = {
 			"session":session,

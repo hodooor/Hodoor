@@ -51,7 +51,7 @@ Session {{ id }} Detail
     </tr>
     <tr>
         <td data-field="key" class="key">Session Modified</td>
-        <td data-field="value">{{ session.is_session_complete }}</td>
+        <td data-field="value">{{ session.modified }}</td>
         <td data-field="description">Session is modified, if some of it's swipes were corrected.<td>
     </tr>
     </tbody>
@@ -102,7 +102,7 @@ Session {{ id }} Detail
 		{% for form in project_separation_form %}
 			<td>{{form}}</td>
 		{% endfor %}
-		<input type='submit' value = 'Save'/>
+		<td><input type='submit' value = 'Add'/></td>
 	</tr>	
 	</form>
 	

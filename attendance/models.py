@@ -124,9 +124,14 @@ class Session(models.Model):
 		return in_datetime
 
 	def get_assigned_duration(self):
-		time_spend_sum = timedelta()
+		time_spend_sum = timedelta(0)
+
 		for sep in self.projectseparation_set.all():
-			time_spend_sum += sep.time_spend
+			try:
+				time_spend_sum += sep.time_spend
+			except TypeError as err: 
+				if "unsupported operand type(s) for" not in str(err):	
+					raise
 		return time_spend_sum
 
 	def get_not_assigned_duration(self):
@@ -263,6 +268,7 @@ def post_process_swipes(sender=Swipe, **kwargs):
 			created_swipe.save()
 			
 			created_swipe.session.duration = created_swipe.session.session_duration()
+			created_swipe.session.modified = True
 			created_swipe.session.save()
 
 
