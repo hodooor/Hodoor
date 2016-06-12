@@ -1,5 +1,6 @@
 from django import forms
-from .models import Session, ProjectSeparation
+from .models import Session, ProjectSeparation, Swipe
+from django.contrib.admin.widgets import AdminDateWidget 
 
 class SessionForm(forms.ModelForm):
 	class Meta:
@@ -17,3 +18,8 @@ class ProjectSeparationForm(forms.ModelForm):
 			}),
 			'session': forms.HiddenInput(),
 		}
+class SwipeEditForm(forms.ModelForm):
+	class Meta:
+		model = Swipe
+		fields = ["datetime"]
+		widget = {"datetime": AdminDateWidget }

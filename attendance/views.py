@@ -9,7 +9,7 @@ from django.views.generic import ListView, DetailView
 from django.contrib.auth.decorators import login_required
 from rest_framework import permissions
 from datetime import datetime
-from .forms import ProjectSeparationForm
+from .forms import ProjectSeparationForm, SwipeEditForm
 
 @login_required(login_url='/login/')
 def home_page(request):
@@ -130,9 +130,12 @@ def swipe_detail(request, username, id):
 	swipe = get_object_or_404(Swipe, pk = int(id))
 	
 	if swipe.user.username == username: #write test for this!!
+		
+		form = SwipeEditForm()
 		context={
 			"swipe":swipe,
 			"id": id,
+			"form": form,
 		}
 		return render(request, "attendance/swipe_detail.html", context)
 	else:
