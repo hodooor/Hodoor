@@ -1,8 +1,9 @@
 from django.core.urlresolvers import resolve
-from django.test import TestCase
+from django.test import TestCase,Client
 from attendance.views import home_page
 from django.contrib.auth.models import User
 from unittest import skip
+from django.core.urlresolvers import reverse 
 
 from django.http import HttpRequest
 from .models import Session, Swipe
@@ -11,6 +12,7 @@ from .serializers import SwipeSerializer, UserSerializer
 from const_data import USERS, SWIPES, SWIPE_TYPES
 from datetime import datetime, timedelta
 from django.utils import timezone
+from rest_framework import status
 
 def dict_to_database(serializer_class, list_of_dict):
 	'''
@@ -188,3 +190,18 @@ class SwipeTestCase(TestCase):
 			except ValueError:
 					pass
 			self.assertFalse(Swipe.objects.all().filter(id = id))
+
+class ViewTestCase(TestCase):
+
+	def test_home_page_redirects_to_login(self):
+		client = Client()
+		response = client.get(reverse("home"))
+		self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+		self.assertEqual(response.url, "/login/?next=/")
+
+	def test_resolve_session_month(self):
+		match = resolve("/sessions/bla.bla/2015/05/")
+		print(match.kwargs)
+		self.assertEqual(match.kwargs["username"],"bla.bla")
+		self.assertEqual(match.kwargs["year"],"2015")
+		self.assertEqual(match.kwargs["month"],"05")

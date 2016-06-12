@@ -13,9 +13,7 @@ from .forms import ProjectSeparationForm
 
 @login_required(login_url='/login/')
 def home_page(request):
-	return HttpResponseRedirect(
-		reverse(user, args=[request.user.username]))
-
+	return HttpResponseRedirect(reverse(user, args=[request.user.username]))
 class SwipeViewSet(viewsets.ModelViewSet):
 	'''
 	API end point for posting swipes

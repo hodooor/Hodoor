@@ -19,6 +19,7 @@ from rest_framework.authtoken.models import Token
 from selenium.webdriver.support.wait import WebDriverWait
 from attendance.factories import UserFactory, SwipeFactory
 from django.contrib.auth.hashers import check_password
+from selenium.common.exceptions import NoSuchElementException
 
 
 #firefox_capabilities = DesiredCapabilities.FIREFOX
@@ -197,13 +198,24 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		self.assertIn("Hours", self.browser.page_source)
 
 	def test_there_should_be_no_session_long_time_ago(self):
+		
 		user = UserFactory.create()
 		swipe = SwipeFactory(user = user, swipe_type = "IN")
 		login_by_form(user.username,"password", self.browser)
-		self.browser.find_element_by_class_name('a-sessions').click()
 		
-		self.browser.get(self.server_url + "/logout/")
-		self.assertIn(self.server_url + "/login/",self.browser.current_url)
+		SESSION_URL = self.server_url + "/sessions/" + user.username + "/2014/06/"
+		
+		self.browser.get(SESSION_URL)
+		self.assertEqual(SESSION_URL,self.browser.current_url)
+		try:
+			element = self.browser.find_element_by_link_text("Detail")
+		except NoSuchElementException:
+			pass
+		else:
+			self.fail("There are sessions!")
+		finally:
+			self.browser.get(self.server_url + "/logout/")
+			self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
 class APITestCase(StaticLiveServerTestCase):
 	'''
