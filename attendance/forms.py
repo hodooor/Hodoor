@@ -25,5 +25,8 @@ class SwipeEditForm(forms.ModelForm):
 		fields = ["datetime"]
 	
 		widgets = {
-			"datetime": DateTimeWidget(attrs={'id':"datetime"}, bootstrap_version=3),
+			"datetime": DateTimeWidget(
+				attrs={'id':"datetime"},
+				bootstrap_version=3,
+				),
 		}

@@ -102,7 +102,7 @@ def session_detail(request, username, id):
 		separations =  ProjectSeparation.objects.filter(session = session)
 		swipes = Swipe.objects.filter(session = session)
 		if request.method == "POST":
-			form = ProjectSeparationForm(request.POST)			
+			form = ProjectSeparationForm(request.POST)		
 			if form.is_valid():
 				form.save()
 			
@@ -131,6 +131,18 @@ def swipe_detail(request, username, id):
 	
 	if swipe.user.username == username: #write test for this!!
 		
+		if request.method == "POST":
+			# data = {
+			# 	"datetime": request.datetime,
+			# 	"user": swipe.user,
+			# 	"type": swipe.type,
+			# 	"correction_of_swipe": swipe,
+			# }
+			form = SwipeEditForm(request.POST)		
+			if form.is_valid():
+				print(form.cleaned_data)
+				new_data = form.save
+				
 		form = SwipeEditForm(
 			initial = {
 				"datetime":swipe.datetime,

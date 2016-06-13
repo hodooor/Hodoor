@@ -6,7 +6,40 @@ swipe {{ id }} Detail
 {% endblock %}
 
 {% block content %}
+<table class="table table-hover">
+
+	<thead>
+	<tr>
+	  <th class="col-md-2">PARAMETER</th>
+	  <th class="col-md-4">VALUE</th>
+	  <th class="col-md-6">DESCRIPTION</th>
+	</tr>
+	</thead>
+	<tbody>	
+	<tr>
+	    <td data-field="key" class="key">Swipe Type</td>
+	    <td data-field="value">{{swipe.swipe_type}}</td>
+	</tr>
+	<tr>
+	    <td data-field="key" class="key">Belongs to Session</td>
+
+	    <td data-field="value">{% if swipe.session %}<a href="{% url 'session_detail' username=user.username id=swipe.session.id %}">{{swipe.session}}</a>{% endif %}</td>
+	</tr>
+	<tr>
+		<td data-field="key" class="key">Was corrected by</td>
+		
+	</tr>
+	<tr>
+	    <td data-field="key" class="key">Datetime</td>
+	    <form method='POST' action=''>{% csrf_token %}
+	   	{% for f in form %}
+			<td>{{f}}</td>
+		{% endfor %}
+		<td><input type='submit' value = 'Submit Change'/></td>
+		</form>
+	</tr>
+</tbody>	
+</table>
 <div class="col-md-3">
-{{form}}
 </div>
 {% endblock %}
