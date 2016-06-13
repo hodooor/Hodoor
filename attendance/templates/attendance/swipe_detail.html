@@ -1,9 +1,12 @@
 {% extends 'attendance/base.html' %}
+{% load crispy_forms_tags %}
 
 {% block header_text %}
 swipe {{ id }} Detail
 {% endblock %}
 
 {% block content %}
+<div class="col-md-3">
 {{form}}
+</div>
 {% endblock %}

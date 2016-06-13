@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_spaghetti',
     'rest_framework.authtoken',
     'crispy_forms',
+    'datetimewidget',
 ]
 
 MIDDLEWARE_CLASSES = [

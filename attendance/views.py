@@ -131,7 +131,11 @@ def swipe_detail(request, username, id):
 	
 	if swipe.user.username == username: #write test for this!!
 		
-		form = SwipeEditForm()
+		form = SwipeEditForm(
+			initial = {
+				"datetime":swipe.datetime,
+			}
+		)
 		context={
 			"swipe":swipe,
 			"id": id,
