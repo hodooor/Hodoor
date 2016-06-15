@@ -1,0 +1,1 @@
+setInterval(function(){ console.log("Ahoj Patričku :)"); }, 1000);

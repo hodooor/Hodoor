@@ -1,4 +1,5 @@
 {% extends 'attendance/base.html' %}
+{% load static %}
 {% block header_text %}{{ user.username }} Swipes{% endblock %}
 {% block content %}
 
@@ -22,7 +23,8 @@
 	<tr>
 		<td>{{swipe.datetime| date:'D d.m.Y'}}</td>
 		<td>{{swipe.datetime| date:'H:i:s'}}</td>
-		<td>{{swipe.swipe_type}}</td>
+		<td>{% if swipe.swipe_type == 'IN' %}<img src="{% static "img/incom.svg" %}">
+		{% else %}{{swipe.swipe_type }}{% endif %}</td>
 		
 		
 		<td><a href="{% url 'session_detail' username=user.username id=swipe.session.id %}">{{swipe.session}}</a></td>
