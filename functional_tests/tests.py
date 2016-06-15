@@ -51,7 +51,7 @@ def login_by_form(usr, pswd, webdriver):
 	username.send_keys(usr)
 	password.send_keys(pswd)
 
-	webdriver.find_element_by_css_selector("input[value='login']").click()
+	webdriver.find_element_by_css_selector("input[type='submit']").click()
 
 class NewVisitorTest(StaticLiveServerTestCase):
 	
