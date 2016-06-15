@@ -4,33 +4,52 @@
 {% block header_text %}Login{% endblock %}
 {% block content %}
 
-
 {% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
+	<div class="alert alert-warning" role="alert">	
+		<p class="text-left">
+			<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>&nbsp;Your username and password didn't match. Please try again.
+		</p>
+	</div>
 {% endif %}
 
 {% if next %}
     {% if user.is_authenticated %}
-    <p>Your account doesn't have access to this page. To proceed,
-    please login with an account that has access.</p>
+	<div class="alert alert-danger" role="alert">	
+		<p class="text-left">
+			<span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>&nbsp;Your account doesn't have access to this page. To proceed,
+    please login with an account that has access.
+		</p>
+	</div>
     {% else %}
-    <p>Please login to see this page.</p>
+	<div class="alert alert-info" role="alert">	
+	    <p class="text-left">
+				<span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;Please login to see this page.
+		</p>
+	</div>
     {% endif %}
 {% endif %}
 <div class ="row">
-<div class="col-md-3">
+<div class="col-md-4"></div>
+<div class="col-md-4">
+	<div class="panel panel-default">
+		<div class="panel-body">
 
-	<form method="post" action="{% url 'login' %}">
-	{% csrf_token %}
+			<form method="post" action="{% url 'login' %}">
+			{% csrf_token %}
 
-	{{form | crispy}}
+			{{form | crispy}}
 
-	<input class ="btn btn-primary" type="submit" value="login" />
-	<input type="hidden" name="next" value="{{ next }}" />
-	</form>
+			<input class="btn btn-primary btn-block" type="submit" value="Login" />
+			<input type="hidden" name="next" value="{{ next }}" />
+			</form>
 
-	{# Assumes you setup the password_reset view in your URLconf #}
-	<p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+			{# Assumes you setup the password_reset view in your URLconf #}
+			<p>&nbsp;</p>
+			<p class="text-right"><a href="{% url 'password_reset' %}">Lost password?</a></p>
+
+		</div>
+	</div>
+
 </div>
-</div>
+<div class="col-md-4"></div>
 {% endblock %}

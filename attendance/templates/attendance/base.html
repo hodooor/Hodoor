@@ -14,7 +14,7 @@
 </head>
 
 <body>
-	<nav class="navbar navbar-inverse">
+	<nav class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar">
@@ -28,26 +28,26 @@
 			<div class="collapse navbar-collapse" id="topNavBar">
 				
 				{% if user.is_authenticated %}
-				<p class="navbar-text navbar-right">{{user.username}}</p> 
+				<p class="navbar-text">Logged in as: {{user.username}}</p>
 				<ul class="nav navbar-nav navbar-right">
 					<li class="">
-						<a href="{%url 'logout' %}" class="a-logout">
-							<span class="glyphicon glyphicon-log-out" aria-hidden="true"</span>
-							Logout
+						<a href="{% url 'home' %}", class="a-sessions">
+							<span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;User profile
 						</a>
 					</li>
-				</ul>
-				<ul class="nav navbar-nav navbar-right">
 					<li class="">
 						<a href="{% url 'sessions' user.username %}", class="a-sessions">
-							<span class="glyphicon glyphicon-time" aria-hidden="true"</span>
-							Sessions
+							<span class="glyphicon glyphicon-time" aria-hidden="true"></span>&nbsp;Sessions
 						</a>
 					</li>
 					<li class="">
 						<a href="{% url 'swipes' user.username %}", class="a-swipes">
-							<span class="glyphicon glyphicon-list-alt" aria-hidden="true"</span>
-							Swipes
+							<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>&nbsp;Swipes
+						</a>
+					</li>
+					<li class="">
+						<a href="{%url 'logout' %}" class="a-logout">
+							<span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
 						</a>
 					</li>
 				</ul>
@@ -55,6 +55,7 @@
 			</div>
 		</div>
 	</nav>
+	<div><br/><br/></div> <!-- This structure is old and not recommended, but works, somewhere is wrong code in Bootstrap navbar -->
 	<div class="container">
 	    <div class="col-md-6 col-md-offset-3">
 	        <div class="text-center">
