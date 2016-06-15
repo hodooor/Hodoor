@@ -15,7 +15,9 @@ swipe_types = [short_type[0] for short_type in Swipe.SWIPE_TYPES]
 
 
 class UserFactory(DjangoModelFactory):
-
+	"""
+	Factory for user
+	"""
 	class Meta:
 		model = User
 
