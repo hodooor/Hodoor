@@ -1,6 +1,10 @@
 {% extends 'attendance/base.html' %}
 {% load static %}
-{% block header_text %}{{ user.username }} Swipes{% endblock %}
+{% block header_text %}
+
+{{user.first_name}} {{user.last_name}}: Swipes
+
+{% endblock %}
 {% block content %}
 
 {% endblock %}
@@ -23,10 +27,27 @@
 	<tr>
 		<td>{{swipe.datetime| date:'D d.m.Y'}}</td>
 		<td>{{swipe.datetime| date:'H:i:s'}}</td>
-		<td>{% if swipe.swipe_type == 'IN' %}<img src="{% static "img/incom.svg" %}">
-		{% else %}{{swipe.swipe_type }}{% endif %}</td>
-		
-		
+		<td>
+			<a href="#" data-toggle="tooltip" data-placement="right" title="
+					{% if swipe.swipe_type == 'IN' %} Coming to work
+					{% elif swipe.swipe_type == 'OUT' %} Leave work
+					{% elif swipe.swipe_type == 'OBR' %} Break
+					{% elif swipe.swipe_type == 'FBR' %} Coming from break back to work
+					{% elif swipe.swipe_type == 'OTR' %} On work trip
+					{% elif swipe.swipe_type == 'FTR' %} From work trip
+					{% endif %}
+			">
+				<img src="
+					{% if swipe.swipe_type == 'IN' %}{% static "img/incom.svg" %}
+					{% elif swipe.swipe_type == 'OUT' %}{% static "img/outgo.svg" %}
+					{% elif swipe.swipe_type == 'OBR' %}{% static "img/break.svg" %}
+					{% elif swipe.swipe_type == 'FBR' %}{% static "img/break_ret.svg" %}
+					{% elif swipe.swipe_type == 'OTR' %}{% static "img/trip.svg" %}
+					{% elif swipe.swipe_type == 'FTR' %}{% static "img/trip_ret.svg" %}
+					{% endif %}
+				" />
+			</a>
+		</td>
 		<td><a href="{% url 'session_detail' username=user.username id=swipe.session.id %}">{{swipe.session}}</a></td>
 		<td></td>
 		<td>{% if swipe.correction_of_swipe%}<a href="{% url 'swipe_detail' username=user.username id=swipe.correction_of_swipe.id %}">{{ swipe.correction_of_swipe.id}}</a>{% endif %}</td>

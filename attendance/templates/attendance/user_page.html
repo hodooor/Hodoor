@@ -1,12 +1,46 @@
 {% extends 'attendance/base.html' %}
+{% load static %}
 {% block header_text %}
-Profile
+User's profile page
 {% endblock %}
 
 {% block table%}
 	  	
 {% endblock %}
 {% block content %}
-<h3>{{user.username}}</h3>
-<h4>Hours this month: {{ hours_this_month|floatformat:2}}</h4>
+
+
+
+<div class="col-md-3">
+	<img src="{% static "user_img/default.gif" %}" alt="Users profile image" class="img-circle img-responsive userImage"/>
+</div>
+<div class="col-md-9">
+	<h3>{{user.first_name}} {{user.last_name}}</h3>
+	<table class="table table-responsive">
+		<tr>
+			<td><strong>Name</strong></td>
+			<td>{{user.first_name}}</td>
+		</tr>
+		<tr>
+			<td><strong>Surname</strong></td>
+			<td>{{user.last_name}}</td>
+		</tr>
+		<tr>
+			<td><strong>Email</strong></td>
+			<td>{{user.email}}</td>
+		</tr>
+		<tr>
+			<td><strong>Login</strong></td>
+			<td>{{user.username}}</td>
+		</tr>
+	</table>
+
+	<h3>Attendance info</h3>
+	<hr/>
+	<p class="lead">Hours this month: {{ hours_this_month|floatformat:2}}</p>
+	<p class="lead">Sessions this month: </p>
+</div>
+
+
+
 {% endblock %}

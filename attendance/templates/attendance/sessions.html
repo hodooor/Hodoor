@@ -1,7 +1,8 @@
 {% extends 'attendance/base.html' %}
 {% block header_text %}
-{{ user.username }} Sessions 
-{{month}}-{{year}}
+
+{{user.first_name}} {{user.last_name}}: Sessions {{month}}-{{year}}
+
 {% endblock %}
 {% block content %}
 {% endblock %}

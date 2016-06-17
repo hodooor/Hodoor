@@ -6,7 +6,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hodoor</title>
+    <title>Hodoor - ELEDUS attendance system</title>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
@@ -29,41 +30,42 @@
 			<div class="collapse navbar-collapse" id="topNavBar">
 				
 				{% if user.is_authenticated %}
-				<p class="navbar-text">Logged in as: {{user.username}}</p>
-				<ul class="nav navbar-nav navbar-right">
-					<li class="">
-						<a href="{% url 'home' %}", class="a-user">
+				<p class="navbar-text">Logged in as: {{user.first_name}} {{user.last_name}}</p>
+				<ul class="nav navbar-nav navbar-right">				
+					<li class="nav-item  {% if "/user/" in request.path %}active{% endif %} ">
+						<a href="{% url 'home' %}" class="a-user nav-link">
 							<span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;User profile
 						</a>
 					</li>
-					<li class="">
-						<a href="{% url 'sessions' user.username %}", class="a-sessions">
+					<li class="nav-item {% if "/sessions/" in request.path %}active{% endif %} ">
+						<a href="{% url 'sessions' user.username %}", class="a-sessions nav-link">
 							<span class="glyphicon glyphicon-time" aria-hidden="true"></span>&nbsp;Sessions
 						</a>
 					</li>
-					<li class="">
-						<a href="{% url 'swipes' user.username %}", class="a-swipes">
+					<li class="nav-item {% if "/swipes/" in request.path %}active{% endif %} ">
+						<a href="{% url 'swipes' user.username %}", class="a-swipes nav-link">
 							<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>&nbsp;Swipes
 						</a>
 					</li>
-					<li class="">
-						<a href="{%url 'logout' %}" class="a-logout">
+					<li class="nav-item">
+						<a href="{%url 'logout' %}" class="a-logout nav-link">
 							<span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
 						</a>
 					</li>
 				</ul>
 				{% endif %}
+
 			</div>
 		</div>
 	</nav>
-	<div><br/><br/></div> <!-- This structure is old and not recommended, but works, somewhere is wrong code in Bootstrap navbar -->
+	<div><br/><br/><br/></div> <!-- This structure is old and not recommended, but works, somewhere is wrong code in Bootstrap navbar -->
 	<div class="container">
 	    <div class="col-md-6 col-md-offset-3">
 	        <div class="text-center">
 	            <h1>{% block header_text %}{% endblock %}</h1>
 	        </div>
 	    </div>
-	    <table class="table">
+	    <table class="table table-striped">
 	            {% block table %}
 	            {% endblock %}
 	    </table>
