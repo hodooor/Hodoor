@@ -83,11 +83,12 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
 		datetime__year = int(year), 
 	).values_list('session', flat=True)
 	sessions = Session.objects.filter(pk__in = in_swipes_ids)
-
+	u = User.objects.get(username = username)
 	context = {
 		"sessions":sessions,
 		"year":year,
-		"month":month
+		"month":month,
+		"hours_this_month": Session.objects.get_hours_this_month(u.id),
 	}
 	return render(request, "attendance/sessions.html", context)
 

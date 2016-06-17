@@ -15,7 +15,7 @@ User's profile page
 	<img src="{% static "user_img/default.gif" %}" alt="Users profile image" class="img-circle img-responsive userImage"/>
 </div>
 <div class="col-md-9">
-	<h3>{{user.first_name}} {{user.last_name}}</h3>
+	<h3>{{user.first_name}} {{user.last_name}} ({% if user.is_superuser %}Admin{% else %}User{% endif %})</h3>
 	<table class="table table-responsive">
 		<tr>
 			<td><strong>Name</strong></td>

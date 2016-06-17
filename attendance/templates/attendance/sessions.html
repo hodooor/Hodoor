@@ -1,24 +1,51 @@
 {% extends 'attendance/base.html' %}
 {% block header_text %}
 
-{{user.first_name}} {{user.last_name}}: Sessions {{month}}-{{year}}
+Sessions info for: {{month}}-{{year}}
 
 {% endblock %}
-{% block content %}
-{% endblock %}
 
+{% block content_top %}
+<div class="">
+        <div class="btn-group" role="group" aria-label="...">
+                <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <strong>Year: 2016 <span class="caret"></span></strong>
+                        </button>
+                                <ul class="dropdown-menu">
+                                <li><a href="#">2015</a></li>
+                                <li><a href="#">2016</a></li>
+                                <li><a href="#">2017</a></li>
+                        </ul>
+                </div>
+                <a href="#" class="btn btn-default {% if "/01" in request.path %}active{% endif %}">01</a>
+                <a href="#" class="btn btn-default {% if "/02" in request.path %}active{% endif %}">02</a>
+                <a href="#" class="btn btn-default {% if "/03" in request.path %}active{% endif %}">03</a>
+                <a href="#" class="btn btn-default {% if "/04" in request.path %}active{% endif %}">04</a>
+                <a href="#" class="btn btn-default {% if "/05" in request.path %}active{% endif %}">05</a>
+                <a href="#" class="btn btn-default {% if "/06" in request.path %}active{% endif %}">06</a>
+                <a href="#" class="btn btn-default {% if "/07" in request.path %}active{% endif %}">07</a>
+                <a href="#" class="btn btn-default {% if "/08" in request.path %}active{% endif %}">08</a>
+                <a href="#" class="btn btn-default {% if "/09" in request.path %}active{% endif %}">09</a>
+                <a href="#" class="btn btn-default {% if "/10" in request.path %}active{% endif %}">10</a>
+                <a href="#" class="btn btn-default {% if "/11" in request.path %}active{% endif %}">11</a>
+                <a href="#" class="btn btn-default {% if "/12" in request.path %}active{% endif %}">12</a>
+        </div>
+</div>
+<h2>Session info table</h2>
+{% endblock %}
 {% block table %}
 <thead class = "thead-inverse">
-	     <tr>
-	    	<th>DATE</th>
-	    	<th>PROJECT</th>
-	    	<th>TIME SPEND</th>
-	    	<th>DESCRIPTION</th>
-	    	<th>DURATION</th>
-	    	<th>BREAKS</th>
-	    	<th>STATUS</th>
-	    	<th>ID</th>
-	  	</tr>
+        <tr>
+        	<th>DATE</th>
+        	<th>PROJECT</th>
+        	<th>TIME SPEND</th>
+        	<th>DESCRIPTION</th>
+        	<th>DURATION</th>
+        	<th>BREAKS</th>
+        	<th>STATUS</th>
+        	<th>ID</th>
+        </tr>
 </thead>
 <tbody>
 {% for session in sessions%}
@@ -54,4 +81,7 @@
 {% endfor %}
 </tbody>
 
+{% endblock %}
+{% block content %}
+<h3>Hour this month: {{hours_this_month|floatformat:2}}</h3>
 {% endblock %}

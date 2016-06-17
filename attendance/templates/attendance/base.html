@@ -24,19 +24,27 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class = "navbar-brand" href="{% url 'home' %}">Hodoor</a>
+				<a class="navbar-brand" style="color:#ffffff;" href="{% url 'home' %}">Hodoor</a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="topNavBar">
 				
 				{% if user.is_authenticated %}
-				<p class="navbar-text">Logged in as: {{user.first_name}} {{user.last_name}}</p>
+				<!--<p class="navbar-text">Logged in as: {{user.first_name}} {{user.last_name}}</p>-->
+				<p class="navbar-text">ELEDUS s.r.o. Attendance System</p>
 				<ul class="nav navbar-nav navbar-right">				
-					<li class="nav-item  {% if "/user/" in request.path %}active{% endif %} ">
+					<!--<li class="nav-item  {% if "/user/" in request.path %}active{% endif %} ">
 						<a href="{% url 'home' %}" class="a-user nav-link">
 							<span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;User profile
 						</a>
+					</li>-->
+					<p class="navbar-text">Logged in as:</p>
+					<li class="nav-item  {% if "/user/" in request.path %}active{% endif %} ">
+						<a href="{% url 'home' %}" class="a-user nav-link">
+							<span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;{{user.first_name}} {{user.last_name}}
+						</a>
 					</li>
+
 					<li class="nav-item {% if "/sessions/" in request.path %}active{% endif %} ">
 						<a href="{% url 'sessions' user.username %}", class="a-sessions nav-link">
 							<span class="glyphicon glyphicon-time" aria-hidden="true"></span>&nbsp;Sessions
@@ -58,18 +66,33 @@
 			</div>
 		</div>
 	</nav>
-	<div><br/><br/><br/></div> <!-- This structure is old and not recommended, but works, somewhere is wrong code in Bootstrap navbar -->
-	<div class="container">
-	    <div class="col-md-6 col-md-offset-3">
-	        <div class="text-center">
-	            <h1>{% block header_text %}{% endblock %}</h1>
-	        </div>
-	    </div>
-	    <table class="table table-striped">
-	            {% block table %}
-	            {% endblock %}
-	    </table>
 
+	<div><br/><br/><br/></div> <!-- This structure is old and not recommended, but works, somewhere is wrong code in Bootstrap navbar -->
+	
+	<div class="container">
+		<div class="row">
+		    <div class="col-md-6 col-md-offset-3">
+		        <div class="text-center">
+		            <h1>{% block header_text %}{% endblock %}</h1>
+		        </div>
+		    </div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+		    {% block content_top %}
+		    {% endblock %}
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+		    <table class="table table-striped">
+		            {% block table %}
+		            {% endblock %}
+		    </table>
+	    </div>
+	</div>
+	<div class="container">
 	    {% block content %}
 		{% endblock %}
 	</div>
