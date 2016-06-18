@@ -97,7 +97,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
 		sessions_header = self.browser.find_element_by_tag_name("h1").text
 	
-		self.assertIn("Profile", sessions_header)
+		self.assertIn("User", sessions_header)
 		self.assertEqual(self.server_url + "/user/" + user.username+ "/",self.browser.current_url)
 		self.browser.find_element_by_class_name('a-logout').click()
 		self.assertIn(self.server_url + "/login/",self.browser.current_url)
