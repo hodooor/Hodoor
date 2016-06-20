@@ -10,26 +10,26 @@ Sessions info for: {{month}}-{{year}}
         <div class="btn-group" role="group" aria-label="...">
                 <div class="btn-group" role="group">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <strong>Year: 2016 <span class="caret"></span></strong>
+                        <strong>Year: {{year}} <span class="caret"></span></strong>
                         </button>
                                 <ul class="dropdown-menu">
-                                <li><a href="#">2015</a></li>
-                                <li><a href="#">2016</a></li>
-                                <li><a href="#">2017</a></li>
+                                <li><a href="{% url 'sessions' user.username %}2015/{{month}}">2015</a></li>
+                                <li><a href="{% url 'sessions' user.username %}2016/{{month}}">2016</a></li>
+                                <li><a href="{% url 'sessions' user.username %}2017/{{month}}">2017</a></li>
                         </ul>
                 </div>
-                <a href="#" class="btn btn-default {% if "/01" in request.path %}active{% endif %}">01</a>
-                <a href="#" class="btn btn-default {% if "/02" in request.path %}active{% endif %}">02</a>
-                <a href="#" class="btn btn-default {% if "/03" in request.path %}active{% endif %}">03</a>
-                <a href="#" class="btn btn-default {% if "/04" in request.path %}active{% endif %}">04</a>
-                <a href="#" class="btn btn-default {% if "/05" in request.path %}active{% endif %}">05</a>
-                <a href="#" class="btn btn-default {% if "/06" in request.path %}active{% endif %}">06</a>
-                <a href="#" class="btn btn-default {% if "/07" in request.path %}active{% endif %}">07</a>
-                <a href="#" class="btn btn-default {% if "/08" in request.path %}active{% endif %}">08</a>
-                <a href="#" class="btn btn-default {% if "/09" in request.path %}active{% endif %}">09</a>
-                <a href="#" class="btn btn-default {% if "/10" in request.path %}active{% endif %}">10</a>
-                <a href="#" class="btn btn-default {% if "/11" in request.path %}active{% endif %}">11</a>
-                <a href="#" class="btn btn-default {% if "/12" in request.path %}active{% endif %}">12</a>
+                <a href="{% url 'sessions' user.username %}{{year}}/01/" class="btn btn-default {% if "/01" in request.path %}active{% endif %}">01</a>
+                <a href="{% url 'sessions' user.username %}{{year}}/02/" class="btn btn-default {% if "/02" in request.path %}active{% endif %}">02</a>
+                <a href="{% url 'sessions' user.username %}{{year}}/03/" class="btn btn-default {% if "/03" in request.path %}active{% endif %}">03</a>
+                <a href="{% url 'sessions' user.username %}{{year}}/04/" class="btn btn-default {% if "/04" in request.path %}active{% endif %}">04</a>
+                <a href="{% url 'sessions' user.username %}{{year}}/05/" class="btn btn-default {% if "/05" in request.path %}active{% endif %}">05</a>
+                <a href="{% url 'sessions' user.username %}{{year}}/06/" class="btn btn-default {% if "/06" in request.path %}active{% endif %}">06</a>
+                <a href="{% url 'sessions' user.username %}{{year}}/07/" class="btn btn-default {% if "/07" in request.path %}active{% endif %}">07</a>
+                <a href="{% url 'sessions' user.username %}{{year}}/08/" class="btn btn-default {% if "/08" in request.path %}active{% endif %}">08</a>
+                <a href="{% url 'sessions' user.username %}{{year}}/09/" class="btn btn-default {% if "/09" in request.path %}active{% endif %}">09</a>
+                <a href="{% url 'sessions' user.username %}{{year}}/10/" class="btn btn-default {% if "/10" in request.path %}active{% endif %}">10</a>
+                <a href="{% url 'sessions' user.username %}{{year}}/11/" class="btn btn-default {% if "/11" in request.path %}active{% endif %}">11</a>
+                <a href="{% url 'sessions' user.username %}{{year}}/12/" class="btn btn-default {% if "/12" in request.path %}active{% endif %}">12</a>
         </div>
 </div>
 <h2>Session info table</h2>
