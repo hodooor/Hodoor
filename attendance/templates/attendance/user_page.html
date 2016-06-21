@@ -10,37 +10,47 @@ User's profile page
 {% block content %}
 
 
-
-<div class="col-md-3">
-	<img src="{% static "user_img/default.gif" %}" alt="Users profile image" class="img-circle img-responsive userImage"/>
+<div class="row">
+	<div class="col-md-3">
+		<img src="{% static "user_img/default.gif" %}" alt="Users profile image" class="img-circle img-responsive userImage"/>
+	</div>
+	<div class="col-md-9">
+		<h3>{{user.first_name}} {{user.last_name}} <span class="label label-{% if user.is_superuser %}primary">Admin{% else %}warning">User{% endif %}</span></h3>
+		<table class="table table-responsive">
+			<tr>
+				<td><h4>Name</h4></td>
+				<td><h4>{{user.first_name}}</h4></td>
+			</tr>
+			<tr>
+				<td><h4>Surname</h4></td>
+				<td><h4>{{user.last_name}}</td>
+			</tr>
+			<tr>
+				<td><h4>Email</h4></td>
+				<td><h4>{{user.email}}</td>
+			</tr>
+			<tr>
+				<td><h4>Login</h4></td>
+				<td><h4>{{user.username}}</h4></td>
+			</tr>
+		</table>
+	</div>
 </div>
-<div class="col-md-9">
-	<h3>{{user.first_name}} {{user.last_name}} ({% if user.is_superuser %}Admin{% else %}User{% endif %})</h3>
-	<table class="table table-responsive">
-		<tr>
-			<td><h4>Name</h4></td>
-			<td><h4>{{user.first_name}}</h4></td>
-		</tr>
-		<tr>
-			<td><h4>Surname</h4></td>
-			<td><h4>{{user.last_name}}</td>
-		</tr>
-		<tr>
-			<td><h4>Email</h4></td>
-			<td><h4>{{user.email}}</td>
-		</tr>
-		<tr>
-			<td><h4>Login</h4></td>
-			<td><h4>{{user.username}}</td>
-		</tr>
-	</table>
-
-	<h3>Attendance info</h3>
-	<hr/>
-	<p class="lead">Hours this month: {{ hours_this_month|floatformat:2}}</p>
-	<p class="lead">Sessions this month: </p>
+<div class="bs-callout bs-callout-info">
+	<h3>Attendance info:</h3>
+	<p class="">Hours this month: {{ hours_this_month|floatformat:2}}</p>
+	<p class="">Sessions this month: </p>
 </div>
 
+<div class="bs-callout bs-callout-danger">
+	<h3>Assigned projects:</h3>
+	<p class="label label-lg label-default">GCOMUN</p>
+	<p class="label label-primary">SCIOX</p>
+	<p class="label label-success">MULA</p>
+	<p class="label label-danger">Study time</p>
+	<p class="label label-warning">Wigard</p>
+	<p class="label label-info">LTE</p>
+</div>
 
 
 {% endblock %}

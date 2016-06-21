@@ -1,4 +1,5 @@
 {% extends 'attendance/base.html' %}
+
 {% block header_text %}
 
 Sessions info for: <span class="label label-default">{{month}}-{{year}}</span>
@@ -42,16 +43,35 @@ Sessions info for: <span class="label label-default">{{month}}-{{year}}</span>
   <div class="col-md-5">
     <div class="bs-callout bs-callout-info">
         <h2>Session info table</h2>
+
         <table class="table table-default">
             <tr>
-                <td>Hour this month:</td>
+                <td><strong>Hours this month:</strong></td>
                 <td><span style="font-size: 1.2em; color:#00AEEF;">{{hours_this_month|floatformat:2}}</span></td>
+                <td><strong>hours</strong></td>
             </tr>
             <tr>
-                <td>Hour in selected month:</td>
-                <td>{{hours_this_month|floatformat:2}}</td>
+                <td>Hours in selected month:</td>
+                <td>{{ 0 }}</td>
+                <td>hours</td>
             </tr>
+            <tr>
+                <td>Unsigned duration time:</td>
+                <td>{{ 0 }}</td>
+                <td>hours</td>
+            </tr>
+            <tr>
+                <td>
+                  <a href="#" class="" data-toggle="tooltip" data-placement="left" title="You will need reach this qota">
+                    <span class="glyphicon glyphicon-info-sign"></span>
+                  </a> Time to fulfill qotas:
+                </td>
+                <td>{% with 160 as qota %} {{ hours_this_month|add:-160 }} {% endwith %}</td>
+                <td>hour</td>
+            </tr>
+
         </table>
+
       </div>
   </div>     
 </div>

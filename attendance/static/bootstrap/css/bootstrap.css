@@ -1152,7 +1152,7 @@ hr {
   margin-top: 20px;
   margin-bottom: 20px;
   border: 0;
-  border-top: 1px solid #eee;
+  border-top: 1px solid #ddd;
 }
 .sr-only {
   position: absolute;
@@ -1273,11 +1273,11 @@ h1,
 }
 h2,
 .h2 {
-  font-size: 30px;
+  font-size: 24px;
 }
 h3,
 .h3 {
-  font-size: 24px;
+  font-size: 22px;
 }
 h4,
 .h4 {
