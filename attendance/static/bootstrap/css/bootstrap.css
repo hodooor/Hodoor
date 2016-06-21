@@ -3178,6 +3178,7 @@ fieldset[disabled] .btn-success.active {
 .btn-info {
   color: #fff;
   background-color: #5bc0de;
+  /*background-color: #00AEEF;*/
   border-color: #46b8da;
 }
 .btn-info:hover,
@@ -4174,7 +4175,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   margin-bottom: 0;
   border-width: 1px 0 0;
 }
-.navbar-brand {
+/*.navbar-brand {
   float: left;
   height: 50px;
   padding: 15px 15px;
@@ -4187,6 +4188,15 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .navbar-brand > img {
   display: block;
+}*/
+.navbar-brand {
+  padding: 0px;
+}
+.navbar-brand>img {
+  height: 50px;
+  padding: 8px;
+  width: auto;
+  max-width: 220px;
 }
 @media (min-width: 768px) {
   .navbar > .container .navbar-brand,
@@ -4398,6 +4408,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .navbar-default {
   background-color: #f8f8f8;
   border-color: #e7e7e7;
+  border-bottom: 4px solid;
 }
 .navbar-default .navbar-brand {
   color: #777;
