@@ -6,33 +6,54 @@ Sessions info for: {{month}}-{{year}}
 {% endblock %}
 
 {% block content_top %}
-<div class="">
-        <div class="btn-group" role="group" aria-label="...">
-                <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <strong>Year: {{year}} <span class="caret"></span></strong>
-                        </button>
-                                <ul class="dropdown-menu">
-                                <li><a href="{% url 'sessions' user.username %}2015/{{month}}">2015</a></li>
-                                <li><a href="{% url 'sessions' user.username %}2016/{{month}}">2016</a></li>
-                                <li><a href="{% url 'sessions' user.username %}2017/{{month}}">2017</a></li>
-                        </ul>
+<div class="row">
+        <div class="panel panel-default">
+                <div class="panel-body">
+                        <div class="col-md-7">
+                                <h2>Session selection</h2>
+                                <div class="btn-group" role="group" aria-label="...">
+                                        <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Year: {{year}} <span class="caret"></span> 
+                                                </button>
+                                                        <ul class="dropdown-menu">
+                                                        <li><a href="{% url 'sessions' user.username %}2015/{{month}}">2015</a></li>
+                                                        <li><a href="{% url 'sessions' user.username %}2016/{{month}}">2016</a></li>
+                                                        <li><a href="{% url 'sessions' user.username %}2017/{{month}}">2017</a></li>
+                                                </ul>
+                                        </div>
+                                        <a href="{% url 'sessions' user.username %}{{year}}/01/" class="btn btn-default {% if "/01" in request.path %}active{% endif %}">01</a>
+                                        <a href="{% url 'sessions' user.username %}{{year}}/02/" class="btn btn-default {% if "/02" in request.path %}active{% endif %}">02</a>
+                                        <a href="{% url 'sessions' user.username %}{{year}}/03/" class="btn btn-default {% if "/03" in request.path %}active{% endif %}">03</a>
+                                        <a href="{% url 'sessions' user.username %}{{year}}/04/" class="btn btn-default {% if "/04" in request.path %}active{% endif %}">04</a>
+                                        <a href="{% url 'sessions' user.username %}{{year}}/05/" class="btn btn-default {% if "/05" in request.path %}active{% endif %}">05</a>
+                                        <a href="{% url 'sessions' user.username %}{{year}}/06/" class="btn btn-default {% if "/06" in request.path %}active{% endif %}">06</a>
+                                        <a href="{% url 'sessions' user.username %}{{year}}/07/" class="btn btn-default {% if "/07" in request.path %}active{% endif %}">07</a>
+                                        <a href="{% url 'sessions' user.username %}{{year}}/08/" class="btn btn-default {% if "/08" in request.path %}active{% endif %}">08</a>
+                                        <a href="{% url 'sessions' user.username %}{{year}}/09/" class="btn btn-default {% if "/09" in request.path %}active{% endif %}">09</a>
+                                        <a href="{% url 'sessions' user.username %}{{year}}/10/" class="btn btn-default {% if "/10" in request.path %}active{% endif %}">10</a>
+                                        <a href="{% url 'sessions' user.username %}{{year}}/11/" class="btn btn-default {% if "/11" in request.path %}active{% endif %}">11</a>
+                                        <a href="{% url 'sessions' user.username %}{{year}}/12/" class="btn btn-default {% if "/12" in request.path %}active{% endif %}">12</a>
+                                </div>
+                        <p class="text-left">You can choose any Session you want by clicking on tabs above</p>
+                        </div>                
+                        <div class="col-md-5">
+                                <h2>Session info table</h2>
+                                <table class="table table-default">
+                                        <tr>
+                                                <td>Hour this month:</td>
+                                                <td>{{hours_this_month|floatformat:2}}</td>
+                                        </tr>
+                                        <tr>
+                                                <td>Hour in selected month:</td>
+                                                <td>{{hours_this_month|floatformat:2}}</td>
+                                        </tr>
+                                </table>
+                        </div>  
                 </div>
-                <a href="{% url 'sessions' user.username %}{{year}}/01/" class="btn btn-default {% if "/01" in request.path %}active{% endif %}">01</a>
-                <a href="{% url 'sessions' user.username %}{{year}}/02/" class="btn btn-default {% if "/02" in request.path %}active{% endif %}">02</a>
-                <a href="{% url 'sessions' user.username %}{{year}}/03/" class="btn btn-default {% if "/03" in request.path %}active{% endif %}">03</a>
-                <a href="{% url 'sessions' user.username %}{{year}}/04/" class="btn btn-default {% if "/04" in request.path %}active{% endif %}">04</a>
-                <a href="{% url 'sessions' user.username %}{{year}}/05/" class="btn btn-default {% if "/05" in request.path %}active{% endif %}">05</a>
-                <a href="{% url 'sessions' user.username %}{{year}}/06/" class="btn btn-default {% if "/06" in request.path %}active{% endif %}">06</a>
-                <a href="{% url 'sessions' user.username %}{{year}}/07/" class="btn btn-default {% if "/07" in request.path %}active{% endif %}">07</a>
-                <a href="{% url 'sessions' user.username %}{{year}}/08/" class="btn btn-default {% if "/08" in request.path %}active{% endif %}">08</a>
-                <a href="{% url 'sessions' user.username %}{{year}}/09/" class="btn btn-default {% if "/09" in request.path %}active{% endif %}">09</a>
-                <a href="{% url 'sessions' user.username %}{{year}}/10/" class="btn btn-default {% if "/10" in request.path %}active{% endif %}">10</a>
-                <a href="{% url 'sessions' user.username %}{{year}}/11/" class="btn btn-default {% if "/11" in request.path %}active{% endif %}">11</a>
-                <a href="{% url 'sessions' user.username %}{{year}}/12/" class="btn btn-default {% if "/12" in request.path %}active{% endif %}">12</a>
         </div>
 </div>
-<h2>Session info table</h2>
+<h2>Session details</h2>
 {% endblock %}
 {% block table %}
 <thead class = "thead-inverse">
@@ -50,7 +71,7 @@ Sessions info for: {{month}}-{{year}}
 <tbody>
 {% for session in sessions%}
         <tr>	
-        	<td>{{session.get_date|date:'d.m.'}}</td>
+        	<td>{{session.get_date|date:'D d.m.'}}</td>
         	<td>
         		<table class = "table-condensed">
         			{% for sep in session.projectseparation_set.all %}
@@ -83,5 +104,4 @@ Sessions info for: {{month}}-{{year}}
 
 {% endblock %}
 {% block content %}
-<h3>Hour this month: {{hours_this_month|floatformat:2}}</h3>
 {% endblock %}

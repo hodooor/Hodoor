@@ -5,8 +5,8 @@
 {{user.first_name}} {{user.last_name}}: Swipes
 
 {% endblock %}
-{% block content %}
 
+{% block content %}
 {% endblock %}
 
 {% block table %}
@@ -19,12 +19,14 @@
     <th>SOURCE</th>
   	<th>CORRECTION OF SWIPE</th>
   	<th>ID</th>
-  	<th>DETAIL</th>
+  	<th class="text-center">DETAIL</th>
   </tr>
 </thead>
 <tbody>
+	
 	{% for swipe in swipes %}
-	<tr>
+
+	<tr class="hiddenRow">
 		<td>{{swipe.datetime| date:'D d.m.Y'}}</td>
 		<td>{{swipe.datetime| date:'H:i:s'}}</td>
 		<td>
@@ -52,9 +54,12 @@
 		<td></td>
 		<td>{% if swipe.correction_of_swipe%}<a href="{% url 'swipe_detail' username=user.username id=swipe.correction_of_swipe.id %}">{{ swipe.correction_of_swipe.id}}</a>{% endif %}</td>
 		<td>{{swipe.id}}</td>
-		<td><a href="{% url 'swipe_detail' username=user.username id=swipe.id %}">Detail</a></td>   
+		<td class="text-center"><a href="{% url 'swipe_detail' username=user.username id=swipe.id %}" class="btn btn-info">Detail</a></td>   
 	</tr>
+
 	{% endfor %}
 </tbody>
 </table>
+<button id="showAll" type="button" class="btn btn-primary pull-right" data-toggle="tooltip" data-placement="bottom" title="Click to show all of swipes">
+	<span class="glyphicon glyphicon-chevron-right"></span> View All Swipes</button>
 {% endblock %}
