@@ -1,0 +1,28 @@
+<VirtualHost *:80>
+        ServerName hodoor-staging.eledus.cz
+        Redirect permanent / https://hodoor-staging.eledus.cz/
+</VirtualHost>
+
+<VirtualHost *:443>
+        Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
+        SSLEngine On
+        SSLCertificateFile /etc/apache2/ssl/wildcard.eledus.cz/eledus.pem
+        SSLCertificateKeyFile /etc/apache2/ssl/wildcard.eledus.cz/eledus.key
+        ServerName hodoor-staging.eledus.cz
+        ErrorLog /var/log/apache2/hodoor-staging.log
+        CustomLog /var/log/apache2/hodoor-staging_auth.log combined
+        Alias /static/ /home/ondrej.vicar/sites/hodoor-staging.eledus.cz/static/
+        <Directory /home/ondrej.vicar/sites/hodoor-staging.eledus.cz/static>
+                Require all granted
+        </Directory>
+
+        <Directory /home/ondrej.vicar/sites/hodoor-staging.eledus.cz/source/ticker>
+        <Files wsgi.py>
+            Require all granted
+        </Files>
+        </Directory>
+        WSGIDaemonProcess hodoor-staging.eledus.cz python-path=/home/ondrej.vicar/sites/hodoor-staging.eledus$
+        WSGIProcessGroup hodoor-staging.eledus.cz
+        WSGIScriptAlias / /home/ondrej.vicar/sites/hodoor-staging.eledus.cz/source/ticker/wsgi.py
+
+</VirtualHost>
