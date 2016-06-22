@@ -11,7 +11,8 @@
     <link href="{% static 'css/docs.css' %}" rel="stylesheet">
     <link href="{% static 'bootstrap/css/bootstrap.css' %}" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-	<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+		<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+		<script src="{% static 'js/attendance.js' %}"></script>
  	{{form.media}}
 </head>
 
@@ -31,14 +32,8 @@
 			<div class="collapse navbar-collapse" id="topNavBar">
 				
 				{% if user.is_authenticated %}
-				<!--<p class="navbar-text">Logged in as: {{user.first_name}} {{user.last_name}}</p>-->
 				<p class="navbar-text">ELEDUS s.r.o. Attendance System</p>
 				<ul class="nav navbar-nav navbar-right">				
-					<!--<li class="nav-item  {% if "/user/" in request.path %}active{% endif %} ">
-						<a href="{% url 'home' %}" class="a-user nav-link">
-							<span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;User profile
-						</a>
-					</li>-->
 					<p class="navbar-text">Logged in as:</p>
 					<li class="nav-item  {% if "/user/" in request.path %}active{% endif %} ">
 						<a href="{% url 'home' %}" class="a-user nav-link">
@@ -79,24 +74,37 @@
 		    </div>
 		</div>
 	</div>
-	<div class="container">
+
+	<div class="container-fluid">
 		<div class="row">
-		    {% block content_top %}
+			<div class="col-md-12">
+		    {% block content-top-fluid %}
 		    {% endblock %}
+		  </div>
 		</div>
 	</div>
+
 	<div class="container">
 		<div class="row">
-		    <table class="table table-striped">
-		            {% block table %}
-		            {% endblock %}
-		    </table>
-	    </div>
+			<div class="col-md-12">
+		    {% block content-top %}
+		    {% endblock %}
+		  </div>
+		</div>
 	</div>
-	<div class="container">
-	    {% block content %}
-		{% endblock %}
+
+	<div class="container-fluid">
+	  <div class="row">
+	  	<div class="col-md-3">
+		  	{% block content-left %}
+		  	{% endblock %}
+	  	</div>
+	  	<div class="col-md-9">
+		  	{% block content %}
+		  	{% endblock %}
+	  	</div>
+	  </div>
 	</div>
-	<script src="{% static 'js/attendance.js' %}"></script>
+
 </body>
 </html>

@@ -6,78 +6,79 @@ Sessions info for: <span class="label label-default">{{month}}-{{year}}</span>
 
 {% endblock %}
 
-{% block content_top %}
-<div class="row">        
-  <div class="col-md-7">
-    <div class="bs-callout bs-callout-danger">
-        <h2>Session selection</h2>
-        <br />
-        <div class="btn-group" role="group" aria-label="...">
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Year: {{year}} <span class="caret"></span> 
-                </button>
-                    <ul class="dropdown-menu">
-                    <li><a href="{% url 'sessions' user.username %}2015/{{month}}">2015</a></li>
-                    <li><a href="{% url 'sessions' user.username %}2016/{{month}}">2016</a></li>
-                    <li><a href="{% url 'sessions' user.username %}2017/{{month}}">2017</a></li>
-                </ul>
-            </div>
-            <a href="{% url 'sessions' user.username %}{{year}}/01/" class="btn btn-default {% if "/01" in request.path %}active{% endif %}">01</a>
-            <a href="{% url 'sessions' user.username %}{{year}}/02/" class="btn btn-default {% if "/02" in request.path %}active{% endif %}">02</a>
-            <a href="{% url 'sessions' user.username %}{{year}}/03/" class="btn btn-default {% if "/03" in request.path %}active{% endif %}">03</a>
-            <a href="{% url 'sessions' user.username %}{{year}}/04/" class="btn btn-default {% if "/04" in request.path %}active{% endif %}">04</a>
-            <a href="{% url 'sessions' user.username %}{{year}}/05/" class="btn btn-default {% if "/05" in request.path %}active{% endif %}">05</a>
-            <a href="{% url 'sessions' user.username %}{{year}}/06/" class="btn btn-default {% if "/06" in request.path %}active{% endif %}">06</a>
-            <a href="{% url 'sessions' user.username %}{{year}}/07/" class="btn btn-default {% if "/07" in request.path %}active{% endif %}">07</a>
-            <a href="{% url 'sessions' user.username %}{{year}}/08/" class="btn btn-default {% if "/08" in request.path %}active{% endif %}">08</a>
-            <a href="{% url 'sessions' user.username %}{{year}}/09/" class="btn btn-default {% if "/09" in request.path %}active{% endif %}">09</a>
-            <a href="{% url 'sessions' user.username %}{{year}}/10/" class="btn btn-default {% if "/10" in request.path %}active{% endif %}">10</a>
-            <a href="{% url 'sessions' user.username %}{{year}}/11/" class="btn btn-default {% if "/11" in request.path %}active{% endif %}">11</a>
-            <a href="{% url 'sessions' user.username %}{{year}}/12/" class="btn btn-default {% if "/12" in request.path %}active{% endif %}">12</a>
-        </div>
-        <br /><br />
-    <p class="text-left">You can choose any Session you want by clicking on tabs above</p>
-    </div> 
-  </div>               
-  <div class="col-md-5">
-    <div class="bs-callout bs-callout-info">
-        <h2>Session info table</h2>
-
-        <table class="table table-default">
-            <tr>
-                <td><strong>Hours this month:</strong></td>
-                <td><span style="font-size: 1.2em; color:#00AEEF;">{{hours_this_month|floatformat:2}}</span></td>
-                <td><strong>hours</strong></td>
-            </tr>
-            <tr>
-                <td>Hours in selected month:</td>
-                <td>{{ 0 }}</td>
-                <td>hours</td>
-            </tr>
-            <tr>
-                <td>Unsigned duration time:</td>
-                <td>{{ 0 }}</td>
-                <td>hours</td>
-            </tr>
-            <tr>
-                <td>
-                  <a href="#" class="" data-toggle="tooltip" data-placement="left" title="You will need reach this qota">
-                    <span class="glyphicon glyphicon-info-sign"></span>
-                  </a> Time to fulfill qotas:
-                </td>
-                <td>{% with 160 as qota %} {{ hours_this_month|add:-160 }} {% endwith %}</td>
-                <td>hour</td>
-            </tr>
-
-        </table>
-
+{% block content-left %}
+<div class="bs-callout bs-callout-danger">
+  <div class="row">
+    <div class="col-md-8">
+      <h2>Session settings</h2>
+    </div>
+    <div class="col-md-4">
+      <div class="btn-group" style="margin-top:15px;">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Year: {{year}} <span class="caret"></span> 
+        </button>
+            <ul class="dropdown-menu">
+            <li><a href="{% url 'sessions' user.username %}2015/{{month}}">2015</a></li>
+            <li><a href="{% url 'sessions' user.username %}2016/{{month}}">2016</a></li>
+            <li><a href="{% url 'sessions' user.username %}2017/{{month}}">2017</a></li>
+        </ul>
       </div>
-  </div>     
+    </div>
+  </div>
+    <p>Select month:</p>
+    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+        <a href="{% url 'sessions' user.username %}{{year}}/01/" class="btn btn-default {% if "/01" in request.path %}active{% endif %}">01</a>
+        <a href="{% url 'sessions' user.username %}{{year}}/02/" class="btn btn-default {% if "/02" in request.path %}active{% endif %}">02</a>
+        <a href="{% url 'sessions' user.username %}{{year}}/03/" class="btn btn-default {% if "/03" in request.path %}active{% endif %}">03</a>
+        <a href="{% url 'sessions' user.username %}{{year}}/04/" class="btn btn-default {% if "/04" in request.path %}active{% endif %}">04</a>
+        <a href="{% url 'sessions' user.username %}{{year}}/05/" class="btn btn-default {% if "/05" in request.path %}active{% endif %}">05</a>
+        <a href="{% url 'sessions' user.username %}{{year}}/06/" class="btn btn-default {% if "/06" in request.path %}active{% endif %}">06</a>
+      </div>
+      <div class="btn-group btn-group-justified" role="group" aria-label="...">       
+        <a href="{% url 'sessions' user.username %}{{year}}/07/" class="btn btn-default {% if "/07" in request.path %}active{% endif %}">07</a>
+        <a href="{% url 'sessions' user.username %}{{year}}/08/" class="btn btn-default {% if "/08" in request.path %}active{% endif %}">08</a>
+        <a href="{% url 'sessions' user.username %}{{year}}/09/" class="btn btn-default {% if "/09" in request.path %}active{% endif %}">09</a>
+        <a href="{% url 'sessions' user.username %}{{year}}/10/" class="btn btn-default {% if "/10" in request.path %}active{% endif %}">10</a>
+        <a href="{% url 'sessions' user.username %}{{year}}/11/" class="btn btn-default {% if "/11" in request.path %}active{% endif %}">11</a>
+        <a href="{% url 'sessions' user.username %}{{year}}/12/" class="btn btn-default {% if "/12" in request.path %}active{% endif %}">12</a>
+    </div>
+    <br /><br />
+<p class="text-left">You can choose any Session you want by clicking on tabs above</p>
+</div> 
+
+<div class="bs-callout bs-callout-info">
+  <h2>Session info table</h2>
+  <table class="table table-default">
+      <tr>
+          <td><strong>Hours this month:</strong></td>
+          <td><span style="font-size: 1.2em; color:#00AEEF;">{{hours_this_month|floatformat:2}}</span></td>
+          <td><strong>hours</strong></td>
+      </tr>
+      <tr>
+          <td>Hours in selected month:</td>
+          <td>{{ 0 }}</td>
+          <td>hours</td>
+      </tr>
+      <tr>
+          <td>Unsigned duration time:</td>
+          <td>{{ 0 }}</td>
+          <td>hours</td>
+      </tr>
+      <tr>
+          <td>
+            <a href="#" class="" data-toggle="tooltip" data-placement="top" title="You will need reach this qota">
+              <span class="glyphicon glyphicon-info-sign"></span>
+            </a> Time to fulfill qotas:
+          </td>
+          <td>{% with 160 as qota %} {{ hours_this_month|add:-160 }} {% endwith %}</td>
+          <td>hour</td>
+      </tr>
+  </table>
 </div>
-<h2>Session details</h2>
 {% endblock %}
-{% block table %}
+
+{% block content %}
+<table class="table table-striped">
 <thead class = "thead-inverse">
   <tr>
     <th>DATE</th>
@@ -91,7 +92,7 @@ Sessions info for: <span class="label label-default">{{month}}-{{year}}</span>
   </tr>
 </thead>
 <tbody>
-{% for session in sessions%}
+  {% for session in sessions%}
     <tr> 
      <td>{{session.get_date|date:'D d.m.'}}</td>
      <td>
@@ -121,9 +122,7 @@ Sessions info for: <span class="label label-default">{{month}}-{{year}}</span>
      <td>{{ session.id }}</td>
      <td><a href="{% url 'session_detail' username=user.username id=session.id %}" type="button" class="btn btn-info">Detail</a></td>
     </tr>
-{% endfor %}
+  {% endfor %}
 </tbody>
+{% endblock %}
 
-{% endblock %}
-{% block content %}
-{% endblock %}

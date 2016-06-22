@@ -1,56 +1,57 @@
 {% extends 'attendance/base.html' %}
 {% load static %}
+
 {% block header_text %}
 User's profile page
 {% endblock %}
 
-{% block table%}
-	  	
-{% endblock %}
-{% block content %}
 
-
-<div class="row">
-	<div class="col-md-3">
-		<img src="{% static "user_img/default.gif" %}" alt="Users profile image" class="img-circle img-responsive userImage"/>
+	{% block content-left %}
+	<div class="bs-callout bs-callout-info">
+		<h3>Attendance info:</h3>
+		<p class="">Hours this month: {{ hours_this_month|floatformat:2}}</p>
+		<p class="">Sessions this month: </p>
 	</div>
-	<div class="col-md-9">
-		<h3>{{user.first_name}} {{user.last_name}} <span class="label label-{% if user.is_superuser %}primary">Admin{% else %}warning">User{% endif %}</span></h3>
-		<table class="table table-responsive">
-			<tr>
-				<td><h4>Name</h4></td>
-				<td><h4>{{user.first_name}}</h4></td>
-			</tr>
-			<tr>
-				<td><h4>Surname</h4></td>
-				<td><h4>{{user.last_name}}</td>
-			</tr>
-			<tr>
-				<td><h4>Email</h4></td>
-				<td><h4>{{user.email}}</td>
-			</tr>
-			<tr>
-				<td><h4>Login</h4></td>
-				<td><h4>{{user.username}}</h4></td>
-			</tr>
-		</table>
+
+	<div class="bs-callout bs-callout-danger">
+		<h3>Assigned projects:</h3>
+		<p class="label label-lg label-default">GCOMUN</p>
+		<p class="label label-primary">SCIOX</p>
+		<p class="label label-success">MULA</p>
+		<p class="label label-danger">Study time</p>
+		<p class="label label-warning">Wigard</p>
+		<p class="label label-info">LTE</p>
 	</div>
-</div>
-<div class="bs-callout bs-callout-info">
-	<h3>Attendance info:</h3>
-	<p class="">Hours this month: {{ hours_this_month|floatformat:2}}</p>
-	<p class="">Sessions this month: </p>
-</div>
+	{% endblock %}
+	{% block content %}
+	<div class="">
+		<br />
+		<div class="panel panel-body">
+			<div class="col-md-3">
+				<img src="{% static "user_img/default.gif" %}" alt="Users profile image" class="img-circle img-responsive userImage"/>
+			</div>
+			<div class="col-md-9">
+				<h3>{{user.first_name}} {{user.last_name}} <span class="label label-{% if user.is_superuser %}primary">Admin{% else %}warning">User{% endif %}</span></h3>
+				<table class="table table-responsive">
+					<tr>
+						<td><h4>Name</h4></td>
+						<td><h4>{{user.first_name}}</h4></td>
+					</tr>
+					<tr>
+						<td><h4>Surname</h4></td>
+						<td><h4>{{user.last_name}}</h4></td>
+					</tr>
+					<tr>
+						<td><h4>Email</h4></td>
+						<td><h4>{{user.email}}</h4></td>
+					</tr>
+					<tr>
+						<td><h4>Login</h4></td>
+						<td><h4>{{user.username}}</h4></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	{% endblock %}
 
-<div class="bs-callout bs-callout-danger">
-	<h3>Assigned projects:</h3>
-	<p class="label label-lg label-default">GCOMUN</p>
-	<p class="label label-primary">SCIOX</p>
-	<p class="label label-success">MULA</p>
-	<p class="label label-danger">Study time</p>
-	<p class="label label-warning">Wigard</p>
-	<p class="label label-info">LTE</p>
-</div>
-
-
-{% endblock %}
