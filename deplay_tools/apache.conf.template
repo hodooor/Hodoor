@@ -24,5 +24,6 @@
         WSGIDaemonProcess hodoor-staging.eledus.cz python-path=/home/ondrej.vicar/sites/hodoor-staging.eledus$
         WSGIProcessGroup hodoor-staging.eledus.cz
         WSGIScriptAlias / /home/ondrej.vicar/sites/hodoor-staging.eledus.cz/source/ticker/wsgi.py
+        WSGIPassAuthorization On #need to be added for token auth
 
 </VirtualHost>
