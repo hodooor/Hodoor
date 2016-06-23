@@ -2,7 +2,10 @@
 {% load static %}
 {% block header_text %}
 
-{{user.first_name}} {{user.last_name}}: Swipes
+{{user.first_name}} {{user.last_name}}: Swipes 
+<button id="showAll" type="button" class="btn btn-primary pull-right" data-toggle="tooltip" data-placement="bottom" data-original-title="Click to show all of swipes">
+ View All Swipes
+</button>
 
 {% endblock %}
 
@@ -58,6 +61,4 @@
 	{% endfor %}
 </tbody>
 </table>
-<button id="showAll" type="button" class="btn btn-primary pull-right" data-toggle="tooltip" data-placement="bottom" title="Click to show all of swipes">
-	<span class="glyphicon glyphicon-chevron-right"></span> View All Swipes</button>
 {% endblock %}
