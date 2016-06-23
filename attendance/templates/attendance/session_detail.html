@@ -1,20 +1,22 @@
 {% extends 'attendance/base.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block header_text %}
-Session {{ id }} Detail
+Session {{ id }} - details
 {% endblock %}
 
 {% block table%}
 	  	
 {% endblock %}
-{% block content %}
+{% block content-top %}
 
 <h2>Swipes</h2>
-<table class="table">
+<table class="table table-striped">
 <thead>
   <tr>
     <th>TYPE</th>
+    <th></th>
     <th>TIME</th>
     <th>DATE</th>
     <th>ID</th>
@@ -25,6 +27,27 @@ Session {{ id }} Detail
 	{% for swipe in swipes %}
 	<tr>
 		<td>{{swipe.swipe_type}}</td>
+        <td>
+            <a href="#" data-toggle="tooltip" data-placement="right" title="
+                    {% if swipe.swipe_type == 'IN' %} Coming to work
+                    {% elif swipe.swipe_type == 'OUT' %} Leave work
+                    {% elif swipe.swipe_type == 'OBR' %} Break
+                    {% elif swipe.swipe_type == 'FBR' %} Coming from break back to work
+                    {% elif swipe.swipe_type == 'OTR' %} On work trip
+                    {% elif swipe.swipe_type == 'FTR' %} From work trip
+                    {% endif %}
+            ">
+                <img src="
+                    {% if swipe.swipe_type == 'IN' %}{% static "img/incom.svg" %}
+                    {% elif swipe.swipe_type == 'OUT' %}{% static "img/outgo.svg" %}
+                    {% elif swipe.swipe_type == 'OBR' %}{% static "img/break.svg" %}
+                    {% elif swipe.swipe_type == 'FBR' %}{% static "img/break_ret.svg" %}
+                    {% elif swipe.swipe_type == 'OTR' %}{% static "img/trip.svg" %}
+                    {% elif swipe.swipe_type == 'FTR' %}{% static "img/trip_ret.svg" %}
+                    {% endif %}
+                " />
+            </a>
+        </td>
 		<td>{{swipe.datetime| date:'H:i:s'}}
 		<td>{{swipe.datetime| date:'D d.m.Y'}}
 		</td><td>{{swipe.id}}</td>
@@ -34,82 +57,88 @@ Session {{ id }} Detail
 </tbody>
 </table>
 
-
-<h2>Projects</h2>
-<table class="table">
-<thead>
-  <tr>
-    <th class="col-md-2">PROJECT</th>
-    <th class="col-md-2">TIME SPEND</th>
-    <th class="col-md-6">DESCRIPTION</th>
-    <th class="col-md-2"></th>
-  </tr>
-</thead>
-<tbody>
-	{% for separation in separations %}
-	<tr>
-		<td>{{separation.project}}</td><td>{{separation.time_spend}}</td><td>{{separation.description}}</td>  
-	</tr>
-	{% endfor %}
-	<form method='POST' action=''>{% csrf_token %}
-	<tr>
-		{% for form in project_separation_form %}
-			<td>{{form}}</td>
-		{% endfor %}
-		<td><input type='submit' value = 'Add'/></td>
-	</tr>	
-	</form>
-	
-</tbody>
-</table>
-<h2>Info</h2>
-<table class="table table-hover">
-	<thead>
-	<tr>
-	  <th class="col-md-2">PARAMETER</th>
-	  <th class="col-md-2">VALUE</th>
-	  <th class="col-md-8">DESCRIPTION</th>
-	</tr>
-	</thead>
-	<tbody>	
-    <tr>
-        <td data-field="key" class="key">Overall Duration</td>
-        <td data-field="value">{{session.session_duration_overall}}</td>
-        <td data-field="description">Duration of whole session from incomming to outgoing swipe.<td>
-    </tr>
-    <tr>
-        <td data-field="key" class="key">Work Duration</td>
-        <td data-field="value">{{session.session_duration}}</td>
-        <td data-field="description">Clean work time. This value should be assigned to projects.<td>
-    </tr>
-    <tr>
-        <td data-field="key" class="key">Not Assigned Duration</td>
-        <td data-field="value">{{session.get_not_assigned_duration}}</td>
-        <td data-field="description">Time, that was not assigned to projects. Should be 0 after end of month<td>
-    </tr>
-    <tr>
-        <td data-field="key" class="key">Number of Breaks</td>
-        <td data-field="value">{{session.num_of_breaks}}</td>
-        <td data-field="description">Number of breaks during this session.<td>
-    </tr>
-    <tr>
-        <td data-field="key" class="key">Breaks Duration</td>
-        <td data-field="value">{{session.breaks_duration}}</td>
-        <td data-field="description">Sum of duration of all breaks during this session.<td>
-    </tr>
-    <tr>
-        <td data-field="key" class="key">Session Status</td>
-        <td data-field="value">{{ session.is_session_complete |yesno:"Complete, Open" }}</td>
-        <td data-field="description">Session is open, if there is no outgoing swipe<td>
-    </tr>
-    <tr>
-        <td data-field="key" class="key">Session Modified</td>
-        <td data-field="value">{{ session.modified }}</td>
-        <td data-field="description">Session is modified, if some of it's swipes were corrected.<td>
-    </tr>
+<div class="bs-callout bs-callout-danger">
+    <h2>Projects</h2>
+    <table class="table">
+    <thead>
+      <tr>
+        <th class="col-md-2">PROJECT</th>
+        <th class="col-md-2">TIME SPEND</th>
+        <th class="col-md-6">DESCRIPTION</th>
+        <th class="col-md-1"></th>
+        <th class="col-md-1"></th>
+      </tr>
+    </thead>
+    <tbody>
+    	{% for separation in separations %}
+    	<tr>
+    		<td>{{separation.project}}</td>
+            <td>{{separation.time_spend}}</td>
+            <td>{{separation.description}}</td>  
+    	</tr>
+    	{% endfor %}
+    	<form method='POST' action=''>{% csrf_token %}
+    	<tr>
+    		{% for form in project_separation_form %}
+    			<td>{{form}}</td>
+    		{% endfor %}
+    		<td><input type="submit" class="btn btn-primary" value="Add" /></td>
+    	</tr>	
+    	</form>
+    	
     </tbody>
-</table>
+    </table>
+</div>
 
+<div class="bs-callout bs-callout-info">
+    <h2>Info</h2>
+    <table class="table table-hover">
+    	<thead>
+    	<tr>
+    	  <th class="col-md-2">PARAMETER</th>
+    	  <th class="col-md-2">VALUE</th>
+    	  <th class="col-md-8">DESCRIPTION</th>
+    	</tr>
+    	</thead>
+    	<tbody>	
+        <tr>
+            <td data-field="key" class="key">Overall Duration</td>
+            <td data-field="value">{{session.session_duration_overall}}</td>
+            <td data-field="description">Duration of whole session from incomming to outgoing swipe.<td>
+        </tr>
+        <tr>
+            <td data-field="key" class="key">Work Duration</td>
+            <td data-field="value">{{session.session_duration}}</td>
+            <td data-field="description">Clean work time. This value should be assigned to projects.<td>
+        </tr>
+        <tr>
+            <td data-field="key" class="key">Not Assigned Duration</td>
+            <td data-field="value">{{session.get_not_assigned_duration}}</td>
+            <td data-field="description">Time, that was not assigned to projects. Should be 0 after end of month<td>
+        </tr>
+        <tr>
+            <td data-field="key" class="key">Number of Breaks</td>
+            <td data-field="value">{{session.num_of_breaks}}</td>
+            <td data-field="description">Number of breaks during this session.<td>
+        </tr>
+        <tr>
+            <td data-field="key" class="key">Breaks Duration</td>
+            <td data-field="value">{{session.breaks_duration}}</td>
+            <td data-field="description">Sum of duration of all breaks during this session.<td>
+        </tr>
+        <tr>
+            <td data-field="key" class="key">Session Status</td>
+            <td data-field="value">{{ session.is_session_complete |yesno:"Complete, Open" }}</td>
+            <td data-field="description">Session is open, if there is no outgoing swipe<td>
+        </tr>
+        <tr>
+            <td data-field="key" class="key">Session Modified</td>
+            <td data-field="value">{{ session.modified }}</td>
+            <td data-field="description">Session is modified, if some of it's swipes were corrected.<td>
+        </tr>
+        </tbody>
+    </table>
+</td>
 
 
 {% endblock %}
