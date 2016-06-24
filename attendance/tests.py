@@ -13,6 +13,7 @@ from const_data import USERS, SWIPES, SWIPE_TYPES
 from datetime import datetime, timedelta
 from django.utils import timezone
 from rest_framework import status
+import pytz
 
 from attendance.views import sessions_month
 from attendance.factories import UserFactory
@@ -210,3 +211,14 @@ class ViewTestCase(TestCase):
 		self.assertEqual(match.kwargs["username"],"bla.bla")
 		self.assertEqual(match.kwargs["year"],"2015")
 		self.assertEqual(match.kwargs["month"],"05")
+
+class TimeTestCase(TestCase):
+
+	def test_app_time_is_same_as_server_time(self):
+		server_now = datetime.now(pytz.utc)
+		django_now = timezone.now()
+		server_now = server_now.replace(microsecond = 0)
+		django_now = django_now.replace(microsecond = 0)
+
+		self.assertEqual(server_now, django_now)
+
