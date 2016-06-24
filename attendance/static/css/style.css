@@ -1,11 +1,20 @@
+
+
 .userImage
 {
-	width:215px; 
-	margin: 0 auto; 
-	margin-top:15px; 
+	width:215px;
+	margin: 0 auto;
+	margin-top:15px;
 	border:3px solid #eaeaea;
 }
 
 .hiddenRow {
 	display: none;
+}
+
+.complete {
+	color: #6cbe4b;
+}
+.open {
+	color: #e44747;
 }

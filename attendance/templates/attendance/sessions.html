@@ -15,7 +15,7 @@ Sessions info for: <span class="label label-default">{{month}}-{{year}}</span>
     <div class="col-md-4">
       <div class="btn-group" style="margin-top:15px;">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Year: {{year}} <span class="caret"></span> 
+        Year: {{year}} <span class="caret"></span>
         </button>
             <ul class="dropdown-menu">
             <li><a href="{% url 'sessions' user.username %}2015/{{month}}">2015</a></li>
@@ -34,7 +34,7 @@ Sessions info for: <span class="label label-default">{{month}}-{{year}}</span>
         <a href="{% url 'sessions' user.username %}{{year}}/05/" class="btn btn-default {% if "/05" in request.path %}active{% endif %}">05</a>
         <a href="{% url 'sessions' user.username %}{{year}}/06/" class="btn btn-default {% if "/06" in request.path %}active{% endif %}">06</a>
       </div>
-      <div class="btn-group btn-group-justified" role="group" aria-label="...">       
+      <div class="btn-group btn-group-justified" role="group" aria-label="...">
         <a href="{% url 'sessions' user.username %}{{year}}/07/" class="btn btn-default {% if "/07" in request.path %}active{% endif %}">07</a>
         <a href="{% url 'sessions' user.username %}{{year}}/08/" class="btn btn-default {% if "/08" in request.path %}active{% endif %}">08</a>
         <a href="{% url 'sessions' user.username %}{{year}}/09/" class="btn btn-default {% if "/09" in request.path %}active{% endif %}">09</a>
@@ -44,7 +44,7 @@ Sessions info for: <span class="label label-default">{{month}}-{{year}}</span>
     </div>
     <br /><br />
 <p class="text-left">You can choose any Session you want by clicking on tabs above</p>
-</div> 
+</div>
 
 <div class="bs-callout bs-callout-info">
   <h2>Session info table</h2>
@@ -94,7 +94,7 @@ Sessions info for: <span class="label label-default">{{month}}-{{year}}</span>
 </thead>
 <tbody>
   {% for session in sessions%}
-    <tr> 
+    <tr>
      <td>{{session.get_date|date:'D d.m.'}}</td>
      <td>
       <table class = "table-condensed">
@@ -109,16 +109,16 @@ Sessions info for: <span class="label label-default">{{month}}-{{year}}</span>
        <tr><td>{{sep.time_spend}}</td></tr>
        {% endfor %}
       </table>
-     </td>  
+     </td>
      <td>
       <table class = "table-condensed">
        {% for sep in session.projectseparation_set.all %}
        <tr><td>{{sep.description}}</td></tr>
        {% endfor %}
       </table>
-     </td> 
-     <td>{{ session.session_duration }}</td> 
-     <td>{{ session.breaks_duration }}</td> 
+     </td>
+     <td>{{ session.session_duration }}</td>
+     <td>{{ session.breaks_duration }}</td>
      <td>{{ session.is_session_complete |yesno:"Complete, Open" }}</td>
      <td>{{ session.id }}</td>
      <td><a href="{% url 'session_detail' username=user.username id=session.id %}" type="button" class="btn btn-info">Detail</a></td>
@@ -126,4 +126,3 @@ Sessions info for: <span class="label label-default">{{month}}-{{year}}</span>
   {% endfor %}
 </tbody>
 {% endblock %}
-

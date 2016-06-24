@@ -30,10 +30,10 @@
 			</div>
 
 			<div class="collapse navbar-collapse" id="topNavBar">
-				
+
 				{% if user.is_authenticated %}
 				<p class="navbar-text">ELEDUS s.r.o. Attendance System</p>
-				<ul class="nav navbar-nav navbar-right">				
+				<ul class="nav navbar-nav navbar-right">
 					<p class="navbar-text">Logged in as:</p>
 					<li class="nav-item  {% if "/user/" in request.path %}active{% endif %} ">
 						<a href="{% url 'home' %}" class="a-user nav-link">
@@ -64,7 +64,7 @@
 	</nav>
 
 	<div><br/><br/><br/></div> <!-- This structure is old and not recommended, but works, somewhere is wrong code in Bootstrap navbar -->
-	
+
 	<div class="container">
 		<div class="row">
 		    <div class="col-md-6 col-md-offset-3">

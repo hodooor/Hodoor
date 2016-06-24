@@ -22,14 +22,14 @@ $(document).ready(function(){ //Calling jQuery when document.ready
 			$(SwipesBtn).removeClass(btnClass1);
 			$(SwipesBtn).addClass(btnClass2);
 			$(SwipesBtn).attr('data-original-title', btnTitle2)
-			HideRows(rows);	
+			HideRows(rows);
 			btnState = !btnState;
   	} else {
 			$(SwipesBtn).html(btnText1);
 			$(SwipesBtn).removeClass(btnClass2);
 			$(SwipesBtn).addClass(btnClass1);
 			$(SwipesBtn).attr('data-original-title', btnTitle1)
-			UnhideRows(rows);	
+			UnhideRows(rows);
   		btnState = !btnState;
   	}
   });
@@ -44,11 +44,18 @@ $(document).ready(function(){ //Calling jQuery when document.ready
 
 	//=====================================Hidding last rows filter======================
 	//hidding last rows, if rowIndex is lower than VALUE then remove hidding
-	rows.filter(function( index ) { return index > rowsCount-MaxNumOfRow; }).removeClass("hiddenRow"); 
-	
+	rows.filter(function( index ) { return index > rowsCount-MaxNumOfRow; }).removeClass("hiddenRow");
+
+  //=====================================Sessions status color=========================
+  $("td:contains('Complete')").each(function() {
+    $(this).addClass("complete");
+  });
+  $("td:contains('Open')").each(function() {
+    $(this).addClass("open");
+  });
+
 	//=====================================Debugging=====================================
 	//console.log(rowsCount);
 	//console.log(rows);
 
 });
-
