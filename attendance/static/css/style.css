@@ -1,4 +1,6 @@
-
+body {
+	background: url('../img/bg-blurry-3.jpg') fixed #f4f4f4;
+}
 
 .userImage
 {
@@ -12,9 +14,9 @@
 	display: none;
 }
 
-.complete {
+.complete, .green-possitive {
 	color: #6cbe4b;
 }
-.open {
+.open, .red-negative {
 	color: #e44747;
 }

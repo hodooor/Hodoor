@@ -2,10 +2,13 @@
 {% load crispy_forms_tags %}
 
 {% block header_text %}
-swipe {{ id }} Detail
+Swipe {{ id }} - detail
 {% endblock %}
 
-{% block content %}
+{% block content-top %}
+<div class="col-md-2 col-md-offset-10">
+	<a class="btn btn-danger" href="{% url 'swipes' user.username %}"><span class="glyphicon glyphicon-chevron-left"></span> Go back to swipes page</a>
+</div>
 <table class="table table-hover">
 
 	<thead>
@@ -15,19 +18,21 @@ swipe {{ id }} Detail
 	  <th class="col-md-6">DESCRIPTION</th>
 	</tr>
 	</thead>
-	<tbody>	
+	<tbody>
 	<tr>
 	    <td data-field="key" class="key">Swipe Type</td>
 	    <td data-field="value">{{swipe.swipe_type}}</td>
+			<td></td>
 	</tr>
 	<tr>
 	    <td data-field="key" class="key">Belongs to Session</td>
-
 	    <td data-field="value">{% if swipe.session %}<a href="{% url 'session_detail' username=user.username id=swipe.session.id %}">{{swipe.session}}</a>{% endif %}</td>
+			<td></td>
 	</tr>
 	<tr>
 		<td data-field="key" class="key">Was corrected by</td>
-		
+		<td></td>
+		<td></td>
 	</tr>
 	<tr>
 	    <td data-field="key" class="key">Datetime</td>
@@ -35,10 +40,10 @@ swipe {{ id }} Detail
 	   	{% for f in form %}
 			<td>{{f}}</td>
 		{% endfor %}
-		<td><input type='submit' value = 'Submit Change'/></td>
+			<td><input type='submit' class="btn btn-primary" value ='Submit Change'/></td>
 		</form>
 	</tr>
-</tbody>	
+</tbody>
 </table>
 <div class="col-md-3">
 </div>

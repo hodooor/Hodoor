@@ -5,8 +5,8 @@ $(document).ready(function(){ //Calling jQuery when document.ready
   //===================================Show/Hide Swipes================================
   var SwipesBtn = $('#showAll'); //get identifier for clickable button
   var MaxNumOfRow = 12; //how many rows should be vissible
-  var btnText1 = "View All Swipes";
-  var btnText2 = "Hide until last " + MaxNumOfRow;
+  var btnText1 = " View All Swipes";
+  var btnText2 = " Hide until last " + MaxNumOfRow;
   var btnClass1 = "btn-primary";
   var btnClass2 = "btn-danger";
   var btnTitle1 = "Click to show all of swipes";
@@ -18,14 +18,14 @@ $(document).ready(function(){ //Calling jQuery when document.ready
   //calling functions after button event
   $(SwipesBtn).click(function() {
   	if(!btnState) {
-			$(SwipesBtn).html(btnText2);
+			$(SwipesBtn).html('<span id="showAllSpan" class="glyphicon glyphicon-chevron-up"></span>'+btnText2);
 			$(SwipesBtn).removeClass(btnClass1);
 			$(SwipesBtn).addClass(btnClass2);
 			$(SwipesBtn).attr('data-original-title', btnTitle2)
 			HideRows(rows);
 			btnState = !btnState;
   	} else {
-			$(SwipesBtn).html(btnText1);
+			$(SwipesBtn).html('<span id="showAllSpan" class="glyphicon glyphicon-chevron-down"></span>'+btnText1);
 			$(SwipesBtn).removeClass(btnClass2);
 			$(SwipesBtn).addClass(btnClass1);
 			$(SwipesBtn).attr('data-original-title', btnTitle1)
@@ -36,22 +36,29 @@ $(document).ready(function(){ //Calling jQuery when document.ready
 
   //Hidding/showing all of the swipes in SWIPES template
   function HideRows(rows) {
-	    rows.filter('.hiddenRow').show();
+	    rows.filter('.hiddenRow').fadeIn('slow'); //show()
   }
   function UnhideRows(rows) {
-	    rows.filter('.hiddenRow').hide();
+	    rows.filter('.hiddenRow').fadeOut('slow'); //hide()
   }
 
 	//=====================================Hidding last rows filter======================
 	//hidding last rows, if rowIndex is lower than VALUE then remove hidding
 	rows.filter(function( index ) { return index > rowsCount-MaxNumOfRow; }).removeClass("hiddenRow");
 
-  //=====================================Sessions status color=========================
-  $("td:contains('Complete')").each(function() {
-    $(this).addClass("complete");
+  //=====================================Sessions status colors========================
+  $(".status:contains('Complete')").each(function() {
+    $(this).addClass("green-possitive");
   });
-  $("td:contains('Open')").each(function() {
-    $(this).addClass("open");
+  $(".status:contains('Open')").each(function() {
+    $(this).addClass("red-negative");
+  });
+  $(".not-assigned:contains('0:00:00')").each(function() {
+    $(this).addClass("green-possitive");
+    //$(this).text("No unasigned time");
+  });
+  $('.not-assigned:not(:contains("0:00:00"))').each(function() {
+    $(this).addClass("red-negative");
   });
 
 	//=====================================Debugging=====================================
