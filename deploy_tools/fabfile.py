@@ -13,6 +13,11 @@ def deploy():
 	_update_virtualenv(source_folder)
 	_update_static_files(source_folder)
 	_update_database(source_folder)
+	_set_database_permissions(site_folder)
+
+def create_superuser():
+	source_folder = '/home/%s/sites/%s/source' % (env.user, env.host)
+	run('cd %s && ../virtualenv/bin/python3 manage.py createsuperuser' % (source_folder))
 
 def _create_directory_structure_if_necessary(site_folder):
 	for subfolder in ('database','static', 'virtualenv', 'source'):
@@ -65,3 +70,9 @@ def _update_database(source_folder):
 	run('cd %s && ../virtualenv/bin/python3 manage.py migrate --noinput' % (
 		source_folder,
 	))
+def _set_database_permissions(site_folder):
+	database_folder = site_folder + "/database"
+	run('sudo chgrp www-data %s' % (database_folder, )) #set group to folder
+	run('sudo chgrp www-data %s/db.sqlite3' % (database_folder, )) #and file
+	run('sudo chmod 770 %s' % (database_folder, ))
+	run('sudo chmod 770 %s/db.sqlite3' % (database_folder, ))
