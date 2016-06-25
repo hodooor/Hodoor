@@ -18,6 +18,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+SECRET_KEY = 's5z45we4r0k5_5f-dw*oo(d-ufuyi-wsj!d2^4m(j(&4&3vn1c'
+
 ALLOWED_HOSTS = []
 # Application definition
 CSRF_COOKIE_SECURE = False
