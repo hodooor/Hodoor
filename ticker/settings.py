@@ -138,7 +138,5 @@ REST_FRAMEWORK = {
     )
 }
 
-CRISPY_TEMPLATE_PACK = "bootstrap3" 
-
-#theres need to be empty line on end of the file becouse import settings secret
-#will be included
+CRISPY_TEMPLATE_PACK = "bootstrap3"
+#Here will be from .settings_secret import SECRET_KEY after deployment script
