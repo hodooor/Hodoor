@@ -15,15 +15,13 @@
         <Directory /home/ondrej.vicar/sites/SITENAME/static>
                 Require all granted
         </Directory>
-
         <Directory /home/ondrej.vicar/sites/SITENAME/source/ticker>
         <Files wsgi.py>
             Require all granted
         </Files>
         </Directory>
-        WSGIDaemonProcess SITENAME python-path=/home/ondrej.vicar/SITENAME$
+        WSGIDaemonProcess SITENAME python-path=/home/ondrej.vicar/sites/SITENAME:/home/ondrej.vicar/sites/SITENAME/virtualenv/lib/python3.4/site-packages
         WSGIProcessGroup SITENAME
         WSGIScriptAlias / /home/ondrej.vicar/sites/SITENAME/source/ticker/wsgi.py
-        WSGIPassAuthorization On #need to be added for token auth
-
+        WSGIPassAuthorization On
 </VirtualHost>
