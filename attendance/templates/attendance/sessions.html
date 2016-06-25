@@ -78,15 +78,18 @@ Sessions info for: <span class="label label-default">{{month}}-{{year}}</span>
 {% endblock %}
 
 {% block content %}
-<table class="table table-striped">
+<table class="table table-striped table-hover">
 <thead class = "thead-inverse">
-  <tr>
+  <tr class="">
     <th>DATE</th>
     <th>PROJECT</th>
     <th>TIME SPEND</th>
     <th>DESCRIPTION</th>
     <th>DURATION</th>
     <th>BREAKS</th>
+    <th>
+      <span  data-toggle="tooltip" data-placement="top" title="Shows you NOT ASSIGNED TIME" class="glyphicon glyphicon-info-sign"></span> NAT
+    </th>
     <th>STATUS</th>
     <th>ID</th>
     <th></th>
@@ -119,7 +122,8 @@ Sessions info for: <span class="label label-default">{{month}}-{{year}}</span>
      </td>
      <td>{{ session.session_duration }}</td>
      <td>{{ session.breaks_duration }}</td>
-     <td>{{ session.is_session_complete |yesno:"Complete, Open" }}</td>
+     <td class="not-assigned">{{session.get_not_assigned_duration}}</td>
+     <td class="status">{{ session.is_session_complete |yesno:"Complete, Open" }}</td>
      <td>{{ session.id }}</td>
      <td><a href="{% url 'session_detail' username=user.username id=session.id %}" type="button" class="btn btn-info">Detail</a></td>
     </tr>

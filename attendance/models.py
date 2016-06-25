@@ -34,25 +34,25 @@ class SessionManager(models.Manager):
 			return 0
 
 	def get_sessions(month = datetime.now().month, year = datetime.now().year):
-		pass	
+		pass
 class Project(models.Model):
 	name = models.CharField(max_length = 20)
 
 	#so we can define private projects (hours in this project does not count)
 	private = models.BooleanField(default = False)
 	description = models.CharField(
-		max_length = 100, 
-		null = True, 
+		max_length = 100,
+		null = True,
 		blank = True
 	)
 	#maybe worked hours? or will be calculated dynamicaly?
-	
+
 	def __str__(self):
 		return self.name
 
 class Session(models.Model):
 	'''
-	Session is from login swipe to logout swipe and can have one or 
+	Session is from login swipe to logout swipe and can have one or
 	more breaks
 	'''
 
@@ -61,10 +61,10 @@ class Session(models.Model):
 	duration = models.DurationField(null = True, blank = True)
 
 	modified = models.BooleanField(default = False)
-	
+
 	project = models.ManyToManyField(Project, through = "ProjectSeparation")
 
-	objects = SessionManager() 
+	objects = SessionManager()
 	def num_of_breaks (self):
 		'''
 		Returns number of completed breaks during session
@@ -80,7 +80,7 @@ class Session(models.Model):
 		'''
 		Returns timedelta duration of all breaks
 		'''
-		
+
 		obr = self.swipe_set.filter(swipe_type = "OBR")
 		fbr = self.swipe_set.filter(swipe_type = "FBR")
 		duration = timedelta(0)
@@ -90,23 +90,23 @@ class Session(models.Model):
 
 		if len(obr) > len(fbr): #if we are on break
 			duration += datetime.now(timezone.utc) - obr.latest("datetime").datetime
-	
+
 		return duration
-			
+
 	def session_duration_overall (self):
 		'''
 		Returns time delta duration of session(including breaks)
 		'''
 
 		login_datetime = self.swipe_set.get(swipe_type = "IN").datetime
-		
+
 		if(self.is_session_complete()):
 			end_datetime = self.swipe_set.get(swipe_type = "OUT").datetime
 		else:
 			end_datetime = datetime.now(timezone.utc)
-			
-			
-		bla = end_datetime - login_datetime 
+
+
+		bla = end_datetime - login_datetime
 		bla = bla - timedelta(microseconds=bla.microseconds)
 		return bla
 
@@ -132,8 +132,8 @@ class Session(models.Model):
 		for sep in self.projectseparation_set.all():
 			try:
 				time_spend_sum += sep.time_spend
-			except TypeError as err: 
-				if "unsupported operand type(s) for" not in str(err):	
+			except TypeError as err:
+				if "unsupported operand type(s) for" not in str(err):
 					raise
 		return time_spend_sum
 
@@ -141,7 +141,7 @@ class Session(models.Model):
 		return self.session_duration() - self.get_assigned_duration()
 
 
-		
+
 	def __str__(self):
 		return str(self.id) + " " + str(self.user)
 
@@ -154,13 +154,13 @@ class ProjectSeparation(models.Model):
 
 	#this describes the activity
 	description = models.CharField(
-		max_length = 100, 
-		null = True, 
+		max_length = 100,
+		null = True,
 		blank = True
 	)
 	#maybe entered in percentages
-	time_spend = models.DurationField() 
-	
+	time_spend = models.DurationField()
+
 	def __str__(self):
 		return  "Session: " + str(self.session) + " Project: " + str(self.project)
 class Swipe(models.Model):
@@ -174,7 +174,7 @@ class Swipe(models.Model):
 					("OBR","On Break"),
 					("FBR","From Break"),
 					("OTR","On Trip"),
-					("FTR","From Trip")		
+					("FTR","From Trip")
 	)
 
 	user = models.ForeignKey(User)
@@ -184,8 +184,8 @@ class Swipe(models.Model):
 
 	#session should be specified for correcting swipe
 	session = models.ForeignKey(Session,
-		null = True, 
-		blank = True, 
+		null = True,
+		blank = True,
 		on_delete = models.SET_NULL,
 		)
 	source = models.CharField(max_length = 5,null = True, blank = True)
@@ -195,7 +195,7 @@ class Swipe(models.Model):
 		"self",
 		on_delete=models.CASCADE,
 		blank = True,
-		null = True, #if blank, this swipe is the right one 
+		null = True, #if blank, this swipe is the right one
 		)
 	def get_next_allowed_types(self):
 		"""
@@ -211,7 +211,7 @@ class Swipe(models.Model):
 			return "OBR", "OTR","OUT",
 		elif self.swipe_type == "OTR":
 			return "FTR",
-		elif self.swipe_type == "FTR": 
+		elif self.swipe_type == "FTR":
 			return "OBR", "OTR","OUT",
 		else:
 			return "0"
@@ -244,7 +244,7 @@ class Key(models.Model):
 	'''
 	Saves information data about keys.
 	'''
-	id = models.CharField(max_length = 10, primary_key = True) 
+	id = models.CharField(max_length = 10, primary_key = True)
 	key_type = models.CharField(max_length = 4, null = True, blank = True)
 	user = models.ForeignKey(User)
 
@@ -257,11 +257,11 @@ class Key(models.Model):
 @receiver(post_save, sender = Swipe)
 def post_process_swipes(sender=Swipe, **kwargs):
 	if kwargs['created']: # trigering only when swipe was created
-		
+
 		#swipe object that was just created
-		created_swipe = kwargs["instance"]		
-		
-		if created_swipe.correction_of_swipe: 
+		created_swipe = kwargs["instance"]
+
+		if created_swipe.correction_of_swipe:
 
 			orig_swipe = Swipe.objects.get(id = created_swipe.correction_of_swipe.id)
 			orig_swipe.session = None;
@@ -269,19 +269,19 @@ def post_process_swipes(sender=Swipe, **kwargs):
 
 			created_swipe.session = created_swipe.correction_of_swipe.session
 			created_swipe.save()
-			
+
 			created_swipe.session.duration = created_swipe.session.session_duration()
 			created_swipe.session.modified = True
 			created_swipe.session.save()
 
 
-		#open new session if created swipe is not correction of old one 
+		#open new session if created swipe is not correction of old one
 		else:
 			if created_swipe.swipe_type == "IN":
 				sess = Session(user = created_swipe.user)
 				sess.save()
 
-				#swipe is related to session 
+				#swipe is related to session
 				created_swipe.session = sess
 				created_swipe.save()
 
@@ -296,10 +296,9 @@ def post_process_swipes(sender=Swipe, **kwargs):
 					sess = sess[0]
 				else:
 					raise ValueError('More Opened Sessions')
-						
+
 				created_swipe.session = sess
 				created_swipe.save()
 				if created_swipe.swipe_type == "OUT":
 					sess.duration = sess.session_duration()
 					sess.save()
-
