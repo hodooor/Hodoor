@@ -11,12 +11,17 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
-from .settings_secret import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+ALLOWED_HOSTS = []
 # Application definition
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
 
 INSTALLED_APPS = [
 	'attendance', # need to be before admin, so logout redirects to attendance
