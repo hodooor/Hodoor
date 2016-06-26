@@ -24,34 +24,7 @@ from django.utils import timezone
 from datetime import timedelta, datetime
 import time
 
-#firefox_capabilities = DesiredCapabilities.FIREFOX
-#firefox_capabilities['marionette'] = True
-#firefox_capabilities['binary'] = '/home/ondra/Documents/'
 
-
-def populate_database(what_pop):
-	what_pop.USERS = USERS
-	what_pop.SWIPES = SWIPES
-	what_pop.SWIPE_TYPES = SWIPE_TYPES
-	what_pop.TEST_PASSWORD = "user1234"
-
-	dict_to_database(UserSerializer,what_pop.USERS)
-	dict_to_database(SwipeSerializer,what_pop.SWIPES)
-
-	users = User.objects.all()
-	
-	for user in users:
-		user.set_password(what_pop.TEST_PASSWORD)
-		user.save()
-
-def login_by_form(usr, pswd, webdriver):
-	username = webdriver.find_element_by_id("id_username")
-	password = webdriver.find_element_by_id("id_password")
-
-	username.send_keys(usr)
-	password.send_keys(pswd)
-
-	webdriver.find_element_by_css_selector("input[type='submit']").click()
 
 class NewVisitorTest(StaticLiveServerTestCase):
 	
@@ -73,6 +46,16 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		cls.browser.close()
 		super(NewVisitorTest, cls).tearDownClass()
 
+	def login_by_form(self, usr, pswd, webdriver):
+		username = webdriver.find_element_by_id("id_username")
+		password = webdriver.find_element_by_id("id_password")
+
+		username.send_keys(usr)
+		password.send_keys(pswd)
+
+		webdriver.find_element_by_css_selector("input[type='submit']").click()
+
+
 	def test_home_page_login(self):
 		
 		self.browser.get(self.server_url)
@@ -93,7 +76,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		self.browser.get(self.server_url)
 
 		
-		login_by_form(user.username,"admin1324", self.browser)
+		self.login_by_form(user.username,"admin1324", self.browser)
 
 		sessions_header = self.browser.find_element_by_tag_name("h1").text
 	
@@ -124,7 +107,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		)
 
 		#login - logo taking us to profile page
-		login_by_form(user.username,"password", self.browser)
+		self.login_by_form(user.username,"password", self.browser)
 		self.assertEqual(
 			self.server_url + "/user/" + user.username + "/",
 			self.browser.current_url
@@ -140,7 +123,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 	def test_click_on_logout(self):
 
 		user = UserFactory.create()		
-		login_by_form(user.username,"password", self.browser)
+		self.login_by_form(user.username,"password", self.browser)
 		self.assertEqual(
 			self.server_url + "/user/" + user.username + "/",
 			self.browser.current_url
@@ -151,7 +134,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
 	def test_click_on_sessions(self):
 		user = UserFactory.create()		
-		login_by_form(user.username,"password", self.browser)
+		self.login_by_form(user.username,"password", self.browser)
 		self.browser.find_element_by_class_name('a-sessions').click()
 		
 		self.assertIn(
@@ -164,7 +147,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 	def test_click_on_swipes(self):
 		user = UserFactory.create()
 			
-		login_by_form(user.username,"password", self.browser)
+		self.login_by_form(user.username,"password", self.browser)
 		self.browser.find_element_by_class_name('a-swipes').click()
 		
 		self.assertEqual(
@@ -177,7 +160,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 	def test_user_cant_access_another_profile(self):
 		user1 = UserFactory.create()
 		user2 = UserFactory.create()
-		login_by_form(user1.username,"password", self.browser)
+		self.login_by_form(user1.username,"password", self.browser)
 		self.browser.get(self.server_url + "/sessions/" + user2.username + "/")
 		self.assertIn("Restricted", self.browser.page_source, 1)
 		self.browser.get(self.server_url + "/swipes/" + user2.username + "/")
@@ -195,7 +178,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		)
 		user2 = UserFactory.create()
 		self.browser.get(self.server_url)
-		login_by_form(user1.username,"password", self.browser)
+		self.login_by_form(user1.username,"password", self.browser)
 		self.browser.get(self.server_url + "/user/" + user2.username + "/")
 		self.assertIn("Hours", self.browser.page_source)
 
@@ -203,7 +186,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		
 		user = UserFactory.create()
 		swipe = SwipeFactory(user = user, swipe_type = "IN")
-		login_by_form(user.username,"password", self.browser)
+		self.login_by_form(user.username,"password", self.browser)
 		self.assertEqual(Session.objects.count(), 1)
 		SESSION_URL = self.server_url + "/sessions/" + user.username + "/2014/06/"
 		
@@ -250,7 +233,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		self.assertEqual(Session.objects.count(), 3)
 		for session in Session.objects.all():
 			self.browser.get(self.server_url)
-			login_by_form(user.username,"password", self.browser)
+			self.login_by_form(user.username,"password", self.browser)
 			session_url = "{0}/sessions/{1}/{2}/{3:0>2}/".format(
 				self.server_url,
 				user.username,
