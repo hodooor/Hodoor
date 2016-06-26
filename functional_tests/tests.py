@@ -2,7 +2,6 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.support.wait import WebDriverWait
 
-from django.contrib.auth.models import User
 from attendance.models import Key, Swipe, Session
 from attendance.factories import UserFactory, SwipeFactory
 
@@ -22,6 +21,8 @@ import time
 from django.contrib.sessions.backends.db import SessionStore
 from django.contrib.auth import BACKEND_SESSION_KEY, SESSION_KEY, get_user_model
 from django.conf import settings
+User = get_user_model()
+from django.contrib.auth import authenticate
 
 class FunctionalTest(StaticLiveServerTestCase):
 	@classmethod
@@ -51,19 +52,7 @@ class FunctionalTest(StaticLiveServerTestCase):
 
 		webdriver.find_element_by_css_selector("input[type='submit']").click()
 
-	def create_pre_authenticated_session(self):
-		user = UserFactory.create()
-		auth_session = SessionStore()
-		auth_session[SESSION_KEY] = user.pk
-		auth_session[BACKEND_SESSION_KEY] = settings.AUTHENTICATION_BACKENDS[0]
-		auth_session.save()
 
-		self.browser.get(self.server_url + "/404_no_such_url/")
-		self.browser.add_cookie(dict(
-            name=settings.SESSION_COOKIE_NAME,
-            value=session.session_key,
-            path='/',
-        ))
 	def wait_for_element_with_id(self, element_id):
 		WebDriverWait(self.browser, timeout = 30).until(
 			lambda b: b.find_element_by_id(element_id),
@@ -83,16 +72,18 @@ class FunctionalTest(StaticLiveServerTestCase):
 			self.browser.find_element_by_tag_name("body").text
 		)
 
+	def create_pre_authenticated_session(self, username, password):
+		user = UserFactory(username=username, password=password)
+		self.client.login(username = user.username, password=password)
+
+		self.browser.add_cookie(dict(
+			name=settings.SESSION_COOKIE_NAME,
+			value=self.client.session.session_key,
+			path='/',
+		))
+
 class LoginLogoutTest(FunctionalTest):
 	
-	def test_home_page_login(self):
-		
-		self.browser.get(self.server_url)
-
-		self.assertIn('Hodoor', self.browser.title)
-
-		header_text = self.browser.find_element_by_tag_name('p').text
-		self.assertIn("login", header_text)
 
 	def test_login_and_logut_users(self):
 		
@@ -114,7 +105,16 @@ class LoginLogoutTest(FunctionalTest):
 		self.browser.find_element_by_class_name('a-logout').click()
 		self.wait_to_be_logged_out(user.username)
 		self.assertIn(self.server_url + "/login/",self.browser.current_url)
+	
+	def test_new_pre_auth(self):
+		user = UserFactory.build()
+		self.browser.get(self.server_url)
+		self.wait_to_be_logged_out(user.username)
+
+		self.create_pre_authenticated_session(user.username, "password")
 		
+		self.browser.get(self.server_url)
+		self.wait_to_be_logged_in(user.username)		
 class LayoutStylingTest(FunctionalTest):
 	
 	def test_admin_layout_and_styling(self):
