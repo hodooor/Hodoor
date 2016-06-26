@@ -31,10 +31,13 @@ class FunctionalTest(StaticLiveServerTestCase):
 	def setUpClass(cls):
 		for arg in sys.argv:
 			if 'liveserver' in arg:
-				cls.server_url = 'http://' + arg.split('=')[1]
 				cls.browser = webdriver.Firefox()
 				cls.browser.implicitly_wait(3)
-				cls.server_host = arg.split('=')[1]
+				cls.server_user, cls.server_host = arg.split('=')[1].split('@')
+				print("server host: " + cls.server_host )
+				print("server user: " + cls.server_user )
+				cls.server_url = 'http://' + cls.server_host
+				print("server url: " + cls.server_url )
 				cls.against_staging = True
 				return
 		super(FunctionalTest, cls).setUpClass()
@@ -84,7 +87,7 @@ class FunctionalTest(StaticLiveServerTestCase):
 
 	def create_pre_authenticated_session(self, username):		
 		if self.against_staging:
-			session_key = create_session_on_server(self.server_host, username)
+			session_key = create_session_on_server(self.server_user +"@" +self.server_host, username)
 		else:
 			session_key = create_pre_authenticated_session(username)
 
@@ -96,19 +99,13 @@ class FunctionalTest(StaticLiveServerTestCase):
 
 class LoginLogoutTest(FunctionalTest):
 	
-	@skip
 	def test_login_and_logut_users(self):
 		
-		user = UserFactory.create(
-			first_name = "Ondřej", 
-			last_name= "Vičar", 
-			password = "admin1324"
-		)
-		check_password("admin1324", user.password)
+		user = UserFactory.build()
 		self.browser.get(self.server_url)
 
-		
-		self.login_by_form(user.username,"admin1324", self.browser)
+		self.create_pre_authenticated_session(user.username)
+		self.browser.get(self.server_url)
 
 		sessions_header = self.browser.find_element_by_tag_name("h1").text
 		self.wait_to_be_logged_in(user.username)
