@@ -13,8 +13,8 @@ def reset_database():
 		manage_py = _get_manage_dot_py(env.host)
 	))
 
-def create_session_on_srver(username):
-	session_key = run('{manage_py} create_session {usernamer}'.format(
+def create_session_on_server(username):
+	session_key = run('{manage_py} create_session {username}'.format(
 		manage_py = _get_manage_dot_py(env.host),
 		username=username
 	))
