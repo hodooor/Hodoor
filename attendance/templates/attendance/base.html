@@ -37,7 +37,7 @@
 					<p class="navbar-text">Logged in as:</p>
 					<li class="nav-item  {% if "/user/" in request.path %}active{% endif %} ">
 						<a href="{% url 'home' %}" class="a-user nav-link">
-							<span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;{{user.first_name}} {{user.last_name}}
+							<span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;{{user.username}}
 						</a>
 					</li>
 
@@ -52,7 +52,7 @@
 						</a>
 					</li>
 					<li class="nav-item">
-						<a href="{%url 'logout' %}" class="a-logout nav-link">
+						<a href="{%url 'logout' %}" class="a-logout nav-link" id= "id_logout">
 							<span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
 						</a>
 					</li>

@@ -1,28 +1,27 @@
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase, LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
-#from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from const_data import USERS, SWIPES, SWIPE_TYPES, generate_random_datetimes_for_swipes
-from attendance.tests import dict_to_database
-from attendance.serializers import UserSerializer, SwipeSerializer
-from django.contrib.auth.models import User
-from django.conf import settings
-from attendance.models import Key, Swipe, Session
 from selenium.webdriver.support.wait import WebDriverWait
-from django.test.utils import override_settings
-from django.test import TestCase
+
+from django.contrib.auth.models import User
+from attendance.models import Key, Swipe, Session
+from attendance.factories import UserFactory, SwipeFactory
+
 from rest_framework import status
 import sys
 import re
 from rest_framework.test import APIClient
 from unittest import skip
 from rest_framework.authtoken.models import Token
-from selenium.webdriver.support.wait import WebDriverWait
-from attendance.factories import UserFactory, SwipeFactory
+
 from django.contrib.auth.hashers import check_password
 from selenium.common.exceptions import NoSuchElementException
 from django.utils import timezone
 from datetime import timedelta, datetime
 import time
+
+from django.contrib.sessions.backends.db import SessionStore
+from django.contrib.auth import BACKEND_SESSION_KEY, SESSION_KEY, get_user_model
+from django.conf import settings
 
 class FunctionalTest(StaticLiveServerTestCase):
 	@classmethod
@@ -52,6 +51,38 @@ class FunctionalTest(StaticLiveServerTestCase):
 
 		webdriver.find_element_by_css_selector("input[type='submit']").click()
 
+	def create_pre_authenticated_session(self):
+		user = UserFactory.create()
+		auth_session = SessionStore()
+		auth_session[SESSION_KEY] = user.pk
+		auth_session[BACKEND_SESSION_KEY] = settings.AUTHENTICATION_BACKENDS[0]
+		auth_session.save()
+
+		self.browser.get(self.server_url + "/404_no_such_url/")
+		self.browser.add_cookie(dict(
+            name=settings.SESSION_COOKIE_NAME,
+            value=session.session_key,
+            path='/',
+        ))
+	def wait_for_element_with_id(self, element_id):
+		WebDriverWait(self.browser, timeout = 30).until(
+			lambda b: b.find_element_by_id(element_id),
+			"Could not find element with id {}. Page text was:\n{}".format(
+			element_id, self.browser.find_element_by_tag_name("body").text
+			)
+		)
+
+	def wait_to_be_logged_in(self, username):
+		self.wait_for_element_with_id('id_logout')
+		navbar = self.browser.find_element_by_css_selector('.navbar')
+		self.assertIn(username, navbar.text)
+
+	def wait_to_be_logged_out(self, username):
+		self.wait_for_element_with_id('id_login')	
+		self.assertIn("Login",
+			self.browser.find_element_by_tag_name("body").text
+		)
+
 class LoginLogoutTest(FunctionalTest):
 	
 	def test_home_page_login(self):
@@ -77,10 +108,11 @@ class LoginLogoutTest(FunctionalTest):
 		self.login_by_form(user.username,"admin1324", self.browser)
 
 		sessions_header = self.browser.find_element_by_tag_name("h1").text
-	
+		self.wait_to_be_logged_in(user.username)
 		self.assertIn("User", sessions_header)
 		self.assertEqual(self.server_url + "/user/" + user.username+ "/",self.browser.current_url)
 		self.browser.find_element_by_class_name('a-logout').click()
+		self.wait_to_be_logged_out(user.username)
 		self.assertIn(self.server_url + "/login/",self.browser.current_url)
 		
 class LayoutStylingTest(FunctionalTest):
@@ -260,7 +292,7 @@ class SessionTest(FunctionalTest):
 				self.browser.get(self.server_url + "/logout/")
 				self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
-class APITestCase(FunctionalTest):
+class APITest(FunctionalTest):
 	'''
 	Testing API for posting and receiving swipes - for clients
 	'''
