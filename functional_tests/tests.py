@@ -24,10 +24,7 @@ from django.utils import timezone
 from datetime import timedelta, datetime
 import time
 
-
-
-class NewVisitorTest(StaticLiveServerTestCase):
-	
+class FunctionalTest(StaticLiveServerTestCase):
 	@classmethod
 	def setUpClass(cls):
 		for arg in sys.argv:
@@ -36,7 +33,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 				cls.browser = webdriver.Firefox()
 				cls.browser.implicitly_wait(3)
 				return
-		super(NewVisitorTest, cls).setUpClass()
+		super(FunctionalTest, cls).setUpClass()
 		cls.server_url = cls.live_server_url
 		cls.browser = webdriver.Firefox()
 		cls.browser.implicitly_wait(3)
@@ -44,7 +41,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 	@classmethod
 	def tearDownClass(cls):
 		cls.browser.close()
-		super(NewVisitorTest, cls).tearDownClass()
+		super(FunctionalTest, cls).tearDownClass()
 
 	def login_by_form(self, usr, pswd, webdriver):
 		username = webdriver.find_element_by_id("id_username")
@@ -55,7 +52,8 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
 		webdriver.find_element_by_css_selector("input[type='submit']").click()
 
-
+class LoginLogoutTest(FunctionalTest):
+	
 	def test_home_page_login(self):
 		
 		self.browser.get(self.server_url)
@@ -85,7 +83,8 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		self.browser.find_element_by_class_name('a-logout').click()
 		self.assertIn(self.server_url + "/login/",self.browser.current_url)
 		
-
+class LayoutStylingTest(FunctionalTest):
+	
 	def test_admin_layout_and_styling(self):
 		self.browser.get(self.server_url+"/admin/")
 		self.browser.set_window_size(1024, 768)
@@ -94,6 +93,8 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
 		self.assertEqual(color, "rgba(65, 118, 144, 1)")
 
+class PageNavigationTest(FunctionalTest):
+	
 	def test_click_on_logo_returns_home_page(self):
 
 		user = UserFactory.create()
@@ -157,9 +158,12 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		self.browser.find_element_by_class_name('a-logout').click()
 		self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
+
+class PageAccessTest(FunctionalTest):
 	def test_user_cant_access_another_profile(self):
 		user1 = UserFactory.create()
 		user2 = UserFactory.create()
+		self.browser.get(self.server_url)
 		self.login_by_form(user1.username,"password", self.browser)
 		self.browser.get(self.server_url + "/sessions/" + user2.username + "/")
 		self.assertIn("Restricted", self.browser.page_source, 1)
@@ -182,10 +186,13 @@ class NewVisitorTest(StaticLiveServerTestCase):
 		self.browser.get(self.server_url + "/user/" + user2.username + "/")
 		self.assertIn("Hours", self.browser.page_source)
 
+
+class SessionTest(FunctionalTest):
 	def test_there_should_be_no_session_long_time_ago(self):
 		
 		user = UserFactory.create()
 		swipe = SwipeFactory(user = user, swipe_type = "IN")
+		self.browser.get(self.server_url)
 		self.login_by_form(user.username,"password", self.browser)
 		self.assertEqual(Session.objects.count(), 1)
 		SESSION_URL = self.server_url + "/sessions/" + user.username + "/2014/06/"
@@ -253,7 +260,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 				self.browser.get(self.server_url + "/logout/")
 				self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
-class APITestCase(StaticLiveServerTestCase):
+class APITestCase(FunctionalTest):
 	'''
 	Testing API for posting and receiving swipes - for clients
 	'''
