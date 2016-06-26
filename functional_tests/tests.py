@@ -22,7 +22,9 @@ from django.contrib.sessions.backends.db import SessionStore
 from django.contrib.auth import BACKEND_SESSION_KEY, SESSION_KEY, get_user_model
 from django.conf import settings
 User = get_user_model()
-from django.contrib.auth import authenticate
+from .server_tools import reset_database
+
+from .management.commands.create_session import create_pre_authenticated_session
 
 class FunctionalTest(StaticLiveServerTestCase):
 	@classmethod
@@ -32,8 +34,11 @@ class FunctionalTest(StaticLiveServerTestCase):
 				cls.server_url = 'http://' + arg.split('=')[1]
 				cls.browser = webdriver.Firefox()
 				cls.browser.implicitly_wait(3)
+				cls.server_host = arg.split('=')[1]
+				cls.against_staging = True
 				return
 		super(FunctionalTest, cls).setUpClass()
+		cls.against_staging = False
 		cls.server_url = cls.live_server_url
 		cls.browser = webdriver.Firefox()
 		cls.browser.implicitly_wait(3)
@@ -41,7 +46,12 @@ class FunctionalTest(StaticLiveServerTestCase):
 	@classmethod
 	def tearDownClass(cls):
 		cls.browser.close()
-		super(FunctionalTest, cls).tearDownClass()
+		if not cls.against_staging:
+			super(FunctionalTest, cls).tearDownClass()
+
+	def setUp(self):
+		if self.against_staging:
+			reset_database(self.server_host)
 
 	def login_by_form(self, usr, pswd, webdriver):
 		username = webdriver.find_element_by_id("id_username")
@@ -72,13 +82,15 @@ class FunctionalTest(StaticLiveServerTestCase):
 			self.browser.find_element_by_tag_name("body").text
 		)
 
-	def create_pre_authenticated_session(self, username, password):
-		user = UserFactory(username=username, password=password)
-		self.client.login(username = user.username, password=password)
+	def create_pre_authenticated_session(self, username):		
+		if self.against_staging:
+			session_key = create_session_on_server(self.server_host, email)
+		else:
+			session_key = create_pre_authenticated_session(username)
 
 		self.browser.add_cookie(dict(
 			name=settings.SESSION_COOKIE_NAME,
-			value=self.client.session.session_key,
+			value=session_key,
 			path='/',
 		))
 
@@ -111,7 +123,7 @@ class LoginLogoutTest(FunctionalTest):
 		self.browser.get(self.server_url)
 		self.wait_to_be_logged_out(user.username)
 
-		self.create_pre_authenticated_session(user.username, "password")
+		self.create_pre_authenticated_session(user.username)
 		
 		self.browser.get(self.server_url)
 		self.wait_to_be_logged_in(user.username)		
