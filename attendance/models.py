@@ -91,6 +91,7 @@ class Session(models.Model):
 		if len(obr) > len(fbr): #if we are on break
 			duration += datetime.now(timezone.utc) - obr.latest("datetime").datetime
 
+		duration = duration - timedelta(microseconds=duration.microseconds)
 		return duration
 
 	def session_duration_overall (self):
