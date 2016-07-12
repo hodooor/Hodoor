@@ -11,6 +11,7 @@ django.setup()
 
 from attendance.models import Swipe,Session
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 
 
 
@@ -21,6 +22,12 @@ def print_doc_str_and_return_value(functions_iterable):
 	for function in functions_iterable:
 		print(function.__doc__.strip(), str(function()))
 
-from attendance.factories import SwipeFactory, UserFactory
-swipe = SwipeFactory(swipe_type = "IN")
-print(Session.objects.filter(user= swipe.user))
+send_mail(
+	subject = "Django Mail",
+	message = "Testuju django mail",
+	from_email = "ho.door@eledus.cz",
+	recipient_list = ["ondrej.vicar@eledus.cz"],
+	auth_user = "ho.door@eledus.cz",
+	auth_password = "r4IITjppr7",
+	fail_silently = False
+)	

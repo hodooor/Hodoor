@@ -139,5 +139,8 @@ REST_FRAMEWORK = {
     )
 }
 
+EMAIL_HOST = "smtp.websupport.sk"
+EMAIL_PORT = 25
+
 CRISPY_TEMPLATE_PACK = "bootstrap3"
 #Here will be from .settings_secret import SECRET_KEY after deployment script
