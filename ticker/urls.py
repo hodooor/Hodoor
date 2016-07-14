@@ -18,7 +18,11 @@ from django.contrib import admin
 
 
 from attendance import views
-from django.contrib.auth.views import logout
+from django.contrib.auth.views import (	logout, 
+									   	password_reset, 
+									   	password_reset_done,
+									   	password_reset_confirm,
+									   	password_reset_complete )
 from rest_framework import routers
 
 swipes_router = routers.DefaultRouter()
@@ -69,4 +73,19 @@ urlpatterns = [
     	name='swipe_detail'),
     #/swipes/username/
     url(r'^swipes/(?P<username>[\w.@+-]+)/$', views.swipes, name='swipes'),
+
+    #password reset section
+    url(r'^user/password/reset/$', 
+        password_reset, 
+        {'post_reset_redirect' : '/user/password/reset/done/'},
+        name="password_reset"),
+    
+    url(r'^user/password/reset/done/$', password_reset_done),
+    
+    url(r'^user/password/reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 
+        password_reset_confirm, 
+        {'post_reset_redirect' : '/user/password/done/'}),
+    
+    url(r'^user/password/done/$', 
+        password_reset_complete),
 ]   

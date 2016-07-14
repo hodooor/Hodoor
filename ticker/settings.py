@@ -129,7 +129,7 @@ SPAGHETTI_SAUCE = {
   'show_fields':True,
   'exclude':{}
 }
-
+LOGIN_URL = "/login"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
@@ -141,6 +141,8 @@ REST_FRAMEWORK = {
 
 EMAIL_HOST = "smtp.websupport.sk"
 EMAIL_PORT = 25
+EMAIL_HOST_USER = 'ho.door@eledus.cz'
+EMAIL_HOST_PASSWORD = 'r4IITjppr7'
 
 CRISPY_TEMPLATE_PACK = "bootstrap3"
 #Here will be from .settings_secret import SECRET_KEY after deployment script
