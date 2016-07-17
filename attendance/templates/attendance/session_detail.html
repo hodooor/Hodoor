@@ -84,8 +84,8 @@ Session {{ id }} - details
     	{% endfor %}
     	<form method='POST' action=''>{% csrf_token %}
     	<tr>
-    		{% for form in project_separation_form %}
-    			<td>{{form}}</td>
+    		{% for field in project_separation_form %}
+    			<td>{{field}}</td>
     		{% endfor %}
     		<td><input type="submit" class="btn btn-primary" value="Add" /></td>
     	</tr>
