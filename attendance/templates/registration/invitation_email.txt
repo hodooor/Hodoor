@@ -2,6 +2,6 @@ Welcome to Hodoor Attendance system.
 
 Please, set your password by clicking on link bellow and entering this work email address @eledus.cz.</br>
 
-https://hodoor.eledus.cz/password/reset/
+https://hodoor.eledus.cz/password_reset/
 
 Then you can login at https://hodoor.eledus.cz/">https://hodoor.eledus.cz

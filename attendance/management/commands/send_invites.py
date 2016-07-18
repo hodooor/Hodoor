@@ -18,7 +18,7 @@ class Command(BaseCommand):
 				recipient_list = [user.email],
 				auth_user = "ho.door@eledus.cz",
 				auth_password = "r4IITjppr7",
-				fail_silently = True,
+				fail_silently = False,
 				html_message = msg_html,  
 			)
 
