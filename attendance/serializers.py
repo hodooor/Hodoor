@@ -29,7 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = User
-		fields = ('username','id','last_swipe', 'hours_this_month')
+		fields = ('username','last_swipe','hours_this_month','id')
 
 	def get_last_swipe(self,obj): 
 		#if current user has some swipes
