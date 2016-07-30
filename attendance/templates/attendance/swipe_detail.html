@@ -29,12 +29,22 @@ Swipe {{ id }} - detail
 	    <td data-field="value">{% if swipe.session %}<a href="{% url 'session_detail' username=user.username id=swipe.session.id %}">{{swipe.session}}</a>{% endif %}</td>
 			<td></td>
 	</tr>
+	
+	{% if corrected_by %}
 	<tr>
 		<td data-field="key" class="key">Was corrected by</td>
-		<td data-field="key" class="key"></td>
+		<td data-field="key" class="key"><a href="{% url 'swipe_detail' username=user.username id=corrected_by.id %}">{{ corrected_by.id}}</a></td>
 		<td data-field="key" class="key"></td>
 	</tr>
-	{% if  not swipe.correction_of_swipe %} 
+	{% endif %}
+	
+	{% if swipe.correction_of_swipe %} 
+		<td data-field="key" class="key">Is Correction of Swipe</td>
+		<td data-field="key" class="key"><a href="{% url 'swipe_detail' username=user.username id=swipe.correction_of_swipe.id %}">{{ swipe.correction_of_swipe.id}}</a></td>
+		<td data-field="key" class="key"></td>
+	{% endif %}
+	
+	{% if not swipe.swipe_set.count %} 
 		<tr>
 		    <td data-field="key" class="key">Datetime</td>
 		    <form method='POST' action=''>{% csrf_token %}
@@ -44,7 +54,13 @@ Swipe {{ id }} - detail
 				<td><input id="submit" type='submit' class="btn btn-primary" value ='Submit Change'/></td>
 			</form>
 		</tr>
+	{% else %}
+		<tr>
+		    <td data-field="key" class="key">Datetime</td>
+			<td>{{swipe.datetime | date:'D d.m.Y H:i:s'}}</td>
+		</tr>
 	{% endif %}
+
 </tbody>
 </table>
 <div class="col-md-3">

@@ -160,10 +160,15 @@ def swipe_detail(request, username, id):
 				"datetime":swipe.datetime,
 			}
 		)
+		if (swipe.swipe_set.all()):
+			corrected_by = swipe.swipe_set.all()[0]
+		else:
+			corrected_by = None
 		context={
 			"swipe":swipe,
 			"id": id,
 			"form": form,
+			"corrected_by": corrected_by
 		}
 		return render(request, "attendance/swipe_detail.html", context)
 	else:
