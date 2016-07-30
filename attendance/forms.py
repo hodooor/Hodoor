@@ -42,9 +42,13 @@ class SwipeEditForm(forms.ModelForm):
 		model = Swipe
 		fields = ["datetime"]
 	
-		# widgets = {
-		# 	"datetime": DateTimeWidget(
-		# 		attrs={'id':"datetime"},
-		# 		bootstrap_version=3,
-		# 		),
-		# }
+	def clean_datetime(self):
+		data = self.cleaned_data["datetime"] #data passed to form
+		this_swipe = self.instance
+		last_swipe_datetime = this_swipe.get_last_swipe_same_user().datetime
+		next_swipe_datetime = this_swipe.get_next_swipe_same_user().datetime
+		
+		if last_swipe_datetime < data < next_swipe_datetime:
+			return  data
+		else:
+			raise forms.ValidationError("Conflicting datetime.")

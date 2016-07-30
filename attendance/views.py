@@ -133,7 +133,7 @@ def swipe_detail(request, username, id):
 	if swipe.user.username == username: #write test for this!!
 		
 		if request.method == "POST":
-			form = SwipeEditForm(request.POST)
+			form = SwipeEditForm(request.POST, instance = swipe)
 
 			if form.is_valid():
 				cleaned_data = form.cleaned_data
