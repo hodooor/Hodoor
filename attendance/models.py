@@ -240,6 +240,31 @@ class Swipe(models.Model):
 
 		super(Swipe, self).save(*args, **kwargs)
 
+	def get_last_swipe_same_user(self):
+		"""
+		Returns last swipe of same user
+		"""
+		swipes_before = Swipe.objects.filter(
+			user = self.user, 
+			datetime__lt = self.datetime,
+		)
+		if swipes_before:
+			return swipes_before.order_by("-datetime")[0]
+		else:
+			return None
+
+	def get_next_swipe_same_user(self):
+		"""
+		Returns next swipe of same user
+		"""
+		swipes_after = Swipe.objects.filter(
+			user = self.user, 
+			datetime__gt = self.datetime,
+		)
+		if swipes_after:
+			return swipes_after.order_by("datetime")[0]
+		else:
+			return None
 
 class Key(models.Model):
 	'''

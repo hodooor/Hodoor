@@ -197,6 +197,15 @@ class SwipeTestCase(TestCase):
 			except ValueError:
 					pass
 			self.assertFalse(Swipe.objects.all().filter(id = id))
+	def test_get_swipe_before(self):
+		self.assertFalse(Swipe.objects.get(id = 1).get_last_swipe_same_user())
+		self.assertEqual(1,Swipe.objects.get(id = 2).get_last_swipe_same_user().id)
+
+	def test_get_swipe_after(self):
+		count = Swipe.objects.filter(user__username = "ondrej.vicar").count()
+		self.assertFalse(Swipe.objects.get(id = count).get_next_swipe_same_user())
+		self.assertEqual(8,Swipe.objects.get(id = 7).get_next_swipe_same_user().id)
+		self.assertEqual(3,Swipe.objects.get(id = 2).get_next_swipe_same_user().id)
 
 class ViewTestCase(TestCase):
 

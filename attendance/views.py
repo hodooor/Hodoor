@@ -133,13 +133,6 @@ def swipe_detail(request, username, id):
 	if swipe.user.username == username: #write test for this!!
 		
 		if request.method == "POST":
-			# data = {
-			# 	"datetime": request.datetime,
-			# 	"user": swipe.user,
-			# 	"type": swipe.type,
-			# 	"correction_of_swipe": swipe,
-			# }
-			print(request)
 			form = SwipeEditForm(request.POST)
 
 			if form.is_valid():
@@ -153,7 +146,7 @@ def swipe_detail(request, username, id):
 					correction_of_swipe = swipe,
 				)
 			else:
-				print(form)
+				print("Form was not valid.")
 				
 		form = SwipeEditForm(
 			initial = {
