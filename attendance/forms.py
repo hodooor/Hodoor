@@ -42,9 +42,9 @@ class SwipeEditForm(forms.ModelForm):
 		model = Swipe
 		fields = ["datetime"]
 	
-		widgets = {
-			"datetime": DateTimeWidget(
-				attrs={'id':"datetime"},
-				bootstrap_version=3,
-				),
-		}
+		# widgets = {
+		# 	"datetime": DateTimeWidget(
+		# 		attrs={'id':"datetime"},
+		# 		bootstrap_version=3,
+		# 		),
+		# }

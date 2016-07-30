@@ -31,18 +31,20 @@ Swipe {{ id }} - detail
 	</tr>
 	<tr>
 		<td data-field="key" class="key">Was corrected by</td>
-		<td></td>
-		<td></td>
+		<td data-field="key" class="key"></td>
+		<td data-field="key" class="key"></td>
 	</tr>
-	<tr>
-	    <td data-field="key" class="key">Datetime</td>
-	    <form method='POST' action=''>{% csrf_token %}
-	   	{% for f in form %}
-			<td>{{f}}</td>
-		{% endfor %}
-			<td><input type='submit' class="btn btn-primary" value ='Submit Change'/></td>
-		</form>
-	</tr>
+	{% if  not swipe.correction_of_swipe %} 
+		<tr>
+		    <td data-field="key" class="key">Datetime</td>
+		    <form method='POST' action=''>{% csrf_token %}
+		   	{% for f in form %}
+				<td>{{f}}</td>
+			{% endfor %}
+				<td><input id="submit" type='submit' class="btn btn-primary" value ='Submit Change'/></td>
+			</form>
+		</tr>
+	{% endif %}
 </tbody>
 </table>
 <div class="col-md-3">

@@ -139,10 +139,21 @@ def swipe_detail(request, username, id):
 			# 	"type": swipe.type,
 			# 	"correction_of_swipe": swipe,
 			# }
-			form = SwipeEditForm(request.POST)		
+			print(request)
+			form = SwipeEditForm(request.POST)
+
 			if form.is_valid():
-				print(form.cleaned_data)
-				new_data = form.save
+				cleaned_data = form.cleaned_data
+				swipe.datetime = cleaned_data["datetime"]
+				Swipe.objects.create(
+					user = swipe.user,
+					datetime = cleaned_data["datetime"],
+					swipe_type = swipe.swipe_type,
+					source = "Correction",
+					correction_of_swipe = swipe,
+				)
+			else:
+				print(form)
 				
 		form = SwipeEditForm(
 			initial = {
