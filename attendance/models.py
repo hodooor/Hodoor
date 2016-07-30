@@ -247,7 +247,7 @@ class Swipe(models.Model):
 		swipes_before = Swipe.objects.filter(
 			user = self.user, 
 			datetime__lt = self.datetime,
-		)
+		).exclude(session__isnull = True) #is active in session
 		if swipes_before:
 			return swipes_before.order_by("-datetime")[0]
 		else:
@@ -260,7 +260,7 @@ class Swipe(models.Model):
 		swipes_after = Swipe.objects.filter(
 			user = self.user, 
 			datetime__gt = self.datetime,
-		)
+		).exclude(session__isnull = True)
 		if swipes_after:
 			return swipes_after.order_by("datetime")[0]
 		else:

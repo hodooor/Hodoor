@@ -54,6 +54,7 @@ Swipe {{ id }} - detail
 				<td><input id="submit" type='submit' class="btn btn-primary" value ='Submit Change'/></td>
 			</form>
 		</tr>
+
 	{% else %}
 		<tr>
 		    <td data-field="key" class="key">Datetime</td>
@@ -61,8 +62,10 @@ Swipe {{ id }} - detail
 		</tr>
 	{% endif %}
 
+
 </tbody>
 </table>
+{{form.errors}}
 <div class="col-md-3">
 </div>
 {% endblock %}

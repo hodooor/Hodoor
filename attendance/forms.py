@@ -41,7 +41,7 @@ class SwipeEditForm(forms.ModelForm):
 	class Meta:
 		model = Swipe
 		fields = ["datetime"]
-	
+
 	def clean_datetime(self):
 		data = self.cleaned_data["datetime"] #data passed to form
 		this_swipe = self.instance
@@ -51,4 +51,5 @@ class SwipeEditForm(forms.ModelForm):
 		if last_swipe_datetime < data < next_swipe_datetime:
 			return  data
 		else:
-			raise forms.ValidationError("Conflicting datetime.")
+			self.fields['datetime'].error_messages["conflict"] = "Conflicting datetime"
+			raise forms.ValidationError(self.fields["datetime"].error_messages["conflict"])

@@ -145,14 +145,12 @@ def swipe_detail(request, username, id):
 					source = "Correction",
 					correction_of_swipe = swipe,
 				)
-			else:
-				print("Form was not valid.")
-				
-		form = SwipeEditForm(
-			initial = {
-				"datetime":swipe.datetime,
-			}
-		)
+		else:		
+			form = SwipeEditForm(
+				initial = {
+					"datetime":swipe.datetime,
+				}
+			)
 		if (swipe.swipe_set.all()):
 			corrected_by = swipe.swipe_set.all()[0]
 		else:
