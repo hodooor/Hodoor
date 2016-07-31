@@ -198,6 +198,8 @@ class Swipe(models.Model):
 		blank = True,
 		null = True, #if blank, this swipe is the right one
 		)
+
+
 	def get_next_allowed_types(self):
 		"""
 		Returns tupple of types that can be used in next swipe
@@ -267,6 +269,9 @@ class Swipe(models.Model):
 			return swipes_after.order_by("datetime")[0]
 		else:
 			return None
+
+	def swipe_types_verbose(self):
+		return dict(Swipe.SWIPE_TYPES)[self.swipe_type]
 
 class Key(models.Model):
 	'''

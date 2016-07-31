@@ -11,6 +11,7 @@ django.setup()
 
 from attendance.models import Swipe,Session
 from django.contrib.auth.models import User
+from attendance import factories
 
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -23,4 +24,5 @@ def print_doc_str_and_return_value(functions_iterable):
 	for function in functions_iterable:
 		print(function.__doc__.strip(), str(function()))
 
-	
+
+print(Swipe.objects.get(id = 1).get_swipe_type_display())

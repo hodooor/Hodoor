@@ -57,8 +57,11 @@ User's profile page
 	</div>
 	<form action="{% url 'user' username=user.username %}" method="post">
 		{% csrf_token %}
-		<input type="submit" value="Incoming" name = "IN" />
-		<input type="submit" value="Outgoing" name = "OUT" />
+		{% for swipe_type in next_swipes %}
+				<input type="submit" value="{{swipe_type}}" name = "{{swipe_type}}" />
+		{%endfor %}
+
 	</form>
+
 	{% endblock %}
 

@@ -57,7 +57,34 @@ def user(request, username):
 				user = request.user,
 				datetime = timezone.now(),
 			)
-
+		if request.POST.get("OBR"):
+			print("Trying to post On Break")
+			Swipe.objects.create(
+				swipe_type = "OBR", 
+				user = request.user,
+				datetime = timezone.now(),
+			)
+		if request.POST.get("FBR"):
+			print("Trying to post From Break")
+			Swipe.objects.create(
+				swipe_type = "FBR", 
+				user = request.user,
+				datetime = timezone.now(),
+			)
+		if request.POST.get("OTR"):
+			print("Trying to post On Trip")
+			Swipe.objects.create(
+				swipe_type = "OTR", 
+				user = request.user,
+				datetime = timezone.now(),
+			)
+		if request.POST.get("FTR"):
+			print("Trying to post From Trip")
+			Swipe.objects.create(
+				swipe_type = "FTR", 
+				user = request.user,
+				datetime = timezone.now(),
+			)
 	u = User.objects.get(username = username)
 	s = Session.objects.get_sessions_this_month(user = u)
 	last_swipe = Swipe.objects.filter(user = request.user).order_by("-datetime")[0]
@@ -65,6 +92,7 @@ def user(request, username):
 				"session_list":s,
 				"hours_this_month": Session.objects.get_hours_this_month(u.id),
 				"last_swipe": last_swipe,
+				"next_swipes": last_swipe.get_next_allowed_types()
 	}
 	return render(request, "attendance/user_page.html", context)
 
