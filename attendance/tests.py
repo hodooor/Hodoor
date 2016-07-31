@@ -250,27 +250,30 @@ class TimeTestCase(TestCase):
 		self.assertEqual(server_now, django_now)
 
 class FormTestCase(TestCase):
+	def setUp(self):
+		self.user = UserFactory()
+		self.swipe1 = SwipeFactory(user = self.user, swipe_type = "IN")
+		self.swipe2 = SwipeFactory(user = self.user, swipe_type = "OUT")
 
 	def test_swipe_edit_form(self):
-		user = UserFactory()
-		swipe1 = SwipeFactory(user = user, swipe_type = "IN")
-		swipe2 = SwipeFactory(user = user, swipe_type = "OUT")
-
-
 		form_data = {"datetime": timezone.now()}
 		
-		form = SwipeEditForm(data = form_data, instance = swipe2)
+		form = SwipeEditForm(data = form_data, instance = self.swipe2)
 
 		self.assertTrue(form.is_valid())
 
 		form_data["datetime"] -= timedelta(seconds = 1)
-		form = SwipeEditForm(data = form_data, instance = swipe2)
+		form = SwipeEditForm(data = form_data, instance = self.swipe2)
 
 		self.assertFalse(form.is_valid())
 
-		swipe3 = SwipeFactory(user = user, swipe_type = "IN")
+		swipe = SwipeFactory(user = self.user, swipe_type = "IN")
 
 		form_data["datetime"] += timedelta(hours = 1)
-		form = SwipeEditForm(data = form_data, instance = swipe2)
+		form = SwipeEditForm(data = form_data, instance = self.swipe2)
 
 		self.assertFalse(form.is_valid())
+
+	def test_project_separation_form(self):
+		#implement
+		pass
