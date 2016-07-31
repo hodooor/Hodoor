@@ -17,6 +17,7 @@ import pytz
 
 from attendance.views import sessions_month
 from attendance.factories import UserFactory,SwipeFactory
+from .forms import SwipeEditForm
 
 def dict_to_database(serializer_class, list_of_dict):
 	'''
@@ -209,8 +210,6 @@ class SwipeTestCase(TestCase):
 		swipe5 = SwipeFactory(swipe_type = "OBR", user = user2, correction_of_swipe = swipe4)
 		swipe7 = SwipeFactory(swipe_type = "FBR", user = user2)
 		swipe8 = SwipeFactory(swipe_type = "OUT", user = user2)
-		#print(Swipe.objects.filter(user = user1))
-		#print(Swipe.objects.filter(user = user2, session__isnull = False))
 
 		self.assertFalse(swipe1.get_last_swipe_same_user())
 		self.assertFalse(swipe2.get_last_swipe_same_user())
@@ -250,3 +249,28 @@ class TimeTestCase(TestCase):
 
 		self.assertEqual(server_now, django_now)
 
+class FormTestCase(TestCase):
+
+	def test_swipe_edit_form(self):
+		user = UserFactory()
+		swipe1 = SwipeFactory(user = user, swipe_type = "IN")
+		swipe2 = SwipeFactory(user = user, swipe_type = "OUT")
+
+
+		form_data = {"datetime": timezone.now()}
+		
+		form = SwipeEditForm(data = form_data, instance = swipe2)
+
+		self.assertTrue(form.is_valid())
+
+		form_data["datetime"] -= timedelta(seconds = 1)
+		form = SwipeEditForm(data = form_data, instance = swipe2)
+
+		self.assertFalse(form.is_valid())
+
+		swipe3 = SwipeFactory(user = user, swipe_type = "IN")
+
+		form_data["datetime"] += timedelta(hours = 1)
+		form = SwipeEditForm(data = form_data, instance = swipe2)
+
+		self.assertFalse(form.is_valid())
