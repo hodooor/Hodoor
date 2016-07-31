@@ -223,7 +223,7 @@ class Swipe(models.Model):
 	def save(self, *args, **kwargs):
 		if(self._state.adding and not self.correction_of_swipe):
 			try:
-				latest_swipe = Swipe.objects.filter(user = self.user).order_by("-pk")[0]
+				latest_swipe = Swipe.objects.filter(user = self.user).order_by("-datetime")[0]
 
 
 				if self.swipe_type not in latest_swipe.get_next_allowed_types():

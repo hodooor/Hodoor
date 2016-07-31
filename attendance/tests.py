@@ -197,7 +197,21 @@ class SwipeTestCase(TestCase):
 				self.fail("It should be imposible to write this swipe_type")
 			except ValueError:
 					pass
-			self.assertFalse(Swipe.objects.all().filter(id = id))
+			self.assertFalse(Swipe.objects.filter(id = id))
+
+		user1 = UserFactory()
+		swipe1 = SwipeFactory(user = user1, swipe_type = "IN")
+		swipe2 = SwipeFactory(user = user1, swipe_type = "OUT")
+		swipe3 = SwipeFactory(
+			user = user1, 
+			swipe_type = "IN", 
+			correction_of_swipe = swipe1,
+			datetime = swipe1.datetime - timedelta(seconds = 1),
+		)
+		#this should be posiible because last swipe is correction
+		swipe4 = SwipeFactory(user = user1, swipe_type = "IN")
+
+
 	def test_get_swipe_before(self):
 		self.assertFalse(Swipe.objects.get(id = 1).get_last_swipe_same_user())
 		self.assertEqual(1,Swipe.objects.get(id = 2).get_last_swipe_same_user().id)

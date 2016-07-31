@@ -10,7 +10,9 @@ User's profile page
 	<div class="bs-callout bs-callout-info">
 		<h3>Attendance info:</h3>
 		<p class="">Hours this month: {{ hours_this_month|floatformat:2}}</p>
-		<p class="">Sessions this month: </p>
+		<p class="">Sessions this month: {{session_list | length}}</p>
+		<p class="">Last Swipe Type: {{last_swipe.swipe_type }} </p>
+		<p class="">Last Swipe Datetime: {{last_swipe.datetime }} </p>
 	</div>
 
 <!-- 	<div class="bs-callout bs-callout-danger">
@@ -53,5 +55,10 @@ User's profile page
 			</div>
 		</div>
 	</div>
+	<form action="{% url 'user' username=user.username %}" method="post">
+		{% csrf_token %}
+		<input type="submit" value="Incoming" name = "IN" />
+		<input type="submit" value="Outgoing" name = "OUT" />
+	</form>
 	{% endblock %}
 

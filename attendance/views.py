@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from rest_framework import permissions
 from datetime import datetime
 from .forms import ProjectSeparationForm, SwipeEditForm
+from django.utils import timezone
 
 @login_required(login_url='/login/')
 def home_page(request):
@@ -40,11 +41,31 @@ def user_check(request, username):
 def user(request, username):
 	if not user_check(request, username): 
 		return HttpResponse("Restricted to " + username)
+	if request.method == "POST":
+		if request.POST.get("IN"):
+			print("Trying to post Incoming")
+			print(request.POST)
+			Swipe.objects.create(
+				swipe_type = "IN", 
+				user = request.user,
+				datetime = timezone.now(),
+			)
+		if request.POST.get("OUT"):
+			print("Trying to post Outgoing")
+			Swipe.objects.create(
+				swipe_type = "OUT", 
+				user = request.user,
+				datetime = timezone.now(),
+			)
+
 	u = User.objects.get(username = username)
-	s = Session.objects.filter(user__id = u.id)
+	s = Session.objects.get_sessions_this_month(user = u)
+	last_swipe = Swipe.objects.filter(user = request.user).order_by("-datetime")[0]
 	context = {	"user" : u, 
 				"session_list":s,
-				"hours_this_month": Session.objects.get_hours_this_month(u.id),}
+				"hours_this_month": Session.objects.get_hours_this_month(u.id),
+				"last_swipe": last_swipe,
+	}
 	return render(request, "attendance/user_page.html", context)
 
 @login_required(login_url='/login/')
