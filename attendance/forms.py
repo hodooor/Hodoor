@@ -45,11 +45,17 @@ class SwipeEditForm(forms.ModelForm):
 	def clean_datetime(self):
 		data = self.cleaned_data["datetime"] #data passed to form
 		this_swipe = self.instance
-		last_swipe_datetime = this_swipe.get_last_swipe_same_user().datetime
-		next_swipe_datetime = this_swipe.get_next_swipe_same_user().datetime
+		last_swipe = this_swipe.get_last_swipe_same_user()
+		next_swipe = this_swipe.get_next_swipe_same_user()
 		
-		if last_swipe_datetime < data < next_swipe_datetime:
-			return  data
-		else:
-			self.fields['datetime'].error_messages["conflict"] = "Conflicting datetime"
-			raise forms.ValidationError(self.fields["datetime"].error_messages["conflict"])
+		if last_swipe:
+			if data < last_swipe.datetime:
+				raise forms.ValidationError("Conflict with last swipe" + str(last_swipe))
+		if next_swipe:
+			if data > next_swipe.datetime:
+				raise forms.ValidationError("Conflict with next swipe " + str(next_swipe))
+
+		return  data
+
+			
+			

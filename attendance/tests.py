@@ -16,7 +16,7 @@ from rest_framework import status
 import pytz
 
 from attendance.views import sessions_month
-from attendance.factories import UserFactory
+from attendance.factories import UserFactory,SwipeFactory
 
 def dict_to_database(serializer_class, list_of_dict):
 	'''
@@ -200,6 +200,25 @@ class SwipeTestCase(TestCase):
 	def test_get_swipe_before(self):
 		self.assertFalse(Swipe.objects.get(id = 1).get_last_swipe_same_user())
 		self.assertEqual(1,Swipe.objects.get(id = 2).get_last_swipe_same_user().id)
+		user1, user2 = UserFactory(), UserFactory()
+
+		swipe1 = SwipeFactory(swipe_type = "IN", user = user1) 
+		swipe2 = SwipeFactory(swipe_type = "IN", user = user2)
+		swipe3 = SwipeFactory(swipe_type = "OUT", user = user1)
+		swipe4 = SwipeFactory(swipe_type = "OBR", user = user2)
+		swipe5 = SwipeFactory(swipe_type = "OBR", user = user2, correction_of_swipe = swipe4)
+		swipe7 = SwipeFactory(swipe_type = "FBR", user = user2)
+		swipe8 = SwipeFactory(swipe_type = "OUT", user = user2)
+		#print(Swipe.objects.filter(user = user1))
+		#print(Swipe.objects.filter(user = user2, session__isnull = False))
+
+		self.assertFalse(swipe1.get_last_swipe_same_user())
+		self.assertFalse(swipe2.get_last_swipe_same_user())
+		self.assertEqual(swipe5.id, swipe7.get_last_swipe_same_user().id)
+		self.assertEqual(swipe1.id, swipe3.get_last_swipe_same_user().id)
+		
+		#testing swipe after so we dont have to repeat initialization
+		self.assertEqual(swipe5.id, swipe2.get_next_swipe_same_user().id)
 
 	def test_get_swipe_after(self):
 		count = Swipe.objects.filter(user__username = "ondrej.vicar").count()
