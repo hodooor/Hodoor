@@ -87,12 +87,19 @@ def user(request, username):
 			)
 	u = User.objects.get(username = username)
 	s = Session.objects.get_sessions_this_month(user = u)
-	last_swipe = Swipe.objects.filter(user = request.user).order_by("-datetime")[0]
+	
+	try:
+		last_swipe = Swipe.objects.filter(user = u).order_by("-datetime")[0]
+		next_swipes = last_swipe.get_next_allowed_types()
+	except IndexError:
+		last_swipe = None
+		next_swipes = None
+	
 	context = {	"user" : u, 
 				"session_list":s,
 				"hours_this_month": Session.objects.get_hours_this_month(u.id),
 				"last_swipe": last_swipe,
-				"next_swipes": last_swipe.get_next_allowed_types()
+				"next_swipes": next_swipes
 	}
 	return render(request, "attendance/user_page.html", context)
 

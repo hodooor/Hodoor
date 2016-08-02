@@ -25,6 +25,8 @@ User = get_user_model()
 from .server_tools import reset_database, create_session_on_server
 
 from .management.commands.create_session import create_pre_authenticated_session
+from django.test.utils import override_settings
+from django.conf import settings
 
 class FunctionalTest(StaticLiveServerTestCase):
 	@classmethod
@@ -98,7 +100,7 @@ class FunctionalTest(StaticLiveServerTestCase):
 		))
 
 class LoginLogoutTest(FunctionalTest):
-	
+	@override_settings(DEBUG=True)
 	def test_login_and_logut_users(self):
 		
 		user = UserFactory.build()
