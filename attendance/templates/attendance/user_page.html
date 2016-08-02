@@ -58,7 +58,24 @@ User's profile page
 	<form action="{% url 'user' username=user.username %}" method="post">
 		{% csrf_token %}
 		{% for swipe_type in next_swipes %}
-				<input type="submit" value="{{swipe_type}}" name = "{{swipe_type}}" />
+				{% if swipe_type == "IN" %}
+				<input type="submit" value="Incoming" name = "{{swipe_type}}" />
+				{% endif %}
+				{% if swipe_type == "OUT" %}
+					<input type="submit" value="Outgoing" name = "{{swipe_type}}" />
+				{% endif %}
+				{% if swipe_type == "OBR" %}
+					<input type="submit" value="Break" name = "{{swipe_type}}" />
+				{% endif %}
+				{% if swipe_type == "FBR" %}
+					<input type="submit" value="Break Return" name = "{{swipe_type}}" />
+				{% endif %}
+				{% if swipe_type == "OTR" %}
+					<input type="submit" value="Work Trip" name = "{{swipe_type}}" />
+				{% endif %}
+				{% if swipe_type == "FTR" %}
+					<input type="submit" value="Trip Return" name = "{{swipe_type}}" />
+				{% endif %}
 		{%endfor %}
 
 	</form>
