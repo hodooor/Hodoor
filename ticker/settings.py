@@ -147,3 +147,18 @@ DEFAULT_FROM_EMAIL = 'ho.door@eledus.cz'
 
 CRISPY_TEMPLATE_PACK = "bootstrap3"
 #Here will be from .settings_secret import SECRET_KEY after deployment script
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 9,
+        }
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
