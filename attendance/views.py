@@ -43,43 +43,36 @@ def user(request, username):
 		return HttpResponse("Restricted to " + username)
 	if request.method == "POST":
 		if request.POST.get("IN"):
-			print("Trying to post Incoming")
-			print(request.POST)
 			Swipe.objects.create(
 				swipe_type = "IN", 
 				user = request.user,
 				datetime = timezone.now(),
 			)
 		if request.POST.get("OUT"):
-			print("Trying to post Outgoing")
 			Swipe.objects.create(
 				swipe_type = "OUT", 
 				user = request.user,
 				datetime = timezone.now(),
 			)
 		if request.POST.get("OBR"):
-			print("Trying to post On Break")
 			Swipe.objects.create(
 				swipe_type = "OBR", 
 				user = request.user,
 				datetime = timezone.now(),
 			)
 		if request.POST.get("FBR"):
-			print("Trying to post From Break")
 			Swipe.objects.create(
 				swipe_type = "FBR", 
 				user = request.user,
 				datetime = timezone.now(),
 			)
 		if request.POST.get("OTR"):
-			print("Trying to post On Trip")
 			Swipe.objects.create(
 				swipe_type = "OTR", 
 				user = request.user,
 				datetime = timezone.now(),
 			)
 		if request.POST.get("FTR"):
-			print("Trying to post From Trip")
 			Swipe.objects.create(
 				swipe_type = "FTR", 
 				user = request.user,

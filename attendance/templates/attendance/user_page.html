@@ -11,8 +11,18 @@ User's profile page
 		<h3>Attendance info:</h3>
 		<p class="">Hours this month: {{ hours_this_month|floatformat:2}}</p>
 		<p class="">Sessions this month: {{session_list | length}}</p>
-		<p class="">Last Swipe Type: {{last_swipe.swipe_type }} </p>
-		<p class="">Last Swipe Datetime: {{last_swipe.datetime }} </p>
+		<p class="">Last Swipe:&nbsp  
+			<img src="
+					{% if last_swipe.swipe_type == 'IN' %}{% static "img/incom.svg" %}
+					{% elif last_swipe.swipe_type == 'OUT' %}{% static "img/outgo.svg" %}
+					{% elif last_swipe.swipe_type == 'OBR' %}{% static "img/break.svg" %}
+					{% elif last_swipe.swipe_type == 'FBR' %}{% static "img/break_ret.svg" %}
+					{% elif last_swipe.swipe_type == 'OTR' %}{% static "img/trip.svg" %}
+					{% elif last_swipe.swipe_type == 'FTR' %}{% static "img/trip_ret.svg" %}
+					{% endif %}
+				" />
+			&nbsp{{last_swipe.datetime | date:'D d.m.Y H:i:s'}}
+		</p>
 	</div>
 
 <!-- 	<div class="bs-callout bs-callout-danger">
@@ -59,22 +69,46 @@ User's profile page
 		{% csrf_token %}
 		{% for swipe_type in next_swipes %}
 				{% if swipe_type == "IN" %}
-				<input type="submit" value="Incoming" name = "{{swipe_type}}" />
+				<button type="submit" class="btn btn-primary" value="Incoming" name = "{{swipe_type}}" />
+					<img src="{% static "img/incom.svg" %}">
+					</br>
+					Incoming
+				</button>
 				{% endif %}
 				{% if swipe_type == "OUT" %}
-					<input type="submit" value="Outgoing" name = "{{swipe_type}}" />
+					<button type="submit" class="btn btn-primary" value="Outgoing" name = "{{swipe_type}}" />
+						<img src="{% static "img/outgo.svg" %}">
+						</br>
+						Outgoing
+					</button>
 				{% endif %}
 				{% if swipe_type == "OBR" %}
-					<input type="submit" value="Break" name = "{{swipe_type}}" />
+					<button type="submit" class="btn btn-primary" value="Break" name = "{{swipe_type}}" />
+						<img src="{% static "img/break.svg" %}">
+						</br>
+						Break
+					</button>
 				{% endif %}
 				{% if swipe_type == "FBR" %}
-					<input type="submit" value="Break Return" name = "{{swipe_type}}" />
+					<button type="submit" class="btn btn-primary" value="Break Return" name = "{{swipe_type}}" />
+						<img src="{% static "img/break_ret.svg" %}">
+						</br>
+						Break Return
+					</button>
 				{% endif %}
 				{% if swipe_type == "OTR" %}
-					<input type="submit" value="Work Trip" name = "{{swipe_type}}" />
+					<button type="submit" class="btn btn-primary" value="Trip" name = "{{swipe_type}}" />
+						<img src="{% static "img/trip.svg" %}">
+						</br>
+						Work Trip
+					</button>
 				{% endif %}
 				{% if swipe_type == "FTR" %}
-					<input type="submit" value="Trip Return" name = "{{swipe_type}}" />
+					<button type="submit" class="btn btn-primary" value="Trip Return" name = "{{swipe_type}}" />
+						<img src="{% static "img/trip_ret.svg" %}">
+						</br>
+						Trip Return
+					</button>
 				{% endif %}
 		{%endfor %}
 
