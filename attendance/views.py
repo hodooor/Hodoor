@@ -39,56 +39,56 @@ def user_check(request, username):
 
 @login_required(login_url='/login/')
 def user(request, username):
-	if not user_check(request, username): 
+	if not user_check(request, username):
 		return HttpResponse("Restricted to " + username)
 	if request.method == "POST":
 		if request.POST.get("IN"):
 			Swipe.objects.create(
-				swipe_type = "IN", 
+				swipe_type = "IN",
 				user = request.user,
 				datetime = timezone.now(),
 			)
 		if request.POST.get("OUT"):
 			Swipe.objects.create(
-				swipe_type = "OUT", 
+				swipe_type = "OUT",
 				user = request.user,
 				datetime = timezone.now(),
 			)
 		if request.POST.get("OBR"):
 			Swipe.objects.create(
-				swipe_type = "OBR", 
+				swipe_type = "OBR",
 				user = request.user,
 				datetime = timezone.now(),
 			)
 		if request.POST.get("FBR"):
 			Swipe.objects.create(
-				swipe_type = "FBR", 
+				swipe_type = "FBR",
 				user = request.user,
 				datetime = timezone.now(),
 			)
 		if request.POST.get("OTR"):
 			Swipe.objects.create(
-				swipe_type = "OTR", 
+				swipe_type = "OTR",
 				user = request.user,
 				datetime = timezone.now(),
 			)
 		if request.POST.get("FTR"):
 			Swipe.objects.create(
-				swipe_type = "FTR", 
+				swipe_type = "FTR",
 				user = request.user,
 				datetime = timezone.now(),
 			)
 	u = User.objects.get(username = username)
 	s = Session.objects.get_sessions_this_month(user = u)
-	
+
 	try:
 		last_swipe = Swipe.objects.filter(user = u).order_by("-datetime")[0]
 		next_swipes = last_swipe.get_next_allowed_types()
 	except IndexError:
 		last_swipe = None
 		next_swipes = None
-	
-	context = {	"user" : u, 
+
+	context = {	"user" : u,
 				"session_list":s,
 				"hours_this_month": Session.objects.get_hours_this_month(u.id),
 				"last_swipe": last_swipe,
@@ -98,7 +98,7 @@ def user(request, username):
 
 @login_required(login_url='/login/')
 def sessions(request, username):
-	if not user_check(request, username): 
+	if not user_check(request, username):
 		return HttpResponse("Restricted to " + username)
 	now =datetime.now()
 	year_str = str(now.year)
@@ -109,9 +109,9 @@ def sessions(request, username):
 
 @login_required(login_url='/login/')
 def swipes(request, username):
-	if not user_check(request, username): 
+	if not user_check(request, username):
 		return HttpResponse("Restricted to " + username)
-	swipes = Swipe.objects.filter( 
+	swipes = Swipe.objects.filter(
 		user__username = username,
 		session__isnull = False,
 	)
@@ -122,14 +122,14 @@ def swipes(request, username):
 
 @login_required(login_url='/login/')
 def sessions_month(request, username, year=datetime.now().year, month = datetime.now().month):
-	if not user_check(request, username): 
+	if not user_check(request, username):
 		return HttpResponse("Restricted to " + username)
 	#swipes_this_month = Swipe.objects.filter(swipe_type="IN", datetime__month=datetime.now().month)
 	in_swipes_ids = Swipe.objects.filter(
-		swipe_type = "IN", 
+		swipe_type = "IN",
 		user__username = username,
 		datetime__month = int(month),
-		datetime__year = int(year), 
+		datetime__year = int(year),
 	).values_list('session', flat=True)
 	sessions = Session.objects.filter(pk__in = in_swipes_ids)
 	u = User.objects.get(username = username)
@@ -137,29 +137,30 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
 		"sessions":sessions,
 		"year":year,
 		"month":month,
-		"hours_this_month": Session.objects.get_hours_this_month(u.id),
+		"hours_selected_month": Session.objects.get_hours_month(u.id, month),
+		"unassigned_hours": Session.objects.get_unassigned_hours_month(u.id, month),
 	}
 	return render(request, "attendance/sessions.html", context)
 
 @login_required(login_url='/login/')
 def session_detail(request, username, id):
-	if not user_check(request, username): 
+	if not user_check(request, username):
 		return HttpResponse("Restricted to " + username)
 	session = get_object_or_404(Session, pk = int(id))
-	
+
 	if session.user.username == username: #write test for this!!
 
 		separations =  ProjectSeparation.objects.filter(session = session)
 		swipes = Swipe.objects.filter(session = session)
 		if request.method == "POST":
-			form = ProjectSeparationForm(request.POST)		
+			form = ProjectSeparationForm(request.POST)
 			if form.is_valid():
 				form.save()
-			
+
 		form = ProjectSeparationForm(
 			initial={
 				"time_spend":session.get_not_assigned_duration(),
-				"session": session.id #hidden form 
+				"session": session.id #hidden form
 			},
 		)
 		context = {
@@ -171,16 +172,16 @@ def session_detail(request, username, id):
 		}
 		return render(request, "attendance/session_detail.html", context)
 	else:
-		return HttpResponse("Restricted to " + session.user.username) 
+		return HttpResponse("Restricted to " + session.user.username)
 
 @login_required(login_url='/login/')
 def swipe_detail(request, username, id):
-	if not user_check(request, username): 
+	if not user_check(request, username):
 		return HttpResponse("Restricted to " + username)
 	swipe = get_object_or_404(Swipe, pk = int(id))
-	
+
 	if swipe.user.username == username: #write test for this!!
-		
+
 		if request.method == "POST":
 			form = SwipeEditForm(request.POST, instance = swipe)
 
@@ -194,7 +195,7 @@ def swipe_detail(request, username, id):
 					source = "Correction",
 					correction_of_swipe = swipe,
 				)
-		else:		
+		else:
 			form = SwipeEditForm(
 				initial = {
 					"datetime":swipe.datetime,
@@ -212,4 +213,4 @@ def swipe_detail(request, username, id):
 		}
 		return render(request, "attendance/swipe_detail.html", context)
 	else:
-		return HttpResponse("Restricted to " + session.user.username) 
+		return HttpResponse("Restricted to " + session.user.username)

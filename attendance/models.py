@@ -50,6 +50,16 @@ class SessionManager(models.Manager):
 		"""
 		return self.get_hours_month(user, datetime.now().month)
 
+	def get_unassigned_hours_month(self, user, month):
+		sessions_month = self.get_sessions_month(user, month)
+		if(sessions_month):
+			new_dur = timedelta(0)
+			for session in sessions_month:
+				new_dur += session.get_not_assigned_duration()
+			return new_dur.total_seconds()/3600
+		else:
+			return 0
+
 	def get_sessions(month = datetime.now().month, year = datetime.now().year):
 		pass
 class Project(models.Model):
