@@ -7,31 +7,48 @@ from datetime import datetime, timezone, timedelta, date
 from django.db.models import Sum
 
 class SessionManager(models.Manager):
-	def get_sessions_this_month(self, user):
+	def get_sessions_month(self, user, month):
 		"""
-		returns List of sessions made this month
+		returns List of sessions made inserted month
 		"""
-		swipes_this_month = Swipe.objects.filter(swipe_type="IN", datetime__month=datetime.now().month, user = user)
-		if swipes_this_month:
-			swipes_list = swipes_this_month.values_list('id', flat=True)
-			sessions = Session.objects.filter(swipe__in = swipes_list) #why not swipe_set??
+		swipes_month = Swipe.objects.filter(
+			swipe_type="IN",
+			datetime__month=month,
+			user = user
+		)
+
+		if swipes_month:
+			swipes_list = swipes_month.values_list('id', flat=True)
+			sessions = Session.objects.filter(swipe__in = swipes_list)
 			return sessions
 		else:
 			return 0
 
-	def get_hours_this_month(self, user):
+	def get_sessions_this_month(self, user):
 		"""
-		Returns number of hours for given user id this month
+		returns List of sessions made this month
 		"""
-		sessions_this_month = self.get_sessions_this_month(user)
-		if(sessions_this_month):
+		return self.get_sessions_month(user, datetime.now().month)
+
+	def get_hours_month(self, user, month):
+		"""
+		Returns number of hours in selected month (already finished sessions)
+		"""
+		sessions_month = self.get_sessions_month(user, month)
+		if(sessions_month):
 			new_dur = timedelta(0)
-			for session in sessions_this_month:
+			for session in sessions_month:
 				if(session.duration):
 					new_dur += session.duration
 			return new_dur.total_seconds()/3600
 		else:
 			return 0
+
+	def get_hours_this_month(self, user):
+		"""
+		Return number of hours this month (already finished sessions)
+		"""
+		return self.get_hours_month(user, datetime.now().month)
 
 	def get_sessions(month = datetime.now().month, year = datetime.now().year):
 		pass
@@ -247,7 +264,7 @@ class Swipe(models.Model):
 		Returns last swipe of same user
 		"""
 		swipes_before = Swipe.objects.filter(
-			user = self.user, 
+			user = self.user,
 			datetime__lt = self.datetime,
 			session__isnull = False, #filter out corrected swipes
 		)
@@ -261,7 +278,7 @@ class Swipe(models.Model):
 		Returns next swipe of same user
 		"""
 		swipes_after = Swipe.objects.filter(
-			user = self.user, 
+			user = self.user,
 			datetime__gt = self.datetime,
 			session__isnull = False, #filter out corrected swipes
 		)
