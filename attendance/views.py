@@ -133,12 +133,16 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
 	).values_list('session', flat=True)
 	sessions = Session.objects.filter(pk__in = in_swipes_ids)
 	u = User.objects.get(username = username)
+
+	projects = ProjectSeparation.objects.filter(session = sessions)
+	
 	context = {
 		"sessions":sessions,
 		"year":year,
 		"month":month,
 		"hours_selected_month": Session.objects.get_hours_month(u.id, month),
 		"unassigned_hours": Session.objects.get_unassigned_hours_month(u.id, month),
+		"list_of_projects": projects,
 	}
 	return render(request, "attendance/sessions.html", context)
 

@@ -47,7 +47,7 @@ Sessions info <span class="label label-default">{{month}}-{{year}}</span>
 </div>
 
 <div class="bs-callout bs-callout-info">
-  <h2>Session info table</h2>
+  <h2>Overall</h2>
   <table class="table table-default">
       <tr>
           <td><strong>Hours this month (finished sessions):</strong></td>
@@ -59,6 +59,15 @@ Sessions info <span class="label label-default">{{month}}-{{year}}</span>
           <td>{{ unassigned_hours | floatformat:2}}</td>
           <td>hours</td>
       </tr>
+  </table>
+</div>
+
+<div class="bs-callout bs-callout-info">
+  <h2>Projects</h2>
+  <table class="table table-default">
+  {% for project in list_of_projects %}
+  <tr><td>{{project}}</td><td>hours</td></tr>
+  {% endfor %}
   </table>
 </div>
 {% endblock %}
