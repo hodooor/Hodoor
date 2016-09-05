@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from rest_framework import viewsets
 from .serializers import SwipeSerializer,UserSerializer,KeySerializer
-from .models import Swipe, Key, Session,ProjectSeparation
+from .models import Swipe, Key, Session,ProjectSeparation, Project
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.decorators import login_required
@@ -134,8 +134,17 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
 	sessions = Session.objects.filter(pk__in = in_swipes_ids)
 	u = User.objects.get(username = username)
 
-	projects = ProjectSeparation.objects.filter(session = sessions)
+
+	separations = ProjectSeparation.objects.filter(session__in = sessions)
 	
+	projects = dict()
+
+	for separation in separations:
+		if separation.project.name in projects.keys():
+			projects[separation.project.name] += separation.time_spend
+		else:
+			projects[separation.project.name] = separation.time_spend
+
 	context = {
 		"sessions":sessions,
 		"year":year,

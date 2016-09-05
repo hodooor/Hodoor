@@ -65,8 +65,8 @@ Sessions info <span class="label label-default">{{month}}-{{year}}</span>
 <div class="bs-callout bs-callout-info">
   <h2>Projects</h2>
   <table class="table table-default">
-  {% for project in list_of_projects %}
-  <tr><td>{{project}}</td><td>hours</td></tr>
+  {% for key,value in list_of_projects.items %}
+  <tr><td>{{key}}</td><td>{{value}}</td><td>hours</td></tr>
   {% endfor %}
   </table>
 </div>
