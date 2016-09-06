@@ -116,7 +116,6 @@ def swipes(request, username):
 		session__isnull = False,
 	)
 
-
 	context = {"swipes":swipes}
 	return render(request, "attendance/swipes.html", context)
 
@@ -141,9 +140,9 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
 
 	for separation in separations:
 		if separation.project.name in projects.keys():
-			projects[separation.project.name] += separation.time_spend
+			projects[separation.project.name] += separation.time_spend.seconds/3600
 		else:
-			projects[separation.project.name] = separation.time_spend
+			projects[separation.project.name] = separation.time_spend.seconds/3600
 
 	context = {
 		"sessions":sessions,
