@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from django.db.models import Q
 from datetime import datetime, timezone, timedelta, date
 from django.db.models import Sum
+from django.db.models import Q
 
 class SessionManager(models.Manager):
 	def get_sessions_month(self, user, month):
@@ -60,8 +61,9 @@ class SessionManager(models.Manager):
 		else:
 			return 0
 
-	def get_sessions(month = datetime.now().month, year = datetime.now().year):
-		pass
+	def get_open_sessions(self):
+		return Session.objects.filter(~Q(swipe__swipe_type='OUT'))
+
 class Project(models.Model):
 	name = models.CharField(max_length = 20)
 

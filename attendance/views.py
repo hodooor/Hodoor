@@ -11,6 +11,7 @@ from rest_framework import permissions
 from datetime import datetime
 from .forms import ProjectSeparationForm, SwipeEditForm
 from django.utils import timezone
+from django.db.models import Q
 
 @login_required(login_url='/login/')
 def home_page(request):
@@ -81,6 +82,26 @@ def user(request, username):
 	u = User.objects.get(username = username)
 	s = Session.objects.get_sessions_this_month(user = u)
 
+	
+	open_sessions = Session.objects.get_open_sessions()
+	
+	latest_swipes = []
+	
+	for session in open_sessions:
+		latest_swipes.append(
+			Swipe.objects.filter(session = session).order_by("-datetime")[0]
+		)
+
+	at_work_users, on_break_users, on_trip_users = [],[],[]
+	
+	for swipe in latest_swipes:
+		if swipe.swipe_type == "IN" or swipe.swipe_type == "FBR" or swipe.swipe_type == "FTR":
+			at_work_users.append(swipe.user)
+		elif swipe.swipe_type == "OBR":
+			on_break_users.append(swipe.user)
+		elif swipe.swipe_type == "OTR":
+			on_trip_users.append(swipe.user)
+
 	try:
 		last_swipe = Swipe.objects.filter(user = u).order_by("-datetime")[0]
 		next_swipes = last_swipe.get_next_allowed_types()
@@ -92,7 +113,10 @@ def user(request, username):
 				"session_list":s,
 				"hours_this_month": Session.objects.get_hours_this_month(u.id),
 				"last_swipe": last_swipe,
-				"next_swipes": next_swipes
+				"next_swipes": next_swipes,
+				"at_work_users": at_work_users,
+				"on_break_users": on_break_users,
+				"on_trip_users": on_trip_users
 	}
 	return render(request, "attendance/user_page.html", context)
 

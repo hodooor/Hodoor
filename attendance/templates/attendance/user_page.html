@@ -24,16 +24,27 @@ User's profile page
 			&nbsp{{last_swipe.datetime | date:'D d.m.Y H:i:s'}}
 		</p>
 	</div>
+	<div class="bs-callout bs-callout-info">
+		<h3><img src="https://media.giphy.com/media/LHZyixOnHwDDy/giphy.gif" height="50" /> Users At Work ({{at_work_users | length}}):</h3>
 
-<!-- 	<div class="bs-callout bs-callout-danger">
-		<h3>Assigned projects:</h3>
-		<p class="label label-lg label-default">GCOMUN</p>
-		<p class="label label-primary">SCIOX</p>
-		<p class="label label-success">MULA</p>
-		<p class="label label-danger">Study time</p>
-		<p class="label label-warning">Wigard</p>
-		<p class="label label-info">LTE</p>
-	</div> -->
+		{% for user in at_work_users %}
+			<p>{{user.username}}</p>
+		{%endfor %}
+	</div>
+	<div class="bs-callout bs-callout-info">
+
+		<h3><img src="https://media.giphy.com/media/GqZi964Bo9f0I/giphy.gif" height="70" /> Users On Break ({{on_break_users | length}}):</h3>
+		{% for user in on_break_users%}
+			<p>{{user.username}}</p>
+		{%endfor %}
+	</div>
+	<div class="bs-callout bs-callout-info">
+		<h3><img src="https://media.giphy.com/media/l46C7ZlmzYkclCvwA/giphy.gif" height="40" /> Users On Trip ({{on_trip_users | length}}):</h3>
+		{% for user in on_trip_users%}
+			<p>{{user.username}}</p>
+		{%endfor %}
+	</div>
+
 	{% endblock %}
 	{% block content %}
 	<div class="">
