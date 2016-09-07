@@ -32,8 +32,11 @@ User's profile page
 		{%endfor %}
 	</div>
 	<div class="bs-callout bs-callout-info">
-
+		{% if user.username == "jaroslav.malec" %}
+		<h3><img src="https://media.licdn.com/mpr/mpr/shrinknp_200_200/AAEAAQAAAAAAAAdPAAAAJDFjMWYyYmRkLTE3MjktNDZiOS04YTAzLWM3ODM2MGZlMDBjOA.jpg" height="" /> Users On Break ({{on_break_users | length}}):</h3>
+		{% else %}
 		<h3><img src="https://media.giphy.com/media/GqZi964Bo9f0I/giphy.gif" height="70" /> Users On Break ({{on_break_users | length}}):</h3>
+		{% endif %}
 		{% for user in on_break_users%}
 			<p>{{user.username}}</p>
 		{%endfor %}
