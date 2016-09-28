@@ -258,3 +258,29 @@ def swipe_detail(request, username, id):
 		return render(request, "attendance/swipe_detail.html", context)
 	else:
 		return HttpResponse("Restricted to " + session.user.username)
+
+@login_required(login_url='/login/')
+def administrator(request, year=str(datetime.now().year), month="{0:02d}".format(datetime.now().month, '02d')):
+
+	user_data = []
+	for user in User.objects.all():
+		user_data.append({
+			"user": user,
+			"hours_total": Session.objects.get_hours_month(user.id, month),
+			"hours_unassigned": Session.objects.get_unassigned_hours_month(user.id, month),
+			"looks_ok": False,
+			"hours_assigned": 0
+		})
+	for user in user_data:
+		user["hours_assigned"] = user["hours_total"] - user["hours_unassigned"]
+		if user['hours_unassigned'] == 0 and user['hours_total'] > 0:
+			user["looks_ok"] = True
+		else:
+			user["looks_ok"] = False
+
+	context = {
+		"month": month,
+		"year": year,
+		"user_data": sorted(user_data, key=lambda dic: dic["user"].username)
+	}
+	return render(request, "attendance/administrator.html", context)

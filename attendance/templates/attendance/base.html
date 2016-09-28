@@ -40,7 +40,13 @@
 							<span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;{{user.username}}
 						</a>
 					</li>
-
+          {% if user.is_staff %}
+          <li class="nav-item">
+            <a href="{% url 'default_administrator'%}" class="a-administrator nav-link" id= "id_administrato">
+              <span class="glyphicon glyphicon-usd" aria-hidden="true"></span>&nbsp;Administrator
+            </a>
+          </li>
+          {% endif %}
 					<li class="nav-item {% if "/sessions/" in request.path %}active{% endif %} ">
 						<a href="{% url 'sessions' user.username %}", class="a-sessions nav-link">
 							<span class="glyphicon glyphicon-time" aria-hidden="true"></span>&nbsp;Sessions
