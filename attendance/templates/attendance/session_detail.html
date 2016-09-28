@@ -15,7 +15,9 @@ Session {{ id }} - details
 	<h2>Swipes</h2>
 </div>
 <div class="col-md-2 col-md-offset-8">
-	<a class="btn btn-danger pull-right" value="Previous Page" onClick="javascript:history.go(-1);"><span class="glyphicon glyphicon-chevron-left"></span> Go back to sessions page</a>
+	<a class="btn btn-danger pull-right" value="Previous Page"
+	href="{{ return_url }}">
+	<span class="glyphicon glyphicon-chevron-left"></span> Go back to sessions page</a>
 </div>
 <table class="table table-striped table-hover table-responsive">
 <thead>

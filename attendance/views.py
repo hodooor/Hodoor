@@ -82,18 +82,18 @@ def user(request, username):
 	u = User.objects.get(username = username)
 	s = Session.objects.get_sessions_this_month(user = u)
 
-	
+
 	open_sessions = Session.objects.get_open_sessions()
-	
+
 	latest_swipes = []
-	
+
 	for session in open_sessions:
 		latest_swipes.append(
 			Swipe.objects.filter(session = session).order_by("-datetime")[0]
 		)
 
 	at_work_users, on_break_users, on_trip_users = [],[],[]
-	
+
 	for swipe in latest_swipes:
 		if swipe.swipe_type == "IN" or swipe.swipe_type == "FBR" or swipe.swipe_type == "FTR":
 			at_work_users.append(swipe.user)
@@ -159,7 +159,7 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
 
 
 	separations = ProjectSeparation.objects.filter(session__in = sessions)
-	
+
 	projects = dict()
 
 	for separation in separations:
@@ -199,12 +199,20 @@ def session_detail(request, username, id):
 				"session": session.id #hidden form
 			},
 		)
+
+		return_url = reverse("sessions_month", kwargs={
+			'username': username,
+			'year': str(session.get_date().year),
+			'month': "{0:02d}".format(session.get_date().month, '02d'),
+		})
+
 		context = {
 			"session":session,
 			"id":id,
 			"project_separation_form": form,
 			"separations":separations,
-			"swipes":swipes
+			"swipes":swipes,
+			"return_url": return_url,
 		}
 		return render(request, "attendance/session_detail.html", context)
 	else:
