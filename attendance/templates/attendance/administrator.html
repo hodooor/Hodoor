@@ -50,19 +50,25 @@ Administrator info <span class="label label-default">{{month}}-{{year}}</span>
 <thead class = "thead-inverse">
   <tr class="">
     <th>USER</th>
-    <th>HOURS TOTAL</th>
+    <th>HOURS ASSIGNED</th>
     <th>HOURS UNASSIGNED</th>
+    <th>HOURS TOTAL</th>
     <th>LOOKS OK</th>
   </tr>
 </thead>
 <tbody>
   {% for user in user_data %}
-    <tr>
+    <tr
+    {% if user.looks_ok %}
+      style="background-color": "red"
+    {% endif %}
+    >
       <td><a href="{% url 'sessions_month' username=user.user.username year=year month=month %}">
         {{user.user.username}}</a>
       </td>
-      <td>{{user.hours_total |floatformat:2}}</td>
+      <td>{{user.hours_assigned |floatformat:2}}</td>
       <td>{{user.hours_unassigned |floatformat:2}}</td>
+      <td>{{user.hours_total |floatformat:2}}</td>
       <td>{{user.looks_ok | yesno:"OK, Probably Wrong" }}</td>
     </tr>
   {% endfor %}
