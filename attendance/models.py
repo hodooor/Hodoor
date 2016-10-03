@@ -130,7 +130,7 @@ class Session(models.Model):
 
 		login_datetime = self.swipe_set.get(swipe_type = "IN").datetime
 
-		if(self.is_session_complete()):
+		if self.is_session_complete():
 			end_datetime = self.swipe_set.get(swipe_type = "OUT").datetime
 		else:
 			end_datetime = datetime.now(timezone.utc)

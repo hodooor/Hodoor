@@ -12,6 +12,7 @@ from datetime import datetime
 from .forms import ProjectSeparationForm, SwipeEditForm
 from django.utils import timezone
 from django.db.models import Q
+import locale
 
 @login_required(login_url='/login/')
 def home_page(request):
@@ -260,8 +261,10 @@ def swipe_detail(request, username, id):
 		return HttpResponse("Restricted to " + session.user.username)
 
 @login_required(login_url='/login/')
-def administrator(request, year=str(datetime.now().year), month="{0:02d}".format(datetime.now().month, '02d')):
+def administrator(request, year=str(datetime.now().year), month="{0:02d}".format(datetime.now().month-1, '02d')):
 
+	if not (request.user.is_superuser or request.user.is_staff):
+		return HttpResponse("Restricted to staff.")
 	user_data = []
 	for user in User.objects.all():
 		user_data.append({
@@ -278,9 +281,11 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
 		else:
 			user["looks_ok"] = False
 
+	locale.setlocale(locale.LC_ALL, "cs_CZ.utf-8")
+
 	context = {
 		"month": month,
 		"year": year,
-		"user_data": sorted(user_data, key=lambda dic: dic["user"].username)
+		"user_data": sorted(user_data, key=lambda dic: (locale.strxfrm(dic["user"].last_name)))
 	}
 	return render(request, "attendance/administrator.html", context)

@@ -49,20 +49,24 @@ Administrator info <span class="label label-default">{{month}}-{{year}}</span>
 <table class="table table-striped table-hover">
 <thead class = "thead-inverse">
   <tr class="">
-    <th>USER</th>
+    <th>LAST NAME</th>
+    <th>FIRST NAME</th>
+    <th>USERNAME</th>
     <th>HOURS ASSIGNED</th>
     <th>HOURS UNASSIGNED</th>
     <th>HOURS TOTAL</th>
     <th>LOOKS OK</th>
+    <th>DETAIL</th>
   </tr>
 </thead>
 <tbody>
   {% for user in user_data %}
     <tr
     {% if user.looks_ok %}
-      style="background-color": "red"
-    {% endif %}
-    >
+      class="success"
+    {% endif %}>
+      <td>{{user.user.last_name}}</td>
+      <td>{{user.user.first_name}}</td>
       <td><a href="{% url 'sessions_month' username=user.user.username year=year month=month %}">
         {{user.user.username}}</a>
       </td>
