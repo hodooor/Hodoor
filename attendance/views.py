@@ -109,15 +109,27 @@ def user(request, username):
     except IndexError:
         last_swipe = None
         next_swipes = None
-
-    context = {     "user" : u,
-                            "session_list":s,
-                            "hours_this_month": Session.objects.get_hours_this_month(u.id),
-                            "last_swipe": last_swipe,
-                            "next_swipes": next_swipes,
-                            "at_work_users": at_work_users,
-                            "on_break_users": on_break_users,
-                            "on_trip_users": on_trip_users
+        
+    hours_total_last_month = Session.objects.get_hours_month(u.id, datetime.now().month-1)
+    hours_unassigned_last_month = Session.objects.get_unassigned_hours_month(u.id, datetime.now().month-1)
+    hours_assigned_last_month = hours_total_last_month - hours_unassigned_last_month
+    hours_total_this_month = Session.objects.get_hours_this_month(u.id)
+    hours_unassigned_this_month = Session.objects.get_unassigned_hours_month(u.id, datetime.now().month)
+    hours_assigned_this_month = hours_total_this_month - hours_unassigned_this_month
+    context = { 
+        "user" : u,
+        "session_list":s,
+        "hours_total_this_month": hours_total_this_month,
+        "hours_unassigned_this_month": hours_unassigned_this_month, 
+        "hours_assigned_this_month":  hours_assigned_this_month,
+        "last_swipe": last_swipe,
+        "next_swipes": next_swipes,
+        "at_work_users": at_work_users,
+        "on_break_users": on_break_users,
+        "on_trip_users": on_trip_users,
+        "hours_total_last_month": hours_total_last_month,
+        "hours_unassigned_last_month": hours_unassigned_last_month,
+        "hours_assigned_last_month": hours_assigned_last_month,
     }
     return render(request, "attendance/user_page.html", context)
 
