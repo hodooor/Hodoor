@@ -18,11 +18,11 @@ from django.template.loader import render_to_string
 
 
 def print_doc_str_and_return_value(functions_iterable):
-	'''
-	Takes list of functions and prints thier docstring with retun values
-	'''
-	for function in functions_iterable:
-		print(function.__doc__.strip(), str(function()))
+    '''
+    Takes list of functions and prints thier docstring with retun values
+    '''
+    for function in functions_iterable:
+        print(function.__doc__.strip(), str(function()))
 
 
 print(Swipe.objects.get(id = 1).get_swipe_type_display())

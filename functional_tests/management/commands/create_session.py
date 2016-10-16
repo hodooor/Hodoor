@@ -7,21 +7,21 @@ from attendance.factories import UserFactory
 from django.test import Client
 
 class Command(BaseCommand):
-	
-	def add_arguments(self, parser):
-		parser.add_argument('username')
-		#parser.add_argument('password')
 
-	def handle(self, *args, **options):
-		session_key = create_pre_authenticated_session(options['username'])
-		self.stdout.write(session_key)
+    def add_arguments(self, parser):
+        parser.add_argument('username')
+        #parser.add_argument('password')
+
+    def handle(self, *args, **options):
+        session_key = create_pre_authenticated_session(options['username'])
+        self.stdout.write(session_key)
 
 def create_pre_authenticated_session(username):
-	client = Client()
+    client = Client()
 
-	user = UserFactory(username=username, password="password")
-	
+    user = UserFactory(username=username, password="password")
 
-	client.login(username = user.username, password="password")
-	
-	return client.session.session_key
+
+    client.login(username = user.username, password="password")
+
+    return client.session.session_key

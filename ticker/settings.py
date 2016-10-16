@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-#this is just development secret kez.. Its overwriten in production by include 
+#this is just development secret kez.. Its overwriten in production by include
 SECRET_KEY = 's5z45we4r0k5_5f-dw*oo(d-ufuyi-wsj!d2^4m(j(&4&3vn1c'
 
 ALLOWED_HOSTS = [] #automatically changed in production by deployment script
@@ -27,7 +27,7 @@ CSRF_COOKIE_SECURE = False #automatically changed in production by deployment sc
 SESSION_COOKIE_SECURE = False #automatically changed in production by deployment script
 
 INSTALLED_APPS = [
-	'attendance', # need to be before admin, so logout redirects to attendance
+        'attendance', # need to be before admin, so logout redirects to attendance
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

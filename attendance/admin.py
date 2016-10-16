@@ -3,16 +3,16 @@ from attendance.models import Session, Swipe, Key, Project, ProjectSeparation
 from django.forms import ModelForm
 
 class SwipeInline(admin.TabularInline):
-	model = Swipe
+    model = Swipe
 
 class ProjectSeparationInline(admin.TabularInline):
-	model = ProjectSeparation
+    model = ProjectSeparation
 
 class SessionAdmin(admin.ModelAdmin):
-	inlines = [
-		SwipeInline,
-		ProjectSeparationInline,
-		]
+    inlines = [
+            SwipeInline,
+            ProjectSeparationInline,
+            ]
 
 
 

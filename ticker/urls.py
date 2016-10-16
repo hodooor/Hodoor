@@ -18,11 +18,11 @@ from django.contrib import admin
 
 
 from attendance import views
-from django.contrib.auth.views import (	logout,
-									   	password_reset,
-									   	password_reset_done,
-									   	password_reset_confirm,
-									   	password_reset_complete )
+from django.contrib.auth.views import ( logout,
+                                                                                password_reset,
+                                                                                password_reset_done,
+                                                                                password_reset_confirm,
+                                                                                password_reset_complete )
 from rest_framework import routers
 
 swipes_router = routers.DefaultRouter()
@@ -33,7 +33,7 @@ keys_router.register(r'api/keys',views.KeyViewSet)
 
 
 urlpatterns = [
-	#/
+        #/
     url(r'^$', views.home_page, name ='home'),
 
     #/admin/
@@ -60,17 +60,17 @@ urlpatterns = [
 
      #/sessions/username/2015/05
     url(r'^sessions/(?P<username>[\w.@+-]+)/(?P<year>[0-9]{4})/(?P<month>[0-9]{2})/$',
-    	views.sessions_month,
-    	name='sessions_month'),
+        views.sessions_month,
+        name='sessions_month'),
 
     #/sessions/username/id1
     #/sessions/username/id354
     url(r'^sessions/(?P<username>[\w.@+-]+)/id(?P<id>\d+)/$',
-    	views.session_detail,
-    	name='session_detail'),
+        views.session_detail,
+        name='session_detail'),
     url(r'^swipes/(?P<username>[\w.@+-]+)/id(?P<id>\d+)/$',
-    	views.swipe_detail,
-    	name='swipe_detail'),
+        views.swipe_detail,
+        name='swipe_detail'),
     #/swipes/username/
     url(r'^swipes/(?P<username>[\w.@+-]+)/$', views.swipes, name='swipes'),
 

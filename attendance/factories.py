@@ -15,27 +15,26 @@ swipe_types = [short_type[0] for short_type in Swipe.SWIPE_TYPES]
 
 
 class UserFactory(DjangoModelFactory):
-	"""
-	Factory for user
-	"""
-	class Meta:
-		model = User
+    """
+    Factory for user
+    """
+    class Meta:
+        model = User
 
-	first_name = LazyFunction(faker.first_name)
-	last_name = LazyFunction(faker.last_name)
-	username = LazyAttribute(lambda o: slugify(o.first_name) + "." + slugify(o.last_name))
-	email = LazyAttribute(lambda o: o.username + "@eledus.cz")
-	password = PostGenerationMethodCall('set_password', 'password')
-	is_staff = False
-	is_superuser = False
+    first_name = LazyFunction(faker.first_name)
+    last_name = LazyFunction(faker.last_name)
+    username = LazyAttribute(lambda o: slugify(o.first_name) + "." + slugify(o.last_name))
+    email = LazyAttribute(lambda o: o.username + "@eledus.cz")
+    password = PostGenerationMethodCall('set_password', 'password')
+    is_staff = False
+    is_superuser = False
 
 #@mute_signals(post_save)
 class SwipeFactory(DjangoModelFactory):
-	class Meta:
-		model = Swipe
-	
-	user = SubFactory(UserFactory)	
-	datetime = LazyFunction(timezone.now)
-	swipe_type = fuzzy.FuzzyChoice(swipe_types)
-	correction_of_swipe = None
+    class Meta:
+        model = Swipe
 
+    user = SubFactory(UserFactory)
+    datetime = LazyFunction(timezone.now)
+    swipe_type = fuzzy.FuzzyChoice(swipe_types)
+    correction_of_swipe = None
