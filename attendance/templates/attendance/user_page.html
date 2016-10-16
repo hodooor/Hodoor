@@ -63,19 +63,35 @@ User's profile page
 			</div>
 		</div>
 	</div>
-	<div class="bs-callout bs-callout-info row">
-		<div class="col-md-4">
+	<div class="row">
+		<div class="bs-callout bs-callout-info col-md-4">
 			<h3>This Month:</h3>
 			<p class="">Total Hours: {{ hours_total_this_month|floatformat:2}}</p>
 			<p class="">Unassigned Hours: {{ hours_unassigned_this_month | floatformat:2}}</p>
 			<p class="">Assigned Hours: {{ hours_assigned_this_month | floatformat:2}}</p>
 			<p class="">Sessions this month: {{session_list | length}}</p>
+			{% if not hours_unassigned_this_month %}
+				<p class="text-success"><span class="glyphicon glyphicon-thumbs-up"></span> You have all hours assigned to projects.</p>
+			{% else  %}
+				<p class="text-danger"><span class="glyphicon glyphicon-thumbs-down"></span> 
+					You have {{ hours_unassigned_this_month | floatformat:2}} unassigned hours. You have to assign all hours to projects until end of month.
+				</p>
+			{% endif %}
 		</div>
-		<div class="col-md-4">
+		<div class="bs-callout bs-callout-info col-md-4">
 			<h3>Last Month:</h3>
 			<p class="">Total Hours: {{ hours_total_last_month|floatformat:2}}</p>
 			<p class="">Unassigned Hours: {{ hours_unassigned_last_month | floatformat:2}}</p>
 			<p class="">Assigned Hours: {{ hours_assigned_last_month | floatformat:2}}</p>
+			{% if not hours_unassigned_last_month %}
+				<p class="text-success"><span class="glyphicon glyphicon-thumbs-up"></span> You have all hours assigned to projects. Your attendance can be calculated by administrator.</p>
+			{% else  %}
+				<p class="text-danger"><span class="glyphicon glyphicon-thumbs-down"></span> 
+					You have {{ hours_unassigned_last_month | floatformat:2}} unassigned hours. You have to assign all hours to projects in Sessions page.
+					Only assigned hours will be counted as attendance.
+				</p>
+			{% endif %}
+
 		</div>
 	</div>
 	<p class="">Last Swipe:&nbsp  

@@ -90,10 +90,10 @@ def user(request, username):
 
     for session in open_sessions:
         latest_swipes.append(
-                Swipe.objects.filter(session = session).order_by("-datetime")[0]
+                Swipe.objects.filter(session=session).order_by("-datetime")[0]
         )
 
-    at_work_users, on_break_users, on_trip_users = [],[],[]
+    at_work_users, on_break_users, on_trip_users = [], [], []
 
     for swipe in latest_swipes:
         if swipe.swipe_type == "IN" or swipe.swipe_type == "FBR" or swipe.swipe_type == "FTR":
@@ -116,6 +116,7 @@ def user(request, username):
     hours_total_this_month = Session.objects.get_hours_this_month(u.id)
     hours_unassigned_this_month = Session.objects.get_unassigned_hours_month(u.id, datetime.now().month)
     hours_assigned_this_month = hours_total_this_month - hours_unassigned_this_month
+
     context = { 
         "user" : u,
         "session_list":s,
