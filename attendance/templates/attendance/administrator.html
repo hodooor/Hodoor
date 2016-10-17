@@ -52,7 +52,8 @@ Administrator info <span class="label label-default">{{month}}-{{year}}</span>
     <th>LAST NAME</th>
     <th>FIRST NAME</th>
     <th>USERNAME</th>
-    <th>HOURS ASSIGNED</th>
+    <th>WORK HOURS</th>
+    <th>NOT WORK HOURS </th>
     <th>HOURS UNASSIGNED</th>
     <th>HOURS TOTAL</th>
     <th>LOOKS OK</th>
@@ -67,13 +68,13 @@ Administrator info <span class="label label-default">{{month}}-{{year}}</span>
     {% endif %}>
       <td>{{user.user.last_name}}</td>
       <td>{{user.user.first_name}}</td>
-      <td><a href="{% url 'sessions_month' username=user.user.username year=year month=month %}">
-        {{user.user.username}}</a>
-      </td>
-      <td>{{user.hours_assigned |floatformat:2}}</td>
+      <td>{{user.user.username}}</a></td>
+      <td><strong>{{user.hours_work |floatformat:2}}</strong></td>
+       <td>{{user.hours_not_work |floatformat:2}}</td>
       <td>{{user.hours_unassigned |floatformat:2}}</td>
       <td>{{user.hours_total |floatformat:2}}</td>
       <td>{{user.looks_ok | yesno:"OK, Probably Wrong" }}</td>
+      <td><a href="{% url 'sessions_month' username=user.user.username year=year month=month %}" type="button" class="btn btn-xs btn-info">Detail</a></td>
     </tr>
   {% endfor %}
 </tbody>

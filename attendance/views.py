@@ -287,11 +287,12 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
                 "user": user,
                 "hours_total": Session.objects.get_hours_month(user.id, month),
                 "hours_unassigned": Session.objects.get_unassigned_hours_month(user.id, month),
+                "hours_not_work": Session.objects.get_not_work_hours_month(user.id, month),
                 "looks_ok": False,
-                "hours_assigned": 0
+                "hours_work": 0
         })
     for user in user_data:
-        user["hours_assigned"] = user["hours_total"] - user["hours_unassigned"]
+        user["hours_work"] = user["hours_total"] - user["hours_unassigned"] - user["hours_not_work"]
         if user['hours_unassigned'] == 0 and user['hours_total'] > 0:
             user["looks_ok"] = True
         else:
