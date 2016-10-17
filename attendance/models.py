@@ -60,7 +60,7 @@ class SessionManager(models.Manager):
             return new_dur.total_seconds()/3600
         else:
             return 0
-    
+
     def get_not_work_hours_month(self, user, month):
         sessions_month = self.get_sessions_month(user, month)
         if(sessions_month):
