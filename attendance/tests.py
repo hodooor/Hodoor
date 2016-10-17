@@ -6,7 +6,7 @@ from unittest import skip
 from django.core.urlresolvers import reverse
 
 from django.http import HttpRequest
-from .models import Session, Swipe
+from .models import Session, Swipe, Project, ProjectSeparation
 from const_data import generate_random_datetimes_for_swipes
 from .serializers import SwipeSerializer, UserSerializer
 from const_data import USERS, SWIPES, SWIPE_TYPES
@@ -16,7 +16,7 @@ from rest_framework import status
 import pytz
 
 from attendance.views import sessions_month
-from attendance.factories import UserFactory,SwipeFactory
+from attendance.factories import UserFactory, SwipeFactory, ProjectFactory, ProjectSeparationFactory
 from .forms import SwipeEditForm
 
 def dict_to_database(serializer_class, list_of_dict):
@@ -122,6 +122,28 @@ class SessionTestCase(TestCase):
 
     def test_get_sessions_this_month(self):
         pass
+
+    def test_get_not_work_duration(self):
+        project1 = ProjectFactory(private=True)
+        project2 = ProjectFactory(private=False)
+        session1 = Session.objects.get(pk=1)
+        session2 = Session.objects.get(pk=2)
+        time1 = timedelta(hours=2)
+        time2 = session2.get_not_assigned_duration()
+        
+        ProjectSeparationFactory(
+            time_spend=time1, 
+            session=session1,
+            project=project1
+        )
+        ProjectSeparationFactory(
+            time_spend=time2, 
+            session=session2,
+            project=project2
+        )
+
+        self.assertEqual(session1.get_not_work_duration(), time1)
+        self.assertEqual(session2.get_not_work_duration(), timedelta(0))
 
 class SwipeTestCase(TestCase):
     def setUp(self):

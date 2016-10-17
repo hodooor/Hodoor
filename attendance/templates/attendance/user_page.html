@@ -69,6 +69,7 @@ User's profile page
 			<p class="">Total Hours: {{ hours_total_this_month|floatformat:2}}</p>
 			<p class="">Unassigned Hours: {{ hours_unassigned_this_month | floatformat:2}}</p>
 			<p class="">Assigned Hours: {{ hours_assigned_this_month | floatformat:2}}</p>
+			<p class="">Not Work Hours: {{ hours_not_work_this_month| floatformat:2}}</p>
 			<p class="">Sessions this month: {{session_list | length}}</p>
 			{% if not hours_unassigned_this_month %}
 				<p class="text-success"><span class="glyphicon glyphicon-thumbs-up"></span> You have all hours assigned to projects.</p>
@@ -83,6 +84,7 @@ User's profile page
 			<p class="">Total Hours: {{ hours_total_last_month|floatformat:2}}</p>
 			<p class="">Unassigned Hours: {{ hours_unassigned_last_month | floatformat:2}}</p>
 			<p class="">Assigned Hours: {{ hours_assigned_last_month | floatformat:2}}</p>
+			<p class="">Not Work Hours: {{ hours_not_work_last_month| floatformat:2}}</p>
 			{% if not hours_unassigned_last_month %}
 				<p class="text-success"><span class="glyphicon glyphicon-thumbs-up"></span> You have all hours assigned to projects. Your attendance can be calculated by administrator.</p>
 			{% else  %}

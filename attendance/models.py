@@ -60,6 +60,16 @@ class SessionManager(models.Manager):
             return new_dur.total_seconds()/3600
         else:
             return 0
+    
+    def get_not_work_hours_month(self, user, month):
+        sessions_month = self.get_sessions_month(user, month)
+        if(sessions_month):
+            new_dur = timedelta(0)
+            for session in sessions_month:
+                new_dur += session.get_not_work_duration()
+            return new_dur.total_seconds()/3600
+        else:
+            return 0
 
     def get_open_sessions(self):
         return Session.objects.filter(~Q(swipe__swipe_type='OUT'))
@@ -170,6 +180,15 @@ class Session(models.Model):
     def get_not_assigned_duration(self):
         return self.session_duration() - self.get_assigned_duration()
 
+    def get_not_work_duration(self):
+        time_spend_sum = timedelta(0)
+        for sep in self.projectseparation_set.filter(project__private=True):
+            try:
+                time_spend_sum += sep.time_spend
+            except TypeError as err:
+                if "unsupported operand type(s) for" not in str(err):
+                    raise
+        return time_spend_sum
 
 
     def __str__(self):
@@ -199,12 +218,12 @@ class Swipe(models.Model):
     '''
 
     SWIPE_TYPES = (
-                                    ("IN","Login"),
-                                    ("OUT","Logout"),
-                                    ("OBR","On Break"),
-                                    ("FBR","From Break"),
-                                    ("OTR","On Trip"),
-                                    ("FTR","From Trip")
+        ("IN","Login"),
+        ("OUT","Logout"),
+        ("OBR","On Break"),
+        ("FBR","From Break"),
+        ("OTR","On Trip"),
+        ("FTR","From Trip")
     )
 
     user = models.ForeignKey(User)
