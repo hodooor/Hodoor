@@ -5,94 +5,77 @@ from django.dispatch import receiver
 from datetime import datetime, timezone, timedelta
 from .managers import SessionManager
 
-class Project(models.Model):
-    name = models.CharField(max_length = 20)
 
-    #so we can define private projects (hours in this project does not count)
-    private = models.BooleanField(default = False)
+class Project(models.Model):
+    name = models.CharField(max_length=20)
+
+    # so we can define private projects (hours private this project does not count)
+    private = models.BooleanField(default=False)
     description = models.CharField(
-            max_length = 100,
-            null = True,
-            blank = True
+        max_length=100,
+        null=True,
+        blank=True
     )
-    #maybe worked hours? or will be calculated dynamicaly?
 
     def __str__(self):
+        """Just name of project."""
         return self.name
 
+
 class Session(models.Model):
-    '''
-    Session is from login swipe to logout swipe and can have one or
-    more breaks
-    '''
-
     user = models.ForeignKey(User)
-    #this is saved field and exists only for finished sessions
-    duration = models.DurationField(null = True, blank = True)
-
-    modified = models.BooleanField(default = False)
-
-    project = models.ManyToManyField(Project, through = "ProjectSeparation")
-
+    # this is saved field and exists only for finished sessions
+    duration = models.DurationField(null=True, blank=True)
+    modified = models.BooleanField(default=False)
+    project = models.ManyToManyField(Project, through="ProjectSeparation")
     objects = SessionManager()
-    def num_of_breaks (self):
-        '''
-        Returns number of completed breaks during session
-        '''
 
-        obr = self.swipe_set.filter(swipe_type = "OBR")
-        fbr = self.swipe_set.filter(swipe_type = "FBR")
+    def num_of_breaks(self):
+        """Return number of completed breaks during session."""
+        obr = self.swipe_set.filter(swipe_type="OBR")
+        fbr = self.swipe_set.filter(swipe_type="FBR")
         if len(obr) != len(fbr):
             print("Some breaks are not complete")
         return len(fbr)
 
-    def breaks_duration (self):
-        '''
-        Returns timedelta duration of all breaks
-        '''
-
-        obr = self.swipe_set.filter(swipe_type = "OBR")
-        fbr = self.swipe_set.filter(swipe_type = "FBR")
+    def breaks_duration(self):
+        """Return timedelta duration of all breaks."""
+        obr = self.swipe_set.filter(swipe_type="OBR")
+        fbr = self.swipe_set.filter(swipe_type="FBR")
         duration = timedelta(0)
 
-        for obr_object, fbr_object  in zip(obr,fbr):
+        for obr_object, fbr_object in zip(obr, fbr):
             duration += fbr_object.datetime - obr_object.datetime
 
-        if len(obr) > len(fbr): #if we are on break
+        if len(obr) > len(fbr):  # if we are on break
             duration += datetime.now(timezone.utc) - obr.latest("datetime").datetime
 
         duration = duration - timedelta(microseconds=duration.microseconds)
         return duration
 
-    def session_duration_overall (self):
-        '''
-        Returns time delta duration of session(including breaks)
-        '''
-
-        login_datetime = self.swipe_set.get(swipe_type = "IN").datetime
+    def session_duration_overall(self):
+        """Return time delta duration of session(including breaks)."""
+        login_datetime = self.swipe_set.get(swipe_type="IN").datetime
 
         if self.is_session_complete():
-            end_datetime = self.swipe_set.get(swipe_type = "OUT").datetime
+            end_datetime = self.swipe_set.get(swipe_type="OUT").datetime
         else:
             end_datetime = datetime.now(timezone.utc)
-
 
         bla = end_datetime - login_datetime
         bla = bla - timedelta(microseconds=bla.microseconds)
         return bla
 
     def session_duration(self):
-        '''
-        Returns time delta duration of session(excluding breaks)
-        '''
-
+        """Return time delta duration of session(excluding breaks)."""
         return self.session_duration_overall() - self.breaks_duration()
 
     def is_session_complete(self):
-        if(self.swipe_set.filter(swipe_type = "OUT").exists()):
+        if(self.swipe_set.filter(swipe_type="OUT").exists()):
             return True
         else:
             return False
+
     def get_date(self):
         in_datetime = self.swipe_set.all()[0].datetime
         return in_datetime
@@ -121,28 +104,25 @@ class Session(models.Model):
                     raise
         return time_spend_sum
 
-
     def __str__(self):
+        """Id and User."""
         return str(self.id) + " " + str(self.user)
 
+
 class ProjectSeparation(models.Model):
-    '''
-    So we can time divide our session into more projects
-    '''
+    """So we can time divide our session into more projects."""
+
     session = models.ForeignKey(Session)
     project = models.ForeignKey(Project)
-
-    #this describes the activity
     description = models.CharField(
-            max_length = 100,
-            null = True,
-            blank = True
+        max_length=100,
+        null=True,
+        blank=True
     )
-    #maybe entered in percentages
     time_spend = models.DurationField()
 
     def __str__(self):
-        return  "Session: " + str(self.session) + " Project: " + str(self.project)
+        return "Session: " + str(self.session) + " Project: " + str(self.project)
 
 
 class Swipe(models.Model):
