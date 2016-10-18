@@ -2,77 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.db.models import Q
-from datetime import datetime, timezone, timedelta, date
-from django.db.models import Sum
-from django.db.models import Q
-
-class SessionManager(models.Manager):
-    def get_sessions_month(self, user, month):
-        """
-        returns List of sessions made inserted month
-        """
-        swipes_month = Swipe.objects.filter(
-                swipe_type="IN",
-                datetime__month=month,
-                user = user
-        )
-
-        if swipes_month:
-            swipes_list = swipes_month.values_list('id', flat=True)
-            sessions = Session.objects.filter(swipe__in = swipes_list)
-            return sessions
-        else:
-            return 0
-
-    def get_sessions_this_month(self, user):
-        """
-        returns List of sessions made this month
-        """
-        return self.get_sessions_month(user, datetime.now().month)
-
-    def get_hours_month(self, user, month):
-        """
-        Returns number of hours in selected month (already finished sessions)
-        """
-        sessions_month = self.get_sessions_month(user, month)
-        if(sessions_month):
-            new_dur = timedelta(0)
-            for session in sessions_month:
-                if(session.duration):
-                    new_dur += session.duration
-            return new_dur.total_seconds()/3600
-        else:
-            return 0
-
-    def get_hours_this_month(self, user):
-        """
-        Return number of hours this month (already finished sessions)
-        """
-        return self.get_hours_month(user, datetime.now().month)
-
-    def get_unassigned_hours_month(self, user, month):
-        sessions_month = self.get_sessions_month(user, month)
-        if(sessions_month):
-            new_dur = timedelta(0)
-            for session in sessions_month:
-                new_dur += session.get_not_assigned_duration()
-            return new_dur.total_seconds()/3600
-        else:
-            return 0
-
-    def get_not_work_hours_month(self, user, month):
-        sessions_month = self.get_sessions_month(user, month)
-        if(sessions_month):
-            new_dur = timedelta(0)
-            for session in sessions_month:
-                new_dur += session.get_not_work_duration()
-            return new_dur.total_seconds()/3600
-        else:
-            return 0
-
-    def get_open_sessions(self):
-        return Session.objects.filter(~Q(swipe__swipe_type='OUT'))
+from datetime import datetime, timezone, timedelta
+from .managers import SessionManager
 
 class Project(models.Model):
     name = models.CharField(max_length = 20)
@@ -212,6 +143,8 @@ class ProjectSeparation(models.Model):
 
     def __str__(self):
         return  "Session: " + str(self.session) + " Project: " + str(self.project)
+
+
 class Swipe(models.Model):
     '''
     Swipes are individual key scans of each user
