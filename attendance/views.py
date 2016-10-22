@@ -283,11 +283,16 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
         return HttpResponse("Restricted to staff.")
     user_data = []
     for user in User.objects.all():
+        sessions = Session.objects.filter(
+            user=user,
+            swipe__datetime__month=month,
+            swipe__swipe_type="IN"
+        ).prefetch_related("swipe_set").prefetch_related("projectseparation_set")
         user_data.append({
                 "user": user,
-                "hours_total": Session.objects.get_hours_month(user.id, month),
-                "hours_unassigned": Session.objects.get_unassigned_hours_month(user.id, month),
-                "hours_not_work": Session.objects.get_not_work_hours_month(user.id, month),
+                "hours_total": Session.objects.get_hours_month(user.id, month, sessions),
+                "hours_unassigned": Session.objects.get_unassigned_hours_month(user.id, month, sessions),
+                "hours_not_work": Session.objects.get_not_work_hours_month(user.id, month, sessions),
                 "looks_ok": False,
                 "hours_work": 0
         })
