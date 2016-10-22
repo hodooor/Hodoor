@@ -92,7 +92,10 @@ class Session(models.Model):
         return time_spend_sum
 
     def get_not_assigned_duration(self):
-        return self.session_duration() - self.get_assigned_duration()
+        if self.duration:
+            return self.duration - self.get_assigned_duration()
+        else:
+            return self.session_duration() - self.get_assigned_duration()
 
     def get_not_work_duration(self):
         time_spend_sum = timedelta(0)
