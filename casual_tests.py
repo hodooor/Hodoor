@@ -29,4 +29,4 @@ now = time.time()
 user = User.objects.get(username="ondrej.vicar")
 month = datetime.now().month-1
 
-print(Session.objects.get_sessions_month(user, month))
+Session.objects.get_sessions_month(user, month)

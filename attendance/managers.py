@@ -5,7 +5,11 @@ from datetime import datetime, timedelta
 
 class SessionManager(models.Manager):
     def get_sessions_month(self, user, month):
-        sessions = self.model.objects.filter(user=user, swipe__datetime__month=month, swipe__swipe_type="IN")
+        sessions = self.model.objects.filter(
+            user=user,
+            swipe__datetime__month=month,
+            swipe__swipe_type="IN"
+        ).prefetch_related("swipe_set").prefetch_related("projectseparation_set")
         return sessions
 
     def get_sessions_this_month(self, user):

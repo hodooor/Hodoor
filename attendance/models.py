@@ -99,7 +99,7 @@ class Session(models.Model):
 
     def get_not_work_duration(self):
         time_spend_sum = timedelta(0)
-        for sep in self.projectseparation_set.filter(project__private=True):
+        for sep in (s for s in self.projectseparation_set.all() if s.project.private):
             try:
                 time_spend_sum += sep.time_spend
             except TypeError as err:
