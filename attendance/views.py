@@ -13,6 +13,7 @@ from .forms import ProjectSeparationForm, SwipeEditForm
 from django.utils import timezone
 from django.db.models import Q
 import locale
+from django.db.models import Prefetch
 
 @login_required(login_url='/login/')
 def home_page(request):
@@ -282,17 +283,22 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
     if not (request.user.is_superuser or request.user.is_staff):
         return HttpResponse("Restricted to staff.")
     user_data = []
-    for user in User.objects.all():
-        sessions = Session.objects.filter(
-            user=user,
-            swipe__datetime__month=month,
-            swipe__swipe_type="IN"
-        ).prefetch_related("swipe_set").prefetch_related("projectseparation_set")
+    users = User.objects.all().prefetch_related(
+        Prefetch(
+            'session_set',
+            queryset=Session.objects.filter(
+                swipe__datetime__month=month,
+                swipe__swipe_type="IN"
+            ).prefetch_related("swipe_set").prefetch_related("projectseparation_set")
+        )
+    )
+
+    for user in users:
         user_data.append({
                 "user": user,
-                "hours_total": Session.objects.get_hours_month(user.id, month, sessions),
-                "hours_unassigned": Session.objects.get_unassigned_hours_month(user.id, month, sessions),
-                "hours_not_work": Session.objects.get_not_work_hours_month(user.id, month, sessions),
+                "hours_total": Session.objects.get_hours_month(user.id, month, user.session_set.all()),
+                "hours_unassigned": Session.objects.get_unassigned_hours_month(user.id, month, user.session_set.all()),
+                "hours_not_work": Session.objects.get_not_work_hours_month(user.id, month, user.session_set.all()),
                 "looks_ok": False,
                 "hours_work": 0
         })
