@@ -46,6 +46,7 @@ Administrator info <span class="label label-default">{{month}}-{{year}}</span>
 {% endblock %}
 
 {% block content %}
+<h2>Users with sessions</h2>
 <table class="table table-striped table-hover">
 <thead class = "thead-inverse">
   <tr class="">
@@ -78,4 +79,26 @@ Administrator info <span class="label label-default">{{month}}-{{year}}</span>
     </tr>
   {% endfor %}
 </tbody>
+</table>
+<h2>Users without sessions</h2>
+<table class="table table-striped table-hover">
+<thead class = "thead-inverse">
+  <tr class="">
+    <th>LAST NAME</th>
+    <th>FIRST NAME</th>
+    <th>USERNAME</th>
+    <th>DETAIL</th>
+  </tr>
+</thead>
+<tbody>
+  {% for user in empty_users %}
+    <tr>
+      <td>{{user.last_name}}</td>
+      <td>{{user.first_name}}</td>
+      <td>{{user.username}}</a></td>
+      <td><a href="{% url 'sessions_month' username=user.username year=year month=month %}" type="button" class="btn btn-xs btn-info">Detail</a></td>
+    </tr>
+  {% endfor %}
+</tbody>
+</table>
 {% endblock %}

@@ -282,8 +282,8 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
 
     if not (request.user.is_superuser or request.user.is_staff):
         return HttpResponse("Restricted to staff.")
-    user_data = []
-    users = User.objects.all().prefetch_related(
+    user_data, empty_users = [], []
+    users = User.objects.filter().prefetch_related(
         Prefetch(
             'session_set',
             queryset=Session.objects.filter(
@@ -294,14 +294,18 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
     )
 
     for user in users:
-        user_data.append({
-                "user": user,
-                "hours_total": Session.objects.get_hours_month(user.id, month, user.session_set.all()),
-                "hours_unassigned": Session.objects.get_unassigned_hours_month(user.id, month, user.session_set.all()),
-                "hours_not_work": Session.objects.get_not_work_hours_month(user.id, month, user.session_set.all()),
-                "looks_ok": False,
-                "hours_work": 0
-        })
+        if user.session_set.all():
+            user_data.append({
+                    "user": user,
+                    "hours_total": Session.objects.get_hours_month(user.id, month, user.session_set.all()),
+                    "hours_unassigned": Session.objects.get_unassigned_hours_month(user.id, month, user.session_set.all()),
+                    "hours_not_work": Session.objects.get_not_work_hours_month(user.id, month, user.session_set.all()),
+                    "looks_ok": False,
+                    "hours_work": 0
+            })
+        else:
+            empty_users.append(user)
+
     for user in user_data:
         user["hours_work"] = user["hours_total"] - user["hours_unassigned"] - user["hours_not_work"]
         if user['hours_unassigned'] == 0 and user['hours_total'] > 0:
@@ -314,6 +318,7 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
     context = {
             "month": month,
             "year": year,
-            "user_data": sorted(user_data, key=lambda dic: (locale.strxfrm(dic["user"].last_name)))
+            "user_data": sorted(user_data, key=lambda dic: (locale.strxfrm(dic["user"].last_name))),
+            "empty_users": sorted(empty_users, key=lambda user: (locale.strxfrm(user.last_name))), 
     }
     return render(request, "attendance/administrator.html", context)
