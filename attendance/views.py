@@ -185,13 +185,19 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
             projects[separation.project.name] += separation.time_spend.seconds/3600
         else:
             projects[separation.project.name] = separation.time_spend.seconds/3600
-
+    
+    not_work_hours = Session.objects.get_not_work_hours_month(u, month)
+    total_hours = Session.objects.get_hours_month(u.id, month)
+    unassigned_hours = Session.objects.get_unassigned_hours_month(u.id, month)
+    work_hours = total_hours - unassigned_hours - not_work_hours
     context = {
-            "sessions":sessions,
-            "year":year,
-            "month":month,
-            "hours_selected_month": Session.objects.get_hours_month(u.id, month),
-            "unassigned_hours": Session.objects.get_unassigned_hours_month(u.id, month),
+            "sessions": sessions,
+            "year": year,
+            "month": month,
+            "total_hours": total_hours,
+            "unassigned_hours": unassigned_hours,
+            "work_hours": work_hours,
+            "not_work_hours": not_work_hours,
             "list_of_projects": projects,
     }
     return render(request, "attendance/sessions.html", context)
