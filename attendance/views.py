@@ -14,6 +14,9 @@ from django.utils import timezone
 from django.db.models import Q
 import locale
 from django.db.models import Prefetch
+from attendance.utils import get_quota_work_hours
+
+WORKHOURS_PER_DAY = 8
 
 @login_required(login_url='/login/')
 def home_page(request):
@@ -135,6 +138,7 @@ def user(request, username):
         "hours_not_work_last_month": hours_not_work_last_month,
         "hours_work_last_month": hours_work_last_month,
         "hours_work_this_month": hours_work_this_month,
+        "hours_quota": get_quota_work_hours(datetime.now().year, datetime.now().month, WORKHOURS_PER_DAY),
     }
     return render(request, "attendance/user_page.html", context)
 
@@ -199,6 +203,7 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
             "work_hours": work_hours,
             "not_work_hours": not_work_hours,
             "list_of_projects": projects,
+            "hours_quota": get_quota_work_hours(int(year), int(month), WORKHOURS_PER_DAY)
     }
     return render(request, "attendance/sessions.html", context)
 

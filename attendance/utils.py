@@ -4,7 +4,7 @@ import calendar
 
 
 def daterange(start_date, end_date):
-    """Return generator yielding each day in range."""
+    """Generator yielding each day in range."""
     date = start_date
     yield date
     while date < end_date:

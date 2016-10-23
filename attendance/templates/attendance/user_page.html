@@ -70,6 +70,7 @@ User's profile page
 			<p class="">Unassigned Hours: {{ hours_unassigned_this_month | floatformat:2}}</p>
 			<p class="">Not Work Hours: {{ hours_not_work_this_month| floatformat:2}}</p>
 			<p class="">Work Hours: <span class="text-primary h3">{{ hours_work_this_month | floatformat:2}}</span></p>
+			<p class="">Quota Hours: {{ hours_quota | floatformat:2}}</p>
 			{% if not hours_unassigned_this_month %}
 				<p class="text-success"><span class="glyphicon glyphicon-thumbs-up"></span> You have all hours assigned to projects.</p>
 			{% else  %}
