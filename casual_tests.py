@@ -8,6 +8,7 @@ import time
 import os, django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ticker.settings")
 django.setup()
+import attendance.utils as ut
 
 from attendance.models import Swipe, Session
 from django.contrib.auth.models import User
@@ -15,7 +16,7 @@ from attendance import factories
 
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-from datetime import datetime
+from datetime import date, timedelta, datetime
 from attendance.managers import SessionManager
 
 def print_doc_str_and_return_value(functions_iterable):
@@ -30,3 +31,5 @@ user = User.objects.get(username="ondrej.vicar")
 month = datetime.now().month-1
 
 Session.objects.get_sessions_month(user, month)
+
+print(ut.get_quota_work_hours(2016, 8, 8))
