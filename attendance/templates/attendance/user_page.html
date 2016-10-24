@@ -63,8 +63,10 @@ User's profile page
 			</div>
 		</div>
 	</div>
+
 	<div class="row">
-		<div class="bs-callout bs-callout-info col-md-4">
+		<div class="col-md-4">
+		<div class="bs-callout">
 			<h3>This Month:</h3>
 			<p class="">Total Hours: {{ hours_total_this_month|floatformat:2}}</p>
 			<p class="">Unassigned Hours: {{ hours_unassigned_this_month | floatformat:2}}</p>
@@ -79,7 +81,9 @@ User's profile page
 				</p>
 			{% endif %}
 		</div>
-		<div class="bs-callout bs-callout-info col-md-4">
+		</div>
+		<div class="col-md-4">
+		<div class="bs-callout">
 			<h3>Last Month:</h3>
 			<p class="">Total Hours: {{ hours_total_last_month|floatformat:2}}</p>
 			<p class="">Unassigned Hours: {{ hours_unassigned_last_month | floatformat:2}}</p>
@@ -93,9 +97,10 @@ User's profile page
 					Only assigned hours will be counted as attendance.
 				</p>
 			{% endif %}
-
+		</div>
 		</div>
 	</div>
+	<div>
 	<p class="">Last Swipe:&nbsp  
 		<img src="
 				{% if last_swipe.swipe_type == 'IN' %}{% static "img/incom.svg" %}
@@ -108,6 +113,7 @@ User's profile page
 			" />
 		&nbsp{{last_swipe.datetime | date:'D d.m.Y H:i:s'}}
 	</p>
+	</div>
 	<form action="{% url 'user' username=user.username %}" method="post">
 		{% csrf_token %}
 		{% for swipe_type in next_swipes %}
