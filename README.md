@@ -20,4 +20,4 @@ What can Hodoor do:
 #Development
 ...
 #License
-Project is licenced under GNU GPLv3 Licence
+Project is licenced under GNU GPLv3 License
