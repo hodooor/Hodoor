@@ -21,3 +21,8 @@ What can Hodoor do:
 ...
 #License
 Project is licenced under GNU GPLv3 License
+#Screenshots
+Profile page
+![alt text](screenshots/hodoor1.png "User page")
+Sessions
+![alt text](screenshots/hodoor2.png "Sessions")
