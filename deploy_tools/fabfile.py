@@ -2,7 +2,7 @@ from fabric.contrib.files import append, exists, sed
 from fabric.api import env, local, run
 import random
 
-REPO_URL = 'http://ondrej.vicar@hermes.eledus.cz/Hodoor/Hodoor-server'
+REPO_URL = 'https://github.com/OndrejVicar/Hodoor/'
 
 def deploy():
     site_folder = '/home/%s/sites/%s' % (env.user, env.host)
