@@ -18,7 +18,30 @@ What can Hodoor do:
 #Installation
 ...
 #Development
-...
+You need Python 3.4+ and probably [virtual enviroment](https://virtualenv.pypa.io/en/stable/) (if you have more python projects on your machine). 
+You should create similar folder structure:
+```
+[Project Folder]
+    [repo]
+    [virtualenv]
+    [database]
+    [static]
+```
+*repo* folder is  this cloned repo. Relative path from *repo* to *database* is important even in development enviroment. *static* folder will be created after you run `python manage.py collectstatic` (it is not required for development purposes). *virtualenv* can be enywhere as long as you activate it.
+
+If you have prepared folder structure and activated virutalenv you can:
+```
+cd repo
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
+```
+Then you should be able to access page at `http://localhost:8000/`
+You can create superuser by running:
+```
+python manage.py createsuperuser
+```
+
 #License
 Project is licenced under GNU GPLv3 License
 #Screenshots
