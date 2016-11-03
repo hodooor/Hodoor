@@ -15,8 +15,6 @@ What can Hodoor do:
 * Can be accessed directly by web interface
 * Can show Users at work / on break
 
-#Installation
-...
 #Development
 You need Python 3.4+ and probably [virtual enviroment](https://virtualenv.pypa.io/en/stable/) (if you have more python projects on your machine). 
 You should create similar folder structure:
@@ -41,6 +39,15 @@ You can create superuser by running:
 ```
 python manage.py createsuperuser
 ```
+#Server deployment
+Deployment process was inspired by great book [Test-Driven Web Development with Python](http://chimera.labs.oreilly.com/books/1234000000754/ch08.html) - Chapter8 and Chapter 9. I'm using apache2 instead of Nginx. You can use template [config file](deploy_tools/apache.conf.template) for apache2 https access with self-signed certificate. 
+
+Deployment process was automated by [Fabric](http://www.fabfile.org/) - [fabfile](deploy_tools/fabfile.py). You need python2 to be able to run fab script. After webserver configuration, deployment of new version should be as easy as:
+```
+cd deploy_tools
+fab deploy:host=USERNAME@site.address.com
+```
+For more information and step by step process, please use [Test-Driven Web Development with Python](http://chimera.labs.oreilly.com/books/1234000000754/ch08.html)  
 
 #License
 Project is licenced under GNU GPLv3 License
