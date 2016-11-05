@@ -101,8 +101,9 @@ User's profile page
 		</div>
 	</div>
 	<div>
-	<p class="">Last Swipe:&nbsp  
-		<img src="
+    {% if last_swipe %} 
+	<p class="">Last Swipe:&nbsp
+  		<img src="
 				{% if last_swipe.swipe_type == 'IN' %}{% static "img/incom.svg" %}
 				{% elif last_swipe.swipe_type == 'OUT' %}{% static "img/outgo.svg" %}
 				{% elif last_swipe.swipe_type == 'OBR' %}{% static "img/break.svg" %}
@@ -111,8 +112,9 @@ User's profile page
 				{% elif last_swipe.swipe_type == 'FTR' %}{% static "img/trip_ret.svg" %}
 				{% endif %}
 			" />
-		&nbsp{{last_swipe.datetime | date:'D d.m.Y H:i:s'}}
+		&nbsp{{last_swipe.datetime | date:'D d.m.Y H:i:s'}}       
 	</p>
+     {%endif%}
 	</div>
 	<form action="{% url 'user' username=user.username %}" method="post">
 		{% csrf_token %}

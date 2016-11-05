@@ -108,12 +108,12 @@ def user(request, username):
             on_trip_users.append(swipe.user)
 
     try:
-        last_swipe = Swipe.objects.filter(user = u).order_by("-datetime")[0]
+        last_swipe = Swipe.objects.filter(user=u).order_by("-datetime")[0]
         next_swipes = last_swipe.get_next_allowed_types()
     except IndexError:
         last_swipe = None
-        next_swipes = None
-        
+        next_swipes = ('IN',)  # empty database - first swipe is IN
+
     hours_total_last_month = Session.objects.get_hours_month(u.id, datetime.now().month-1)
     hours_unassigned_last_month = Session.objects.get_unassigned_hours_month(u.id, datetime.now().month-1)
     hours_total_this_month = Session.objects.get_hours_this_month(u.id)
