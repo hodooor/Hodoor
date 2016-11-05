@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block header_text %}
-User's profile page
+{{user.first_name}} {{user.last_name}} profile page
 {% endblock %}
 
 
@@ -34,36 +34,6 @@ User's profile page
 	{% endblock %}
 	{% block content %}
 	
-	<div class="">
-		<br />
-		<div class="panel panel-body">
-			<div class="col-md-3">
-				<img src="{% static "user_img/default.gif" %}" alt="Users profile image" class="img-circle img-responsive userImage" style="width:100px"/>
-			</div>
-			<div class="col-md-9">
-				<h4>{{user.first_name}} {{user.last_name}} <span class="label label-{% if user.is_superuser %}primary">Admin{% else %}warning">User{% endif %}</span></h4>
-				<table class="table table-responsive">
-					<tr>
-						<td>Name</td>
-						<td>{{user.first_name}}</td>
-					</tr>
-					<tr>
-						<td>Surname</td>
-						<td>{{user.last_name}}</td>
-					</tr>
-					<tr>
-						<td>Email</td>
-						<td>{{user.email}}</td>
-					</tr>
-					<tr>
-						<td>Login</td>
-						<td>{{user.username}}</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-	</div>
-
 	<div class="row">
 		<div class="col-md-4">
 		<div class="bs-callout">
@@ -101,7 +71,11 @@ User's profile page
 		</div>
 	</div>
 	<div>
-    {% if last_swipe %} 
+    {% if last_swipe %}
+    {% if current_session %}
+    <h3>Current Session: ID {{ current_session.pk }}</h3>
+    <p>Current Session Work Hours: {{ current_session_work_hours | floatformat:2 }}<p>
+    {% endif %}
 	<p class="">Last Swipe:&nbsp
   		<img src="
 				{% if last_swipe.swipe_type == 'IN' %}{% static "img/incom.svg" %}
@@ -114,7 +88,8 @@ User's profile page
 			" />
 		&nbsp{{last_swipe.datetime | date:'D d.m.Y H:i:s'}}       
 	</p>
-     {%endif%}
+
+    {%endif%}
 	</div>
 	<form action="{% url 'user' username=user.username %}" method="post">
 		{% csrf_token %}

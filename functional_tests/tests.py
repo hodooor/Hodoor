@@ -110,7 +110,7 @@ class LoginLogoutTest(FunctionalTest):
 
         sessions_header = self.browser.find_element_by_tag_name("h1").text
         self.wait_to_be_logged_in(user.username)
-        self.assertIn("User", sessions_header)
+        self.assertIn("profile", sessions_header)
         self.assertEqual(self.server_url + "/user/" + user.username+ "/",self.browser.current_url)
         self.browser.find_element_by_class_name('a-logout').click()
         self.wait_to_be_logged_out(user.username)

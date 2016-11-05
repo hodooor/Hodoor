@@ -32,7 +32,6 @@
 			<div class="collapse navbar-collapse" id="topNavBar">
 
 				{% if user.is_authenticated %}
-				<p class="navbar-text">ELEDUS s.r.o. Attendance System</p>
 				<ul class="nav navbar-nav navbar-right">
 					<p class="navbar-text">Logged in as:</p>
 					<li class="nav-item  {% if "/user/" in request.path %}active{% endif %} ">

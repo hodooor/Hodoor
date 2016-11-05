@@ -84,17 +84,22 @@ def user(request, username):
                     user = request.user,
                     datetime = timezone.now(),
             )
-    u = User.objects.get(username = username)
-    s = Session.objects.get_sessions_this_month(user = u)
-
+    u = User.objects.get(username=username)
+    s = Session.objects.get_sessions_this_month(user=u)
 
     open_sessions = Session.objects.get_open_sessions()
+    try:
+        current_session = open_sessions.filter(user=u)[0]
+        current_session_work_hours = current_session.session_duration().seconds / 3600
+    except:
+        current_session = None
+        current_session_work_hours = 0
 
     latest_swipes = []
 
     for session in open_sessions:
         latest_swipes.append(
-                Swipe.objects.filter(session=session).order_by("-datetime")[0]
+            Swipe.objects.filter(session=session).order_by("-datetime")[0]
         )
 
     at_work_users, on_break_users, on_trip_users = [], [], []
@@ -122,11 +127,11 @@ def user(request, username):
     hours_not_work_last_month = Session.objects.get_not_work_hours_month(u.id, datetime.now().month-1)
     hours_work_last_month = hours_total_last_month - hours_unassigned_last_month - hours_not_work_last_month
     hours_work_this_month = hours_total_this_month - hours_unassigned_this_month - hours_not_work_this_month
-    context = { 
-        "user" : u,
-        "session_list":s,
+    context = {
+        "user": u,
+        "session_list": s,
         "hours_total_this_month": hours_total_this_month,
-        "hours_unassigned_this_month": hours_unassigned_this_month, 
+        "hours_unassigned_this_month": hours_unassigned_this_month,
         "last_swipe": last_swipe,
         "next_swipes": next_swipes,
         "at_work_users": at_work_users,
@@ -139,6 +144,8 @@ def user(request, username):
         "hours_work_last_month": hours_work_last_month,
         "hours_work_this_month": hours_work_this_month,
         "hours_quota": get_quota_work_hours(datetime.now().year, datetime.now().month, WORKHOURS_PER_DAY),
+        "current_session_work_hours": current_session_work_hours,
+        "current_session": current_session
     }
     return render(request, "attendance/user_page.html", context)
 
