@@ -39,7 +39,7 @@
 		<div class="bs-callout">
 			<h3>This Month:</h3>
 			<p class="">Total Hours: {{ hours_total_this_month|floatformat:2}}</p>
-			<p class="">Unassigned Hours: {{ hours_unassigned_this_month | floatformat:2}}</p>
+			<p class="">Unassigned Hours: {{ hours_unassigned_this_month | floatformat:2}} ({{unassigned_closed_session_hours | floatformat:2}})</p>
 			<p class="">Not Work Hours: {{ hours_not_work_this_month| floatformat:2}}</p>
 			<p class="">Work Hours: <span class="text-primary h3">{{ hours_work_this_month | floatformat:2}}</span></p>
 			<p class="">Quota Hours: {{ hours_quota | floatformat:2}}</p>

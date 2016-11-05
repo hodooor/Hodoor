@@ -127,6 +127,8 @@ def user(request, username):
     hours_not_work_last_month = Session.objects.get_not_work_hours_month(u.id, datetime.now().month-1)
     hours_work_last_month = hours_total_last_month - hours_unassigned_last_month - hours_not_work_last_month
     hours_work_this_month = hours_total_this_month - hours_unassigned_this_month - hours_not_work_this_month
+    unassigned_closed_session_hours = hours_unassigned_this_month - current_session_work_hours
+
     context = {
         "user": u,
         "session_list": s,
@@ -145,7 +147,8 @@ def user(request, username):
         "hours_work_this_month": hours_work_this_month,
         "hours_quota": get_quota_work_hours(datetime.now().year, datetime.now().month, WORKHOURS_PER_DAY),
         "current_session_work_hours": current_session_work_hours,
-        "current_session": current_session
+        "current_session": current_session,
+        "unassigned_closed_session_hours": unassigned_closed_session_hours
     }
     return render(request, "attendance/user_page.html", context)
 
