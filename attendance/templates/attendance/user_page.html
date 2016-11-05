@@ -41,15 +41,38 @@
 			<p class="">Total Hours: {{ hours_total_this_month|floatformat:2}}</p>
 			<p class="">Unassigned Hours: {{ hours_unassigned_this_month | floatformat:2}} ({{unassigned_closed_session_hours | floatformat:2}})</p>
 			<p class="">Not Work Hours: {{ hours_not_work_this_month| floatformat:2}}</p>
-			<p class="">Work Hours: <span class="text-primary h3">{{ hours_work_this_month | floatformat:2}}</span></p>
-			<p class="">Quota Hours: {{ hours_quota | floatformat:2}}</p>
+			<p class="">Work Hours: <span class="text-primary h3">{{ hours_work_this_month | floatformat:2}}</span></p>        
 			{% if not hours_unassigned_this_month %}
-				<p class="text-success"><span class="glyphicon glyphicon-thumbs-up"></span> You have all hours assigned to projects.</p>
+				<p class="text-success"><span class="glyphicon glyphicon-thumbs-up"></span>You have all hours assigned to projects.</p>
 			{% else  %}
 				<p class="text-danger"><span class="glyphicon glyphicon-thumbs-down"></span> 
-					You have {{ hours_unassigned_this_month | floatformat:2}} unassigned hours. You have to assign all hours to projects until end of month.
+					You have <strong>{{ hours_unassigned_this_month | floatformat:2}}</strong> unassigned hours. You have to assign all hours to projects until end of month.
 				</p>
 			{% endif %}
+            <h3>Full-time Quota - {{workhours_per_day}} hours/day</h3>
+            <p class="">Month Quota Hours: {{ hours_quota | floatformat:2}}</p>
+            <p class="">Elapsed Work Days: {{ num_of_elapsed_workdays }} ({{ num_of_workdays }})</p>
+            <p class="">Current Quota Hours: {{current_quota}}</p>
+            <p>
+                Quota difference:
+                {% if quota_difference >= 0 %}
+                <span class="text-success">
+                    +{{quota_difference | floatformat:2}}
+                </span>
+                {% else %}
+                    {{quota_difference | floatformat:2}}
+                {% endif %}
+             </p>
+            
+            {% if quota_difference >= 0 %}
+                <p class="text-success"><span class="glyphicon glyphicon-thumbs-up"></span>
+            {% else  %} 
+                <p class="text-danger"><span class="glyphicon glyphicon-thumbs-down"> </span>
+            {% endif %}
+                Sum of your work hours and unassigned hours is currently <strong>{{quota_difference_abs | floatformat:2}} </strong> 
+                hours {% if quota_difference >= 0 %}over{% else  %}below{% endif %} quota (<strong>{{current_quota}}</strong> hours).
+                You should work <strong>{{ avg_work_hours_fullfill_qoota | floatformat:2}}</strong> hours per work day to fullfill quota until end of month.
+                </p>
 		</div>
 		</div>
 		<div class="col-md-4">
@@ -63,7 +86,7 @@
 				<p class="text-success"><span class="glyphicon glyphicon-thumbs-up"></span> You have all hours assigned to projects. Your attendance can be calculated by administrator.</p>
 			{% else  %}
 				<p class="text-danger"><span class="glyphicon glyphicon-thumbs-down"></span> 
-					You have {{ hours_unassigned_last_month | floatformat:2}} unassigned hours. You have to assign all hours to projects in Sessions page.
+					You have <strong>{{ hours_unassigned_last_month | floatformat:2}} </strong>unassigned hours. You have to assign all hours to projects in Sessions page.
 					Only assigned hours will be counted as attendance.
 				</p>
 			{% endif %}

@@ -8,13 +8,13 @@ from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.decorators import login_required
 from rest_framework import permissions
-from datetime import datetime
+from datetime import datetime, date
 from .forms import ProjectSeparationForm, SwipeEditForm
 from django.utils import timezone
 from django.db.models import Q
 import locale
 from django.db.models import Prefetch
-from attendance.utils import get_quota_work_hours
+from attendance.utils import get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days
 
 WORKHOURS_PER_DAY = 8
 
@@ -127,7 +127,15 @@ def user(request, username):
     hours_not_work_last_month = Session.objects.get_not_work_hours_month(u.id, datetime.now().month-1)
     hours_work_last_month = hours_total_last_month - hours_unassigned_last_month - hours_not_work_last_month
     hours_work_this_month = hours_total_this_month - hours_unassigned_this_month - hours_not_work_this_month
+    
+    num_of_workdays = get_number_of_work_days(date.today().year, date.today().month)
     unassigned_closed_session_hours = hours_unassigned_this_month - current_session_work_hours
+    hours_quota = get_quota_work_hours(datetime.now().year, datetime.now().month, WORKHOURS_PER_DAY)
+    num_of_elapsed_workdays = get_num_of_elapsed_workdays_in_month(date.today())
+    current_quota = num_of_elapsed_workdays * WORKHOURS_PER_DAY
+    quota_difference = hours_work_this_month + unassigned_closed_session_hours - current_quota
+    quota_difference_abs = abs(quota_difference)
+    avg_work_hours_fullfill_quota = (hours_quota - unassigned_closed_session_hours - hours_work_this_month) / (num_of_workdays - num_of_elapsed_workdays) 
 
     context = {
         "user": u,
@@ -145,10 +153,17 @@ def user(request, username):
         "hours_not_work_last_month": hours_not_work_last_month,
         "hours_work_last_month": hours_work_last_month,
         "hours_work_this_month": hours_work_this_month,
-        "hours_quota": get_quota_work_hours(datetime.now().year, datetime.now().month, WORKHOURS_PER_DAY),
+        "hours_quota": hours_quota,
         "current_session_work_hours": current_session_work_hours,
         "current_session": current_session,
-        "unassigned_closed_session_hours": unassigned_closed_session_hours
+        "unassigned_closed_session_hours": unassigned_closed_session_hours,
+        "num_of_elapsed_workdays": num_of_elapsed_workdays,
+        "num_of_workdays": num_of_workdays,
+        "current_quota": current_quota,
+        "quota_difference": quota_difference,
+        "quota_difference_abs": quota_difference_abs,
+        "avg_work_hours_fullfill_qoota": avg_work_hours_fullfill_quota,
+        "workhours_per_day": WORKHOURS_PER_DAY
     }
     return render(request, "attendance/user_page.html", context)
 
