@@ -100,7 +100,6 @@ class FunctionalTest(StaticLiveServerTestCase):
         ))
 
 class LoginLogoutTest(FunctionalTest):
-    @override_settings(DEBUG=True)
     def test_login_and_logut_users(self):
 
         user = UserFactory.build()
