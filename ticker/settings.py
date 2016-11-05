@@ -27,7 +27,7 @@ CSRF_COOKIE_SECURE = False #automatically changed in production by deployment sc
 SESSION_COOKIE_SECURE = False #automatically changed in production by deployment script
 
 INSTALLED_APPS = [
-        'attendance', # need to be before admin, so logout redirects to attendance
+    'attendance',  # need to be before admin, so logout redirects to attendance
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'crispy_forms',
     'datetimewidget',
-    'functional_tests'
+    'functional_tests',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -51,6 +52,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'ticker.urls'
@@ -146,7 +148,7 @@ EMAIL_HOST_PASSWORD = 'r4IITjppr7'
 DEFAULT_FROM_EMAIL = 'ho.door@eledus.cz'
 
 CRISPY_TEMPLATE_PACK = "bootstrap3"
-#Here will be from .settings_secret import SECRET_KEY after deployment script
+# Here will be from .settings_secret import SECRET_KEY after deployment script
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -161,4 +163,8 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+]
+
+INTERNAL_IPS = [
+    '127.0.0.1',
 ]

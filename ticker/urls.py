@@ -1,83 +1,69 @@
-"""ticker URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.9/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.conf.urls import url, include
-    2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
-"""
-from django.conf.urls import url,include
+from django.conf.urls import url, include
 from django.contrib import admin
-
-
+from django.conf import settings
 from attendance import views
-from django.contrib.auth.views import ( logout,
-                                                                                password_reset,
-                                                                                password_reset_done,
-                                                                                password_reset_confirm,
-                                                                                password_reset_complete )
+from django.contrib.auth.views import (
+    logout,
+    password_reset,
+    password_reset_done,
+    password_reset_confirm,
+    password_reset_complete
+)
 from rest_framework import routers
 
 swipes_router = routers.DefaultRouter()
 swipes_router.register(r'api/swipes', views.SwipeViewSet)
 
 keys_router = routers.DefaultRouter()
-keys_router.register(r'api/keys',views.KeyViewSet)
+keys_router.register(r'api/keys', views.KeyViewSet)
 
 
 urlpatterns = [
-        #/
-    url(r'^$', views.home_page, name ='home'),
+    #  /
+    url(r'^$', views.home_page, name='home'),
 
-    #/admin/
+    # /admin/
     url(r'^admin/', admin.site.urls),
 
-    #/api/swipes/
+    # /api/swipes/
     url(r'^', include(swipes_router.urls)),
-    #/api/keys/
+    # /api/keys/
     url(r'^', include(keys_router.urls)),
 
-    #/plate/
+    # /plate/
     url(r'^plate/', include('django_spaghetti.urls')),
 
-    url(r'^logout/$', logout,{'next_page': '/login/'}),
+    url(r'^logout/$', logout, {'next_page': '/login/'}),
 
-    #/login/  #/logout/ etc... https://docs.djangoproject.com/ja/1.9/topics/auth/default/
+    # /login/  #/logout/ etc... https://docs.djangoproject.com/ja/1.9/topics/auth/default/
     url(r'^', include('django.contrib.auth.urls')),
 
-    #/user/username/
+    # /user/username/
     url(r'^user/(?P<username>[\w.@+-]+)/$', views.user, name='user'),
 
-    #/sessions/username/
     url(r'^sessions/(?P<username>[\w.@+-]+)/$', views.sessions, name='sessions'),
+    # /sessions/username/
 
-     #/sessions/username/2015/05
+    # /sessions/username/2015/05
     url(r'^sessions/(?P<username>[\w.@+-]+)/(?P<year>[0-9]{4})/(?P<month>[0-9]{2})/$',
         views.sessions_month,
         name='sessions_month'),
 
-    #/sessions/username/id1
-    #/sessions/username/id354
+    # /sessions/username/id1
+    # /sessions/username/id354
     url(r'^sessions/(?P<username>[\w.@+-]+)/id(?P<id>\d+)/$',
         views.session_detail,
         name='session_detail'),
     url(r'^swipes/(?P<username>[\w.@+-]+)/id(?P<id>\d+)/$',
         views.swipe_detail,
         name='swipe_detail'),
-    #/swipes/username/
+    # /swipes/username/
     url(r'^swipes/(?P<username>[\w.@+-]+)/$', views.swipes, name='swipes'),
 
-    #password reset section
+    # password reset section
     url(r'^user/password/reset/$',
         password_reset,
-        {'post_reset_redirect' : '/user/password/reset/done/'},
+        {'post_reset_redirect': '/user/password/reset/done/'},
         name="password_reset"),
 
     url(r'^user/password/reset/done/$', password_reset_done),
@@ -97,3 +83,9 @@ urlpatterns = [
         views.administrator,
         name='default_administrator'),
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ]
