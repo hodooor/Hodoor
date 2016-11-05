@@ -14,10 +14,12 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 from rest_framework import status
 import pytz
+from datetime import date
 
 from attendance.views import sessions_month
 from attendance.factories import UserFactory, SwipeFactory, ProjectFactory, ProjectSeparationFactory
 from .forms import SwipeEditForm
+from .utils import get_num_of_elapsed_workdays_in_month
 
 def dict_to_database(serializer_class, list_of_dict):
     '''
@@ -313,3 +315,16 @@ class FormTestCase(TestCase):
     def test_project_separation_form(self):
         #implement
         pass
+
+
+class UtilsTestCase(TestCase):
+    def test_num_of_elapsed_workdays(self):
+        f = get_num_of_elapsed_workdays_in_month
+        self.assertEqual(f(date(2016, 11, 1)), 0)
+        self.assertEqual(f(date(2016, 11, 2)), 1)
+        self.assertEqual(f(date(2016, 11, 3)), 2)
+        self.assertEqual(f(date(2016, 11, 30)), 20)
+        self.assertEqual(f(date(2017, 1, 1)), 0)
+        self.assertEqual(f(date(2017, 1, 2)), 0)
+        self.assertEqual(f(date(2017, 1, 3)), 1)
+        
