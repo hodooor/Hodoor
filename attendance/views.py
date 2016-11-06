@@ -194,18 +194,32 @@ def swipes(request, username):
 def sessions_month(request, username, year=datetime.now().year, month = datetime.now().month):
     if not user_check(request, username):
         return HttpResponse("Restricted to " + username)
-    #swipes_this_month = Swipe.objects.filter(swipe_type="IN", datetime__month=datetime.now().month)
+    
+    if request.method == "POST":
+        form = ProjectSeparationForm(request.POST)
+        if form.is_valid():
+            form.save()
+
     in_swipes_ids = Swipe.objects.filter(
-            swipe_type = "IN",
-            user__username = username,
-            datetime__month = int(month),
-            datetime__year = int(year),
+        swipe_type="IN",
+        user__username=username,
+        datetime__month=int(month),
+        datetime__year=int(year),
     ).values_list('session', flat=True)
-    sessions = Session.objects.filter(pk__in = in_swipes_ids)
-    u = User.objects.get(username = username)
+    sessions = Session.objects.filter(pk__in=in_swipes_ids)
+    u = User.objects.get(username=username)
 
+    separations = ProjectSeparation.objects.filter(session__in=sessions)
 
-    separations = ProjectSeparation.objects.filter(session__in = sessions)
+    form = ProjectSeparationForm()
+
+    for session in sessions:
+        session.form = ProjectSeparationForm(
+                initial={
+                        "time_spend": session.get_not_assigned_duration(),
+                        "session": session.id  # hidden form
+                },
+        )
 
     projects = dict()
 
@@ -214,7 +228,7 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
             projects[separation.project.name] += separation.time_spend.seconds/3600
         else:
             projects[separation.project.name] = separation.time_spend.seconds/3600
-    
+
     not_work_hours = Session.objects.get_not_work_hours_month(u, month)
     total_hours = Session.objects.get_hours_month(u.id, month)
     unassigned_hours = Session.objects.get_unassigned_hours_month(u.id, month)
@@ -228,7 +242,8 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
             "work_hours": work_hours,
             "not_work_hours": not_work_hours,
             "list_of_projects": projects,
-            "hours_quota": get_quota_work_hours(int(year), int(month), WORKHOURS_PER_DAY)
+            "hours_quota": get_quota_work_hours(int(year), int(month), WORKHOURS_PER_DAY),
+            "form": form
     }
     return render(request, "attendance/sessions.html", context)
 

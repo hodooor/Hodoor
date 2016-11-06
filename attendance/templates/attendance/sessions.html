@@ -107,13 +107,21 @@ Sessions info <span class="label label-default">{{month}}-{{year}}</span>
 </thead>
 <tbody>
   {% for session in sessions%}
+  <form method='POST' action=''>{% csrf_token %}
     <tr>
      <td>{{session.get_date|date:'D d.m.'}}</td>
      <td>
-      <table class = "table-condensed">
+      <table class = "table-condensed">       
        {% for sep in session.projectseparation_set.all %}
        <tr><td>{{sep.project.name}}</td></tr>
        {% endfor %}
+       <tr>
+           <td>
+           {% if session.get_not_assigned_duration%}
+           {{ session.form.project}}
+           {% endif %}
+       </td>
+       </tr>
       </table>
      </td>
      <td>
@@ -121,13 +129,33 @@ Sessions info <span class="label label-default">{{month}}-{{year}}</span>
        {% for sep in session.projectseparation_set.all %}
        <tr><td>{{sep.time_spend}}</td></tr>
        {% endfor %}
+       <tr>
+           <td>
+           {% if session.get_not_assigned_duration%}
+           {{ session.form.time_spend}}
+           {% endif %}
+       </td>
+       </tr>
       </table>
-     </td>
+     </td> 
      <td>
       <table class = "table-condensed">
        {% for sep in session.projectseparation_set.all %}
        <tr><td>{{sep.description}}</td></tr>
-       {% endfor %}
+       {% endfor %} 
+       <tr>
+           <td>
+           {% if session.get_not_assigned_duration%}
+           {{ session.form.session}}
+           {{ session.form.description}}
+           {% endif %}
+       </td>
+       <td>
+          {% if session.get_not_assigned_duration%}
+           <input id="submit" type='submit' class="btn btn-xs btn-info" value ='Submit'/>
+          {% endif %}
+       </td>
+       </tr>
       </table>
      </td>
      <td>{{ session.session_duration }}</td>
@@ -137,6 +165,7 @@ Sessions info <span class="label label-default">{{month}}-{{year}}</span>
      <td>{{ session.id }}</td>
      <td><a href="{% url 'session_detail' username=user.username id=session.id %}" type="button" class="btn btn-xs btn-info">Detail</a></td>
     </tr>
+  </form>
   {% endfor %}
 </tbody>
 {% endblock %}
