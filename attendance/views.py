@@ -194,11 +194,13 @@ def swipes(request, username):
 def sessions_month(request, username, year=datetime.now().year, month = datetime.now().month):
     if not user_check(request, username):
         return HttpResponse("Restricted to " + username)
-    
+
     if request.method == "POST":
         form = ProjectSeparationForm(request.POST)
         if form.is_valid():
             form.save()
+            url = reverse('sessions_month', kwargs={"username": username, "year": year, "month": month})
+            return HttpResponseRedirect(url)
 
     in_swipes_ids = Swipe.objects.filter(
         swipe_type="IN",
@@ -261,6 +263,8 @@ def session_detail(request, username, id):
             form = ProjectSeparationForm(request.POST)
             if form.is_valid():
                 form.save()
+                url = reverse('session_detail', kwargs={"username": username, "id":id})
+                return HttpResponseRedirect(url)
 
         form = ProjectSeparationForm(
                 initial={

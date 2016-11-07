@@ -33,7 +33,7 @@ class ProjectSeparationForm(forms.ModelForm):
         time_spend = cleaned_data.get("time_spend")
         session = cleaned_data.get("session")
         if time_spend and session:
-            if(time_spend > cleaned_data.get("session").session_duration()):
+            if(time_spend > cleaned_data.get("session").get_not_assigned_duration()):
                 msg = "Time spend more then not assigned time"
                 self.add_error('time_spend', msg)
 
