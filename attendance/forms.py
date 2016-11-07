@@ -9,14 +9,15 @@ class SessionForm(forms.ModelForm):
         model = Session
         fields = ["duration"]
 
+
 class ProjectSeparationForm(forms.ModelForm):
     class Meta:
         model = ProjectSeparation
-        fields = ['project','time_spend','description','session']
+        fields = ['project', 'time_spend', 'description', 'session']
         widgets = {
                 'description': forms.Textarea(attrs={
                         'cols': 50,
-                        'rows': 2
+                        'rows': 1
                 }),
                 'session': forms.HiddenInput(),
         }
@@ -32,7 +33,7 @@ class ProjectSeparationForm(forms.ModelForm):
         time_spend = cleaned_data.get("time_spend")
         session = cleaned_data.get("session")
         if time_spend and session:
-            if(time_spend > cleaned_data.get("session").session_duration()):
+            if(time_spend > cleaned_data.get("session").get_not_assigned_duration()):
                 msg = "Time spend more then not assigned time"
                 self.add_error('time_spend', msg)
 
