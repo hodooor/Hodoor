@@ -15,6 +15,7 @@ from django.utils import timezone
 from rest_framework import status
 import pytz
 from datetime import date
+from time import sleep
 
 from attendance.views import sessions_month
 from attendance.factories import UserFactory, SwipeFactory, ProjectFactory, ProjectSeparationFactory
@@ -58,6 +59,24 @@ class SessionTestCase(TestCase):
             )
 
 
+
+    def test_NAT_value_of_opened_session_is_updated_overtime_if_IN_swipe_is_corrected(self):
+        user1 = UserFactory()
+        swipe1 = SwipeFactory(user = user1, swipe_type = "IN")        
+        
+        swipe2 = SwipeFactory( # correction of swipe1
+                user = user1,
+                swipe_type = "IN",
+                correction_of_swipe = swipe1,
+                datetime = swipe1.datetime + timedelta(seconds = 1),
+        )
+
+        nat_1 = swipe2.session.get_not_assigned_duration()
+        sleep(1) # sleep creates needed time difference (better method?)
+        nat_2 = swipe2.session.get_not_assigned_duration()
+
+        self.assertNotEqual(nat_1, nat_2)    
+        
     def create_swipe_new_swipe_with_time_offset(self, session, offset_hours, swipe_type):
         """
         For testing purposes, returns  new_swipe, original_swipe tupple
