@@ -92,10 +92,13 @@ class Session(models.Model):
         return time_spend_sum
 
     def get_not_assigned_duration(self):
-        if self.duration:
-            return self.duration - self.get_assigned_duration()
-        else:
+        if Swipe.correction_of_swipe: # Need to check this first for corrected IN swipe of active session
             return self.session_duration() - self.get_assigned_duration()
+        else:
+            if self.duration:
+                return self.duration - self.get_assigned_duration()
+            else:
+                return self.session_duration() - self.get_assigned_duration()
 
     def get_not_work_duration(self):
         time_spend_sum = timedelta(0)
