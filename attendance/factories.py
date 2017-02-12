@@ -54,4 +54,5 @@ class ProjectSeparationFactory(DjangoModelFactory):
     session = Session.objects.first()
     project = SubFactory(ProjectFactory)
     description = fuzzy.FuzzyText(length=fuzzy.FuzzyInteger(2,20).fuzz(), chars=string.printable)
-    time_spend = session.session_duration()
+    if session:
+        time_spend = session.session_duration()
