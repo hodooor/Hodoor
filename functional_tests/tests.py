@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.support.wait import WebDriverWait
 
 from attendance.models import Key, Swipe, Session
-from attendance.factories import UserFactory, SwipeFactory
+from attendance.factories import UserFactory, SwipeFactory, ProjectFactory
 
 from rest_framework import status
 import sys
@@ -302,6 +302,61 @@ class SessionTest(FunctionalTest):
             finally:
                 self.browser.get(self.server_url + "/logout/")
                 self.assertIn(self.server_url + "/login/",self.browser.current_url)
+
+    def test_forms_is_not_cleared_after_submit(self):
+        user = UserFactory.create()
+        project = ProjectFactory.create()
+        self.browser.get(self.server_url)
+
+        SwipeFactory(
+            user=user,
+            swipe_type="IN",
+            datetime=timezone.now() - timedelta(hours=24))
+        SwipeFactory(
+            user=user,
+            swipe_type="OUT",
+            datetime=timezone.now() - timedelta(hours=23))
+        SwipeFactory(
+            user=user,
+            swipe_type="IN",
+            datetime=timezone.now() - timedelta(hours=22))
+        SwipeFactory(
+            user=user,
+            swipe_type="OUT",
+            datetime=timezone.now() - timedelta(hours=21))
+        session1 = Session.objects.all()[0]
+
+        self.login_by_form(user.username, "password", self.browser)
+
+        sessions_url = "{0}/sessions/{1}/{2}/{3:0>2}/".format(
+                self.server_url,
+                user.username,
+                session1.get_date().year,
+                session1.get_date().month,
+        )
+        self.browser.get(sessions_url)
+        selects = self.browser.find_elements_by_id("id_project")
+        options = selects[0].find_elements_by_tag_name("option")
+        options[1].click()
+        options = selects[1].find_elements_by_tag_name("option")
+        options[1].click()
+
+        descriptions = self.browser.find_elements_by_id("id_description")
+        DESCRIPTION_TEXT = "test description"
+
+        descriptions[0].send_keys("DESCRIPTION_TEXT")
+        descriptions[1].send_keys("DESCRIPTION_TEXT")
+
+        submits = self.browser.find_elements_by_id("submit")
+
+        submits[0].click()
+
+        description = self.browser.find_element_by_id("id_description")
+        option = self.browser.find_element_by_tag_name("option")
+
+        self.assertEqual(option.text, project.name)
+        self.assertEqual(description.text, DESCRIPTION_TEXT)
+
 
 class APITest(FunctionalTest):
     '''
