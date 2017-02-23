@@ -7,7 +7,7 @@ from .managers import SessionManager
 
 
 class Project(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=40)
 
     # so we can define private projects (hours private this project does not count)
     private = models.BooleanField(default=False)
