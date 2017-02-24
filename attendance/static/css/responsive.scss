@@ -29,6 +29,14 @@
     }
 }
 
+@mixin footer-text-padding($padding) {
+    .footer {
+    .hodoor-footer-text {
+        margin-left: $padding;
+        }
+    }
+}
+
 
 /*==========  Mobile First Method  ==========*/
 
@@ -46,16 +54,19 @@
     @media only screen and (min-width : 768px) {
         @include footer-responsive();
         @include myDropDownSize(318px);
+        @include footer-text-padding(55px);
     }
     /* Medium Devices, Desktops */
     @media only screen and (min-width : 992px) {
         @include footer-responsive();
         @include myDropDownSize(318px);
+        @include footer-text-padding(55px);
     }
     /* Large Devices, Wide Screens */
     @media only screen and (min-width : 1200px) {
         @include footer-responsive();
         @include myDropDownSize(318px);
+        @include footer-text-padding(55px);
     }
 
 
