@@ -1,10 +1,6 @@
 //CONFIGURATION VARIABLES
 var debug = 0; //set true or false, true enables debugging mode
 
-
-
-
-
 //Functions
 var variable;
 function debugLog(variable) {
@@ -24,6 +20,11 @@ function getRandomColor() {
 }*/
 
 $(document).ready(function(){ 
+    var temp;
+    //temp = $('.ext-link').html();
+    //console.log(temp);
+    //$('.ext-link').html(temp + ' <i class="fa fa-external-link" aria-hidden="true"></i>');
+    $('.ext-link').append(' <i class="fa fa-external-link" aria-hidden="true"></i>');
     /*This functions makes color change on form icons*/
     /*$(".focused").focus(function(){
         var idcon;
