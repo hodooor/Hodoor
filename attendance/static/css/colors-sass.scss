@@ -1,0 +1,27 @@
+/*------------------------------------------
+Author: Patrik Predny,
+Title: COLOURS - SASS SETUP
+Year: 2017,
+License: MIT,
+------------------------------------------*/
+/*----------------------------------------*/
+/*Colors*/
+/*----------------------------------------*/
+$green: #46a372;
+$li-green: #4ab47c;
+$eledus-blue: #00AEEF;
+$darkest-blue: #1f4371;
+$darker-blue:#2962a9;
+$normal-blue:#347bd5;
+$li-blue:#609ae1;
+$lightest-blue:#76a7e3;
+$red: #a02828;
+$gray: #38453d;
+$li-gray: #ddd;
+$aqua: #007071;
+$orange:#E74121;
+
+$success: $green;
+//$danger: $red;
+$danger: $orange;
+$primary: darken($eledus-blue, 5%);

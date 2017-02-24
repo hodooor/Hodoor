@@ -1,0 +1,88 @@
+/*Definitions*/
+/*Make MIXIN for Footer Custom Styling*/
+@import 'colors-sass';
+@mixin footer-responsive() {
+    .footer {
+        .navbar-fixed-bottom {
+        height: 12px;
+        .navbar-text {
+            padding: 5px auto auto auto;
+            margin: 5px auto auto auto;
+            }
+        }
+    } 
+    .scrollup {
+        position: relative;
+        top: -6px;
+    }
+} 
+
+@mixin myDropDownSize($size) {  
+    .dropdown-menu {
+        width: $size;
+        box-shadow: none;
+        box-shadow: inset -6px 0px 3px -5px $darker-blue;
+        -webkit-box-shadow: none;
+        -webkit-box-shadow: inset -6px 0px 3px -5px $darker-blue;
+        -moz-box-shadow: none;
+        -moz-box-shadow: inset -6px 0px 3px -5px $darker-blue;
+    }
+}
+
+
+/*==========  Mobile First Method  ==========*/
+
+    /* Custom, iPhone Retina */ 
+    @media only screen and (min-width : 320px) {
+        
+    }
+
+    /* Extra Small Devices, Phones */ 
+    @media only screen and (min-width : 480px) {
+
+    }
+
+    /* Small Devices, Tablets */
+    @media only screen and (min-width : 768px) {
+        @include footer-responsive();
+        @include myDropDownSize(318px);
+    }
+    /* Medium Devices, Desktops */
+    @media only screen and (min-width : 992px) {
+        @include footer-responsive();
+        @include myDropDownSize(318px);
+    }
+    /* Large Devices, Wide Screens */
+    @media only screen and (min-width : 1200px) {
+        @include footer-responsive();
+        @include myDropDownSize(318px);
+    }
+
+
+/*==========  Non-Mobile First Method  ==========*/
+
+    /* Large Devices, Wide Screens */
+    @media only screen and (max-width : 1200px) {
+
+    }
+
+    /* Medium Devices, Desktops */
+    @media only screen and (max-width : 992px) {
+
+    }
+
+    /* Small Devices, Tablets */
+    @media only screen and (max-width : 768px) {
+
+    }
+
+    /* Extra Small Devices, Phones */ 
+    @media only screen and (max-width : 480px) {
+
+    }
+
+    /* Custom, iPhone Retina */ 
+    @media only screen and (max-width : 320px) {
+        
+    }
+

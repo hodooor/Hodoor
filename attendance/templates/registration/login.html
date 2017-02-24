@@ -1,11 +1,11 @@
-{% extends 'attendance/base.html' %}
+{% extends 'registration/base.html' %}
+{% load static %}
 {% load crispy_forms_tags %}
 
-{% block header_text %}Login{% endblock %}
-{% block content-top %}
+{% block content %}
 
 {% if form.errors %}
-	<div class="alert alert-warning" role="alert">	
+	<div class="hidden alert alert-warning" role="alert">	
 		<p class="text-left">
 			<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>&nbsp;Your username and password didn't match. Please try again.
 		</p>
@@ -14,40 +14,92 @@
 
 {% if next %}
     {% if user.is_authenticated %}
-	<div class="alert alert-danger" role="alert">	
+	<div class="hidden alert alert-danger" role="alert">	
 		<p class="text-left">
 			<span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>&nbsp;Your account doesn't have access to this page. To proceed,
     please login with an account that has access.
 		</p>
 	</div>
     {% else %}
-	<div class="alert alert-info" role="alert">	
+	<div class="hidden alert alert-info" role="alert">	
 	    <p class="text-left">
 				<span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;Please login to see this page.
 		</p>
 	</div>
     {% endif %}
 {% endif %}
-<div class ="row">
-<div class="col-md-4 col-md-offset-4">
-	<div class="panel panel-default">
-		<div class="panel-body">
+     <!-- -->
+     <!--To make top distance on larger screens - desktop first method--> 
+      <div class="row">  
+        <div class="col-md-3 col-md-offset-2">
+          <h3 class="hidden-sm hidden-xs">&nbsp;</h3>  
+          <p class="visible-xs visible-sm">&nbsp;</p> 
+        </div>
+      </div>
+      <!--/-->
+      <div class="row">          
+        <div class="col-md-3 center">
+        <img src="{% static 'img/door.svg' %}" class="login-page-image hidden-xs hidden-sm" />        
+          <div class="panel panel-primary">
+            <div class="panel-heading text-center">  		
+              <h1>Please login</h1>
+            </div>
+            <div class="panel-body">			
+              <form method="post" class="login-form" action="{% url 'login' %}">
+               {% csrf_token %}
+			         {{form | crispy}}
+                <br />            
+                <div class="row">             
+                  <div class="col-xs-12">            
+                    <div class="login-page">
+                      <input class="btn-primary btn btn-block btn-lg" type="submit" value="Login&nbsp;" />
+                      <input type="hidden" name="next" value="{{ next }}" />
+                    </div>          
+                  </div>        
+                </div>
+              </form>	           			 			
+            </div>	
+          </div>                            
+        </div> 
+        </div>
 
-			<form method="post" action="{% url 'login' %}">
-			{% csrf_token %}
+        <div class="row">
+          <div class="col-md-4 col-md-offset-4">            
+            <div class="login-page">
+              <a href="{% url 'password_reset' %}" class="text-center col-md-12 col-xs-12 lostpasswd">Lost your password ?&nbsp;</a>
+            </div>          
+          </div>           
+      </div>
+      <script type="text/javascript">
+      /*This script is used for styling crispy form*/
+        $(document).ready(function(){
+          //Styling Username field
+          $('#id_username').attr("placeholder", "Type your username here").addClass('focused');
+          $('#id_username').css('width', '82%').css('float', 'right').css('position','relative').css('top','-36px');
+          $('#div_id_username').prepend('<span class="mbri-users icon" id="id_username-icon"></span>');
+          //Styling Paswword field
+          $('#id_password').attr("placeholder", "Type your password here").addClass('focused');
+          $('#id_password').css('width', '82%').css('float', 'right').css('position','relative').css('top','-36px');
+          $('#div_id_password').prepend('<span class="mbri-key icon" id="id_password-icon"></span>');
 
-			{{form | crispy}}
-
-			<input class="btn btn-primary btn-block" type="submit" value="Login" id = "id_login"/>
-			<input type="hidden" name="next" value="{{ next }}" />
-			</form>
-
-			{# Assumes you setup the password_reset view in your URLconf #}
-			<p>&nbsp;</p>
-			<p class="text-right"><a href="{% url 'password_reset' %}">Lost password?</a></p>
-
-		</div>
-	</div>
-
-</div>
+          $('.control-label').hide();
+          //Icon animations, depended on username and password field classes: .focused
+          $(".focused").focus(function(){
+            var idcon;
+            idcon = "#"+(this).id+"-icon";
+            debugLog(idcon);
+            $(idcon).removeClass("icon");
+            $(idcon).addClass("icon-active");
+          });
+          $(".focused").focusout(function(){
+            var idcon;
+            idcon = "#"+(this).id+"-icon";
+            $(idcon).removeClass("icon-active");
+            $(idcon).addClass("icon");
+          });
+        });
+      </script>
+      <!--PACE loader - use loader before all scripts are set correctly-->
+      <script type="text/javascript" language="javascript" src="{% static 'js/pace.js' %}"></script>
+      <link rel="stylesheet" href="{% static 'css/pace-loader.css' %}">
 {% endblock %}

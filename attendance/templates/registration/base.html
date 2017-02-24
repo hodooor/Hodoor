@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+{% load static %}
+{% load compress %}
+<html lang="en">
+    <head>  
+    <title>Hodoor - Login</title> 
+    <!--Favicons for all devices-->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/favicon/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" href="{% static 'img/favicon/favicon-32x32.png' %}" sizes="32x32">
+    <link rel="icon" type="image/png" href="{% static 'img/favicon/favicon-16x16.png' %}" sizes="16x16">
+    <link rel="manifest" href="{% static 'img/favicon/manifest.json' %}">
+    <link rel="mask-icon" href="{% static 'img/favicon/safari-pinned-tab.svg' %}" color="#5bbad5">
+    <meta name="theme-color" content="#ffffff"> 
+    <!--/favicons-->
+
+    <meta charset="utf-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    
+    <!--BS--> 
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"> 
+    <!--jQuery--> 
+    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>  
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>  
+    
+    <!--ICONIC PACKS and FONTS-->
+    <!--Font awesome-->
+    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet"> 
+    <!--Mobirise icons-->
+    <link rel="stylesheet" href="{% static 'modules/mobirise/style.css' %}"> 
+    <!--Custom fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    
+    <!--Own CSS Styles--> 
+    {% compress css %}
+    <link rel="stylesheet" type="text/x-scss" href="{% static 'css/main.scss' %}" />
+    <link id="responsive" rel="stylesheet" type="text/x-scss" href="{% static 'css/responsive.scss' %}">
+    {% endcompress %}
+    
+    <!--JAVASCRIPTS-->
+    {% compress js %}
+    <script type="text/javascript" language="javascript" src="{% static 'js/functions.js' %}"></script>
+    {% endcompress %}   
+ 
+
+    {{form.media}}
+  </head>
+  <body class="login">
+    <div class="container-fluid">
+    {% block content %}
+    {% endblock %}
+      <div class="footer">
+        <div class="visible-xs visible-sm" style="min-height: 70px;"></div>
+        <div class="navbar navbar-fixed-bottom" role="navigation">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-3 col-md-offset-5 col-xs-12">              
+                <div class="navbar-text text-center">
+                  <p class="hodoor-footer-text text-center">&lt; &frasl;  <a href="https://github.com/OndrejVicar/Hodoor/">Hodoor</a> - made with <i class="fa fa-heart love"></i> and  <i class="fa fa-coffee coffee"></i> &gt;</p>
+                </div>
+              </div>
+
+              <div class="col-md-1 col-md-offset-4 col-xs-12 text-center">
+                <a href="#" class="scrollup" data-toggle="tooltip" data-placement="top" title="Scroll up!"><i class="fa fa-arrow-circle-o-left fa-rotate-90 " aria-hidden="true"></i></a>
+              </div>
+
+              <div class="col-xs-12 visible-sm visible-xs">&nbsp;</div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
