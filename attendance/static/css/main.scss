@@ -20,6 +20,15 @@ License: MIT,
 .blue {
 	color: $li-blue;
 }
+.primary {
+	color: $primary;
+}
+.big-text {
+	font-size: 1.3em;
+}
+.bold {
+	font-weight: bold;
+}
 /*----------------------------------------*/
 /*default transitions*/
 /*----------------------------------------*/
@@ -396,6 +405,18 @@ h4 {
 			li a {
 				color: $gray;
 			}
+		}
+	}
+	.terminal-buttons {
+		margin-left:5px; 
+		button {
+			width: 31%;
+			font-weight: bold;
+		}
+	}
+	.last-swipe {
+		i {
+			font-size: 1.3em;
 		}
 	}
 }
