@@ -23,5 +23,5 @@ $orange:#E74121;
 
 $success: $green;
 //$danger: $red;
-$danger: $orange;
+$danger: lighten($orange, 0%);
 $primary: darken($eledus-blue, 5%);
