@@ -1,167 +1,307 @@
 {% extends 'attendance/base.html' %}
 {% load static %}
 
-{% block header_text %}
-{{user.first_name}} {{user.last_name}} profile page
+{% block title %}Dashboard{% endblock %}
+{% block aside %}
+<div class="panel panel-simple">
+  <div class="panel-body">
+      <div class="row userinfo">
+        <div class="col-xs-2">
+          <i class="fa fa-user-circle-o fa-2x" aria-hidden="true"></i>
+        </div>
+        <div class="col-xs-10">
+          <div class="row">
+            <div class="col-xs-12">
+              <span id="main-username" class="username">{{user.first_name}} {{user.last_name}}</span>
+            </div>
+            <div class="col-xs-5 col-xs-offset-7">
+              <div class="badge {% if user.is_superuser %}badge-admin{% endif %}"><span class="userstatus">{% if user.is_superuser %}Admin{% else %}User{% endif %}</span></div>
+            </div>
+          </div>
+        </div>                     
+      </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading clickable" id="working-users">
+    <h3 class="panel-title">
+      <i class="fa fa-thumbs-o-up panel-icon" aria-hidden="true"></i>
+      Working users
+      <span class="badge pull-right">{{at_work_users | length}}</span>
+    </h3>     
+  </div>
+  <div class="panel-body">     
+    <ul class="collabsible-list list-group " id="users-at-work">
+    {% for user in at_work_users %}
+			<li><i class="fa fa-circle-o" aria-hidden="true"></i> {{user.first_name}} {{user.last_name}}</li>
+		{%endfor %}               
+    </ul>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading clickable"> <!--panel-collapsed-->
+    <h3 class="panel-title">
+      <i class="fa fa-coffee panel-icon" aria-hidden="true"></i>
+      Users on break
+      <span class="badge pull-right">{{on_break_users | length}}</span>
+    </h3>               
+  </div>
+  <div class="panel-body">         
+    <ul class="collabsible-list list-group" id="users-on-break">               
+    {% for user in on_break_users %}
+			<li><i class="fa fa-circle-o" aria-hidden="true"></i> {{user.first_name}} {{user.last_name}}</li>
+		{%endfor %}  
+    </ul>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading clickable">
+    <h3 class="panel-title">
+      <i class="fa fa-suitcase panel-icon" aria-hidden="true"></i>
+      Users on trip
+      <span class="badge pull-right">{{on_trip_users | length}}</span>
+    </h3>              
+  </div>
+  <div class="panel-body">        
+    <ul class="collabsible-list list-group" id="users-on-trip">               
+    {% for user in on_trip_users %}
+			<li><i class="fa fa-circle-o" aria-hidden="true"></i> {{user.first_name}} {{user.last_name}}</li>
+		{%endfor %} 
+    </ul>
+  </div>
+</div>
+
+<div class="visible-xs visible-sm">
+  &nbsp;
+</div>
+{% endblock %}
+{% block content %}
+<div class="visible-xs visible-sm">
+  <label>Navigation:</label>
+  <div class="navigable-bar">
+    <ul>
+      
+    </ul>
+  </div>
+</div>
+
+
+<div class="page-header">
+  <div class="well">
+    <h1><i class="fa fa-dashboard" aria-hidden="true"></i> Dashboard <small>- your attendance info summary</small></h1>
+  </div>
+</div>
+
+<div class="row gutter-small"> <!-- if needed add class: equal-height-panels-->
+    <div class="col-md-3">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h2 class="panel-title navigable" id="this-month-quota" title="This month - Quota">
+            <i class="fa fa-calendar-check-o" aria-hidden="true"></i> This month - quota <i id="tooltip1" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title=" "></i>
+          </h2> 
+        </div>
+        <div class="panel-body">
+          <p>Elapsed work days:</p>
+          <div class="row">
+            <div class="col-xs-1"><span class="pull-right">0</span></div>
+            <div class="col-xs-10">                      
+              <div class="progress">
+                <div class="progress-bar primary" role="progressbar" aria-valuenow="3" aria-valuemin="0" aria-valuemax="20" style="min-width: 15em;">
+              3 d. (24 h.)
+                </div>
+              </div>
+          </div>
+            <div class="col-xs-1">20</div>
+          </div>
+          <ul class="dash-list-group">
+            <li class="">You should work: <span class="danger">9.41 </span>hour(s)/day</li>
+          </ul>
+          <div class="separator"></div>
+          <ul class="dash-list-group">
+            <li class="">Full-time quota: <span class="primary">8 </span>hours/day</li>
+            <li class="">Month quota hours: <span class="success">160</span></li>
+            <li class="">Work days: 20 days</li>
+          </ul>
+          <ul class="dash-list-group">
+            <li class="">You worked: <span class="primary">0 </span>hour(s)</li>
+            <li class="">Current quota: 24 hour(s)</li>
+            <li class="">Quota difference: -24 hour(s)</li>
+          </ul>
+        </div>
+        <div class="panel-footer">
+          <div class="alert alert-danger" role="alert">
+            <div class="title">
+              <label>Month Quota:</label>
+              <i class="fa fa-frown-o alert-icon" aria-hidden="true"></i>
+            </div>
+            <p>Sum of your work hours and unassigned hours is currently <strong>24.00 </strong> 
+            hours below quota (<strong>24</strong> hours).
+            You should work <strong>9.41</strong> hours per work day to fullfill quota until end of month.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">            
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h2 class="panel-title navigable" id="this-month-work-time" title="This month - Work time">
+            <i class="fa fa-calendar-check-o" aria-hidden="true"></i> This month - work time <i id="tooltip2" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Tooltip text"></i>
+          </h2>
+        </div>
+        <div class="panel-body">
+          <ul class="dash-list-group">
+            <li class="">Work Hours: <span class="success">139.5</span></li>
+            <li class="">Not-work Hours: <span class="danger">15.5</span></li>
+            <li class="list-separator"></li>
+            <li class="">Total Hours: <span class="primary">165.0</span></li>
+          </ul>
+          <canvas id="Work-Time-Chart" class="doughnut-chart" width="auto" height="250"></canvas>
+          <script>
+
+          </script>
+        </div>
+        <div class="panel-footer">
+
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">            
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h2 class="panel-title navigable" id="this-month-assigned" title="This month - Assigned time">
+            <i class="fa fa-calendar-check-o" aria-hidden="true"></i> This month - assign. <i id="tooltip3" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Tooltip text"></i>
+          </h2>
+        </div>
+        <div class="panel-body">
+          <ul class="dash-list-group">
+            <li class="">Assigned Hours: <span class="success">120.0</span></li>
+            <li class="">Unassigned Hours: <span class="danger">19.5</span></li>
+            <li class="list-separator"></li>
+            <li class="">Total Hours: <span class="primary">139.5</span></li>
+          </ul>
+          <canvas id="Assigned-Time-Chart" class="doughnut-chart" width="auto" height="250"></canvas>
+        </div>
+        <div class="panel-footer">
+          <div class="alert alert-success" role="alert">
+            <div class="title">
+              <label>This Month:</label>
+              <i class="fa fa-smile-o alert-icon" aria-hidden="true"></i>
+            </div>
+            <p>
+            You have all hours assigned to projects. Your attendance can be calculated by administrator.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h2 class="panel-title navigable" id="terminal-emulator" title="Terminal Emulator">
+           <i class="fa fa-calculator" aria-hidden="true"></i> Terminal emulator <i id="tooltip4" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Tooltip text"></i>
+          </h2>
+        </div>
+        <div class="panel-body">
+          <div>
+            <a href="#" class="btn btn-primary"><i class="fa fa-sign-in fa-2x" aria-hidden="true"></i> INCOMING</a>
+            <a href="#" class="btn btn-primary">OUTGOING</a>
+            <a href="#" class="btn btn-primary">BREAK</a>
+          </div>
+          <div class="separator"></div>
+          <div>
+            <p class="">Last Swipe:&nbsp;
+            <i class="fa fa-sign-in fa-2x" aria-hidden="true"></i>
+            (OUTGOING)
+            &nbsp;Sun 29.01.2017 21:02:53       
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!--
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <h2 class="panel-title navigable" id="terminal-emulator" title="Local Weather">
+           <i class="fa fa-sun-o" aria-hidden="true"></i> Local Weather <i id="tooltip6" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Tooltip text"></i>
+          </h2>
+        </div>
+        <div class="panel-body">
+          Pocasi
+        </div>
+      </div>
+      -->
+      
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h2 class="panel-title navigable" id="last-month" title="Last month info">
+            <i class="fa fa-calendar-minus-o" aria-hidden="true"></i> Last month <i id="tooltip5" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Tooltip teXxt"></i>
+          </h2>
+        </div>
+        <div class="panel-body">
+          <ul class="dash-list-group">
+            <li class="">Work Hours: <span class="success">142.60</span></li>
+            <li class="">Not-work Hours: <span class="danger">0.00</span></li>
+            <li class="">Unassigned Hours: 19.5</li>
+            <li class="list-separator"></li>
+            <li class="">Total Hours: <span class="primary">142.60</span></li>
+          </ul>
+        </div>
+        <div class="panel-footer">
+          <div class="alert alert-success" role="alert">
+            <div class="title">
+              <label>Last Month:</label>
+              <i class="fa fa-smile-o alert-icon" aria-hidden="true"></i>
+            </div>
+            <p>
+            You have all hours assigned to projects. Your attendance can be calculated by administrator.
+            </p>
+          </div>
+        </div>
+      </div>               
+    </div>
+
+  </div><!--//row equal panels-->
+<script type="text/javascript">
+	$(document).ready(function () {
+	/*Work Time Doughnut Chart*/
+	  var ctx = $("#Work-Time-Chart");
+	  var dataWorkTime = [139.5, 15.5];
+	  var labelsWorkTime = ["Work Hours", "Not-work Hours"];
+	  var bgcolorsWorkTime = ["#009bd7","#cccccc"];
+
+	  var myChart = new Chart(ctx, {
+	  type: 'doughnut',
+	  data: {
+	    labels: labelsWorkTime,
+	    datasets: [{
+	      backgroundColor: bgcolorsWorkTime,
+	      data: dataWorkTime
+	    }]
+	  }
+	  });
+
+	/*Assigned Time Doughnut Chart*/
+	  var ctx = $("#Assigned-Time-Chart");
+	  var dataWorkTime = [120.0, 19.5];
+	  var labelsWorkTime = ["Assigned Hours", "Unassigned Hours"];
+	  var bgcolorsWorkTime = ["#cccccc","#E74121"];
+
+	  var myChart = new Chart(ctx, {
+	  type: 'doughnut',
+	  data: {
+	    labels: labelsWorkTime,
+	    datasets: [{
+	      backgroundColor: bgcolorsWorkTime,
+	      data: dataWorkTime
+	    }]
+	  }
+	  });
+	    
+	});
+</script>
 {% endblock %}
 
-
-	{% block content-left %}
-	<div class="bs-callout bs-callout-info">
-		<h3><img src="https://media.giphy.com/media/LHZyixOnHwDDy/giphy.gif" height="50" /> Users At Work ({{at_work_users | length}}):</h3>
-
-		{% for user in at_work_users %}
-			<p>{{user.username}}</p>
-		{%endfor %}
-	</div>
-	<div class="bs-callout bs-callout-info">
-		{% if user.username == "jaroslav.malec" %}
-		<h3><img src="https://media.licdn.com/mpr/mpr/shrinknp_200_200/AAEAAQAAAAAAAAdPAAAAJDFjMWYyYmRkLTE3MjktNDZiOS04YTAzLWM3ODM2MGZlMDBjOA.jpg" height="" /> Users On Break ({{on_break_users | length}}):</h3>
-		{% else %}
-		<h3><img src="https://media.giphy.com/media/GqZi964Bo9f0I/giphy.gif" height="70" /> Users On Break ({{on_break_users | length}}):</h3>
-		{% endif %}
-		{% for user in on_break_users%}
-			<p>{{user.username}}</p>
-		{%endfor %}
-	</div>
-	<div class="bs-callout bs-callout-info">
-		<h3><img src="https://media.giphy.com/media/l46C7ZlmzYkclCvwA/giphy.gif" height="40" /> Users On Trip ({{on_trip_users | length}}):</h3>
-		{% for user in on_trip_users%}
-			<p>{{user.username}}</p>
-		{%endfor %}
-	</div>
-
-	{% endblock %}
-	{% block content %}
-	
-	<div class="row">
-		<div class="col-md-4">
-		<div class="bs-callout">
-			<h3>This Month:</h3>
-			<p class="">Total Hours: {{ hours_total_this_month|floatformat:2}}</p>
-			<p class="">Unassigned Hours: {{ hours_unassigned_this_month | floatformat:2}} ({{unassigned_closed_session_hours | floatformat:2}})</p>
-			<p class="">Not Work Hours: {{ hours_not_work_this_month| floatformat:2}}</p>
-			<p class="">Work Hours: <span class="text-primary h3">{{ hours_work_this_month | floatformat:2}}</span></p>        
-			{% if not hours_unassigned_this_month %}
-				<p class="text-success"><span class="glyphicon glyphicon-thumbs-up"></span>You have all hours assigned to projects.</p>
-			{% else  %}
-				<p class="text-danger"><span class="glyphicon glyphicon-thumbs-down"></span> 
-					You have <strong>{{ hours_unassigned_this_month | floatformat:2}}</strong> unassigned hours. You have to assign all hours to projects until end of month.
-				</p>
-			{% endif %}
-            <h3>Full-time Quota - {{workhours_per_day}} hours/day</h3>
-            <p class="">Month Quota Hours: {{ hours_quota | floatformat:2}}</p>
-            <p class="">Elapsed Work Days: {{ num_of_elapsed_workdays }} ({{ num_of_workdays }})</p>
-            <p class="">Current Quota Hours: {{current_quota}}</p>
-            <p>
-                Quota difference:
-                {% if quota_difference >= 0 %}
-                <span class="text-success">
-                    +{{quota_difference | floatformat:2}}
-                </span>
-                {% else %}
-                    {{quota_difference | floatformat:2}}
-                {% endif %}
-             </p>
-            
-            {% if quota_difference >= 0 %}
-                <p class="text-success"><span class="glyphicon glyphicon-thumbs-up"></span>
-            {% else  %} 
-                <p class="text-danger"><span class="glyphicon glyphicon-thumbs-down"> </span>
-            {% endif %}
-                Sum of your work hours and unassigned hours is currently <strong>{{quota_difference_abs | floatformat:2}} </strong> 
-                hours {% if quota_difference >= 0 %}over{% else  %}below{% endif %} quota (<strong>{{current_quota}}</strong> hours).
-                You should work <strong>{{ avg_work_hours_fullfill_qoota | floatformat:2}}</strong> hours per work day to fullfill quota until end of month.
-                </p>
-		</div>
-		</div>
-		<div class="col-md-4">
-		<div class="bs-callout">
-			<h3>Last Month:</h3>
-			<p class="">Total Hours: {{ hours_total_last_month|floatformat:2}}</p>
-			<p class="">Unassigned Hours: {{ hours_unassigned_last_month | floatformat:2}}</p>
-			<p class="">Not Work Hours: {{ hours_not_work_last_month| floatformat:2}}</p>
-			<p class="">Work Hours: <span class="text-primary h3">{{ hours_work_last_month | floatformat:2}}</span></p>
-			{% if not hours_unassigned_last_month %}
-				<p class="text-success"><span class="glyphicon glyphicon-thumbs-up"></span> You have all hours assigned to projects. Your attendance can be calculated by administrator.</p>
-			{% else  %}
-				<p class="text-danger"><span class="glyphicon glyphicon-thumbs-down"></span> 
-					You have <strong>{{ hours_unassigned_last_month | floatformat:2}} </strong>unassigned hours. You have to assign all hours to projects in Sessions page.
-					Only assigned hours will be counted as attendance.
-				</p>
-			{% endif %}
-		</div>
-		</div>
-	</div>
-	<div>
-    {% if last_swipe %}
-    {% if current_session %}
-    <h3>Current Session: ID {{ current_session.pk }}</h3>
-    <p>Current Session Work Hours: {{ current_session_work_hours | floatformat:2 }}<p>
-    {% endif %}
-	<p class="">Last Swipe:&nbsp
-  		<img src="
-				{% if last_swipe.swipe_type == 'IN' %}{% static "img/incom.svg" %}
-				{% elif last_swipe.swipe_type == 'OUT' %}{% static "img/outgo.svg" %}
-				{% elif last_swipe.swipe_type == 'OBR' %}{% static "img/break.svg" %}
-				{% elif last_swipe.swipe_type == 'FBR' %}{% static "img/break_ret.svg" %}
-				{% elif last_swipe.swipe_type == 'OTR' %}{% static "img/trip.svg" %}
-				{% elif last_swipe.swipe_type == 'FTR' %}{% static "img/trip_ret.svg" %}
-				{% endif %}
-			" />
-		&nbsp{{last_swipe.datetime | date:'D d.m.Y H:i:s'}}       
-	</p>
-
-    {%endif%}
-	</div>
-	<form action="{% url 'user' username=user.username %}" method="post">
-		{% csrf_token %}
-		{% for swipe_type in next_swipes %}
-				{% if swipe_type == "IN" %}
-				<button type="submit" class="btn btn-primary" value="Incoming" name = "{{swipe_type}}" />
-					<img src="{% static "img/incom.svg" %}">
-					</br>
-					Incoming
-				</button>
-				{% endif %}
-				{% if swipe_type == "OUT" %}
-					<button type="submit" class="btn btn-primary" value="Outgoing" name = "{{swipe_type}}" />
-						<img src="{% static "img/outgo.svg" %}">
-						</br>
-						Outgoing
-					</button>
-				{% endif %}
-				{% if swipe_type == "OBR" %}
-					<button type="submit" class="btn btn-primary" value="Break" name = "{{swipe_type}}" />
-						<img src="{% static "img/break.svg" %}">
-						</br>
-						Break
-					</button>
-				{% endif %}
-				{% if swipe_type == "FBR" %}
-					<button type="submit" class="btn btn-primary" value="Break Return" name = "{{swipe_type}}" />
-						<img src="{% static "img/break_ret.svg" %}">
-						</br>
-						Break Return
-					</button>
-				{% endif %}
-				{% if swipe_type == "OTR" %}
-					<button type="submit" class="btn btn-primary" value="Trip" name = "{{swipe_type}}" />
-						<img src="{% static "img/trip.svg" %}">
-						</br>
-						Work Trip
-					</button>
-				{% endif %}
-				{% if swipe_type == "FTR" %}
-					<button type="submit" class="btn btn-primary" value="Trip Return" name = "{{swipe_type}}" />
-						<img src="{% static "img/trip_ret.svg" %}">
-						</br>
-						Trip Return
-					</button>
-				{% endif %}
-		{%endfor %}
-
-	</form>
-
-	{% endblock %}
 

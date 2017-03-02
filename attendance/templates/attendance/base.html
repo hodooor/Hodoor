@@ -1,115 +1,161 @@
 <!DOCTYPE html>
 {% load static %}
+{% load compress %}
 <html lang="en">
+  <head>  
+    <title>Hodoor - {% block title %}{% endblock %}</title> 
+    <!--Favicons for all devices-->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/favicon/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" href="{% static 'img/favicon/favicon-32x32.png' %}" sizes="32x32">
+    <link rel="icon" type="image/png" href="{% static 'img/favicon/favicon-16x16.png' %}" sizes="16x16">
+    <link rel="manifest" href="{% static 'img/favicon/manifest.json' %}">
+    <link rel="mask-icon" href="{% static 'img/favicon/safari-pinned-tab.svg' %}" color="#5bbad5">
+    <meta name="theme-color" content="#ffffff"> 
+    <!--/favicons-->
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hodoor - ELEDUS attendance system</title>
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
-    <link href="{% static 'css/docs.css' %}" rel="stylesheet">
-    <link href="{% static 'bootstrap/css/bootstrap.css' %}" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-		<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-		<script src="{% static 'js/attendance.js' %}"></script>
- 	{{form.media}}
-</head>
+    <meta charset="utf-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    
+    <!--BS--> 
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}"> 
+    <!--jQuery--> 
+    <script src="{% static 'js/jquery-3.1.1.min.js'%}"></script>  
+    <script src="{% static 'js/bootstrap.min.js'%}"></script>  
+    
+    <!--ICONIC PACKS and FONTS-->
+    <!--Font awesome-->
+    <link href="{% static 'css/font-awesome.min.css'%}" rel="stylesheet"> 
+    <!--Mobirise icons-->
+    <link rel="stylesheet" href="{% static 'modules/mobirise/style.css'%}"> 
+    <!--Custom fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    
+    <!--Own CSS Styles-->
+    {% compress css %} 
+    <link id="mystyle" rel="stylesheet" type="text/x-scss" href="{% static 'css/main.scss' %}">
+    <link id="responsive" rel="stylesheet" type="text/x-scss" href="{% static 'css/responsive.scss' %}">
+    {% endcompress %}
+    
+    <!--JAVASCRIPTS-->
+    {% compress js %}
+    <script type="text/javascript" language="javascript" src="{% static 'js/functions.js' %}"></script>   
+    <!--equalHeight module-->
+    <script type="text/javascript" language="javascript" src="{% static 'modules/jquery-match-height/jquery.matchHeight.js'%}"></script> 
+    <!--My tooltips-->
+    <script type="text/javascript" language="javascript" src="{% static 'js/tooltips.js' %}"></script> 
+    {% endcompress %}
+    <!--Charts.JS module-->
+    <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script> 
+    <!--PACE loader-->
+    <script type="text/javascript" language="javascript" src="{% static 'js/pace.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/pace-loader.css' %}">
+  
+  </head>
+  <body class="">
+    <div class="container-fluid"> 
+      <div class="row">
+        <div class="col-md-2">
+          <div class="aside">
+					<!--aside content here-->
+          <div class="row">
+            <div class="col-md-12">
 
-<!--<body style="background:/*url('{% static 'img/bg-blurry-3.jpg' %}')*/ #f4f4f4;">-->
-<body>
-	<nav class="navbar navbar-default navbar-fixed-top">
-		<div class="container-fluid">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" style="color:#000;" href="{% url 'home' %}"><img width="220px" alt="Hodoor" src="{% static "img/hodoor-icon-64x220.png" %}" /></a>
-			</div>
+              <div id="myDropdown">
+                <a href="#" class="dropdown-toggle btn btn-block myDropBtn" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars menu-icon"></i><span class="menu-text">Hodoor - attendance system</span></a>
+                <ul class="dropdown-menu">
+                <!--List of items-->
+                    <li class="col-xs-6">
+                      <a class="dropmenu-item-btn" href="#">
+                        <i class="fa fa-dashboard" aria-hidden="true"></i>
+                        Dashboard
+                      </a>
+                    </li>
+                    <li class="col-xs-6">
+                      <a class="dropmenu-item-btn" href="#">
+                        <i class="fa fa-diamond" aria-hidden="true"></i>
+                        Admin
+                      </a>
+                    </li>
+                <!--Next row-->
+                    <li class="col-xs-6">
+                      <a class="dropmenu-item-btn" href="#">
+                        <i class="fa fa-cubes" aria-hidden="true"></i>
+                        Sessions
+                      </a>
+                    </li>
+                    <li class="col-xs-6">
+                      <a class="dropmenu-item-btn" href="#">
+                        <i class="fa fa-cube" aria-hidden="true"></i>
+                        Swipes
+                      </a>
+                    </li>
+                <!--Next row-->
+                    <li class="col-xs-6">
+                      <a class="dropmenu-item-btn disabled" href="#">
+                        <i class="fa fa-cogs" aria-hidden="true"></i>
+                        Settings
+                      </a>
+                    </li>
+                    <li class="col-xs-6">
+                      <a class="dropmenu-item-btn" href="#">
+                        <i class="fa fa-power-off" aria-hidden="true"></i>
+                        Logout
+                      </a>
+                    </li>
+                <!--//List of items-->
+                </ul>
+              </div>
+     
+            </div>
+          </div><!--//Menu Top - ROW-->
+          {% block aside %}
+          {% endblock %}
+          <!--//aside content here-->
+          </div>
+        </div>
+        <div class="col-md-10">
+          <div class="content">
+          <!--content here-->
+          {% block content %}
+          {% endblock %}  
+          <!--//content here-->
+          </div>
+        </div>
+      </div>
 
-			<div class="collapse navbar-collapse" id="topNavBar">
+     <!--To make top distance--> 
+      <div class="row">  
+        <div class="col-md-3 col-md-offset-2"> 
+          <p class="hidden-xs hidden-sm"></p>
+          <p class="visible-sm visible-xs">&nbsp;</p>
+          <p>&nbsp;</p>
+        </div>
+      </div>
+      <!--/-->
 
-				{% if user.is_authenticated %}
-				<ul class="nav navbar-nav navbar-right">
-					<p class="navbar-text">Logged in as:</p>
-					<li class="nav-item  {% if "/user/" in request.path %}active{% endif %} ">
-						<a href="{% url 'home' %}" class="a-user nav-link">
-							<span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;{{user.username}}
-						</a>
-					</li>
-          {% if user.is_staff %}
-          <li class="nav-item">
-            <a href="{% url 'default_administrator'%}" class="a-administrator nav-link" id= "id_administrato">
-              <span class="glyphicon glyphicon-usd" aria-hidden="true"></span>&nbsp;Administrator
-            </a>
-          </li>
-          {% endif %}
-					<li class="nav-item {% if "/sessions/" in request.path %}active{% endif %} ">
-						<a href="{% url 'sessions' user.username %}", class="a-sessions nav-link">
-							<span class="glyphicon glyphicon-time" aria-hidden="true"></span>&nbsp;Sessions
-						</a>
-					</li>
-					<li class="nav-item {% if "/swipes/" in request.path %}active{% endif %} ">
-						<a href="{% url 'swipes' user.username %}", class="a-swipes nav-link">
-							<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>&nbsp;Swipes
-						</a>
-					</li>
-					<li class="nav-item">
-						<a href="{%url 'logout' %}" class="a-logout nav-link" id= "id_logout">
-							<span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
-						</a>
-					</li>
-				</ul>
-				{% endif %}
+      <div class="footer">
+        <div class="visible-xs visible-sm" style="min-height: 70px;"></div>
+        <div class="navbar navbar-fixed-bottom" role="navigation">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-3 col-md-offset-5 col-xs-12">              
+                <div class="navbar-text text-center">
+                  <p class="hodoor-footer-text text-center">&lt; &frasl;  <a href="#">Hodoor</a> - made with <i class="fa fa-heart love"></i> and  <i class="fa fa-coffee coffee"></i> &gt;</p>
+                </div>
+              </div>
 
-			</div>
-		</div>
-	</nav>
+              <div class="col-md-1 col-md-offset-4 col-xs-12 text-center">
+                <a href="#" class="scrollup" data-toggle="tooltip" data-placement="top" title="Scroll up!"><i class="fa fa-arrow-circle-o-left fa-rotate-90 " aria-hidden="true"></i></a>
+              </div>
 
-	<div><br/><br/><br/></div> <!-- This structure is old and not recommended, but works, somewhere is wrong code in Bootstrap navbar -->
+              <div class="col-xs-12 visible-sm visible-xs">&nbsp;</div>
 
-	<div class="container">
-		<div class="row">
-		    <div class="col-md-6 col-md-offset-3">
-		        <div class="text-center">
-		            <h1>{% block header_text %}{% endblock %}</h1>
-		        </div>
-		    </div>
-		</div>
-	</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-md-12">
-		    {% block content-top-fluid %}
-		    {% endblock %}
-		  </div>
-		</div>
-	</div>
-
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-		    {% block content-top %}
-		    {% endblock %}
-		  </div>
-		</div>
-	</div>
-
-	<div class="container-fluid">
-	  <div class="row">
-	  	<div class="col-md-3">
-		  	{% block content-left %}
-		  	{% endblock %}
-	  	</div>
-	  	<div class="col-md-9">
-		  	{% block content %}
-		  	{% endblock %}
-	  	</div>
-	  </div>
-	</div>
-
-</body>
+      
+    </div>
+  </body>
 </html>

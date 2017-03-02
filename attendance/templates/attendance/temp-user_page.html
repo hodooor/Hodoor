@@ -1,0 +1,167 @@
+{% extends 'attendance/base.html' %}
+{% load static %}
+
+{% block header_text %}
+{{user.first_name}} {{user.last_name}} profile page
+{% endblock %}
+
+
+	{% block content-left %}
+	<div class="bs-callout bs-callout-info">
+		<h3><img src="https://media.giphy.com/media/LHZyixOnHwDDy/giphy.gif" height="50" /> Users At Work ({{at_work_users | length}}):</h3>
+
+		{% for user in at_work_users %}
+			<p>{{user.username}}</p>
+		{%endfor %}
+	</div>
+	<div class="bs-callout bs-callout-info">
+		{% if user.username == "jaroslav.malec" %}
+		<h3><img src="https://media.licdn.com/mpr/mpr/shrinknp_200_200/AAEAAQAAAAAAAAdPAAAAJDFjMWYyYmRkLTE3MjktNDZiOS04YTAzLWM3ODM2MGZlMDBjOA.jpg" height="" /> Users On Break ({{on_break_users | length}}):</h3>
+		{% else %}
+		<h3><img src="https://media.giphy.com/media/GqZi964Bo9f0I/giphy.gif" height="70" /> Users On Break ({{on_break_users | length}}):</h3>
+		{% endif %}
+		{% for user in on_break_users%}
+			<p>{{user.username}}</p>
+		{%endfor %}
+	</div>
+	<div class="bs-callout bs-callout-info">
+		<h3><img src="https://media.giphy.com/media/l46C7ZlmzYkclCvwA/giphy.gif" height="40" /> Users On Trip ({{on_trip_users | length}}):</h3>
+		{% for user in on_trip_users%}
+			<p>{{user.username}}</p>
+		{%endfor %}
+	</div>
+
+	{% endblock %}
+	{% block content %}
+	
+	<div class="row">
+		<div class="col-md-4">
+		<div class="bs-callout">
+			<h3>This Month:</h3>
+			<p class="">Total Hours: {{ hours_total_this_month|floatformat:2}}</p>
+			<p class="">Unassigned Hours: {{ hours_unassigned_this_month | floatformat:2}} ({{unassigned_closed_session_hours | floatformat:2}})</p>
+			<p class="">Not Work Hours: {{ hours_not_work_this_month| floatformat:2}}</p>
+			<p class="">Work Hours: <span class="text-primary h3">{{ hours_work_this_month | floatformat:2}}</span></p>        
+			{% if not hours_unassigned_this_month %}
+				<p class="text-success"><span class="glyphicon glyphicon-thumbs-up"></span>You have all hours assigned to projects.</p>
+			{% else  %}
+				<p class="text-danger"><span class="glyphicon glyphicon-thumbs-down"></span> 
+					You have <strong>{{ hours_unassigned_this_month | floatformat:2}}</strong> unassigned hours. You have to assign all hours to projects until end of month.
+				</p>
+			{% endif %}
+            <h3>Full-time Quota - {{workhours_per_day}} hours/day</h3>
+            <p class="">Month Quota Hours: {{ hours_quota | floatformat:2}}</p>
+            <p class="">Elapsed Work Days: {{ num_of_elapsed_workdays }} ({{ num_of_workdays }})</p>
+            <p class="">Current Quota Hours: {{current_quota}}</p>
+            <p>
+                Quota difference:
+                {% if quota_difference >= 0 %}
+                <span class="text-success">
+                    +{{quota_difference | floatformat:2}}
+                </span>
+                {% else %}
+                    {{quota_difference | floatformat:2}}
+                {% endif %}
+             </p>
+            
+            {% if quota_difference >= 0 %}
+                <p class="text-success"><span class="glyphicon glyphicon-thumbs-up"></span>
+            {% else  %} 
+                <p class="text-danger"><span class="glyphicon glyphicon-thumbs-down"> </span>
+            {% endif %}
+                Sum of your work hours and unassigned hours is currently <strong>{{quota_difference_abs | floatformat:2}} </strong> 
+                hours {% if quota_difference >= 0 %}over{% else  %}below{% endif %} quota (<strong>{{current_quota}}</strong> hours).
+                You should work <strong>{{ avg_work_hours_fullfill_qoota | floatformat:2}}</strong> hours per work day to fullfill quota until end of month.
+                </p>
+		</div>
+		</div>
+		<div class="col-md-4">
+		<div class="bs-callout">
+			<h3>Last Month:</h3>
+			<p class="">Total Hours: {{ hours_total_last_month|floatformat:2}}</p>
+			<p class="">Unassigned Hours: {{ hours_unassigned_last_month | floatformat:2}}</p>
+			<p class="">Not Work Hours: {{ hours_not_work_last_month| floatformat:2}}</p>
+			<p class="">Work Hours: <span class="text-primary h3">{{ hours_work_last_month | floatformat:2}}</span></p>
+			{% if not hours_unassigned_last_month %}
+				<p class="text-success"><span class="glyphicon glyphicon-thumbs-up"></span> You have all hours assigned to projects. Your attendance can be calculated by administrator.</p>
+			{% else  %}
+				<p class="text-danger"><span class="glyphicon glyphicon-thumbs-down"></span> 
+					You have <strong>{{ hours_unassigned_last_month | floatformat:2}} </strong>unassigned hours. You have to assign all hours to projects in Sessions page.
+					Only assigned hours will be counted as attendance.
+				</p>
+			{% endif %}
+		</div>
+		</div>
+	</div>
+	<div>
+    {% if last_swipe %}
+    {% if current_session %}
+    <h3>Current Session: ID {{ current_session.pk }}</h3>
+    <p>Current Session Work Hours: {{ current_session_work_hours | floatformat:2 }}<p>
+    {% endif %}
+	<p class="">Last Swipe:&nbsp
+  		<img src="
+				{% if last_swipe.swipe_type == 'IN' %}{% static "img/incom.svg" %}
+				{% elif last_swipe.swipe_type == 'OUT' %}{% static "img/outgo.svg" %}
+				{% elif last_swipe.swipe_type == 'OBR' %}{% static "img/break.svg" %}
+				{% elif last_swipe.swipe_type == 'FBR' %}{% static "img/break_ret.svg" %}
+				{% elif last_swipe.swipe_type == 'OTR' %}{% static "img/trip.svg" %}
+				{% elif last_swipe.swipe_type == 'FTR' %}{% static "img/trip_ret.svg" %}
+				{% endif %}
+			" />
+		&nbsp{{last_swipe.datetime | date:'D d.m.Y H:i:s'}}       
+	</p>
+
+    {%endif%}
+	</div>
+	<form action="{% url 'user' username=user.username %}" method="post">
+		{% csrf_token %}
+		{% for swipe_type in next_swipes %}
+				{% if swipe_type == "IN" %}
+				<button type="submit" class="btn btn-primary" value="Incoming" name = "{{swipe_type}}" />
+					<img src="{% static "img/incom.svg" %}">
+					</br>
+					Incoming
+				</button>
+				{% endif %}
+				{% if swipe_type == "OUT" %}
+					<button type="submit" class="btn btn-primary" value="Outgoing" name = "{{swipe_type}}" />
+						<img src="{% static "img/outgo.svg" %}">
+						</br>
+						Outgoing
+					</button>
+				{% endif %}
+				{% if swipe_type == "OBR" %}
+					<button type="submit" class="btn btn-primary" value="Break" name = "{{swipe_type}}" />
+						<img src="{% static "img/break.svg" %}">
+						</br>
+						Break
+					</button>
+				{% endif %}
+				{% if swipe_type == "FBR" %}
+					<button type="submit" class="btn btn-primary" value="Break Return" name = "{{swipe_type}}" />
+						<img src="{% static "img/break_ret.svg" %}">
+						</br>
+						Break Return
+					</button>
+				{% endif %}
+				{% if swipe_type == "OTR" %}
+					<button type="submit" class="btn btn-primary" value="Trip" name = "{{swipe_type}}" />
+						<img src="{% static "img/trip.svg" %}">
+						</br>
+						Work Trip
+					</button>
+				{% endif %}
+				{% if swipe_type == "FTR" %}
+					<button type="submit" class="btn btn-primary" value="Trip Return" name = "{{swipe_type}}" />
+						<img src="{% static "img/trip_ret.svg" %}">
+						</br>
+						Trip Return
+					</button>
+				{% endif %}
+		{%endfor %}
+
+	</form>
+
+	{% endblock %}
+

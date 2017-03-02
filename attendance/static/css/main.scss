@@ -982,8 +982,8 @@ input[type="color"]:focus,
   			margin: 0px;
   			color: lighten($lightest-blue, 18%);	
 				&:hover, &:focus, &:active {
-			  color: #fff;
-  			background: $primary;
+			  color: $primary;
+  			background: #f2f2f2;
 				}
 			}
 			a {
