@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hodoor - ELEDUS attendance system</title>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/docs.css' %}" rel="stylesheet">
+    <link href="{% static 'bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+		<script src="{% static 'js/attendance.js' %}"></script>
+ 	{{form.media}}
+</head>
+
+<!--<body style="background:/*url('{% static 'img/bg-blurry-3.jpg' %}')*/ #f4f4f4;">-->
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" style="color:#000;" href="{% url 'home' %}"><img width="220px" alt="Hodoor" src="{% static "img/hodoor-icon-64x220.png" %}" /></a>
+			</div>
+
+			<div class="collapse navbar-collapse" id="topNavBar">
+
+				{% if user.is_authenticated %}
+				<ul class="nav navbar-nav navbar-right">
+					<p class="navbar-text">Logged in as:</p>
+					<li class="nav-item  {% if "/user/" in request.path %}active{% endif %} ">
+						<a href="{% url 'home' %}" class="a-user nav-link">
+							<span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;{{user.username}}
+						</a>
+					</li>
+          {% if user.is_staff %}
+          <li class="nav-item">
+            <a href="{% url 'default_administrator'%}" class="a-administrator nav-link" id= "id_administrato">
+              <span class="glyphicon glyphicon-usd" aria-hidden="true"></span>&nbsp;Administrator
+            </a>
+          </li>
+          {% endif %}
+					<li class="nav-item {% if "/sessions/" in request.path %}active{% endif %} ">
+						<a href="{% url 'sessions' user.username %}", class="a-sessions nav-link">
+							<span class="glyphicon glyphicon-time" aria-hidden="true"></span>&nbsp;Sessions
+						</a>
+					</li>
+					<li class="nav-item {% if "/swipes/" in request.path %}active{% endif %} ">
+						<a href="{% url 'swipes' user.username %}", class="a-swipes nav-link">
+							<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>&nbsp;Swipes
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="{%url 'logout' %}" class="a-logout nav-link" id= "id_logout">
+							<span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
+						</a>
+					</li>
+				</ul>
+				{% endif %}
+
+			</div>
+		</div>
+	</nav>
+
+	<div><br/><br/><br/></div> <!-- This structure is old and not recommended, but works, somewhere is wrong code in Bootstrap navbar -->
+
+	<div class="container">
+		<div class="row">
+		    <div class="col-md-6 col-md-offset-3">
+		        <div class="text-center">
+		            <h1>{% block header_text %}{% endblock %}</h1>
+		        </div>
+		    </div>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+		    {% block content-top-fluid %}
+		    {% endblock %}
+		  </div>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+		    {% block content-top %}
+		    {% endblock %}
+		  </div>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+	  <div class="row">
+	  	<div class="col-md-3">
+		  	{% block content-left %}
+		  	{% endblock %}
+	  	</div>
+	  	<div class="col-md-9">
+		  	{% block content %}
+		  	{% endblock %}
+	  	</div>
+	  </div>
+	</div>
+
+</body>
+</html>

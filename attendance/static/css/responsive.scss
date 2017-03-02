@@ -54,13 +54,13 @@
     @media only screen and (min-width : 768px) {
         @include footer-responsive();
         @include myDropDownSize(318px);
-        @include footer-text-padding(55px);
+        //@include footer-text-padding(5px);
     }
     /* Medium Devices, Desktops */
     @media only screen and (min-width : 992px) {
         @include footer-responsive();
         @include myDropDownSize(318px);
-        @include footer-text-padding(55px);
+        //@include footer-text-padding(20px);
     }
     /* Large Devices, Wide Screens */
     @media only screen and (min-width : 1200px) {

@@ -29,22 +29,23 @@
     {% endif %}
 {% endif %}
      <!-- -->
-     <!--To make top distance on larger screens - desktop first method--> 
+     <!--To make top distance on larger screens - desktop first method 
       <div class="row">  
         <div class="col-md-3 col-md-offset-2">
           <h3 class="hidden-sm hidden-xs">&nbsp;</h3>  
           <p class="visible-xs visible-sm">&nbsp;</p> 
         </div>
-      </div>
+      </div> -->
       <!--/-->
       <div class="row">          
-        <div class="col-md-3 center">
+        <div class="col-lg-3 col-md-4 col-sm-5 center">
         <img src="{% static 'img/door.svg' %}" class="login-page-image hidden-xs hidden-sm" />        
           <div class="panel panel-primary">
             <div class="panel-heading text-center">  		
               <h1>Please login</h1>
             </div>
-            <div class="panel-body">			
+            <div class="panel-body">
+            <div class="loader text-center">Loading form...</div>			
               <form method="post" class="login-form" action="{% url 'login' %}">
                {% csrf_token %}
 			         {{form | crispy}}
@@ -73,6 +74,9 @@
       <script type="text/javascript">
       /*This script is used for styling crispy form*/
         $(document).ready(function(){
+          $('.loder').show();
+          $('.login-form').hide();
+
           //Styling Username field
           $('#id_username').attr("placeholder", "Type your username here").addClass('focused');
           $('#id_username').css('width', '82%').css('float', 'right').css('position','relative').css('top','-36px');
@@ -81,6 +85,8 @@
           $('#id_password').attr("placeholder", "Type your password here").addClass('focused');
           $('#id_password').css('width', '82%').css('float', 'right').css('position','relative').css('top','-36px');
           $('#div_id_password').prepend('<span class="mbri-key icon" id="id_password-icon"></span>');
+          $('#error_1_id_username strong').css("min-width", "100%").css("display","inline-block").css("color","#E74121");
+          $('#error_1_id_password strong').css("min-width", "100%").css("display","inline-block").css("color","#E74121");
 
           $('.control-label').hide();
           //Icon animations, depended on username and password field classes: .focused
@@ -97,9 +103,13 @@
             $(idcon).removeClass("icon-active");
             $(idcon).addClass("icon");
           });
+          $('.login-form').ready(function(){
+            $('.loader').fadeOut('fast');
+            $('.login-form').slideDown('slow');
+          });
         });
       </script>
-      <!--PACE loader - use loader before all scripts are set correctly-->
+      <!--PACE loader - use loader before all scripts are set correctly
       <script type="text/javascript" language="javascript" src="{% static 'js/pace.js' %}"></script>
-      <link rel="stylesheet" href="{% static 'css/pace-loader.css' %}">
+      <link rel="stylesheet" href="{% static 'css/pace-loader.css' %}">-->
 {% endblock %}
