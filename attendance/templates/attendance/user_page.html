@@ -41,7 +41,7 @@
 </div>
 
 <div class="panel panel-default">
-  <div class="panel-heading clickable"> <!--panel-collapsed-->
+  <div class="panel-heading clickable"  id="break-users"> <!--panel-collapsed-->
     <h3 class="panel-title">
       <i class="fa fa-coffee panel-icon" aria-hidden="true"></i>
       Users on break
@@ -58,7 +58,7 @@
 </div>
 
 <div class="panel panel-default">
-  <div class="panel-heading clickable">
+  <div class="panel-heading clickable" id="trip-users">
     <h3 class="panel-title">
       <i class="fa fa-suitcase panel-icon" aria-hidden="true"></i>
       Users on trip
@@ -243,7 +243,7 @@
 					{% if last_swipe %}
 				    {% if current_session %}
 				    <p>Current Session: <span class="bold big-text">ID {{ current_session.pk }}</span></p>
-				    <p>Current Session Work Hours: <span class="primary big-text">{{ current_session_work_hours | floatformat:2 }}</span> hour(s)<p>
+				    <p>Current Session Work Hours: <span class="primary-text big-text">{{ current_session_work_hours | floatformat:2 }}</span> hour(s)<p>
 					    {% endif %}
 						<p class="last-swipe">Last Swipe:&nbsp;        
 							{% if last_swipe.swipe_type == 'IN' %}<i class="fa fa-sign-in" aria-hidden="true"></i>
@@ -361,18 +361,23 @@
 <script type="text/javascript">
 	$(document).ready(function () {
 	/*Work Time Doughnut Chart*/
+		//set bgColors
+		var bgColorWtime = "#009bd7";
+		var bgColorNwtime = "#cccccc";
 		//get data from webpage
 		var workHoursGraph = $('#work-hours-graph').text();
 		var notWorkHoursGraph = $('#not-work-hours-graph').text();
-			if(workHoursGraph == 0) {notWorkHoursGraph = 1};
-		var assignedHoursGraph = $('#assigned-hours-graph').text();
-		var unassignedWorkHoursGraph = $('#unassigned-hours-graph').text();
-			if(assignedHoursGraph == 0) {unassignedWorkHoursGraph = 1};
+			if((workHoursGraph == 0) || (notWorkHoursGraph == 0)) {
+				notWorkHoursGraph = 999.999;
+				workHoursGraph = "XXX";
+			  bgColorNwtime = "#f2f2f2";	
+			};
+		
 		//Graph rendering
 	  var ctx = $("#Work-Time-Chart");
 	  var dataWorkTime = [workHoursGraph, notWorkHoursGraph];
 	  var labelsWorkTime = ["Work Hours", "Not-work Hours"];
-	  var bgcolorsWorkTime = ["#009bd7","#cccccc"];
+	  var bgcolorsWorkTime = [bgColorWtime, bgColorNwtime];
 
 	  var myChart = new Chart(ctx, {
 	  type: 'doughnut',
@@ -386,10 +391,22 @@
 	  });
 
 	/*Assigned Time Doughnut Chart*/
+		//set bgColors
+		var bgColorAtime = "#cccccc";
+		var bgColorUatime = "#E74121";
+		//get data from webpage
+		var assignedHoursGraph = $('#assigned-hours-graph').text();
+		var unassignedWorkHoursGraph = $('#unassigned-hours-graph').text();
+			if((assignedHoursGraph == 0) || (unassignedWorkHoursGraph == 0)) {
+				unassignedWorkHoursGraph = 999.999;
+				assignedHoursGraph = "XXX";
+			  bgColorUatime = "#f2f2f2";	
+			};
+
 	  var ctx = $("#Assigned-Time-Chart");
 	  var dataWorkTime = [assignedHoursGraph, unassignedWorkHoursGraph];
 	  var labelsWorkTime = ["Assigned Hours", "Unassigned Hours"];
-	  var bgcolorsWorkTime = ["#cccccc","#E74121"];
+	  var bgcolorsWorkTime = [bgColorAtime, bgColorUatime];
 
 	  var myChart = new Chart(ctx, {
 	  type: 'doughnut',

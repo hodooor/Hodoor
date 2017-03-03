@@ -44,41 +44,7 @@ $(document).ready(function(){
     //var style = $('#mystyle[rel=stylesheet]').attr('href');
     //debugLog(style);   
 
-    
-    //Colormixer for main username
-        var username = $('#main-username').text();
-            debugLog("users name is: "+username+" .");
-        var usercount, firstLetter;
-        usercount = username.length;
-            debugLog(usercount);
-            debugLog(username[0]);
-
-        var color, colorSegment1, colorSegment2;
-        function ColorMixer(usernametext) {  
-        colorSegment1 = '';
-        //colorSegment2 = '';
-          for (var i = 0; i < 6; i++ ) {
-            var help = usernametext.charCodeAt(i);
-            colorSegment1 += Math.round((help%10));
-          };
-          /*for (var i = 3; i > 0; i-- ) {
-            var help = usernametext.charCodeAt(i);
-            colorSegment2 += Math.round((help%10));
-          };*/
-          //color = "#" + colorSegment1 + colorSegment2;
-          color = "#" + colorSegment1;
-          return color;
-        }
-        
-        debugLog(ColorMixer(username));
-
-        $('#main-usericon').css("background", ColorMixer(username));
-            debugLog(color);
-        firstLetter = username[0];
-        $('#main-usericon').html(firstLetter);
-    /*End of colormixer*/
-
-
+    /* __DROPDOWN MENUS__*/
       // Add slideDown animation to Bootstrap dropdown when expanding.
       $('#myDropdown').on('show.bs.dropdown', function() {
         $(this).find('.dropdown-menu').first().stop(true, true).slideDown('fast');
@@ -88,8 +54,9 @@ $(document).ready(function(){
       $('#myDropdown').on('hide.bs.dropdown', function() {
         $(this).find('.dropdown-menu').first().stop(true, true).slideUp('fast');
       });
+    /* //__DROPDOWN MENUS__*/
 
-    /*Scroll to top*/
+    /* __SCROLL TO TOP FUNCTIONS__*/
     //Show me scroll option
         $('.scrollup').hide();
         $(window).scroll(function () {
@@ -106,15 +73,27 @@ $(document).ready(function(){
         }, 'fast');
         return false;
         });
-    /*End of Scroll to top*/
+    /* //__SCROLL TO TOP FUNCTIONS__*/
 
+    /* __TOOLTIPS__ */
     /*Enable tooltips*/
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
     })
+    /* //__TOOLTIPS__ */
 
-    /*Making clickable function for collabtive-lists*/
-    /**/
+    /* __COLLABTIVE AND CLICKABLE FUNCTIONS__ */
+    /* If empty then add class panel-collapsed and hide panel-body*/
+    if($('#users-at-work li').length == 0) {
+      $("#working-users").addClass('panel-collapsed');
+    }
+    if($('#users-on-break li').length == 0) {
+      $("#break-users").addClass('panel-collapsed');
+    }
+    if($('#users-on-trip li').length == 0) {
+      $("#trip-users").addClass('panel-collapsed');
+    }
+    /*Hide/show panel-body on click on clickable class*/
     $(document).on('click', '.clickable', function(e){
       if(!$(this).hasClass('panel-collapsed')) 
       {
@@ -130,13 +109,46 @@ $(document).ready(function(){
       }
     })
     $('.panel-collapsed').parents('.panel').find('.panel-body').hide();
-    //$('.panel-collapsed').find('.panel-arrow').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+    /* //__COLLABTIVE AND CLICKABLE FUNCTIONS__ */
 
     //Enable same height on panels
     $('.equal-height-panels .panel').matchHeight();
 
-    /*colormixer 2*/
-    var Uls = [];
+    /* __MAIN USERNAME COLOR MIXER__*/
+    var username = $('#main-username').text();
+        debugLog("users name is: "+username+" .");
+    var usercount, firstLetter;
+    usercount = username.length;
+        debugLog(usercount);
+        debugLog(username[0]);
+
+    var color, colorSegment1, colorSegment2;
+    function ColorMixer(usernametext) {  
+    colorSegment1 = '';
+    //colorSegment2 = '';
+      for (var i = 0; i < 6; i++ ) {
+        var help = usernametext.charCodeAt(i);
+        colorSegment1 += Math.round((help%10));
+      };
+      /*for (var i = 3; i > 0; i-- ) {
+        var help = usernametext.charCodeAt(i);
+        colorSegment2 += Math.round((help%10));
+      };*/
+      //color = "#" + colorSegment1 + colorSegment2;
+      color = "#" + colorSegment1;
+      return color;
+    }
+    
+    debugLog(ColorMixer(username));
+
+    $('#main-usericon').css("background", ColorMixer(username));
+        debugLog(color);
+    firstLetter = username[0];
+    $('#main-usericon').html(firstLetter);
+    /* //__MAIN USERNAME COLOR MIXER__*/
+
+    /* __COLOR MIXER 2 EDITION__ */
+    /*var Uls = [];
     var UlsCount = 0;
     var triplen = [];
     $('body').find('.automaticColorMixer').each(function(i) {
@@ -174,8 +186,10 @@ $(document).ready(function(){
       userInitials = [];
     
     }
+    */
+    /* //__COLOR MIXER 2 EDITION__ */
 
-    /*Navigable links from h2 titles generator*/
+    /* __Navigable links from h2 titles generator__*/
     //navigable-bar
     var navigables = [];
     var navigableTitles = [];
@@ -194,8 +208,9 @@ $(document).ready(function(){
         }, 'fast');
     });
 
-     $('#users-with-sessions').DataTable();
-     $('#users-without-sessions').DataTable();
+    /* __DATA TABLES ENABLE__ */
+    // $('#users-with-sessions').DataTable();
+    // $('#users-without-sessions').DataTable();
 
 
 
