@@ -1,25 +1,28 @@
 {% extends 'attendance/base.html' %}
 {% load static %}
-{% block header_text %}
-Swipe records
-{% endblock %}
 
-{% block content-top %}
-<div class="col-md-2 col-md-offset-10">
-  <button id="showAll" type="button" class="btn btn-primary pull-right" data-toggle="tooltip" data-placement="bottom" data-original-title="Click to show all of swipes">
-   <span id="showAllSpan" class="glyphicon glyphicon-chevron-down"></span> View All Swipes
-  </button>
+{% block title %}Swipes{% endblock %}
+{% block aside %}
+here will be the settings panel for show/hide swipes
+
+
+another - add datatables here
+
+{% endblock %}
+{% block content %}
+<div class="page-header">
+	<h1><i class="fa fa-cube"></i> Swipes - <small>all of swipe informations are here</small></h1>
 </div>
-<table class="table table-striped table-hover table-responsive">
+<table class="table table-striped table-hover table-bordered table-responsive table-primary">
 <thead>
-  <tr>
-    <th>DATE</th>
-    <th>TIME</th>
-    <th>TYPE</th>
-    <th>SESSION</th>
-    <th>SOURCE</th>
-  	<th>CORRECTION OF SWIPE</th>
-  	<th>ID</th>
+  <tr class="upper">
+    <th>Date</th>
+    <th>Time</th>
+    <th>Type</th>
+    <th>Session</th>
+    <th>Source</th>
+  	<th>Swipe correction</th>
+  	<th>Id</th>
   	<th class="text-center"></th>
   </tr>
 </thead>
@@ -31,7 +34,8 @@ Swipe records
 		<td>{{swipe.datetime| date:'D d.m.Y'}}</td>
 		<td>{{swipe.datetime| date:'H:i:s'}}</td>
 		<td>
-			<a href="#" data-toggle="tooltip" data-placement="right" title="
+			<span data-toggle="tooltip" data-placement="right" 
+			title="
 					{% if swipe.swipe_type == 'IN' %} Coming to work
 					{% elif swipe.swipe_type == 'OUT' %} Leave work
 					{% elif swipe.swipe_type == 'OBR' %} Break
@@ -40,25 +44,85 @@ Swipe records
 					{% elif swipe.swipe_type == 'FTR' %} From work trip
 					{% endif %}
 			">
-				<img src="
-					{% if swipe.swipe_type == 'IN' %}{% static "img/incom.svg" %}
-					{% elif swipe.swipe_type == 'OUT' %}{% static "img/outgo.svg" %}
-					{% elif swipe.swipe_type == 'OBR' %}{% static "img/break.svg" %}
-					{% elif swipe.swipe_type == 'FBR' %}{% static "img/break_ret.svg" %}
-					{% elif swipe.swipe_type == 'OTR' %}{% static "img/trip.svg" %}
-					{% elif swipe.swipe_type == 'FTR' %}{% static "img/trip_ret.svg" %}
-					{% endif %}
-				" />
-			</a>
+			{% if swipe.swipe_type == 'IN' %}
+				<i class="fa fa-sign-in" aria-hidden="true"></i>
+			{% elif swipe.swipe_type == 'OUT' %}
+				<i class="fa fa-sign-out" aria-hidden="true"></i>
+			{% elif swipe.swipe_type == 'OBR' %}
+				<i class="fa fa-coffee" aria-hidden="true"></i>
+			{% elif swipe.swipe_type == 'FBR' %}
+				<i class="fa fa-clock-o" aria-hidden="true"></i>
+			{% elif swipe.swipe_type == 'OTR' %}
+				<i class="fa fa-suitcase" aria-hidden="true"></i>
+			{% elif swipe.swipe_type == 'FTR' %}
+				<i class="fa fa-share-square" aria-hidden="true"></i>
+			{% endif %}
+
+			</span>
 		</td>
 		<td><a href="{% url 'session_detail' username=user.username id=swipe.session.id %}">{{swipe.session}}</a></td>
 		<td></td>
 		<td>{% if swipe.correction_of_swipe%}<a href="{% url 'swipe_detail' username=user.username id=swipe.correction_of_swipe.id %}">{{ swipe.correction_of_swipe.id}}</a>{% endif %}</td>
 		<td>{{swipe.id}}</td>
-		<td class="text-center"><a href="{% url 'swipe_detail' username=user.username id=swipe.id %}" class="btn btn-info">Detail</a></td>
+		<td class="text-center"><a href="{% url 'swipe_detail' username=user.username id=swipe.id %}" class=" ">Detail</a></td>
 	</tr>
 
 	{% endfor %}
 </tbody>
 </table>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	//$('.hiddenRow').css('display', 'none');
+  //===================================Show/Hide Swipes================================
+  var SwipesBtn = $('#showAll'); //get identifier for clickable button
+  var MaxNumOfRow = 18; //how many rows should be vissible
+  var btnText1 = " View All Swipes";
+  var btnText2 = " Hide until last " + MaxNumOfRow;
+  var btnClass1 = "btn-primary";
+  var btnClass2 = "btn-danger";
+  var btnTitle1 = "Click to show all of swipes";
+  var btnTitle2 = "Click to hide all records until last " + MaxNumOfRow;
+  var rows = $('table.table tbody tr'); //get row indexes
+  var rowsCount = rows.length; //get max count of table rows
+  var btnState = 0; //bool, btnState if 0 then button is activated
+
+  //calling functions after button event
+  $(SwipesBtn).click(function() {
+  	if(!btnState) {
+			$(SwipesBtn).html('<span id="showAllSpan" class="glyphicon glyphicon-chevron-up"></span>'+btnText2);
+			$(SwipesBtn).removeClass(btnClass1);
+			$(SwipesBtn).addClass(btnClass2);
+			$(SwipesBtn).attr('data-original-title', btnTitle2)
+			HideRows(rows);
+			btnState = !btnState;
+  	} else {
+			$(SwipesBtn).html('<span id="showAllSpan" class="glyphicon glyphicon-chevron-down"></span>'+btnText1);
+			$(SwipesBtn).removeClass(btnClass2);
+			$(SwipesBtn).addClass(btnClass1);
+			$(SwipesBtn).attr('data-original-title', btnTitle1)
+			UnhideRows(rows);
+  		btnState = !btnState;
+  	}
+  });
+
+  //Hidding/showing all of the swipes in SWIPES template
+  function HideRows(rows) {
+	    rows.filter('.hiddenRow').fadeIn('slow'); //show()
+  }
+  function UnhideRows(rows) {
+	    rows.filter('.hiddenRow').fadeOut('slow'); //hide()
+  }
+
+	//=====================================Hidding last rows filter======================
+	//hidding last rows, if rowIndex is lower than VALUE then remove hidding
+	rows.filter(function( index ) { return index > rowsCount-MaxNumOfRow; }).removeClass("hiddenRow");
+
+	//HideRows(rows);
+
+	//console.log(rowsCount);
+	//console.log(rows);
+
+});  
+</script>
 {% endblock %}

@@ -368,7 +368,7 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
         else:
             user["looks_ok"] = False
 
-    locale.setlocale(locale.LC_ALL, "cs_CZ.utf-8")
+    locale.setlocale(locale.LC_ALL, "en_US.utf8")
 
     context = {
             "month": month,

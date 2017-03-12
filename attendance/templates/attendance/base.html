@@ -49,6 +49,10 @@
     <!--PACE loader-->
     <!--<script type="text/javascript" language="javascript" src="{% static 'js/pace.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/pace-loader.css' %}">-->
+    <!--Data Tables-->
+    <script type="text/javascript" language="javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/dataTables.bootstrap.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
     {{form.media}}
   </head>
   <body class="">
@@ -61,30 +65,31 @@
             <div class="col-md-12">
 
               <div id="myDropdown">
-                <a href="#" class="dropdown-toggle btn btn-block myDropBtn" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars menu-icon"></i><span class="menu-text">Hodoor - attendance system</span></a>
+                <a href="#" class="dropdown-toggle btn btn-block myDropBtn" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars menu-icon"></i><span class="menu-text">Hodoor - Menu</span></a>
                 <ul class="dropdown-menu">
+                {% if user.is_authenticated %}
                 <!--List of items-->
                     <li class="col-xs-6">
-                      <a class="dropmenu-item-btn" href="#">
+                      <a class="dropmenu-item-btn" href="{% url 'home' %}">
                         <i class="fa fa-dashboard" aria-hidden="true"></i>
                         Dashboard
                       </a>
                     </li>
                     <li class="col-xs-6">
-                      <a class="dropmenu-item-btn" href="#">
+                      <a class="dropmenu-item-btn" href="{% if user.is_staff %}{% url 'default_administrator'%}{% endif %}">
                         <i class="fa fa-diamond" aria-hidden="true"></i>
                         Admin
                       </a>
                     </li>
                 <!--Next row-->
                     <li class="col-xs-6">
-                      <a class="dropmenu-item-btn" href="#">
+                      <a class="dropmenu-item-btn" href="{% url 'swipes' user.username %}">
                         <i class="fa fa-cube" aria-hidden="true"></i>
                         Swipes
                       </a>
                     </li>
                     <li class="col-xs-6">
-                      <a class="dropmenu-item-btn" href="#">
+                      <a class="dropmenu-item-btn" href="{% url 'sessions' user.username %}">
                         <i class="fa fa-cubes" aria-hidden="true"></i>
                         Sessions
                       </a>
@@ -97,12 +102,13 @@
                       </a>
                     </li>
                     <li class="col-xs-6">
-                      <a class="dropmenu-item-btn" href="#">
+                      <a class="dropmenu-item-btn" href="{%url 'logout' %}">
                         <i class="fa fa-power-off" aria-hidden="true"></i>
                         Logout
                       </a>
                     </li>
                 <!--//List of items-->
+                {% endif %}
                 </ul>
               </div>
      
@@ -123,7 +129,7 @@
         </div>
       </div>
 
-     <!--To make top distance--> 
+     <!--To make top distance
       <div class="row">  
         <div class="col-md-3 col-md-offset-2"> 
           <p class="hidden-xs hidden-sm"></p>

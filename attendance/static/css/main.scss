@@ -5,7 +5,6 @@ Year: 2017,
 License: MIT,
 ------------------------------------------*/
 
-
 /*----------------------------------------*/
 /* IMPORT SASS file for COLOURS set up    */
 /*----------------------------------------*/
@@ -136,6 +135,51 @@ h4 {
 	font-size: 15px;
 }
 
+/*TABLES*/
+
+.table-noborder {
+  border: none;
+  td, th, tr {
+  	border: none;
+  }
+}
+.table-primary {
+	thead, tfoot {
+		background: $darker-blue;
+		color: lighten($lightest-blue, 8%);
+		::after {
+			color: $lightest-blue;
+		}
+	}
+}
+.table-danger {
+	thead, tfoot {
+		background: $darker-blue;
+		color: $lightest-blue;
+		::after {
+			color: $lightest-blue;
+		}
+	}
+}
+.table-default {
+	thead, tfoot {
+		background: $darker-blue;
+		color: $lightest-blue;
+		::after {
+			color: $lightest-blue;
+		}
+	}
+}
+.table-primary-inverse {
+	thead, tfoot {
+		background: none;
+		color: $darker-blue;
+		font-weight: bold;
+		::after {
+			color: $darker-blue;
+		}
+	}
+}
 /*----------------------------------------*/
 .ext-link {
 	i {
@@ -248,7 +292,7 @@ h4 {
 	background-color: lighten($li-gray, 5%); 
 	margin: -11px -15px -15px -15px; 
 	padding: 21px 20px 5px 20px;
-	height: 100vh; //100% of screen 
+	min-height: 100vh; //100% of screen 
 	@include box-shadow(0px 0px 3px 1px #ccc);
 	.well {
 		@include border-radius(0);
@@ -318,26 +362,29 @@ h4 {
 	}
 	table {
 		font-size: 12px;
+		thead {
+			.upper {
+				text-transform: uppercase;
+			}
+		}
 	}
 	.table-hover {
 		tbody 
 		{
 			tr {
 				&:hover {
-					background: #fff;
-					color: $gray;
-					font-weight: bold;
+					background: lighten($lightest-blue, 15%);
 				}
 			}
 		}
 	}
 	/*Content page header*/
 	.page-header {
-		//border-bottom-color: $li-gray;
-		//border-top: $li-green 1px solid;
 		border-bottom: none;
 		margin-top: 0px;
 		padding-top: 0px;
+		margin-bottom: -0.5%;
+		padding-bottom: none;
 		h1 {
 			margin-top: 0px;
 		}
@@ -355,6 +402,15 @@ h4 {
 		.dt-default {
 			thead, tfoot {
 				background: $gray;
+				color: $li-gray;
+				::after {
+					color: $li-gray;
+				}
+			}
+		}
+		.dt-primary {
+			thead, tfoot {
+				background: $darker-blue;
 				color: $li-gray;
 				::after {
 					color: $li-gray;
@@ -412,6 +468,9 @@ h4 {
 		button {
 			width: 31%;
 			font-weight: bold;
+			font-size: 0.8em;
+			overflow:hidden;
+			text-overflow: ellipsis;
 		}
 	}
 	.last-swipe {
@@ -428,6 +487,14 @@ h4 {
 	background: none;
 	margin: 0px -15px auto -15px;
 	padding: 15px;
+	.nav-tabs {
+	li {
+		padding:none;
+		a {
+			font-size: 0.9em;
+			}
+		}
+	}
 	.panel {
 		margin-bottom: 8px;
 		.panel-heading {
@@ -445,10 +512,10 @@ h4 {
 			display: inline-block;
 			color: #fff;
 			background: $primary;
-			width: 50px;
+			width: 18%;
 			height: 33px;
 			//outline: 1px solid $primary;
-			text-align: center; 
+			text-align: center; 	
 			padding-top: 8px;
 			}
 		.clickable {
@@ -457,23 +524,19 @@ h4 {
 			}
 		}
 		.panel-title {
-			font-size: 1.1em;
+			font-size: 0.9em;
 			text-transform: uppercase;
 			font-weight: 400;
 			color: $primary;
-			padding: 0px;
-			//text-shadow: 1px 1px 1px #ccc;
-			//border-bottom: 1px solid #eee;
+			padding: 0px;	
 		}
 			.badge {
 				margin-top: 5px;
 				margin-right: 6px;
-				//background: lighten($primary, 30%);
 				background: $li-gray;
 				text-shadow: darken($li-gray, 19%) 1px 1px 3px;
 				color: #fff;
 				@include border-radius(17%);
-				//font-size: 15px;
 			}
 	}
 	.margin {
@@ -586,10 +649,8 @@ h4 {
 /*----------------------------------------*/
 .footer {
 	.navbar-fixed-bottom {
-	//color: lighten($gray, 35%);
 	color: $lightest-blue;
 	font-size: 0.8em;
-	//margin-bottom: -15px;
 	padding-top: 0px;
 	padding-bottom: 0px;
 	background: $darkest-blue;
@@ -648,21 +709,12 @@ h4 {
 }
 
 /*----------------------------------------*/
-/*#main-username {
-		text-transform: uppercase;
-		padding-top: 5px;
-		padding-left: 25%;
-		font-size: 110%;
-}*/
-
 .usericon {
 	display: block;
 	background: orange;
-	//border: 1px solid $green; 
 	float: left;
 	font-weight: bold;
 	margin-left: -16px;
-	//@include border-radius(50%);
 }
 .big {
 	width: $big;
@@ -688,15 +740,6 @@ h4 {
 	font-style: italic; 
 	color: $gray;
 	}
-	/*::before {
-		content: "\0022\00a0";
-	}
-	::after {
-		content: "\00a0\0022";
-	}
-	/*.tooltip-arrow { 
-		border-bottom-color:#f00; 
-	}*/
 } 
 /*----------------------------------------*/
 /*No gutter and gutters sizes - shorten all BS col*-*/
@@ -771,10 +814,6 @@ input[type="color"]:focus,
  font-size: 1.3em;
 }
 
-/*.modal-backdrop {
-   background-color: $primary;
-   opacity:0.7 !important;
-}*/
 /*----------------------------------------*/
 /*FA, GLYPHICONS, MOBIRISE*/
 .love {
@@ -910,12 +949,8 @@ input[type="color"]:focus,
 	.primary {
 		background: $primary;
 	}
-	//@include border-radius(0);
 	margin: auto 3px auto 2px;
 }
-
-
-
 
 /*DASHBOARD*/
 .navbar-nav > li > a,
@@ -939,7 +974,6 @@ input[type="color"]:focus,
 	background: $gray;
 }
 
-
 /*----------------------------------------*/
 /*My Dropdown sliding menu*/
 /*----------------------------------------*/
@@ -949,7 +983,7 @@ input[type="color"]:focus,
 		border-top: 1px solid $darker-blue; 
 		outline: 1px solid $darker-blue;
 		padding: 15px;
-		width: 100%;
+		max-width: 100%;
 		display: block;
 		text-align: center;
 		text-decoration: none;
@@ -962,12 +996,12 @@ input[type="color"]:focus,
 	.menu-icon {
 		font-size: 1.7em;
 		font-weight: normal;
-		margin-left: -15px;
+		margin-left: -5%;
 		margin-right: 10px;
 	}
 	.menu-text {
 		text-align: center;
-		padding-left: 8px;
+		padding-left: 1%;
 	  font-size: 1.2em;
 	  transition: $fast;
 	  position: relative;
@@ -988,12 +1022,10 @@ input[type="color"]:focus,
 		}
 	}
 	.dropdown-menu {
-		//width: 318px;
 		padding: 5px;
 		top: 42px;
 		margin-top: -1px;
 		@include border-radius(0);
-		//border: 1px solid $darker-blue;
 		border: none;
   	background: $darker-blue;
 		@include box-shadow(inset -6px 0px 3px -5px #ccc);
@@ -1078,3 +1110,9 @@ $colHighlight   : $gray;
         background-color: #fff; }}}
 }
 /*----------------------------------------*/
+#id_time_spend {
+	max-width: 75px;
+}
+#id_description {
+	width: 100%;
+}

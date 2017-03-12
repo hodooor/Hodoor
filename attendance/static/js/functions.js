@@ -48,12 +48,18 @@ $(document).ready(function(){
       // Add slideDown animation to Bootstrap dropdown when expanding.
       $('#myDropdown').on('show.bs.dropdown', function() {
         $(this).find('.dropdown-menu').first().stop(true, true).slideDown('fast');
-      });
+      }); 
+      /*$('#myDropdown').on('mouseover', function() {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideDown('fast');
+      });*/
 
       // Add slideUp animation to Bootstrap dropdown when collapsing.
       $('#myDropdown').on('hide.bs.dropdown', function() {
         $(this).find('.dropdown-menu').first().stop(true, true).slideUp('fast');
       });
+      /*$('#myDropdown').on('mouseout', function() {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideUp('fast');
+      });*/
     /* //__DROPDOWN MENUS__*/
 
     /* __SCROLL TO TOP FUNCTIONS__*/
@@ -86,12 +92,15 @@ $(document).ready(function(){
     /* If empty then add class panel-collapsed and hide panel-body*/
     if($('#users-at-work li').length == 0) {
       $("#working-users").addClass('panel-collapsed');
+      $('#working-users').removeClass('clickable');
     }
     if($('#users-on-break li').length == 0) {
       $("#break-users").addClass('panel-collapsed');
+      $('#break-users').removeClass('clickable');
     }
     if($('#users-on-trip li').length == 0) {
       $("#trip-users").addClass('panel-collapsed');
+      $('#trip-users').removeClass('clickable');
     }
     /*Hide/show panel-body on click on clickable class*/
     $(document).on('click', '.clickable', function(e){

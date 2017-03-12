@@ -1,107 +1,162 @@
 {% extends 'attendance/base.html' %}
+{% load static %}
 
-{% block header_text %}
-
-Sessions info <span class="label label-default">{{month}}-{{year}}</span>
-
-{% endblock %}
-
-{% block content-left %}
-<div class="bs-callout bs-callout-danger">
-  <div class="row">
-    <div class="col-md-8">
-      <h2>Session settings</h2>
-    </div>
-    <div class="col-md-4">
-      <div class="btn-group" style="margin-top:15px;">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Year: {{year}} <span class="caret"></span>
-        </button>
-            <ul class="dropdown-menu">
-            <li><a href="{% url 'sessions' user.username %}2015/{{month}}">2015</a></li>
-            <li><a href="{% url 'sessions' user.username %}2016/{{month}}">2016</a></li>
-            <li><a href="{% url 'sessions' user.username %}2017/{{month}}">2017</a></li>
-        </ul>
-      </div>
-    </div>
+{% block title %}Sessions{% endblock %}
+{% block aside %}
+<div class="panel panel-default">
+  <div class="panel-heading clickable">
+    <h3 class="panel-title">
+      <i class="fa fa-calendar-check-o panel-icon" aria-hidden="true"></i>
+      Date selection 
+    </h3>  
   </div>
-    <p>Select month:</p>
-    <div class="btn-group btn-group-justified" role="group" aria-label="...">
-        <a href="{% url 'sessions' user.username %}{{year}}/01/" class="btn btn-default {% if "/01" in request.path %}active{% endif %}">01</a>
-        <a href="{% url 'sessions' user.username %}{{year}}/02/" class="btn btn-default {% if "/02" in request.path %}active{% endif %}">02</a>
-        <a href="{% url 'sessions' user.username %}{{year}}/03/" class="btn btn-default {% if "/03" in request.path %}active{% endif %}">03</a>
-        <a href="{% url 'sessions' user.username %}{{year}}/04/" class="btn btn-default {% if "/04" in request.path %}active{% endif %}">04</a>
-        <a href="{% url 'sessions' user.username %}{{year}}/05/" class="btn btn-default {% if "/05" in request.path %}active{% endif %}">05</a>
-        <a href="{% url 'sessions' user.username %}{{year}}/06/" class="btn btn-default {% if "/06" in request.path %}active{% endif %}">06</a>
+  <div class="panel-body">
+      <div class="row">
+          <div class="col-xs-4">
+         <p>Year: </p>
+         </div>
+         <div class="col-xs-8">
+            <div class="btn-group btn-block ">
+                <button type="button" class="btn btn-default btn-block  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="print-year"></span> 
+                <span class="caret"></span>
+                </button>
+                    <ul class="dropdown-menu">
+                    <li><a href="{% url 'sessions' user.username %}2015/{{month}}">2015</a></li>
+                    <li><a href="{% url 'sessions' user.username %}2016/{{month}}">2016</a></li>
+                    <li><a href="{% url 'sessions' user.username %}2017/{{month}}">2017</a></li>
+                </ul>
+            </div>
+         </div>
+         <div>&nbsp;</div>
+         <div class="col-xs-4">
+             <p>Month: </p>
+         </div>
+         <div class="col-xs-8">
+            <div class="btn-group btn-block ">
+                <button type="button" class="btn btn-default btn-block  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="print-month"></span>
+                <span class="caret"></span>
+                </button>
+                    <ul class="dropdown-menu">
+                    <li><a href="{% url 'sessions' user.username %}{{year}}/01/">January <span class="pull-right">[01]</span></a></li>
+                    <li><a href="{% url 'sessions' user.username %}{{year}}/02/">February <span class="pull-right">[02]</span></a></li>
+                    <li><a href="{% url 'sessions' user.username %}{{year}}/03/">March <span class="pull-right">[03]</span></a></li>
+                    <li><a href="{% url 'sessions' user.username %}{{year}}/04/">April <span class="pull-right">[04]</span></a></li>
+                    <li><a href="{% url 'sessions' user.username %}{{year}}/05/">May <span class="pull-right">[05]</span></a></li>
+                    <li><a href="{% url 'sessions' user.username %}{{year}}/06/">June <span class="pull-right">[06]</span></a></li>
+                    <li><a href="{% url 'sessions' user.username %}{{year}}/07/">July <span class="pull-right">[07]</span></a></li>
+                    <li><a href="{% url 'sessions' user.username %}{{year}}/08/">August <span class="pull-right">[08]</span></a></li>
+                    <li><a href="{% url 'sessions' user.username %}{{year}}/09/">September <span class="pull-right">[09]</span></a></li>
+                    <li><a href="{% url 'sessions' user.username %}{{year}}/10/">October <span class="pull-right">[10]</span></a></li>
+                    <li><a href="{% url 'sessions' user.username %}{{year}}/11/">November <span class="pull-right">[11]</span></a></li>
+                    <li><a href="{% url 'sessions' user.username %}{{year}}/12/">December <span class="pull-right">[12]</span></a></li>
+                </ul>
+            </div>
+         </div>
       </div>
-      <div class="btn-group btn-group-justified" role="group" aria-label="...">
-        <a href="{% url 'sessions' user.username %}{{year}}/07/" class="btn btn-default {% if "/07" in request.path %}active{% endif %}">07</a>
-        <a href="{% url 'sessions' user.username %}{{year}}/08/" class="btn btn-default {% if "/08" in request.path %}active{% endif %}">08</a>
-        <a href="{% url 'sessions' user.username %}{{year}}/09/" class="btn btn-default {% if "/09" in request.path %}active{% endif %}">09</a>
-        <a href="{% url 'sessions' user.username %}{{year}}/10/" class="btn btn-default {% if "/10" in request.path %}active{% endif %}">10</a>
-        <a href="{% url 'sessions' user.username %}{{year}}/11/" class="btn btn-default {% if "/11" in request.path %}active{% endif %}">11</a>
-        <a href="{% url 'sessions' user.username %}{{year}}/12/" class="btn btn-default {% if "/12" in request.path %}active{% endif %}">12</a>
-    </div>
-    <br /><br />
-<p class="text-left">You can choose any Session you want by clicking on tabs above</p>
+  </div>
 </div>
 
-<div class="bs-callout bs-callout-info">
-  <h2>Overall</h2>
-  <table class="table table-default">
+<div class="panel panel-default">
+  <div class="panel-heading clickable">
+    <h3 class="panel-title">
+      <i class="fa fa-info-circle panel-icon" aria-hidden="true"></i>
+      Overall 
+    </h3>  
+  </div>
+  <div class="panel-body">
+  	<table class="table table-condensed table-noborder">
       <tr>
-          <td>Hours total:</td>
-          <td>{{total_hours|floatformat:2}}</td>
-          <td>hours</td>
+        <td>Hours total:</td>
+        <td>{{total_hours|floatformat:2}}</td>
+        <td>h.</td>
       </tr>
       <tr>
-          <td>Unassigned hours:</td>
-          <td>{{ unassigned_hours | floatformat:2}}</td>
-          <td>hours</td>
+        <td>Unassigned hours:</td>
+        <td>{{ unassigned_hours | floatformat:2}}</td>
+        <td>h.</td>
       </tr>
       <tr>
-          <td>Not Work Hours:</td>
-          <td>{{ not_work_hours | floatformat:2}}</td>
-          <td>hours</td>
+        <td>Not Work Hours:</td>
+        <td>{{ not_work_hours | floatformat:2}}</td>
+        <td>h.</td>
       </tr>
       <tr>
-          <td><strong>Work Hours:</strong></td>
-          <td><span style="font-size: 1.2em; color:#00AEEF;">{{ work_hours | floatformat:2}}</span></td>
-          <td><strong>hours</strong></td>
+        <td>Quota Work Hours:</td>
+        <td>{{ hours_quota | floatformat:2}}</td>
+        <td>h.</td>
       </tr>
       <tr>
-          <td>Quota Work Hours:</td>
-          <td>{{ hours_quota | floatformat:2}}</td>
-          <td>hours</td>
+        <td><strong>Work Hours:</strong></td>
+        <td><span>{{ work_hours | floatformat:2}}</span></td>
+        <td>h.</td>
       </tr>
-  </table>
+  	</table> 
+  </div>
 </div>
 
-<div class="bs-callout bs-callout-info">
-  <h2>Projects</h2>
-  <table class="table table-default">
-  {% for key,value in list_of_projects.items %}
-  <tr><td>{{key}}</td><td>{{value | floatformat:2}}</td><td>hours</td></tr>
-  {% endfor %}
-  </table>
+<div class="panel panel-default">
+  <div class="panel-heading clickable">
+    <h3 class="panel-title">
+      <i class="fa fa-clipboard panel-icon" aria-hidden="true"></i>
+      Projects
+    </h3>  
+  </div>
+  <div class="panel-body">
+  <ul class="nav nav-tabs">
+  	<li class="active"><a href="#graph-view" data-toggle="tab">Graph</a></li>
+  	<li><a href="#table-view" data-toggle="tab">Table</a></li>
+	</ul>
+	  <div class="tab-content">
+			<div id="table-view" class="tab-pane fade">
+			<p>&nbsp;</p>
+	    	<table class="table table-condensed table-primary-inverse" id="projects">
+	    		<thead>
+	    			<td>Name</td>
+	    			<td>Hours</td>
+	    			<td></td>
+	    		</thead>
+			  	{% for key,value in list_of_projects.items %}
+			  	<tr>
+				  	<td id="key">{{key}}</td>
+				  	<td id="value">{{value | floatformat:2}}</td>
+				  	<td>h.</td>
+				  </tr>
+			  	{% endfor %}
+			  </table>
+	    </div>
+	    <div id="graph-view" class="tab-pane fade in active">
+    	<canvas id="Projects-Chart" class="doughnut-chart" width="150" height="250"></canvas>
+	    </div>
+  	</div>
+
+  </div>
 </div>
+
+<div class="visible-md visible-lg">
+	<p>&nbsp;</p>
+</div>
+
 {% endblock %}
-
 {% block content %}
-<table class="table table-striped table-hover">
-<thead class = "thead-inverse">
+<div class="page-header">
+	<h1><i class="fa fa-cubes"></i> Sessions - <small>assign project and description to your work time here</small></h1>
+</div>
+<table class="table table-striped table-hover table-bordered table-primary" id="sessions-table">
+<thead class="text-center">
   <tr class="">
-    <th>DATE</th>
-    <th>PROJECT</th>
-    <th>TIME SPEND</th>
-    <th>DESCRIPTION</th>
-    <th>DURATION</th>
-    <th>BREAKS</th>
-    <th>
-      <span  data-toggle="tooltip" data-placement="top" title="Shows you NOT ASSIGNED TIME" class="glyphicon glyphicon-info-sign"></span> NAT
+    <th class="text-center">DATE</th>
+    <th class="text-center">PROJECT</th>
+    <th class="text-center">TIME SPEND</th>
+    <th class="text-center">DESCRIPTION</th>
+    <th class="text-center">DURATION</th>
+    <th class="text-center">BREAKS</th>
+    <th class="text-center">
+      <span  data-toggle="tooltip" data-placement="top" title="Shows you NOT ASSIGNED TIME" class="fa fa-question-circle"></span> NAT
     </th>
-    <th>STATUS</th>
-    <th>ID</th>
+    <th class="text-center">STATUS</th>
+    <th class="text-center">ID</th>
     <th></th>
   </tr>
 </thead>
@@ -111,7 +166,7 @@ Sessions info <span class="label label-default">{{month}}-{{year}}</span>
     <tr>
      <td>{{session.get_date|date:'D d.m.'}}</td>
      <td>
-      <table class = "table-condensed">       
+      <table class="table-condensed">       
        {% for sep in session.projectseparation_set.all %}
        <tr><td>{{sep.project.name}}</td></tr>
        {% endfor %}
@@ -125,7 +180,7 @@ Sessions info <span class="label label-default">{{month}}-{{year}}</span>
       </table>
      </td>
      <td>
-      <table class = "table-condensed">
+      <table class="table-condensed">
        {% for sep in session.projectseparation_set.all %}
        <tr><td>{{sep.time_spend}}</td></tr>
        {% endfor %}
@@ -139,22 +194,22 @@ Sessions info <span class="label label-default">{{month}}-{{year}}</span>
       </table>
      </td> 
      <td>
-      <table class = "table-condensed">
+      <table class="table-condensed">
        {% for sep in session.projectseparation_set.all %}
        <tr><td>{{sep.description}}</td></tr>
        {% endfor %} 
        <tr>
-           <td>
+        <td>
            {% if session.get_not_assigned_duration%}
            {{ session.form.session}}
            {{ session.form.description}}
            {% endif %}
-       </td>
-       <td>
+     		</td>
+       	<td>
           {% if session.get_not_assigned_duration%}
            <input id="submit" type='submit' class="btn btn-xs btn-info" value ='Submit'/>
           {% endif %}
-       </td>
+       	</td>
        </tr>
       </table>
      </td>
@@ -168,4 +223,101 @@ Sessions info <span class="label label-default">{{month}}-{{year}}</span>
   </form>
   {% endfor %}
 </tbody>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	//Make width of content larger in case of larger table
+	//$('.content').css('min-width','100vw');
+	//DataTales
+	//$('#sessions-table').DataTable();
+
+	/*Year value select display function*/
+	var yearToPrint = '2015';
+	var url = window.location.href;
+	if(url.indexOf("2015") > -1) {
+		yearToPrint = '2015';     
+	} else 
+	if(url.indexOf("2016") > -1){
+		yearToPrint = '2016';
+	} else {
+		yearToPrint = '2017';
+	}
+	$('.print-year').text(yearToPrint);
+
+	/*Month value select display function*/
+	var monthToPrint = 'December';
+	if(url.indexOf("/01") > -1) {
+		monthToPrint = "January";
+	} else
+	if(url.indexOf("/02") > -1) {
+		monthToPrint = "February";
+	} else
+	if(url.indexOf("/03") > -1) {
+		monthToPrint = "March";
+	} else
+	if(url.indexOf("/04") > -1) {
+		monthToPrint = "April";
+	} else
+	if(url.indexOf("/05") > -1) {
+		monthToPrint = "May";
+	} else
+	if(url.indexOf("/06") > -1) {
+		monthToPrint = "June";
+	} else
+	if(url.indexOf("/07") > -1) {
+		monthToPrint = "July";
+	} else
+	if(url.indexOf("/08") > -1) {
+		monthToPrint = "August";
+	} else
+	if(url.indexOf("/09") > -1) {
+		monthToPrint = "September";
+	} else
+	if(url.indexOf("/10") > -1) {
+		monthToPrint = "October";
+	} else
+	if(url.indexOf("/11") > -1) {
+		monthToPrint = "November";
+	} else {
+		monthToPrint = "December";
+	}
+  $('.print-month').text(monthToPrint);
+
+
+	/*Chart.JS settings*/
+	//disable legend above chart
+	Chart.defaults.global.legend.display = false;
+	/*Projects Doughnut Chart*/
+	//set bgColors
+	var bgColors = [];
+	bgColors = [
+		'#1f4371', 
+		'#2962a9', 
+		'#347bd5', 
+		'#609ae1', 
+		'#76a7e3', 
+		'#00AEEF'
+	];
+	//get data from webpage
+	var ProjectKeys = [];
+	var ProjectValues = [];
+
+	$('#projects tr').each(function(i){
+		ProjectKeys[i] = ($(this).children('#key').text());
+		ProjectValues[i] = ($(this).children('#value').text());
+	});
+
+  var ctx = $("#Projects-Chart");
+  var myChart = new Chart(ctx, {
+  type: 'doughnut',
+  data: {
+    labels: ProjectKeys,
+    datasets: [{
+      backgroundColor: bgColors,
+      data: ProjectValues
+    }]
+  }
+  });
+});
+</script>
 {% endblock %}
