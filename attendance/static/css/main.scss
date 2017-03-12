@@ -148,7 +148,7 @@ h4 {
 		background: $darker-blue;
 		color: lighten($lightest-blue, 8%);
 		::after {
-			color: $lightest-blue;
+			color: lighten($lightest-blue, 20%);
 		}
 	}
 }
@@ -181,6 +181,21 @@ h4 {
 	}
 }
 /*----------------------------------------*/
+.swipe-int-icon {
+	font-size: 1.6em;
+	padding: none;
+	margin: none;
+}
+
+.btn-fill {
+	width: 60px;
+	padding: none;
+	.btn {
+		margin: -7px;
+		width: 120%;
+	}
+}
+
 .ext-link {
 	i {
 	font-size: 0.7em;
