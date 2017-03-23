@@ -382,6 +382,11 @@ h4 {
 				text-transform: uppercase;
 			}
 		}
+		tbody {
+			.success {
+			background: cyan;
+			}
+		}
 	}
 	.table-hover {
 		tbody

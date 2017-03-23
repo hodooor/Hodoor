@@ -4,12 +4,11 @@
 {% block title %}Administrator's section{% endblock %}
 {% block aside %}
 <div class="panel panel-default">
-  <div class="panel-heading">
+  <div class="panel-heading clickable">
     <h3 class="panel-title">
       <i class="fa fa-calendar-check-o panel-icon" aria-hidden="true"></i>
       Date selection
     </h3>
-
   </div>
   <div class="panel-body">
       <div class="row">
@@ -19,12 +18,13 @@
          <div class="col-xs-8">
             <div class="btn-group btn-block ">
                 <button type="button" class="btn btn-default btn-block  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                2017 <span class="caret"></span>
+                <span class="print-year"></span>
+                <span class="caret"></span>
                 </button>
                     <ul class="dropdown-menu">
-                    <li><a href="#">2015</a></li>
-                    <li><a href="#">2016</a></li>
-                    <li><a href="#">2017</a></li>
+                    <li><a href="{% url 'default_administrator' %}2015/{{month}}">2015</a></li>
+                    <li><a href="{% url 'default_administrator' %}2016/{{month}}">2016</a></li>
+                    <li><a href="{% url 'default_administrator' %}2017/{{month}}">2017</a></li>
                 </ul>
             </div>
          </div>
@@ -35,12 +35,22 @@
          <div class="col-xs-8">
             <div class="btn-group btn-block ">
                 <button type="button" class="btn btn-default btn-block  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                January <span class="caret"></span>
+                <span class="print-month"></span>
+                <span class="caret"></span>
                 </button>
                     <ul class="dropdown-menu">
-                    <li><a href="#">January <span class="pull-right">[01]</span></a></li>
-                    <li><a href="#">February <span class="pull-right">[02]</span></a></li>
-                    <li><a href="#">March <span class="pull-right">[03]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/01/">January <span class="pull-right">[01]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/02/">February <span class="pull-right">[02]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/03/">March <span class="pull-right">[03]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/04/">April <span class="pull-right">[04]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/05/">May <span class="pull-right">[05]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/06/">June <span class="pull-right">[06]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/07/">July <span class="pull-right">[07]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/08/">August <span class="pull-right">[08]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/09/">September <span class="pull-right">[09]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/10/">October <span class="pull-right">[10]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/11/">November <span class="pull-right">[11]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/12/">December <span class="pull-right">[12]</span></a></li>
                 </ul>
             </div>
          </div>
@@ -101,7 +111,7 @@
               <th>NOT WORK HOURS </th>
               <th>HOURS UNASSIGNED</th>
               <th>HOURS TOTAL</th>
-              <th>LOOKS OK</th>
+              <th>Status</th>
               <th>DETAIL</th>
             </tr>
           </thead>
@@ -118,8 +128,10 @@
                  <td>{{user.hours_not_work |floatformat:2}}</td>
                 <td>{{user.hours_unassigned |floatformat:2}}</td>
                 <td>{{user.hours_total |floatformat:2}}</td>
-                <td>{{user.looks_ok | yesno:"OK, Probably Wrong" }}</td>
-                <td><a href="{% url 'sessions_month' username=user.user.username year=year month=month %}" type="button" class="btn btn-xs btn-info">Detail</a></td>
+                <td>{{user.looks_ok | yesno:"OK, Bad" }}</td>
+                <td class="btn-fill">
+                  <a href="{% url 'sessions_month' username=user.user.username year=year month=month %}" type="button" class="btn btn-sm btn-block btn-primary">Detail</a>
+                </td>
               </tr>
             {% endfor %}
           </tbody>
@@ -150,7 +162,9 @@
                 <td>{{user.last_name}}</td>
                 <td>{{user.first_name}}</td>
                 <td>{{user.username}}</a></td>
-                <td><a href="{% url 'sessions_month' username=user.username year=year month=month %}" type="button" class="btn btn-xs btn-info">Detail</a></td>
+                <td class="btn-fill">
+                  <a href="{% url 'sessions_month' username=user.username year=year month=month %}" type="button" class="btn btn-sm btn-block btn-primary">Detail</a>
+                </td>
               </tr>
             {% endfor %}
           </tbody>
@@ -163,8 +177,77 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-  $('#users-with-sessions').DataTable();
-  $('#users-without-sessions').DataTable();
+  /*Year value select display function*/
+	var yearToPrint = '2015';
+	var url = window.location.href;
+	if(url.indexOf("2015") > -1) {
+		yearToPrint = '2015';
+	} else
+	if(url.indexOf("2016") > -1){
+		yearToPrint = '2016';
+	} else {
+		yearToPrint = '2017';
+	}
+	$('.print-year').text(yearToPrint);
+
+	/*Month value select display function*/
+	var monthToPrint = 'December';
+	if(url.indexOf("/01") > -1) {
+		monthToPrint = "January";
+	} else
+	if(url.indexOf("/02") > -1) {
+		monthToPrint = "February";
+	} else
+	if(url.indexOf("/03") > -1) {
+		monthToPrint = "March";
+	} else
+	if(url.indexOf("/04") > -1) {
+		monthToPrint = "April";
+	} else
+	if(url.indexOf("/05") > -1) {
+		monthToPrint = "May";
+	} else
+	if(url.indexOf("/06") > -1) {
+		monthToPrint = "June";
+	} else
+	if(url.indexOf("/07") > -1) {
+		monthToPrint = "July";
+	} else
+	if(url.indexOf("/08") > -1) {
+		monthToPrint = "August";
+	} else
+	if(url.indexOf("/09") > -1) {
+		monthToPrint = "September";
+	} else
+	if(url.indexOf("/10") > -1) {
+		monthToPrint = "October";
+	} else
+	if(url.indexOf("/11") > -1) {
+		monthToPrint = "November";
+	} else {
+		monthToPrint = "December";
+	}
+  $('.print-month').text(monthToPrint);
+
+  //Making tables sortable
+  $('#users-with-sessions').DataTable({
+    "aaSorting": [
+    	[0,'asc']
+  	],
+    "lengthMenu": [
+    	[-1, 100, 50, 15],
+    	["All", 100, 50, 15]
+    ]
+  });
+  $('#users-without-sessions').DataTable({
+    "aaSorting": [
+    	[0,'asc']
+  	],
+    "lengthMenu": [
+    	[-1, 100, 50, 15],
+    	["All", 100, 50, 15]
+    ]
+  });
 });
 </script>
 {% endblock %}
