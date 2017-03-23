@@ -163,10 +163,10 @@ h4 {
 }
 .table-default {
 	thead, tfoot {
-		background: $darker-blue;
-		color: $lightest-blue;
+		background: $gray;
+		color: $li-gray;
 		::after {
-			color: $lightest-blue;
+			color: $li-gray;
 		}
 	}
 }
@@ -206,7 +206,7 @@ h4 {
 }
 .login {
 	.form-text {
-		font-weight: normal; 
+		font-weight: normal;
 		font-size: 1.1em;
 	}
 	h1 {
@@ -254,12 +254,12 @@ h4 {
     text-indent: center;
     margin-top: 10px;
 	  }
-	  #id_new_password1, 
+	  #id_new_password1,
 	  #id_new_password2,
 	  #id_email {
 	  	background: none;
 	  	width: 100%;
-	  	margin-bottom: 5px; 
+	  	margin-bottom: 5px;
 	  	height: 30px;
 	  	border: 1px solid #ccc;
 	  	padding: 2px;
@@ -304,10 +304,10 @@ h4 {
 }
 /*----------------------------------------*/
 .content {
-	background-color: lighten($li-gray, 5%); 
-	margin: -11px -15px -15px -15px; 
+	background-color: lighten($li-gray, 5%);
+	margin: -11px -15px -15px -15px;
 	padding: 21px 20px 5px 20px;
-	min-height: 100vh; //100% of screen 
+	min-height: 100vh; //100% of screen
 	@include box-shadow(0px 0px 3px 1px #ccc);
 	.well {
 		@include border-radius(0);
@@ -344,7 +344,7 @@ h4 {
 		}
 		.panel-footer {
 			margin:auto;
-			padding:0px; 
+			padding:0px;
 			.alert {
 				margin:0px;
 				border: none;
@@ -384,7 +384,7 @@ h4 {
 		}
 	}
 	.table-hover {
-		tbody 
+		tbody
 		{
 			tr {
 				&:hover {
@@ -409,9 +409,9 @@ h4 {
 		}
 	}
 	.dt-bootstrap {
-		font-size: $basic-font -2px; 
+		font-size: $basic-font -2px;
 		thead, tfoot {
-			font-weight: bold;	
+			font-weight: bold;
 			font-size: 12px;
 		}
 		.dt-default {
@@ -468,10 +468,10 @@ h4 {
 			li {
 				@include border-radius(0);
 			}
-			li.paginate_button.active > a { 
+			li.paginate_button.active > a {
 				background: $li-gray;
 				border-color: $gray;
-				color: $gray; 
+				color: $gray;
 			}
 			li a {
 				color: $gray;
@@ -479,7 +479,7 @@ h4 {
 		}
 	}
 	.terminal-buttons {
-		margin-left:5px; 
+		margin-left:5px;
 		button {
 			width: 31%;
 			font-weight: bold;
@@ -530,7 +530,7 @@ h4 {
 			width: 18%;
 			height: 33px;
 			//outline: 1px solid $primary;
-			text-align: center; 	
+			text-align: center;
 			padding-top: 8px;
 			}
 		.clickable {
@@ -543,7 +543,7 @@ h4 {
 			text-transform: uppercase;
 			font-weight: 400;
 			color: $primary;
-			padding: 0px;	
+			padding: 0px;
 		}
 			.badge {
 				margin-top: 5px;
@@ -586,7 +586,7 @@ h4 {
 }
 
 .clickable{
-    cursor: pointer;   
+    cursor: pointer;
 }
 
 .collabsible-list {
@@ -606,7 +606,7 @@ h4 {
 		margin-left: 0px;
 		color: #fff;
 		border: none;
-		font-weight: normal; 
+		font-weight: normal;
 	}
 	.username {
 		margin-left: 5px;
@@ -629,7 +629,7 @@ h4 {
 	@include border-radius(0);
 	text-align: justify;
 	padding: 3px 8px 6px 8px;
-	font-size: 12px; 
+	font-size: 12px;
 	label {
 		font-size: 1.2em;
 		text-transform: uppercase;
@@ -641,7 +641,7 @@ h4 {
 		font-size: 2em;
 		float: right;
 		text-align: center;
-		margin-bottom: 3px; 
+		margin-bottom: 3px;
 	}
 	.title {
 		width: 100%;
@@ -673,7 +673,7 @@ h4 {
 		color: #fff;
 		}
 	}
-} 
+}
 .scrollup {
 	font-size: 2.3em;
 }
@@ -682,7 +682,7 @@ h4 {
 	transition: $mid;
 }
 .scrollup > i {
-	&:hover, 
+	&:hover,
 	&:active {
 			color: #fff;
 	}
@@ -708,7 +708,7 @@ h4 {
 			margin-top: 10px;
 		}
 		.username {
-			font-size: 1.4em; 
+			font-size: 1.4em;
 		}
 		.userstatus {
 			font-size: 0.9em;
@@ -739,7 +739,7 @@ h4 {
 .small {
 	width: $small;
 	height: $small;
-	font-size: $small - 4px; 
+	font-size: $small - 4px;
 }
 /*----------------------------------------*/
 
@@ -752,10 +752,10 @@ h4 {
 	background-color: #fff;
 	border: 1px solid #000;
 	font-size: 1.05em;
-	font-style: italic; 
+	font-style: italic;
 	color: $gray;
 	}
-} 
+}
 /*----------------------------------------*/
 /*No gutter and gutters sizes - shorten all BS col*-*/
 /*----------------------------------------*/
@@ -778,7 +778,7 @@ h4 {
 
 
 .panel-default > .panel-heading {
-	color: $success;
+	//color: $success;
 }
 
 .panel-danger > .panel-heading {
@@ -805,9 +805,9 @@ input[type="search"]:focus,
 input[type="tel"]:focus,
 input[type="color"]:focus,
 .uneditable-input:focus,
-#id_new_password1:focus, 
+#id_new_password1:focus,
 #id_new_password2:focus,
-#id_email:focus {   
+#id_email:focus {
   border: 1px solid #333;
   @include box-shadow(0px 0px 0px 0px #333);
   outline: 0 none;
@@ -818,10 +818,10 @@ input[type="color"]:focus,
 /*Modal setups*/
 .modal-content {
 	@include border-radius(0);
-	
+
 }
 .modal-primary > .modal-header {
-	background: $primary;	
+	background: $primary;
 	color: lighten($normal-blue, 39%);
 }
 
@@ -835,7 +835,7 @@ input[type="color"]:focus,
 	color: #ff3333;
 }
 .coffee {
-	color: $li-gray; 
+	color: $li-gray;
 }
 /*----------------------------------------*/
 .icon {font-size: 35px; color: #ccc; transition: $slow;}
@@ -857,68 +857,68 @@ input[type="color"]:focus,
 /*BUTTONS custom styling*/
 /*----------------------------------------*/
 .btn-primary {
-  background-color: #fff;  
-  border-color: $primary;  
+  background-color: #fff;
+  border-color: $primary;
   color:$primary;
-  @include border-radius(0); 
-  border-width: 2px;   
+  @include border-radius(0);
+  border-width: 2px;
   &:hover {
-  	background-color: $primary;  
-  	border-color: $primary;  
+  	background-color: $primary;
+  	border-color: $primary;
   	color: #fff;
-  	@include border-radius(0);                 
+  	@include border-radius(0);
 	}
 	&:focus, &:active:focus {
-	background-color: darken($primary, 20%);  
-  border-color: darken($primary, 20%);  
-	}             
+	background-color: darken($primary, 20%);
+  border-color: darken($primary, 20%);
+	}
 }
 /*SUCESS BTN*/
 /*----------------------------------------*/
 .btn-success {
-  background-color: #fff;  
-  border-color: $success;  
+  background-color: #fff;
+  border-color: $success;
   color:$success;
-  @include border-radius(0); 
-  border-width: 2px;   
-  &:hover {
-  	background-color: $success;  
-  	border-color: $success;  
-  	color: #fff;
-  	@include border-radius(0);                 
-	}
-	&:focus, &:active:focus {
-	background-color: darken($success, 20%);  
-  border-color: darken($success, 20%);  
-	}             
-}
-/*----------------------------------------*/  
-/*DANGER BTN*/
-.btn-danger {
-  background-color: #fff;  
-  border-color: $danger;  
-  color:$danger;
-  @include border-radius(0); 
+  @include border-radius(0);
   border-width: 2px;
   &:hover {
-  	background-color: $danger;  
-  	border-color: $danger;  
+  	background-color: $success;
+  	border-color: $success;
   	color: #fff;
-  	@include border-radius(0);                 
+  	@include border-radius(0);
 	}
-	&:focus, 
+	&:focus, &:active:focus {
+	background-color: darken($success, 20%);
+  border-color: darken($success, 20%);
+	}
+}
+/*----------------------------------------*/
+/*DANGER BTN*/
+.btn-danger {
+  background-color: #fff;
+  border-color: $danger;
+  color:$danger;
+  @include border-radius(0);
+  border-width: 2px;
+  &:hover {
+  	background-color: $danger;
+  	border-color: $danger;
+  	color: #fff;
+  	@include border-radius(0);
+	}
+	&:focus,
 	&:active:focus {
-		background-color: darken($danger, 20%);  
-  	border-color: darken($danger, 20%);  
-	}                
-}  
+		background-color: darken($danger, 20%);
+  	border-color: darken($danger, 20%);
+	}
+}
 /*----------------------------------------*/
 .separator {
 	border-bottom: 1px solid #ddd;
 	margin: 10px auto 15px auto;
 }
 /*----------------------------------------*/
-/*Dashboard list groups 
+/*Dashboard list groups
 - for shorten infos*/
 /*----------------------------------------*/
 .dash-list-group {
@@ -936,7 +936,7 @@ input[type="color"]:focus,
 		margin-top: 10px;
 		margin-bottom: 10px;
 		list-style-type: none;
-		max-width:75%; 
+		max-width:75%;
 	}
 	.primary {
 		font-weight: bold;
@@ -969,9 +969,9 @@ input[type="color"]:focus,
 
 /*DASHBOARD*/
 .navbar-nav > li > a,
-.navbar-nav > li > .navbar-text, 
+.navbar-nav > li > .navbar-text,
 .navbar-brand {
-    padding-top:4px !important; 
+    padding-top:4px !important;
     padding-bottom:0 !important;
     height: 28px;
 }
@@ -983,7 +983,7 @@ input[type="color"]:focus,
 }
 
 .navbar {min-height:28px !important;}
-.navbar-inverse,  
+.navbar-inverse,
 .navbar-inverse:focus,
 .navbar-inverse:active {
 	background: $gray;
@@ -995,7 +995,7 @@ input[type="color"]:focus,
 #myDropdown {
 	.myDropBtn {
 		background: $darker-blue;
-		border-top: 1px solid $darker-blue; 
+		border-top: 1px solid $darker-blue;
 		outline: 1px solid $darker-blue;
 		padding: 15px;
 		max-width: 100%;
@@ -1051,7 +1051,7 @@ input[type="color"]:focus,
 			.dropmenu-item-btn {
 		 	 	padding: 30px;
   			margin: 0px;
-  			color: lighten($lightest-blue, 18%);	
+  			color: lighten($lightest-blue, 18%);
 				&:hover, &:focus, &:active {
 			  color: $primary;
   			background: #f2f2f2;
@@ -1066,7 +1066,7 @@ input[type="color"]:focus,
 		i {
 		  display: block;
 			font-size: 24px;
-			margin-bottom: 6px;	
+			margin-bottom: 6px;
 		}
 	}
 }
@@ -1082,7 +1082,7 @@ $colHighlight   : $gray;
   border-color: $bgHighlight;
   .navbar-brand {
     color: $colDefault;
-    &:hover, &:focus { 
+    &:hover, &:focus {
       color: $colHighlight; }}
   .navbar-text {
     color: $colDefault; }
