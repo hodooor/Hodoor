@@ -101,7 +101,7 @@
 
 <div class="page-header">
   <!--<div class="">-->
-    <h1><i class="fa fa-dashboard" aria-hidden="true"></i> Dashboard <small>- your attendance info summary</small></h1>
+    <h1><i class="fa fa-id-card-o" aria-hidden="true"></i> Dashboard <small>- your attendance info summary</small></h1>
   <!--</div>-->
 </div>
 
@@ -210,10 +210,10 @@
             <li class="">Assigned Hours: <span class="success" id="assigned-hours-graph">
             	<script type="text/javascript">
             	$(document).ready(function(){ 	
-            		var workHours = $('#unassigned-hours-graph').text();
-            		var unassignedHours = $('#total-work-hours').text();
+            		var workHours = $('#total-work-hours').text();
+            		var unassignedHours = $('#unassigned-hours-graph').text();
             		var assignedHours = workHours - unassignedHours;
-            		$('#assigned-hours-graph').text(assignedHours);
+            		$('#assigned-hours-graph').text(assignedHours.toFixed(2));
 							//end of document.ready()
 							});
             	</script>
@@ -386,7 +386,7 @@
 		//get data from webpage
 		var workHoursGraph = $('#work-hours-graph').text();
 		var notWorkHoursGraph = $('#not-work-hours-graph').text();
-			if((workHoursGraph == 0) || (notWorkHoursGraph == 0)) {
+			if((workHoursGraph == 0) && (notWorkHoursGraph == 0)) {
 				notWorkHoursGraph = 999.999;
 				workHoursGraph = "XXX";
 			  bgColorNwtime = "#f2f2f2";	
@@ -416,7 +416,7 @@
 		//get data from webpage
 		var assignedHoursGraph = $('#assigned-hours-graph').text();
 		var unassignedWorkHoursGraph = $('#unassigned-hours-graph').text();
-			if((assignedHoursGraph == 0) || (unassignedWorkHoursGraph == 0)) {
+			if((assignedHoursGraph == 0) && (unassignedWorkHoursGraph == 0)) {
 				unassignedWorkHoursGraph = 999.999;
 				assignedHoursGraph = "XXX";
 			  bgColorUatime = "#f2f2f2";	

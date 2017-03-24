@@ -81,6 +81,11 @@ $basic-font: 14px;
 	-webkit-box-shadow: $shadow;
 	-moz-box-shadow: $shadow;
 }
+
+@mixin font-shadow($h-shadow, $v-shadow, $blur, $color) {
+	/*text-shadow: h-shadow v-shadow blur-radius color|none|initial|inherit;*/
+	text-shadow: $h-shadow $v-shadow $blur $color;
+}
 /*----------------------------------------*/
 /*styling the browsers scroll bar*/
 /*----------------------------------------*/
@@ -163,10 +168,10 @@ h4 {
 }
 .table-default {
 	thead, tfoot {
-		background: $gray;
-		color: $li-gray;
+		background: #666;
+		color: #ccc;
 		::after {
-			color: $li-gray;
+			color: #ccc;
 		}
 	}
 }
@@ -185,16 +190,19 @@ h4 {
 	font-size: 1.6em;
 	padding: none;
 	margin: none;
+	color: $darker-blue;
 }
 
+/*
 .btn-fill {
-	width: 60px;
+	min-width: 65px;
 	padding: none;
 	.btn {
-		margin: -7px;
-		width: 120%;
+		margin: auto -7px auto 0px;
+		width: 100%;
 	}
 }
+*/
 
 .ext-link {
 	i {
@@ -383,9 +391,17 @@ h4 {
 			}
 		}
 		tbody {
-			.success {
-			background: cyan;
+			.ok-status {
+				background: $lightest-blue;
 			}
+			.ok-status:hover {
+				background: $li-green;
+			}
+		}
+	}
+	.table-striped {
+		tr:even {
+			background: red;
 		}
 	}
 	.table-hover {
@@ -393,8 +409,14 @@ h4 {
 		{
 			tr {
 				&:hover {
-					background: lighten($lightest-blue, 15%);
+					background: lighten(#ccc, 15%);
+					outline: 1px solid $darker-blue;
 				}
+			}
+		}
+		.multi-level-table {
+			tr:hover {
+				outline: none;
 			}
 		}
 	}
@@ -405,12 +427,15 @@ h4 {
 		padding-top: 0px;
 		margin-bottom: -0.5%;
 		padding-bottom: none;
+		color: darken($li-gray, 40%);
+		@include font-shadow(2px, 1px, 4px, lighten($li-gray, 12%));
 		h1 {
 			margin-top: 0px;
 		}
 		small {
 			font-style: italic;
 			font-size: 0.7em;
+			color: darken($li-gray, 23%);
 		}
 	}
 	.dt-bootstrap {
@@ -507,6 +532,12 @@ h4 {
 	background: none;
 	margin: 0px -15px auto -15px;
 	padding: 15px;
+	.question {
+		color: darken($li-gray, 15%);
+		font-size: 1.3em;
+		margin: -2px -5px auto auto;
+		cursor: pointer;
+	}
 	.nav-tabs {
 	li {
 		padding:none;
@@ -707,7 +738,8 @@ h4 {
 	background: #f2f2f2;
 	font-weight: 400;
 	.userinfo {
-		color: darken(#f2f2f2, 45%);
+		color: darken($li-gray, 30%);
+		@include font-shadow(2px, 1px, 4px, lighten($li-gray, 12%));
 		i {
 			vertical-align: middle;
 			margin-top: 10px;
@@ -783,7 +815,7 @@ h4 {
 
 
 .panel-default > .panel-heading {
-	//color: $success;
+	color: $gray;
 }
 
 .panel-danger > .panel-heading {

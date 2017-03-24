@@ -1,71 +1,125 @@
 {% extends 'attendance/base.html' %}
-{% load crispy_forms_tags %}
+{% load static %}
 
-{% block header_text %}
-Swipe {{ id }} - detail
+{% block title %}Swipe detail{% endblock %}
+{% block aside %}
+
 {% endblock %}
-
-{% block content-top %}
-<div class="col-md-2 col-md-offset-10">
-	<a class="btn btn-danger" href="{% url 'swipes' user.username %}"><span class="glyphicon glyphicon-chevron-left"></span> Go back to swipes page</a>
+{% block content %}
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content modal-primary">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">
+        {% if not swipe.swipe_set.count %} 
+        	Swipe from session: {{swipe.session}} - detail info<span class="modal-icon fa fa-info pull-right"></span>
+      	{% else %}
+      		Swipe detail <span class="modal-icon fa fa-check pull-right"></span>
+      	{% endif %}
+        </h4>
+      </div>
+      <div class="modal-body">
+				<table class="table table-hover table-primary-inverse">
+					<thead>
+					<tr class="upper">
+					  <th class="col-md-2">Parameter</th>
+					  <th class="col-md-4">Value</th>
+					  <th class="col-md-6">Description</th>
+					</tr>
+					</thead>
+					<tbody>
+						<tr>
+						    <td data-field="key" class="key">Swipe Type</td>
+						    <td data-field="value" id="swipeType">{{swipe.swipe_type}}</td>
+								<td><i id="swipe-icon" class="fa fa-2x "></i></td>
+						</tr>
+						<tr>
+						    <td data-field="key" class="key">Belongs to Session</td>
+						    <td data-field="value">{% if swipe.session %}<a href="{% url 'session_detail' username=user.username id=swipe.session.id %}">{{swipe.session}}</a>{% endif %}</td>
+								<td></td>
+						</tr>		
+						{% if corrected_by %}
+						<tr>
+							<td data-field="key" class="key">Was corrected by</td>
+							<td data-field="key" class="key"><a href="{% url 'swipe_detail' username=user.username id=corrected_by.id %}">{{ corrected_by.id}}</a></td>
+							<td data-field="key" class="key"></td>
+						</tr>
+						{% endif %}
+						
+						{% if swipe.correction_of_swipe %} 
+							<td data-field="key" class="key">Is Correction of Swipe</td>
+							<td data-field="key" class="key"><a href="{% url 'swipe_detail' username=user.username id=swipe.correction_of_swipe.id %}">{{ swipe.correction_of_swipe.id}}</a></td>
+							<td data-field="key" class="key"></td>
+						{% endif %}
+						
+						{% if not swipe.swipe_set.count %} 
+							<tr>
+							    <td data-field="key" class="key">Datetime</td>
+							    <form method='POST' action=''>{% csrf_token %}
+							   	{% for f in form %}
+									<td>{{f}}</td>
+								{% endfor %}
+									<td></td>
+							</tr>
+						{% else %}
+							<tr>
+							  <td data-field="key" class="key">Datetime</td>
+								<td>{{swipe.datetime | date:'D d.m.Y H:i:s'}}</td>
+								<td> Swipe was successfuly corrected <i class="fa fa-check"></i></td>
+							</tr>
+						{% endif %}
+					</tbody>
+				</table>
+				{{form.errors}}
+				<div class="col-md-3">
+				</div>
+   
+      </div><!--/modal body-->
+      <div class="modal-footer">
+      <div class="row">
+      	<div class="col-md-3">
+      		<a class="btn btn-danger" href="{% url 'swipes' user.username %}"><i class="fa fa-arrow-left"></i> Back to Swipes page</a>
+      	</div>
+      	<div class="col-md-4 col-md-offset-5">
+      	{% if not swipe.swipe_set.count %} 
+      		<button id="submit" type='submit' class="btn btn-primary" value='Submit Change'>Submit change <i class="fa fa-check"></i></button>
+      	{% endif %}
+      	</div>
+      	</form>
+      </div>
+      </div>
+    </div><!--/modal-->
+  </div>
 </div>
-<table class="table table-hover">
-
-	<thead>
-	<tr>
-	  <th class="col-md-2">PARAMETER</th>
-	  <th class="col-md-4">VALUE</th>
-	  <th class="col-md-6">DESCRIPTION</th>
-	</tr>
-	</thead>
-	<tbody>
-	<tr>
-	    <td data-field="key" class="key">Swipe Type</td>
-	    <td data-field="value">{{swipe.swipe_type}}</td>
-			<td></td>
-	</tr>
-	<tr>
-	    <td data-field="key" class="key">Belongs to Session</td>
-	    <td data-field="value">{% if swipe.session %}<a href="{% url 'session_detail' username=user.username id=swipe.session.id %}">{{swipe.session}}</a>{% endif %}</td>
-			<td></td>
-	</tr>
-	
-	{% if corrected_by %}
-	<tr>
-		<td data-field="key" class="key">Was corrected by</td>
-		<td data-field="key" class="key"><a href="{% url 'swipe_detail' username=user.username id=corrected_by.id %}">{{ corrected_by.id}}</a></td>
-		<td data-field="key" class="key"></td>
-	</tr>
-	{% endif %}
-	
-	{% if swipe.correction_of_swipe %} 
-		<td data-field="key" class="key">Is Correction of Swipe</td>
-		<td data-field="key" class="key"><a href="{% url 'swipe_detail' username=user.username id=swipe.correction_of_swipe.id %}">{{ swipe.correction_of_swipe.id}}</a></td>
-		<td data-field="key" class="key"></td>
-	{% endif %}
-	
-	{% if not swipe.swipe_set.count %} 
-		<tr>
-		    <td data-field="key" class="key">Datetime</td>
-		    <form method='POST' action=''>{% csrf_token %}
-		   	{% for f in form %}
-				<td>{{f}}</td>
-			{% endfor %}
-				<td><input id="submit" type='submit' class="btn btn-primary" value ='Submit Change'/></td>
-			</form>
-		</tr>
-
-	{% else %}
-		<tr>
-		    <td data-field="key" class="key">Datetime</td>
-			<td>{{swipe.datetime | date:'D d.m.Y H:i:s'}}</td>
-		</tr>
-	{% endif %}
-
-
-</tbody>
-</table>
-{{form.errors}}
-<div class="col-md-3">
-</div>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#myModal').modal('show');
+    /*Add class to see fontawesomes in swipe infos*/
+    var swipeType = $('#swipeType').text();
+    var swipeIcon = $('#swipe-icon');
+    switch(swipeType) {
+    case 'IN':
+      swipeIcon.addClass('fa-sign-in');
+      break;
+    case 'OUT':
+      swipeIcon.addClass('fa-sign-out');
+      break;
+    case 'FBR':
+      swipeIcon.addClass('fa-clock-o');
+      break;
+    case 'OBR':
+      swipeIcon.addClass('fa-coffee');
+      break;
+		case 'OTR':
+      swipeIcon.addClass('fa-suitcase');
+      break;
+    case 'FTR':
+      swipeIcon.addClass('fa-share-square');
+      break;
+    default:
+    	break;
+		}
+  });
+</script>
 {% endblock %}

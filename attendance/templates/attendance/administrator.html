@@ -112,14 +112,14 @@
               <th>HOURS UNASSIGNED</th>
               <th>HOURS TOTAL</th>
               <th>Status</th>
-              <th>DETAIL</th>
+              <th class="no-sort">DETAIL</th>
             </tr>
           </thead>
           <tbody>
             {% for user in user_data %}
               <tr
               {% if user.looks_ok %}
-                class="success"
+                class="ok-status"
               {% endif %}>
                 <td>{{user.user.last_name}}</td>
                 <td>{{user.user.first_name}}</td>
@@ -130,7 +130,8 @@
                 <td>{{user.hours_total |floatformat:2}}</td>
                 <td>{{user.looks_ok | yesno:"OK, Bad" }}</td>
                 <td class="btn-fill">
-                  <a href="{% url 'sessions_month' username=user.user.username year=year month=month %}" type="button" class="btn btn-sm btn-block btn-primary">Detail</a>
+                  <a href="{% url 'sessions_month' username=user.user.username year=year month=month %}"
+                  type="button" class="btn btn-sm btn-block btn-info">Detail</a>
                 </td>
               </tr>
             {% endfor %}
@@ -153,7 +154,7 @@
               <th>Last name</th>
               <th>First name</th>
               <th>Username</th>
-              <th>Detail</th>
+              <th class="btn-fill no-sort">Detail</th>
             </tr>
           </thead>
           <tbody>
@@ -162,8 +163,9 @@
                 <td>{{user.last_name}}</td>
                 <td>{{user.first_name}}</td>
                 <td>{{user.username}}</a></td>
-                <td class="btn-fill">
-                  <a href="{% url 'sessions_month' username=user.username year=year month=month %}" type="button" class="btn btn-sm btn-block btn-primary">Detail</a>
+                <td class="btn-fill text-center">
+                  <a href="{% url 'sessions_month' username=user.username year=year month=month %}"
+                  type="button" class="btn btn-sm btn-info">Detail</a>
                 </td>
               </tr>
             {% endfor %}
@@ -234,6 +236,10 @@ $(document).ready(function(){
     "aaSorting": [
     	[0,'asc']
   	],
+    "columnDefs": [{
+      targets: 'no-sort',
+      orderable: false
+    }],
     "lengthMenu": [
     	[-1, 100, 50, 15],
     	["All", 100, 50, 15]
@@ -243,6 +249,10 @@ $(document).ready(function(){
     "aaSorting": [
     	[0,'asc']
   	],
+    "columnDefs": [{
+      targets: 'no-sort',
+      orderable: false
+    }],
     "lengthMenu": [
     	[-1, 100, 50, 15],
     	["All", 100, 50, 15]

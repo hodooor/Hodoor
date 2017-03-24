@@ -2,50 +2,50 @@
 {% load static %}
 {% load compress %}
 <html lang="en">
-  <head>
-    <title>Hodoor - {% block title %}{% endblock %}</title>
+  <head>  
+    <title>Hodoor - {% block title %}{% endblock %}</title> 
     <!--Favicons for all devices-->
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/favicon/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" href="{% static 'img/favicon/favicon-32x32.png' %}" sizes="32x32">
     <link rel="icon" type="image/png" href="{% static 'img/favicon/favicon-16x16.png' %}" sizes="16x16">
     <link rel="manifest" href="{% static 'img/favicon/manifest.json' %}">
     <link rel="mask-icon" href="{% static 'img/favicon/safari-pinned-tab.svg' %}" color="#5bbad5">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#ffffff"> 
     <!--/favicons-->
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!--BS-->
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}">
-    <!--jQuery-->
-    <script src="{% static 'js/jquery-3.1.1.min.js'%}"></script>
-    <script src="{% static 'js/bootstrap.min.js'%}"></script>
+    <meta charset="utf-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    
+    <!--BS--> 
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}"> 
+    <!--jQuery--> 
+    <script src="{% static 'js/jquery-3.1.1.min.js'%}"></script>  
+    <script src="{% static 'js/bootstrap.min.js'%}"></script>  
     
     <!--ICONIC PACKS and FONTS-->
     <!--Font awesome-->
-    <link href="{% static 'css/font-awesome.min.css'%}" rel="stylesheet">
+    <link href="{% static 'css/font-awesome.min.css'%}" rel="stylesheet"> 
     <!--Mobirise icons-->
-    <link rel="stylesheet" href="{% static 'modules/mobirise/style.css'%}">
+    <link rel="stylesheet" href="{% static 'modules/mobirise/style.css'%}"> 
     <!--Custom fonts-->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-
+    
     <!--Own CSS Styles-->
-    {% compress css %}
+    {% compress css %} 
     <link id="mystyle" rel="stylesheet" type="text/x-scss" href="{% static 'css/main.scss' %}">
     <link id="responsive" rel="stylesheet" type="text/x-scss" href="{% static 'css/responsive.scss' %}">
     {% endcompress %}
-
+    
     <!--JAVASCRIPTS-->
     {% compress js %}
-    <script type="text/javascript" language="javascript" src="{% static 'js/functions.js' %}"></script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/functions.js' %}"></script>  
     <!--equalHeight module-->
-    <script type="text/javascript" language="javascript" src="{% static 'modules/jquery-match-height/jquery.matchHeight.js'%}"></script>
+    <script type="text/javascript" language="javascript" src="{% static 'modules/jquery-match-height/jquery.matchHeight.js'%}"></script> 
     <!--My tooltips-->
-    <script type="text/javascript" language="javascript" src="{% static 'js/tooltips.js' %}"></script>
+    <script type="text/javascript" language="javascript" src="{% static 'js/tooltips.js' %}"></script> 
     {% endcompress %}
     <!--Charts.JS module-->
-    <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script> 
     <!--PACE loader-->
     <!--<script type="text/javascript" language="javascript" src="{% static 'js/pace.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/pace-loader.css' %}">-->
@@ -56,7 +56,7 @@
     {{form.media}}
   </head>
   <body class="">
-    <div class="container-fluid">
+    <div class="container-fluid"> 
       <div class="row">
         <div class="col-md-2">
           <div class="aside">
@@ -71,7 +71,7 @@
                 <!--List of items-->
                     <li class="col-xs-6">
                       <a class="dropmenu-item-btn" href="{% url 'home' %}">
-                        <i class="fa fa-dashboard" aria-hidden="true"></i>
+                        <i class="fa fa-id-card-o" aria-hidden="true"></i>
                         Dashboard
                       </a>
                     </li>
@@ -111,7 +111,7 @@
                 {% endif %}
                 </ul>
               </div>
-
+     
             </div>
           </div><!--//Menu Top - ROW-->
           {% block aside %}
@@ -123,15 +123,15 @@
           <div class="content">
           <!--content here-->
           {% block content %}
-          {% endblock %}
+          {% endblock %}  
           <!--//content here-->
           </div>
         </div>
       </div>
 
      <!--To make top distance
-      <div class="row">
-        <div class="col-md-3 col-md-offset-2">
+      <div class="row">  
+        <div class="col-md-3 col-md-offset-2"> 
           <p class="hidden-xs hidden-sm"></p>
           <p class="visible-sm visible-xs">&nbsp;</p>
           <p>&nbsp;</p>
@@ -144,7 +144,7 @@
         <div class="navbar navbar-fixed-bottom" role="navigation">
           <div class="container-fluid">
             <div class="row">
-              <div class="col-md-3 col-md-offset-5 col-xs-12">
+              <div class="col-md-3 col-md-offset-5 col-xs-12">              
                 <div class="navbar-text text-center">
                   <p class="hodoor-footer-text text-center">&lt; &frasl;  <a href="#">Hodoor</a> - made with <i class="fa fa-heart love"></i> and  <i class="fa fa-coffee coffee"></i> &gt;</p>
                 </div>
@@ -161,7 +161,7 @@
         </div>
       </div>
 
-
+      
     </div>
   </body>
 </html>

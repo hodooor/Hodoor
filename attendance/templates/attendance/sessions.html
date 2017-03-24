@@ -7,8 +7,8 @@
   <div class="panel-heading clickable">
     <h3 class="panel-title">
       <i class="fa fa-calendar-check-o panel-icon" aria-hidden="true"></i>
-      Date selection
-    </h3>
+      Date selection 
+    </h3>  
   </div>
   <div class="panel-body">
       <div class="row">
@@ -18,7 +18,7 @@
          <div class="col-xs-8">
             <div class="btn-group btn-block ">
                 <button type="button" class="btn btn-default btn-block  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="print-year"></span>
+                <span class="print-year"></span> 
                 <span class="caret"></span>
                 </button>
                     <ul class="dropdown-menu">
@@ -62,8 +62,8 @@
   <div class="panel-heading clickable">
     <h3 class="panel-title">
       <i class="fa fa-info-circle panel-icon" aria-hidden="true"></i>
-      Overall
-    </h3>
+      Overall 
+    </h3>  
   </div>
   <div class="panel-body">
   	<table class="table table-condensed table-noborder">
@@ -92,7 +92,7 @@
         <td><span>{{ work_hours | floatformat:2}}</span></td>
         <td>h.</td>
       </tr>
-  	</table>
+  	</table> 
   </div>
 </div>
 
@@ -101,7 +101,7 @@
     <h3 class="panel-title">
       <i class="fa fa-clipboard panel-icon" aria-hidden="true"></i>
       Projects
-    </h3>
+    </h3>  
   </div>
   <div class="panel-body">
   <ul class="nav nav-tabs">
@@ -145,19 +145,19 @@
 </div>
 <table class="table table-striped table-hover table-bordered table-primary" id="sessions-table">
 <thead class="text-center">
-  <tr class="">
-    <th class="text-center">DATE</th>
-    <th class="text-center">PROJECT</th>
-    <th class="text-center">TIME SPEND</th>
-    <th class="text-center">DESCRIPTION</th>
-    <th class="text-center">DURATION</th>
-    <th class="text-center">BREAKS</th>
+  <tr class="upper">
+    <th class="text-center">Date</th>
+    <th class="text-center">Project</th>
+    <th class="text-center">Time spend</th>
+    <th class="text-center">Description</th>
+    <th class="text-center">Duration</th>
+    <th class="text-center">Breaks</th>
     <th class="text-center">
-      <span  data-toggle="tooltip" data-placement="top" title="Shows you NOT ASSIGNED TIME" class="fa fa-question-circle"></span> NAT
+      NAT <i  data-toggle="tooltip" data-placement="top" title="Shows you NOT ASSIGNED TIME" class="fa fa-question-circle"></i>
     </th>
-    <th class="text-center">STATUS</th>
+    <th class="text-center">Status</th>
     <th class="text-center">ID</th>
-    <th></th>
+    <th class="btn-fill"></th>
   </tr>
 </thead>
 <tbody>
@@ -166,7 +166,7 @@
     <tr>
      <td>{{session.get_date|date:'D d.m.'}}</td>
      <td>
-      <table class="table-condensed">
+      <table class="table-condensed multi-level-table">       
        {% for sep in session.projectseparation_set.all %}
        <tr><td>{{sep.project.name}}</td></tr>
        {% endfor %}
@@ -180,7 +180,7 @@
       </table>
      </td>
      <td>
-      <table class="table-condensed">
+      <table class="table-condensed multi-level-table">
        {% for sep in session.projectseparation_set.all %}
        <tr><td>{{sep.time_spend}}</td></tr>
        {% endfor %}
@@ -192,12 +192,12 @@
        </td>
        </tr>
       </table>
-     </td>
+     </td> 
      <td>
-      <table class="table-condensed">
+      <table class="table-condensed multi-level-table">
        {% for sep in session.projectseparation_set.all %}
        <tr><td>{{sep.description}}</td></tr>
-       {% endfor %}
+       {% endfor %} 
        <tr>
         <td>
            {% if session.get_not_assigned_duration%}
@@ -218,7 +218,9 @@
      <td class="not-assigned">{{session.get_not_assigned_duration}}</td>
      <td class="status">{{ session.is_session_complete |yesno:"Complete, Open" }}</td>
      <td>{{ session.id }}</td>
-     <td><a href="{% url 'session_detail' username=user.username id=session.id %}" type="button" class="btn btn-xs btn-info">Detail</a></td>
+     <td class="text-center btn-fill">
+      <a href="{% url 'session_detail' username=user.username id=session.id %}" type="button" class="btn btn-sm btn-info pull-right">Detail</a>
+     </td>
     </tr>
   </form>
   {% endfor %}
@@ -235,8 +237,8 @@ $(document).ready(function(){
 	var yearToPrint = '2015';
 	var url = window.location.href;
 	if(url.indexOf("2015") > -1) {
-		yearToPrint = '2015';
-	} else
+		yearToPrint = '2015';     
+	} else 
 	if(url.indexOf("2016") > -1){
 		yearToPrint = '2016';
 	} else {
@@ -288,16 +290,24 @@ $(document).ready(function(){
 	//disable legend above chart
 	Chart.defaults.global.legend.display = false;
 	/*Projects Doughnut Chart*/
-  //Generates charts from projects info
-  //set bgColors
+	//set bgColors
 	var bgColors = [];
 	bgColors = [
-		'#1f4371',
-		'#2962a9',
-		'#347bd5',
-		'#609ae1',
-		'#76a7e3',
-		'#00AEEF'
+		'#1f4371', 
+		'#2962a9', 
+		'#347bd5', 
+		'#609ae1', 
+		'#76a7e3', 
+		'#00AEEF',
+    '#93194F',
+    '#A94772',
+    '#89023E',
+    '#C7D9B7',
+    '#69B578',
+    '#255957',
+    '#A7C945',
+    '#B7D266',
+    '#FFDA38'
 	];
 	//get data from webpage
 	var ProjectKeys = [];
@@ -319,6 +329,22 @@ $(document).ready(function(){
     }]
   }
   });
+  /*refactoring*/
+  $(".status:contains('Complete')").each(function() {
+    $(this).addClass("green-possitive");
+  });
+  $(".status:contains('Open')").each(function() {
+    $(this).addClass("red-negative");
+  });
+  $(".not-assigned:contains('0:00:00')").each(function() {
+    $(this).addClass("green-possitive");
+    //$(this).text("No unasigned time");
+  });
+  $('.not-assigned:not(:contains("0:00:00"))').each(function() {
+    $(this).addClass("red-negative");
+  });
+
+//eof doc.ready
 });
 </script>
 {% endblock %}
