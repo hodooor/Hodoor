@@ -7,8 +7,8 @@
   <div class="panel-heading clickable">
     <h3 class="panel-title">
       <i class="fa fa-calendar-check-o panel-icon" aria-hidden="true"></i>
-      Date selection 
-    </h3>  
+      Date selection
+    </h3>
   </div>
   <div class="panel-body">
       <div class="row">
@@ -18,7 +18,7 @@
          <div class="col-xs-8">
             <div class="btn-group btn-block ">
                 <button type="button" class="btn btn-default btn-block  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="print-year"></span> 
+                <span class="print-year"></span>
                 <span class="caret"></span>
                 </button>
                     <ul class="dropdown-menu">
@@ -62,8 +62,8 @@
   <div class="panel-heading clickable">
     <h3 class="panel-title">
       <i class="fa fa-info-circle panel-icon" aria-hidden="true"></i>
-      Overall 
-    </h3>  
+      Overall
+    </h3>
   </div>
   <div class="panel-body">
   	<table class="table table-condensed table-noborder">
@@ -92,7 +92,7 @@
         <td><span>{{ work_hours | floatformat:2}}</span></td>
         <td>h.</td>
       </tr>
-  	</table> 
+  	</table>
   </div>
 </div>
 
@@ -101,7 +101,7 @@
     <h3 class="panel-title">
       <i class="fa fa-clipboard panel-icon" aria-hidden="true"></i>
       Projects
-    </h3>  
+    </h3>
   </div>
   <div class="panel-body">
   <ul class="nav nav-tabs">
@@ -166,7 +166,7 @@
     <tr>
      <td>{{session.get_date|date:'D d.m.'}}</td>
      <td>
-      <table class="table-condensed multi-level-table">       
+      <table class="table-condensed multi-level-table">
        {% for sep in session.projectseparation_set.all %}
        <tr><td>{{sep.project.name}}</td></tr>
        {% endfor %}
@@ -192,12 +192,12 @@
        </td>
        </tr>
       </table>
-     </td> 
+     </td>
      <td>
       <table class="table-condensed multi-level-table">
        {% for sep in session.projectseparation_set.all %}
        <tr><td>{{sep.description}}</td></tr>
-       {% endfor %} 
+       {% endfor %}
        <tr>
         <td>
            {% if session.get_not_assigned_duration%}
@@ -229,16 +229,16 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	//Make width of content larger in case of larger table
-	//$('.content').css('min-width','100vw');
+	$('.content').css('min-width','100vw');
 	//DataTales
 	//$('#sessions-table').DataTable();
 
 	/*Year value select display function*/
-	var yearToPrint = '2015';
+	var yearToPrint = 'Year';
 	var url = window.location.href;
 	if(url.indexOf("2015") > -1) {
-		yearToPrint = '2015';     
-	} else 
+		yearToPrint = '2015';
+	} else
 	if(url.indexOf("2016") > -1){
 		yearToPrint = '2016';
 	} else {
@@ -247,7 +247,7 @@ $(document).ready(function(){
 	$('.print-year').text(yearToPrint);
 
 	/*Month value select display function*/
-	var monthToPrint = 'December';
+	var monthToPrint = 'Month';
 	if(url.indexOf("/01") > -1) {
 		monthToPrint = "January";
 	} else
@@ -293,11 +293,11 @@ $(document).ready(function(){
 	//set bgColors
 	var bgColors = [];
 	bgColors = [
-		'#1f4371', 
-		'#2962a9', 
-		'#347bd5', 
-		'#609ae1', 
-		'#76a7e3', 
+		'#1f4371',
+		'#2962a9',
+		'#347bd5',
+		'#609ae1',
+		'#76a7e3',
 		'#00AEEF',
     '#93194F',
     '#A94772',

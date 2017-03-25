@@ -392,10 +392,10 @@ h4 {
 		}
 		tbody {
 			.ok-status {
-				background: $lightest-blue;
+				background: lighten($green, 50%);
 			}
-			.ok-status:hover {
-				background: $li-green;
+			.nok-status {
+				background: lighten($orange, 15%);
 			}
 		}
 	}
