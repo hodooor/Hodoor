@@ -153,7 +153,7 @@
     <th class="text-center">Duration</th>
     <th class="text-center">Breaks</th>
     <th class="text-center">
-      NAT <i  data-toggle="tooltip" data-placement="top" title="Shows you NOT ASSIGNED TIME" class="fa fa-question-circle"></i>
+      NAT <i  data-toggle="tooltip" data-placement="left" title="Shows you NOT ASSIGNED TIME" class="fa fa-question-circle"></i>
     </th>
     <th class="text-center">Status</th>
     <th class="text-center">ID</th>
@@ -207,7 +207,7 @@
      		</td>
        	<td>
           {% if session.get_not_assigned_duration%}
-           <input id="submit" type='submit' class="btn btn-xs btn-info" value ='Submit'/>
+           <input id="submit" type='submit' class="btn btn-sm btn-success" value ='Submit'/>
           {% endif %}
        	</td>
        </tr>
@@ -331,17 +331,29 @@ $(document).ready(function(){
   });
   /*refactoring*/
   $(".status:contains('Complete')").each(function() {
-    $(this).addClass("green-possitive");
+    $(this).addClass("green bold");
   });
   $(".status:contains('Open')").each(function() {
-    $(this).addClass("red-negative");
+    $(this).addClass("red bold");
   });
   $(".not-assigned:contains('0:00:00')").each(function() {
-    $(this).addClass("green-possitive");
+    $(this).addClass("green bold");
     //$(this).text("No unasigned time");
   });
   $('.not-assigned:not(:contains("0:00:00"))').each(function() {
-    $(this).addClass("red-negative");
+    $(this).addClass("red bold");
+  });
+
+  /*Edit Bootstrap default form-controls on this page*/
+  $('tbody > tr > td > select').each(function() {
+    $(this).addClass('form-control');
+  });
+  $('tbody > tr > td > input').each(function() {
+    $(this).addClass('form-control');
+  });
+  $('tbody > tr > td > textarea').each(function() {
+    $(this).addClass('form-control');
+    $(this).attr('rows', '1');
   });
 
 //eof doc.ready
