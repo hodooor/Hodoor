@@ -274,12 +274,12 @@
           {% endif %}  
           <div class="panel-footer text-center">
             <p class="last-swipe">Last Swipe:&nbsp;        
-              {% if last_swipe.swipe_type == 'IN' %}<i class="fa fa-sign-in" aria-hidden="true"></i>
-              {% elif last_swipe.swipe_type == 'OUT' %}<i class="fa fa-sign-out" aria-hidden="true"></i>
-              {% elif last_swipe.swipe_type == 'OBR' %}<i class="fa fa-coffee" aria-hidden="true"></i>
-              {% elif last_swipe.swipe_type == 'FBR' %}<i class="fa fa-clock-o" aria-hidden="true"></i>
-              {% elif last_swipe.swipe_type == 'OTR' %}<i class="fa fa-suitcase" aria-hidden="true"></i>
-              {% elif last_swipe.swipe_type == 'FTR' %}<i class="fa fa-share-square" aria-hidden="true"></i>
+              {% if last_swipe.swipe_type == 'IN' %}<i class="fa fa-sign-in" data-toggle="tooltip" title="You came to work" aria-hidden="true"></i>
+              {% elif last_swipe.swipe_type == 'OUT' %}<i class="fa fa-sign-out" data-toggle="tooltip" title="You leaved work" aria-hidden="true"></i>
+              {% elif last_swipe.swipe_type == 'OBR' %}<i class="fa fa-coffee" data-toggle="tooltip" title="You have had a break" aria-hidden="true"></i>
+              {% elif last_swipe.swipe_type == 'FBR' %}<i class="fa fa-clock-o" data-toggle="tooltip" title="You came from break back to work" aria-hidden="true"></i>
+              {% elif last_swipe.swipe_type == 'OTR' %}<i class="fa fa-suitcase" data-toggle="tooltip" title="You were traveling on work trip" aria-hidden="true"></i>
+              {% elif last_swipe.swipe_type == 'FTR' %}<i class="fa fa-share-square" data-toggle="tooltip" title="You came back from work trip" aria-hidden="true"></i>
               {% endif %}&nbsp;
               {{last_swipe.datetime | date:'D d.m.Y, H:i:s'}}      
             </p>
@@ -299,28 +299,28 @@
               {% csrf_token %}
               {% for swipe_type in next_swipes %}
                   {% if swipe_type == "IN" %}     
-                  <button type="submit" class="btn btn-primary" value="Incoming" name = "{{swipe_type}}">
+                  <button type="submit" class="btn btn-primary" value="Incoming" name = "{{swipe_type}}" data-toggle="tooltip" title="Incoming">
                     <i class="fa fa-sign-in fa-2x" aria-hidden="true"></i></br>Incoming
                   </button>
                   {% endif %}
                   {% if swipe_type == "OUT" %}
-                    <button type="submit" class="btn btn-primary" value="Outgoing" name = "{{swipe_type}}"><i class="fa fa-sign-out fa-2x" aria-hidden="true"></i></br>Outgoing
+                    <button type="submit" class="btn btn-primary" value="Outgoing" name = "{{swipe_type}}" data-toggle="tooltip" title="Outgoing"><i class="fa fa-sign-out fa-2x" aria-hidden="true"></i></br>Outgoing
                     </button>
                   {% endif %}
                   {% if swipe_type == "OBR" %}
-                    <button type="submit" class="btn btn-primary" value="Break" name = "{{swipe_type}}"><i class="fa fa-coffee fa-2x" aria-hidden="true"></i></br>Break
+                    <button type="submit" class="btn btn-primary" value="Break" name = "{{swipe_type}}" data-toggle="tooltip" title="Break"><i class="fa fa-coffee fa-2x" aria-hidden="true"></i></br>Break
                     </button>
                   {% endif %}
                   {% if swipe_type == "FBR" %}
-                    <button type="submit" class="btn btn-primary" value="Break Return" name = "{{swipe_type}}"><i class="fa fa-clock-o fa-2x" aria-hidden="true"></i></br>Break Return
+                    <button type="submit" class="btn btn-primary" value="Break Return" name = "{{swipe_type}}" data-toggle="tooltip" title="Break Return"><i class="fa fa-clock-o fa-2x" aria-hidden="true"></i></br>Break Return
                     </button>
                   {% endif %}
                   {% if swipe_type == "OTR" %}
-                    <button type="submit" class="btn btn-primary" value="Trip" name = "{{swipe_type}}"><i class="fa fa-suitcase fa-2x" aria-hidden="true"></i></br>Work Trip
+                    <button type="submit" class="btn btn-primary" value="Trip" name = "{{swipe_type}}" data-toggle="tooltip" title="Work Trip"><i class="fa fa-suitcase fa-2x" aria-hidden="true"></i></br>Work Trip
                     </button>
                   {% endif %}
                   {% if swipe_type == "FTR" %}
-                    <button type="submit" class="btn btn-primary" value="Trip Return" name = "{{swipe_type}}"><i class="fa fa-share-square fa-2x" aria-hidden="true"></i></br>Trip Return
+                    <button type="submit" class="btn btn-primary" value="Trip Return" name = "{{swipe_type}}" data-toggle="tooltip" title="Trip Return"><i class="fa fa-share-square fa-2x" aria-hidden="true"></i></br>Trip Return
                     </button>
                   {% endif %}
               {%endfor %}

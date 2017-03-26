@@ -34,13 +34,7 @@ $(document).ready(function() {
 	MaxTooltipNum = Math.max.apply(Math,TooltipsIds);
 
 	for(var n=0; n<=numOfTooltips; n++) {
-		$('#tooltip'+(n+MinTooltipNum)).attr('title', tooltipData[n+MinTooltipNum-1]);
-		console.log(TooltipsIds[n]);
-		console.log('#tooltip'+(n+MinTooltipNum));
-		console.log(tooltipData[n+MinTooltipNum-1]);		
+		$('#tooltip'+(n+MinTooltipNum)).attr('title', tooltipData[n+MinTooltipNum-1]);		
 	}
-	console.log(numOfTooltips);
-	console.log(MinTooltipNum);
-	console.log(MaxTooltipNum);
 
 });

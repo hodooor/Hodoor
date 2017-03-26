@@ -791,12 +791,16 @@ h4 {
 /*Styling BS tooltips*/
 /*----------------------------------------*/
 .tooltip {
+	width: auto;
 	.tooltip-inner {
 	background-color: #fff;
 	border: 1px solid #000;
 	font-size: 1.05em;
-	font-style: italic;
+	//font-style: italic;
+	text-align: center;
 	color: $gray;
+	opacity: 1;
+	width: auto;
 	}
 }
 /*----------------------------------------*/
@@ -867,10 +871,15 @@ input[type="color"]:focus,
   transition: $slow;
 }
 
+#id_project {
+	min-width: 80px;
+}
+
 #id_time_spend {
 	/*padding: 7px;*/
-	text-align: center;
+	//text-align: left;
 	border: 1px solid #ccc;
+	min-width: 85px;
 }
 
 /*Modal setups*/

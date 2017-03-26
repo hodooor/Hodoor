@@ -95,12 +95,12 @@
           <td>{{swipe.datetime| date:'H:i:s'}}</td>
           <td>
             <a href="#" data-toggle="tooltip" data-placement="right" title="
-                {% if swipe.swipe_type == 'IN' %} Coming to work
-                {% elif swipe.swipe_type == 'OUT' %} Leave work
-                {% elif swipe.swipe_type == 'OBR' %} Break
-                {% elif swipe.swipe_type == 'FBR' %} Coming from break back to work
-                {% elif swipe.swipe_type == 'OTR' %} On work trip
-                {% elif swipe.swipe_type == 'FTR' %} From work trip
+                {% if swipe.swipe_type == 'IN' %} You came to work
+                {% elif swipe.swipe_type == 'OUT' %} You leaved work
+                {% elif swipe.swipe_type == 'OBR' %} You have had a break
+                {% elif swipe.swipe_type == 'FBR' %} You came from break back to work
+                {% elif swipe.swipe_type == 'OTR' %} You were traveling on work trip
+                {% elif swipe.swipe_type == 'FTR' %} You came back from work trip
                 {% endif %}
             ">
             {% if swipe.swipe_type == 'IN' %}
