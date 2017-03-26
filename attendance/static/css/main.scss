@@ -1,6 +1,7 @@
 /*------------------------------------------
 Author: Patrik Predny,
-Title: My Custom SCSS style
+Title: My Custom SCSS style as Bootstrap 
+superstructure
 Year: 2017,
 License: MIT,
 ------------------------------------------*/
@@ -394,9 +395,11 @@ h4 {
 			}
 		}
 		tbody {
+			//used in admin template
 			.ok-status {
 				background: lighten($green, 50%);
 			}
+			//used in admin template
 			.nok-status {
 				background: lighten($orange, 15%);
 			}
@@ -1006,6 +1009,15 @@ input[type="color"]:focus,
 	.success {
 		font-weight: bold;
 		color: $success;
+		font-size: 1.2em;
+	}
+	.bold {
+		font-weight: bold;
+		font-size: 1.2em;
+	}
+	.gray {
+		font-weight: bold;
+		color: darken(#ccc, 5%);
 		font-size: 1.2em;
 	}
 	margin-bottom: 20px;

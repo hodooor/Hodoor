@@ -7,23 +7,28 @@ License: MIT,
 /*----------------------------------------*/
 /*Colors*/
 /*----------------------------------------*/
+//GREEN
 $green: #00AD1A;
 $li-green: #2EBB43;
+//BLUE
 $eledus-blue: #00AEEF;
 $darkest-blue: #1f4371;
 $darker-blue:#2962a9;
 $normal-blue:#347bd5;
 $li-blue:#609ae1;
 $lightest-blue:#76a7e3;
+$white-blue: lighten($lightest-blue, 5%);
+//BLUE-GREEN
+$aqua: #007071;
+//RED
 $red: #a02828;
+$orange:#E74121;
+//GRAY
 $gray: #38453d;
 $li-gray: #ddd;
-$aqua: #007071;
-$orange:#E74121;
-
+/*OWN COLOR FOR BS*/
+//MIXED
 $success: $green;
-//$danger: $red;
 $danger: lighten($orange, 0%);
 $primary: darken($eledus-blue, 5%);
 
-$white-blue: lighten($lightest-blue, 5%);
