@@ -20,7 +20,7 @@
         </h4>
       </div>
       <div class="modal-body">
-				<table class="table table-hover table-primary-inverse">
+				<table class="table table-primary-inverse">
 					<thead>
 					<tr class="upper">
 					  <th class="col-md-2">Parameter</th>
@@ -60,7 +60,10 @@
 							   	{% for f in form %}
 									<td>{{f}}</td>
 								{% endfor %}
-									<td></td>
+									<td>
+										<input id="PickerDate" type="text" name="PickerDate" class="form-control" />
+										<input id="PickerTime" type="text" name="PickerTime" class="form-control" />
+									</td>
 							</tr>
 						{% else %}
 							<tr>
@@ -94,6 +97,40 @@
 </div>
 <script type="text/javascript">
   $(document).ready(function(){
+  	
+  	/*Time and Date picker preparing data - script*/
+  	//Test if element exist
+  	if ($('#id_datetime').length){
+  		$('#id_datetime').addClass('form-control');
+  		//read data from python form
+	  	var PickerDateTime = $('#id_datetime').attr("value");
+	  	//split these two strings and put it into array
+	  	var PickerDateArray = PickerDateTime.split(' ');
+	  	//show these values in another inputs
+	  	$('#PickerDate').attr("value", PickerDateArray[0]);
+	  	$('#PickerTime').attr("value", PickerDateArray[1]);
+	  	//save values before change
+			$('#PickerDate').data("NewDate", PickerDateArray[0]);
+	  	$('#PickerTime').data("NewTime", PickerDateArray[1]);
+	  	
+	  	//on change val do this - DATE
+	  	$('#PickerDate').on("change", function(){
+	        $(this).data("NewDate", $(this).val()); //make it as new data
+	        //display it in python form 
+	        $('#id_datetime').val( $(this).data("NewDate")+" "+$('#PickerTime').data("NewTime") );
+	        console.log($(this).data("NewDate"));  
+	  	});
+	  	//on change val do this - TIME
+	  	$('#PickerTime').on("change", function(){
+	        $(this).data("NewTime", $(this).val()); //make it as new data
+	        //display it in python form 
+	        $('#id_datetime').val( $('#PickerDate').data("NewDate")+" "+$(this).data("NewTime") );
+	        console.log($(this).data("NewTime"));  
+	  	});
+
+	  	console.log("DATE: "+PickerDateArray[0]+"\nTIME: "+PickerDateArray[1]);
+		}
+
     $('#myModal').modal('show');
     /*Add class to see fontawesomes in swipe infos*/
     var swipeType = $('#swipeType').text();
