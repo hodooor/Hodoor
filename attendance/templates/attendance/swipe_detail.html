@@ -58,10 +58,12 @@
 							    <td data-field="key" class="key">Datetime</td>
 							    <form method='POST' action=''>{% csrf_token %}
 							   	{% for f in form %}
-									<td>{{f}}</td>
+									<td>
+										{{f}}
+										<input id="PickerDate" type="text" name="PickerDate" class="form-control" />
+									</td>
 								{% endfor %}
 									<td>
-										<input id="PickerDate" type="text" name="PickerDate" class="form-control" />
 										<input id="PickerTime" type="text" name="PickerTime" class="form-control" />
 									</td>
 							</tr>
@@ -69,7 +71,7 @@
 							<tr>
 							  <td data-field="key" class="key">Datetime</td>
 								<td>{{swipe.datetime | date:'D d.m.Y H:i:s'}}</td>
-								<td> Swipe was successfuly corrected <i class="fa fa-check"></i></td>
+								<td> <div class="badge badge-success"> Swipe was successfuly corrected <i class="fa fa-check"></i></div></td>
 							</tr>
 						{% endif %}
 					</tbody>
@@ -97,11 +99,22 @@
 </div>
 <script type="text/javascript">
   $(document).ready(function(){
+
+  	$('#PickerDate').datetimepicker({
+		  timepicker:false,
+		  format:'Y-m-d'
+		});
+
+  	$('#PickerTime').datetimepicker({
+		  datepicker:false,
+		  format:'H:i:s'
+		  //maxTime:
+		});
   	
-  	/*Time and Date picker preparing data - script*/
+  	//Time and Date picker preparing data - script
   	//Test if element exist
   	if ($('#id_datetime').length){
-  		$('#id_datetime').addClass('form-control');
+  		$('#id_datetime').addClass('form-control hidden');
   		//read data from python form
 	  	var PickerDateTime = $('#id_datetime').attr("value");
 	  	//split these two strings and put it into array
