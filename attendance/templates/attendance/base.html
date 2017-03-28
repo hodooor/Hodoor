@@ -58,6 +58,8 @@
     <!--dateTimePicker-->
     <script type="text/javascript" language="javascript" src="{% static 'modules/dateTimePicker/jquery.datetimepicker.full.min.js' %}"></script>
     <link rel="stylesheet" href="{% static 'modules/dateTimePicker/jquery.datetimepicker.min.css' %}">
+
+    <!---->
     {{form.media}}
   </head>
   <body class="">
@@ -167,5 +169,12 @@
 
       
     </div>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#myDropdown').data("width", $('#myDropdown').width());
+          console.log("Width is: "+$('#myDropdown').data("width")+'px');
+        $('#myDropdown > .dropdown-menu').css('width', $('#myDropdown').data("width") );  
+      });
+    </script>
   </body>
 </html>

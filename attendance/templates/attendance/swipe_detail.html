@@ -60,11 +60,20 @@
 							   	{% for f in form %}
 									<td>
 										{{f}}
-										<input id="PickerDate" type="text" name="PickerDate" class="form-control" />
+										<div class=" form-inline">
+											<div class="form-group">
+												<div class="input-group">
+													<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+													<input id="PickerDate" type="text" name="PickerDate" class="form-control text-center" />	
+												</div>
+											</div>
+										</div>
 									</td>
 								{% endfor %}
 									<td>
-										<input id="PickerTime" type="text" name="PickerTime" class="form-control" />
+										<div class="col-xs-6">
+											<input id="PickerTime" type="text" name="PickerTime" class="form-control text-center" />
+										</div>
 									</td>
 							</tr>
 						{% else %}
@@ -97,6 +106,7 @@
     </div><!--/modal-->
   </div>
 </div>
+
 <script type="text/javascript">
   $(document).ready(function(){
 
@@ -105,11 +115,10 @@
 		  format:'Y-m-d'
 		});
 
-  	$('#PickerTime').datetimepicker({
+  	/*$('#PickerTime').datetimepicker({
 		  datepicker:false,
-		  format:'H:i:s'
-		  //maxTime:
-		});
+		  format:'H:i:s',
+		});*/
   	
   	//Time and Date picker preparing data - script
   	//Test if element exist
