@@ -24,12 +24,15 @@
 </div>
 
 <div class="panel panel-default">
-  <div class="panel-heading clickable" id="working-users">
+  <div class="panel-heading clickable" id="working-users">    
     <h3 class="panel-title">
       <i class="fa fa-thumbs-o-up panel-icon" aria-hidden="true"></i>
       Working users
       <span class="badge pull-right">{{at_work_users | length}}</span>
-    </h3>     
+    </h3>
+    <div class="users-at-work-img" data-philter-grayscale="90">
+      <img id="users-on-break-img" class="panel-img" src="https://media.giphy.com/media/3oEdv1EbS2Ss1NvrUc/giphy.gif">
+    </div>       
   </div>
   <div class="panel-body">     
     <ul class="collabsible-list list-group " id="users-at-work">
@@ -46,7 +49,10 @@
       <i class="fa fa-coffee panel-icon" aria-hidden="true"></i>
       Users on break
       <span class="badge pull-right">{{on_break_users | length}}</span>
-    </h3>               
+    </h3>
+    <div class="users-at-work-img" data-philter-grayscale="90">
+      <img id="users-on-break-img" class="panel-img" src="https://media.giphy.com/media/129fSchexp3aPC/giphy.gif">
+    </div>          
   </div>
   <div class="panel-body">         
     <ul class="collabsible-list list-group" id="users-on-break">               
@@ -63,7 +69,10 @@
       <i class="fa fa-suitcase panel-icon" aria-hidden="true"></i>
       Users on trip
       <span class="badge pull-right">{{on_trip_users | length}}</span>
-    </h3>              
+    </h3> 
+    <div id="users-on-trip-img" data-philter-grayscale="90">
+      <img class="panel-img" src="https://media.giphy.com/media/xT0GqvRHBZqIRoSCly/giphy.gif">
+    </div>      
   </div>
   <div class="panel-body">        
     <ul class="collabsible-list list-group" id="users-on-trip">               
@@ -388,6 +397,25 @@
   </div><!--//row equal panels-->
 <script type="text/javascript">
 	$(document).ready(function () {
+  /*Image filtrations*/
+  new Philter({
+    //transitionTime: 0.3
+  });   
+
+  if($('#users-at-work li').length != 0) {
+    $('#users-at-work-img').removeAttr('data-philter-grayscale');
+  }
+  if($('#users-on-break li').length != 0) {
+     $('#users-on-break-img').removeAttr('data-philter-grayscale');
+  }
+  if($('#users-on-trip li').length != 0) {
+    $('#users-on-trip-img').removeAttr('data-philter-grayscale');
+  }
+  
+  //$('.panel-img').removeAttr('data-philter-grayscale',"90 0");
+  /*$('.panel-img').mouseover(function(){
+    $(this).attr('data-philter-grayscale',"90 90");
+  });*/
   /*Add aditional classes*/
   //If you should work less than 0 hours show it green else red
   if($('#you_should_work_hours').text() <= 0) {
