@@ -1076,7 +1076,7 @@ input[type="color"]:focus,
 /*My Dropdown sliding menu*/
 /*----------------------------------------*/
 #myDropdown {
-	.myDropBtn {
+	.myDropBtn { //toggle button for menu
 		background: $darker-blue;
 		border-top: 1px solid $darker-blue;
 		outline: 1px solid $darker-blue;
@@ -1091,13 +1091,13 @@ input[type="color"]:focus,
 		}
 	}
 	@include box-shadow(1px 1px 3px $darker-blue);
-	.menu-icon {
+	.menu-icon { //in toggle btn
 		font-size: 1.7em;
 		font-weight: normal;
 		margin-left: -5%;
 		margin-right: 10px;
 	}
-	.menu-text {
+	.menu-text { //in toggle btn
 		text-align: center;
 		padding-left: 1%;
 	  font-size: 1.2em;
@@ -1106,12 +1106,19 @@ input[type="color"]:focus,
 	  top: -2px;
 	  color: #fff;
 	}
+	//puts whole menu on top and
+	//fix the whitespaces on sides
 	margin: -15px;
 	margin-bottom: 15px;
 	.dropmenu-item-btn {
-  text-align: center;
-  width: 120px;
-  height: 120px;
+	  text-align: center;
+	  width: 130px;
+	  height: 130px;
+	}
+	.dropmenu-item-btn-wide {
+		text-align: center;
+		width: 90%;
+		height: 130px;
 	}
 	.disabled {
 		cursor: not-allowed;
@@ -1121,6 +1128,7 @@ input[type="color"]:focus,
 	}
 	.dropdown-menu {
 		padding: 5px;
+		padding-bottom: 15px;
 		top: 42px;
 		margin-top: -1px;
 		@include border-radius(0);
@@ -1130,8 +1138,9 @@ input[type="color"]:focus,
 		outline: none;
 		li {
 			margin: 0px;
+			margin-left: -2.5%;
 			padding: 0px;
-			.dropmenu-item-btn {
+			.dropmenu-item-btn, .dropmenu-item-btn-wide {
 		 	 	padding: 30px;
   			margin: 0px;
   			color: lighten($lightest-blue, 18%);

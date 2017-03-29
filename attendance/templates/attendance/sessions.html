@@ -231,9 +231,16 @@
 $(document).ready(function(){
 
 	//Make width of content larger in case of larger table
-	$('.content').css('min-width','100vw');
-	//DataTales
-	//$('#sessions-table').DataTable();
+  var Content = $('.content'); //save indetifier to var
+  var Table = $('#sessions-table'); //save indetifier to var
+
+  Table.data("width", $('#sessions-table').width()); //alocate dynamic var
+  Content.data("width", $('.content').width()); //alocate dynamic var
+    //console.log("Content width is: "+Content.data("width")+'px');
+    //console.log("table width is: "+Table.data("width")+'px');
+  if(Table.data("width") > Content.data("width")) { //compare widths
+    $('.content').css('min-width','100vw'); //if table is wider than content, make content bigger(width to vw)
+  }
 
 	/*Year value select display function*/
 	var yearToPrint = 'Year';

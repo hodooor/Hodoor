@@ -98,7 +98,7 @@ $(document).ready(function(){
     /* //__COLLABTIVE AND CLICKABLE FUNCTIONS__ */
 
     //Enable same height on panels
-    $('.equal-height-panels .panel').matchHeight();
+    //$('.equal-height-panels .panel').matchHeight();
 
     /* __Navigable links from h2 titles generator__*/
     //navigable-bar

@@ -66,7 +66,7 @@
     <div class="container-fluid"> 
       <div class="row">
         <div class="col-md-2">
-          <div class="aside">
+          <div class="aside hidden-print">
 					<!--aside content here-->
           <div class="row">
             <div class="col-md-12">
@@ -76,44 +76,44 @@
                 <ul class="dropdown-menu">
                 {% if user.is_authenticated %}
                 <!--List of items-->
-                    <li class="col-xs-6">
-                      <a class="dropmenu-item-btn" href="{% url 'home' %}">
-                        <i class="fa fa-id-card-o" aria-hidden="true"></i>
-                        Dashboard
-                      </a>
-                    </li>
-                    <li class="col-xs-6">
-                      <a class="dropmenu-item-btn" href="{% if user.is_staff %}{% url 'default_administrator'%}{% endif %}">
-                        <i class="fa fa-diamond" aria-hidden="true"></i>
-                        Admin
-                      </a>
-                    </li>
-                <!--Next row-->
-                    <li class="col-xs-6">
-                      <a class="dropmenu-item-btn" href="{% url 'swipes' user.username %}">
-                        <i class="fa fa-cube" aria-hidden="true"></i>
-                        Swipes
-                      </a>
-                    </li>
-                    <li class="col-xs-6">
-                      <a class="dropmenu-item-btn" href="{% url 'sessions' user.username %}">
-                        <i class="fa fa-cubes" aria-hidden="true"></i>
-                        Sessions
-                      </a>
-                    </li>
-                <!--Next row-->
-                    <li class="col-xs-6">
-                      <a class="dropmenu-item-btn disabled" href="#">
-                        <i class="fa fa-cogs" aria-hidden="true"></i>
-                        Settings
-                      </a>
-                    </li>
-                    <li class="col-xs-6">
-                      <a class="dropmenu-item-btn" href="{%url 'logout' %}">
-                        <i class="fa fa-power-off" aria-hidden="true"></i>
-                        Logout
-                      </a>
-                    </li>
+                  <li class="col-xs-6">
+                    <a class="dropmenu-item-btn" href="{% url 'home' %}">
+                      <i class="fa fa-id-card-o" aria-hidden="true"></i>
+                      Dashboard
+                    </a>
+                  </li>
+                  <li class="col-xs-6">
+                    <a class="dropmenu-item-btn" href="{% if user.is_staff %}{% url 'default_administrator'%}{% endif %}">
+                      <i class="fa fa-diamond" aria-hidden="true"></i>
+                      Admin
+                    </a>
+                  </li>
+              <!--Next row-->
+                  <li class="col-xs-6">
+                    <a class="dropmenu-item-btn" href="{% url 'swipes' user.username %}">
+                      <i class="fa fa-cube" aria-hidden="true"></i>
+                      Swipes
+                    </a>
+                  </li>
+                  <li class="col-xs-6">
+                    <a class="dropmenu-item-btn" href="{% url 'sessions' user.username %}">
+                      <i class="fa fa-cubes" aria-hidden="true"></i>
+                      Sessions
+                    </a>
+                  </li>
+              <!--Next row-->
+                  <!--<li class="col-xs-6">
+                    <a class="dropmenu-item-btn disabled" href="#">
+                      <i class="fa fa-cogs" aria-hidden="true"></i>
+                      Settings
+                    </a>
+                  </li>-->
+                  <li class="col-xs-12">
+                    <a class="dropmenu-item-btn-wide" href="{%url 'logout' %}">
+                      <i class="fa fa-power-off" aria-hidden="true"></i>
+                      Logout
+                    </a>
+                  </li>
                 <!--//List of items-->
                 {% endif %}
                 </ul>
@@ -145,7 +145,7 @@
       </div>
       <!--/-->
 
-      <div class="footer">
+      <div class="footer hidden-print">
         <div class="visible-xs visible-sm" style="min-height: 70px;"></div>
         <div class="navbar navbar-fixed-bottom" role="navigation">
           <div class="container-fluid">
@@ -172,7 +172,7 @@
     <script type="text/javascript">
       $(document).ready(function(){
         $('#myDropdown').data("width", $('#myDropdown').width());
-          console.log("Width is: "+$('#myDropdown').data("width")+'px');
+          //console.log("Width is: "+$('#myDropdown').data("width")+'px');
         $('#myDropdown > .dropdown-menu').css('width', $('#myDropdown').data("width") );  
       });
     </script>
