@@ -187,19 +187,9 @@
       /*Write default values into table under fields*/
       $('#default-date').text(defaultDate);
       $('#default-time').text(defaultTime);
+		}//eof if exist
 
-      /*$('#PickerTime').timepicker({
-        showSeconds: true,
-        showMeridian: false,
-        minuteStep:1,
-        secondStep:1,
-        showInputs: false,
-        defaultTime:$('#PickerTime').data("NewTime"),
-      });*/
-		}
-
-
-    setTimeout(function(){
+    setTimeout(function(){ //set timeout for modal to be shown -like delay 
         $('#myModal').modal('show');
       }, 1000);
     /*Add class to see fontawesomes in swipe infos*/
