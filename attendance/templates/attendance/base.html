@@ -10,7 +10,6 @@
     <link rel="icon" type="image/png" href="{% static 'img/favicon/favicon-16x16.png' %}" sizes="16x16">
     <link rel="manifest" href="{% static 'img/favicon/manifest.json' %}">
     <link rel="mask-icon" href="{% static 'img/favicon/safari-pinned-tab.svg' %}" color="#5bbad5">
-    <meta name="theme-color" content="#ffffff">
     <!--/favicons-->
 
     <meta charset="utf-8">
@@ -21,7 +20,8 @@
     <!--jQuery-->
     <script src="{% static 'js/jquery-3.1.1.min.js'%}"></script>
     <script src="{% static 'js/bootstrap.min.js'%}"></script>
-
+    <!--Moment.js-->
+    <script src="{% static 'modules/moment-js/moment.js'%}"></script>
     <!--ICONIC PACKS and FONTS-->
     <!--Font awesome-->
     <link href="{% static 'css/font-awesome.min.css'%}" rel="stylesheet">
@@ -47,17 +47,23 @@
     <!--Charts.JS module-->
     <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
     <!--PACE loader-->
-    <!--<script type="text/javascript" language="javascript" src="{% static 'js/pace.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'css/pace-loader.css' %}">-->
+    <script type="text/javascript" language="javascript" src="{% static 'js/pace.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/pace-loader.css' %}">
     <!--Data Tables-->
     <script type="text/javascript" language="javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
     <script type="text/javascript" language="javascript" src="{% static 'js/dataTables.bootstrap.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
     <!--jsPDF-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.debug.js"></script>
-    <!--dateTimePicker-->
+    <!--dateTimePicker
     <script type="text/javascript" language="javascript" src="{% static 'modules/dateTimePicker/jquery.datetimepicker.full.min.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'modules/dateTimePicker/jquery.datetimepicker.min.css' %}">
+    <link rel="stylesheet" href="{% static 'modules/dateTimePicker/jquery.datetimepicker.min.css' %}">-->
+    <!--bootstrap-TimePicker
+    <script type="text/javascript" language="javascript" src="{% static 'modules/bootstrap-timepicker/js/bootstrap-timepicker.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'modules/bootstrap-timepicker/css/bootstrap-timepicker.min.css' %}">-->
+    <!--bootstrap-DateTimePicker-->
+    <script type="text/javascript" language="javascript" src="{% static 'modules/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'modules/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css' %}">
     <!--PhilterJS - for images-->
     <script type="text/javascript" language="javascript" src="{% static 'modules/philter/philter.min.js' %}"></script>
     <!---->

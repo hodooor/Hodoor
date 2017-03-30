@@ -7,13 +7,12 @@ License: MIT,
 
 //CONFIGURATION VARIABLES
 var debug = 0; //set true or false, true enables debugging mode
-
+var thesis = 0; //presentation in school, disable some features
 //Functions
 var variable;
 function debugLog(variable) {
     if(debug) console.log(variable);
-    
-    return 0;
+  return 0;
 }
 
 /*
@@ -26,14 +25,14 @@ function getRandomColor() {
     return color;
 }*/
 
-$(document).ready(function(){ 
+$(document).ready(function(){
     var temp;
-    $('.ext-link').append(' <i class="fa fa-external-link" aria-hidden="true"></i>'); 
+    $('.ext-link').append(' <i class="fa fa-external-link" aria-hidden="true"></i>');
     /* __DROPDOWN MENUS__*/
       // Add slideDown animation to Bootstrap dropdown when expanding.
       $('#myDropdown').on('show.bs.dropdown', function() {
         $(this).find('.dropdown-menu').first().stop(true, true).slideDown('fast');
-      }); 
+      });
       // Add slideUp animation to Bootstrap dropdown when collapsing.
       $('#myDropdown').on('hide.bs.dropdown', function() {
         $(this).find('.dropdown-menu').first().stop(true, true).slideUp('fast');
@@ -83,12 +82,12 @@ $(document).ready(function(){
     }
     /*Hide/show panel-body on click on clickable class*/
     $(document).on('click', '.clickable', function(e){
-      if(!$(this).hasClass('panel-collapsed')) 
+      if(!$(this).hasClass('panel-collapsed'))
       {
           $(this).parents('.panel').find('.panel-body').slideUp('fast');
           $(this).addClass('panel-collapsed');
-      } 
-      else 
+      }
+      else
       {
           $(this).parents('.panel').find('.panel-body').slideDown('fast');
           $(this).removeClass('panel-collapsed');

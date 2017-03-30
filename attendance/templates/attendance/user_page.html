@@ -18,27 +18,27 @@
               <div class="badge {% if user.is_superuser %}badge-admin{% endif %}"><span class="userstatus">{% if user.is_superuser %}Admin{% else %}User{% endif %}</span></div>
             </div>
           </div>
-        </div>                     
+        </div>
       </div>
   </div>
 </div>
 
 <div class="panel panel-default">
-  <div class="panel-heading clickable" id="working-users">    
+  <div class="panel-heading clickable" id="working-users">
     <h3 class="panel-title">
       <i class="fa fa-thumbs-o-up panel-icon" aria-hidden="true"></i>
       Working users
       <span class="badge pull-right">{{at_work_users | length}}</span>
     </h3>
-    <div class="users-at-work-img" data-philter-grayscale="90">
-      <img id="users-on-break-img" class="panel-img" src="https://media.giphy.com/media/3oEdv1EbS2Ss1NvrUc/giphy.gif">
-    </div>       
+    <div id="users-at-work-img" data-philter-grayscale="100">
+      <img id="" class="panel-img" src="https://media.giphy.com/media/3oEdv1EbS2Ss1NvrUc/giphy.gif">
+    </div>
   </div>
-  <div class="panel-body">     
+  <div class="panel-body">
     <ul class="collabsible-list list-group " id="users-at-work">
     {% for user in at_work_users %}
 			<li><i class="fa fa-circle-o" aria-hidden="true"></i> {{user.first_name}} {{user.last_name}}</li>
-		{%endfor %}               
+		{%endfor %}
     </ul>
   </div>
 </div>
@@ -50,15 +50,15 @@
       Users on break
       <span class="badge pull-right">{{on_break_users | length}}</span>
     </h3>
-    <div class="users-at-work-img" data-philter-grayscale="90">
-      <img id="users-on-break-img" class="panel-img" src="https://media.giphy.com/media/129fSchexp3aPC/giphy.gif">
-    </div>          
+    <div id="users-on-break-img" data-philter-grayscale="100">
+      <img id="" class="panel-img" src="https://media.giphy.com/media/129fSchexp3aPC/giphy.gif">
+    </div>
   </div>
-  <div class="panel-body">         
-    <ul class="collabsible-list list-group" id="users-on-break">               
+  <div class="panel-body">
+    <ul class="collabsible-list list-group" id="users-on-break">
     {% for user in on_break_users %}
 			<li><i class="fa fa-circle-o" aria-hidden="true"></i> {{user.first_name}} {{user.last_name}}</li>
-		{%endfor %}  
+		{%endfor %}
     </ul>
   </div>
 </div>
@@ -69,16 +69,16 @@
       <i class="fa fa-suitcase panel-icon" aria-hidden="true"></i>
       Users on trip
       <span class="badge pull-right">{{on_trip_users | length}}</span>
-    </h3> 
-    <div id="users-on-trip-img" data-philter-grayscale="90">
-      <img class="panel-img" src="https://media.giphy.com/media/xT0GqvRHBZqIRoSCly/giphy.gif">
-    </div>      
+    </h3>
+    <div id="users-on-trip-img" data-philter-grayscale="100">
+      <img id="" class="panel-img" src="https://media.giphy.com/media/xT0GqvRHBZqIRoSCly/giphy.gif">
+    </div>
   </div>
-  <div class="panel-body">        
-    <ul class="collabsible-list list-group" id="users-on-trip">               
+  <div class="panel-body">
+    <ul class="collabsible-list list-group" id="users-on-trip">
     {% for user in on_trip_users %}
 			<li><i class="fa fa-circle-o" aria-hidden="true"></i> {{user.first_name}} {{user.last_name}}</li>
-		{%endfor %} 
+		{%endfor %}
     </ul>
   </div>
 </div>
@@ -121,13 +121,13 @@
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="this-month-quota" title="This month - Quota">
             <i class="fa fa-calendar-check-o" aria-hidden="true"></i> This month - quota <i id="tooltip1" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title=" "></i>
-          </h2> 
+          </h2>
         </div>
         <div class="panel-body">
           <p>Elapsed work days:</p>
           <div class="row">
             <div class="col-xs-1"><span class="pull-right">0</span></div>
-            <div class="col-xs-10">                      
+            <div class="col-xs-10">
               <div class="progress">
                 <div class="progress-bar primary" role="progressbar" aria-valuenow="{{ num_of_elapsed_workdays }}" aria-valuemin="0" aria-valuemax="{{ num_of_workdays }}" style="min-width: 2.2em;width: {{ num_of_elapsed_workdays }}em;">
               {{ num_of_elapsed_workdays }} d.
@@ -149,11 +149,11 @@
             <!--<li class="">You worked: <span class="primary">0 </span>hour(s)</li>-->
             <li class="">Current quota: <span class="bold">{{current_quota}}</span> hour(s)</li>
             <li class="">
-            Quota difference: 
+            Quota difference:
             {% if quota_difference >= 0 %}
             	<span class="success">+{{quota_difference | floatformat:2}}</span>
 						{% else %}
-            	<span class="danger">{{quota_difference | floatformat:2}}</span> 
+            	<span class="danger">{{quota_difference | floatformat:2}}</span>
             {% endif %}
             hour(s)
             </li>
@@ -166,21 +166,21 @@
               <label>Month Quota:</label>
               <i class="fa fa-smile-o alert-icon" aria-hidden="true"></i>
             </div>
-            <p>Sum of your work hours and unassigned hours is currently <strong>{{quota_difference_abs | floatformat:2}}</strong> 
+            <p>Sum of your work hours and unassigned hours is currently <strong>{{quota_difference_abs | floatformat:2}}</strong>
             hours over quota (<strong>{{current_quota}}</strong> hours).
             You should work <strong>{{ avg_work_hours_fullfill_qoota | floatformat:2}}</strong> hours per work day to fullfill quota until end of month.</p>
           </div>
-        {% else  %} 
+        {% else  %}
 					<div class="alert alert-danger" role="alert">
             <div class="title">
               <label>Month Quota:</label>
               <i class="fa fa-frown-o alert-icon" aria-hidden="true"></i>
             </div>
-            <p>Sum of your work hours and unassigned hours is currently <strong>{{quota_difference_abs | floatformat:2}}</strong> 
+            <p>Sum of your work hours and unassigned hours is currently <strong>{{quota_difference_abs | floatformat:2}}</strong>
             hours below quota (<strong>{{current_quota}}</strong> hours).
             You should work <strong>{{ avg_work_hours_fullfill_qoota | floatformat:2}}</strong> hours per work day to fullfill quota until end of month.</p>
           </div>
-        {% endif %}  
+        {% endif %}
         </div>
       </div><!--this month quota-->
 
@@ -212,7 +212,7 @@
       </div><!--/this mont work time-->
     </div><!--/second col-->
 
-    <div class="col-md-3"><!--third col-->            
+    <div class="col-md-3"><!--third col-->
       <div class="panel panel-primary"><!--this month assign time-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="this-month-assigned" title="This month - Assigned time">
@@ -223,7 +223,7 @@
           <ul class="dash-list-group">
             <li class="">Assigned Hours: <span class="primary" id="assigned-hours-graph">
             	<script type="text/javascript">
-            	$(document).ready(function(){ 	
+            	$(document).ready(function(){
             		var workHours = $('#total-work-hours').text();
             		var unassignedHours = $('#unassigned-hours-graph').text();
             		var assignedHours = workHours - unassignedHours;
@@ -273,16 +273,16 @@
           <h2 class="panel-title navigable" id="today-info" title="Today - info">
            <i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Today - info <i id="tooltip4" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Tooltip text"></i>
           </h2>
-        </div>          
+        </div>
         {% if last_swipe %}
           {% if current_session %}
-          <div class="panel-body">  
+          <div class="panel-body">
             <p>Current Session: <span class="bold big-text">ID {{ current_session.pk }}</span></p>
             <p>Current Session Work Hours: <span class="primary-text big-text">{{ current_session_work_hours | floatformat:2 }}</span> hour(s)</p>
           </div>
-          {% endif %}  
+          {% endif %}
           <div class="panel-footer text-center">
-            <p class="last-swipe">Last Swipe:&nbsp;        
+            <p class="last-swipe">Last Swipe:&nbsp;
               {% if last_swipe.swipe_type == 'IN' %}<i class="fa fa-sign-in" data-toggle="tooltip" title="You came to work" aria-hidden="true"></i>
               {% elif last_swipe.swipe_type == 'OUT' %}<i class="fa fa-sign-out" data-toggle="tooltip" title="You leaved work" aria-hidden="true"></i>
               {% elif last_swipe.swipe_type == 'OBR' %}<i class="fa fa-coffee" data-toggle="tooltip" title="You have had a break" aria-hidden="true"></i>
@@ -290,12 +290,12 @@
               {% elif last_swipe.swipe_type == 'OTR' %}<i class="fa fa-suitcase" data-toggle="tooltip" title="You were traveling on work trip" aria-hidden="true"></i>
               {% elif last_swipe.swipe_type == 'FTR' %}<i class="fa fa-share-square" data-toggle="tooltip" title="You came back from work trip" aria-hidden="true"></i>
               {% endif %}&nbsp;
-              {{last_swipe.datetime | date:'D d.m.Y, H:i:s'}}      
+              {{last_swipe.datetime | date:'D d.m.Y, H:i:s'}}
             </p>
-          </div> 
-          {%endif%}   
+          </div>
+          {%endif%}
       </div><!--/todays info panel-->
-      
+
       <div class="panel panel-default"><!--terminal emulator-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="terminal-emulator" title="Terminal Emulator">
@@ -307,7 +307,7 @@
             <form action="{% url 'user' username=user.username %}" method="post">
               {% csrf_token %}
               {% for swipe_type in next_swipes %}
-                  {% if swipe_type == "IN" %}     
+                  {% if swipe_type == "IN" %}
                   <button type="submit" class="btn btn-primary" value="Incoming" name = "{{swipe_type}}" data-toggle="tooltip" title="Incoming">
                     <i class="fa fa-sign-in fa-2x" aria-hidden="true"></i></br>Incoming
                   </button>
@@ -336,7 +336,7 @@
             </form>
           </div><!--//Terminal buttons-->
         </div>
-      </div><!--/terminal emulator-->  
+      </div><!--/terminal emulator-->
 
       <!--
       <div class="panel panel-info">
@@ -350,7 +350,7 @@
         </div>
       </div>
       -->
-      
+
       <div class="panel panel-default"><!--last month-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="last-month" title="Last month info">
@@ -367,7 +367,7 @@
           </ul>
         </div>
         <div class="panel-footer">
-        {% if not hours_unassigned_last_month %}  
+        {% if not hours_unassigned_last_month %}
           <div class="alert alert-success" role="alert">
             <div class="title">
               <label>Last Month:</label>
@@ -391,7 +391,7 @@
           </div>
         {% endif %}
         </div>
-      </div> <!--/last month-->              
+      </div> <!--/last month-->
     </div><!--fourth col-->
 
   </div><!--//row equal panels-->
@@ -400,7 +400,12 @@
   /*Image filtrations*/
   new Philter({
     //transitionTime: 0.3
-  });   
+  });
+  if(thesis) {
+    $('#users-at-work-img').hide();
+    $('#users-on-break-img').hide();
+    $('#users-on-trip-img').hide();
+  }
 
   if($('#users-at-work li').length != 0) {
     $('#users-at-work-img').removeAttr('data-philter-grayscale');
@@ -411,7 +416,7 @@
   if($('#users-on-trip li').length != 0) {
     $('#users-on-trip-img').removeAttr('data-philter-grayscale');
   }
-  
+
   //$('.panel-img').removeAttr('data-philter-grayscale',"90 0");
   /*$('.panel-img').mouseover(function(){
     $(this).attr('data-philter-grayscale',"90 90");
@@ -434,9 +439,9 @@
 			if((workHoursGraph == 0) && (notWorkHoursGraph == 0)) {
 				notWorkHoursGraph = 999.999;
 				workHoursGraph = "XXX";
-			  bgColorNwtime = "#f2f2f2";	
+			  bgColorNwtime = "#f2f2f2";
 			};
-		
+
 		//Graph rendering
 	  var ctx = $("#Work-Time-Chart");
 	  var dataWorkTime = [workHoursGraph, notWorkHoursGraph];
@@ -464,7 +469,7 @@
 			if((assignedHoursGraph == 0) && (unassignedWorkHoursGraph == 0)) {
 				unassignedWorkHoursGraph = 999.999;
 				assignedHoursGraph = "XXX";
-			  bgColorUatime = "#f2f2f2";	
+			  bgColorUatime = "#f2f2f2";
 			};
 
 	  var ctx = $("#Assigned-Time-Chart");
@@ -482,9 +487,7 @@
 	    }]
 	  }
 	  });
-	    
+
 	});
 </script>
 {% endblock %}
-
-
