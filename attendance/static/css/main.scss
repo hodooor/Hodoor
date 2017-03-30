@@ -1,6 +1,6 @@
 /*------------------------------------------
 Author: Patrik Predny,
-Title: My Custom SCSS style as Bootstrap 
+Title: My Custom SCSS style as Bootstrap
 superstructure
 Year: 2017,
 License: MIT,
@@ -1149,10 +1149,15 @@ input[type="color"]:focus,
 		outline: none;
 		li {
 			margin: 0px;
-			margin-left: -2.5%;
+			margin-left: 0%;
 			padding: 0px;
+			.dropmenu-item-btn {
+				padding-top: 25%;
+			}
+			.dropmenu-item-btn-wide {
+				padding-top: 12.5%;
+			}
 			.dropmenu-item-btn, .dropmenu-item-btn-wide {
-		 	 	padding: 30px;
   			margin: 0px;
   			color: lighten($lightest-blue, 18%);
 				&:hover, &:focus, &:active {
@@ -1162,14 +1167,20 @@ input[type="color"]:focus,
 			}
 			a {
 				position: relative;
-				left: 25px;
+				left: 3%;
 				transition: $fast;
 			}
 		}
 		i {
 		  display: block;
-			font-size: 24px;
+			font-size: 1.5em;
 			margin-bottom: 6px;
+		}
+		span {
+			//position: relative;
+			//left: -8%;
+			text-align: center;
+			font-size: 0.95em;
 		}
 	}
 }
