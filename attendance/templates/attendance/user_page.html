@@ -129,7 +129,7 @@
             <div class="col-xs-1"><span class="pull-right">0</span></div>
             <div class="col-xs-10">
               <div class="progress">
-                <div class="progress-bar primary" role="progressbar" aria-valuenow="{{ num_of_elapsed_workdays }}" aria-valuemin="0" aria-valuemax="{{ num_of_workdays }}" style="min-width: 2.2em;width: {{ num_of_elapsed_workdays }}em;">
+                <div id="Elapsed-Work-Days-Bar" class="progress-bar primary" role="progressbar" aria-valuenow="{{ num_of_elapsed_workdays }}" aria-valuemin="0" aria-valuemax="{{ num_of_workdays }}" style="min-width: 2.2em;width: {{ num_of_elapsed_workdays }}em;">
               {{ num_of_elapsed_workdays }} d.
                 </div>
               </div>
@@ -397,6 +397,12 @@
   </div><!--//row equal panels-->
 <script type="text/javascript">
 	$(document).ready(function () {
+  /*Update progress bar with actual width*/
+  var maxWorkDays = {{ num_of_workdays }};
+  var elapsedWorkDays = {{ num_of_elapsed_workdays }};
+  var printDaysUpdate = (elapsedWorkDays/maxWorkDays)*100;
+  $('#Elapsed-Work-Days-Bar').css('width', printDaysUpdate+'%');
+
   /*Image filtrations*/
   new Philter({
     //transitionTime: 0.3
