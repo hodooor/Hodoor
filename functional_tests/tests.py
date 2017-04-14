@@ -76,10 +76,10 @@ class FunctionalTest(StaticLiveServerTestCase):
                 )
         )
 
-    def wait_to_be_logged_in(self, username):
-        self.wait_for_element_with_id('id_logout')
-        navbar = self.browser.find_element_by_css_selector('.navbar')
-        self.assertIn(username, navbar.text)
+    def wait_to_be_logged_in(self, user):
+        self.wait_for_element_with_id('main-username')
+        userinfo = self.browser.find_element_by_class_name("userinfo")
+        self.assertIn(user.first_name, userinfo.text)
 
     def wait_to_be_logged_out(self, username):
         self.wait_for_element_with_id('id_login')
@@ -109,7 +109,7 @@ class LoginLogoutTest(FunctionalTest):
         self.browser.get(self.server_url)
 
         sessions_header = self.browser.find_element_by_tag_name("h1").text
-        self.wait_to_be_logged_in(user.username)
+        self.wait_to_be_logged_in(user)
         self.assertIn("profile", sessions_header)
         self.assertEqual(self.server_url + "/user/" + user.username+ "/",self.browser.current_url)
         self.browser.find_element_by_class_name('a-logout').click()
@@ -125,7 +125,7 @@ class LoginLogoutTest(FunctionalTest):
         self.create_pre_authenticated_session(user.username)
 
         self.browser.get(self.server_url)
-        self.wait_to_be_logged_in(user.username)
+        self.wait_to_be_logged_in(user)
 class LayoutStylingTest(FunctionalTest):
 
     def test_admin_layout_and_styling(self):
