@@ -1,6 +1,11 @@
 {% extends 'attendance/base.html' %}
 {% load static %}
 
+{% block scripts %}
+<!--Charts.JS module-->
+<script type="text/javascript" language="javascript" src="{% static 'modules/charts-js/Chart.bundle.min.js' %}"></script>
+{% endblock %}
+
 {% block title %}Sessions{% endblock %}
 {% block aside %}
 <div class="panel panel-default">

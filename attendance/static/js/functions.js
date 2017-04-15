@@ -11,9 +11,10 @@ var thesis = 0; //presentation in school, disable some features
 //Functions
 var variable;
 function debugLog(variable) {
-    if(debug) console.log(variable);
+    if(debug) console.debug(variable);
   return 0;
 }
+if(debug) console.info("You are in debugging mode");
 
 /*
 function getRandomColor() {
@@ -118,5 +119,15 @@ $(document).ready(function(){
         }, 'fast');
     });
 
+    $('#myDropdown').data("width", $('#myDropdown').width());
+      debugLog("Width is: "+$('#myDropdown').data("width")+'px');
+    $('#myDropdown > .dropdown-menu').css('width', $('#myDropdown').data("width") );
+    $('#myDropdown').data("btn-width", ($('#myDropdown').data("width")-20)/2);
+    $('#myDropdown').data("btn-width-wide", ($('#myDropdown').data("width")-20));
+    $('.dropmenu-item-btn').css('width',($('#myDropdown').data("btn-width")));
+    $('.dropmenu-item-btn').css('height',($('#myDropdown').data("btn-width")));
+    $('.dropmenu-item-btn-wide').css('width',($('#myDropdown').data("btn-width-wide")));
+    $('.dropmenu-item-btn-wide').css('height',($('#myDropdown').data("btn-width")));
+      debugLog($('#myDropdown').data("btn-width"));
 //end of document.ready()
 });

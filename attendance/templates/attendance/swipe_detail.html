@@ -1,6 +1,14 @@
 {% extends 'attendance/base.html' %}
 {% load static %}
 
+{% block scripts %}
+<!--Moment.js: used for timepicker-->
+<script src="{% static 'modules/moment-js/moment.js'%}"></script>
+<!--bootstrap-DateTimePicker-->
+<script type="text/javascript" language="javascript" src="{% static 'modules/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'modules/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css' %}">
+{% endblock %}
+
 {% block title %}Swipe detail{% endblock %}
 {% block aside %}
 
@@ -189,7 +197,7 @@
       $('#default-time').text(defaultTime);
 		}//eof if exist
 
-    setTimeout(function(){ //set timeout for modal to be shown -like delay 
+    setTimeout(function(){ //set timeout for modal to be shown -like delay
         $('#myModal').modal('show');
       }, 1000);
     /*Add class to see fontawesomes in swipe infos*/

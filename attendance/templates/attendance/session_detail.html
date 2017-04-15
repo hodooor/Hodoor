@@ -2,8 +2,13 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
-{% block title %}Session detail{% endblock %}
 
+{% block scripts %}
+<!--My tooltips-->
+<script type="text/javascript" language="javascript" src="{% static 'js/tooltips.js' %}"></script>
+{% endblock %}
+
+{% block title %}Session detail{% endblock %}
 {% block aside %}
 <div class="panel panel-default">
   <div class="panel-heading clickable">

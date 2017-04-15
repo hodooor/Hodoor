@@ -4,7 +4,7 @@
 
 <head>
     <title>Labelling Data Points</title>
-    <script src="../dist/Chart.bundle.js"></script>
+    <script src="../Chart.bundle.js"></script>
     <script src="utils.js"></script>
     <style>
     canvas {
@@ -30,12 +30,12 @@
                 backgroundColor: color(window.chartColors.red).alpha(0.2).rgbString(),
                 borderColor: window.chartColors.red,
                 data: [
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
                     randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
+                    randomScalingFactor(), 
                     randomScalingFactor()
                 ]
             }, {
@@ -44,12 +44,12 @@
                 backgroundColor: color(window.chartColors.blue).alpha(0.2).rgbString(),
                 borderColor: window.chartColors.blue,
                 data: [
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
                     randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
+                    randomScalingFactor(), 
                     randomScalingFactor()
                 ]
             }, {
@@ -58,12 +58,12 @@
                 backgroundColor: color(window.chartColors.green).alpha(0.2).rgbString(),
                 borderColor: window.chartColors.green,
                 data: [
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
+                    randomScalingFactor(), 
                     randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
+                    randomScalingFactor(), 
                     randomScalingFactor()
                 ]
             }]
@@ -71,12 +71,12 @@
 
         // Define a plugin to provide data labels
         Chart.plugins.register({
-            afterDatasetsDraw: function(chart, easing) {
+            afterDatasetsDraw: function(chartInstance, easing) {
                 // To only draw at the end of animation, check for easing === 1
-                var ctx = chart.ctx;
+                var ctx = chartInstance.chart.ctx;
 
-                chart.data.datasets.forEach(function (dataset, i) {
-                    var meta = chart.getDatasetMeta(i);
+                chartInstance.data.datasets.forEach(function (dataset, i) {
+                    var meta = chartInstance.getDatasetMeta(i);
                     if (!meta.hidden) {
                         meta.data.forEach(function(element, index) {
                             // Draw the text in black, with the specified font
@@ -120,7 +120,7 @@
 
         document.getElementById('randomizeData').addEventListener('click', function() {
             barChartData.datasets.forEach(function(dataset) {
-                dataset.data = dataset.data.map(function() {
+                dataset.data = dataset.data.map(function() { 
                     return randomScalingFactor();
                 })
             });

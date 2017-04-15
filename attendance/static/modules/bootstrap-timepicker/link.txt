@@ -1,1 +1,0 @@
-http://jdewit.github.io/bootstrap-timepicker/

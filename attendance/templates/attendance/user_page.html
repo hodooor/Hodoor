@@ -1,6 +1,14 @@
 {% extends 'attendance/base.html' %}
 {% load static %}
 
+{% block scripts %}
+<!--Charts.JS module-->
+<script type="text/javascript" language="javascript" src="{% static 'modules/charts-js/Chart.bundle.min.js' %}"></script>
+<!--My tooltips-->
+<script type="text/javascript" language="javascript" src="{% static 'js/tooltips.js' %}"></script>
+<!--PhilterJS - for images-->
+<script type="text/javascript" language="javascript" src="{% static 'modules/philter/philter.min.js' %}"></script>
+{% endblock %}
 {% block title %}Dashboard{% endblock %}
 {% block aside %}
 <div class="panel panel-simple">
@@ -437,7 +445,7 @@
 
 	/*Work Time Doughnut Chart*/
 		//set bgColors
-		var bgColorWtime = "#009bd7";
+		var bgColorWtime = "#609ae1";
 		var bgColorNwtime = "#cccccc";
 		//get data from webpage
 		var workHoursGraph = $('#work-hours-graph').text();
@@ -467,8 +475,8 @@
 
 	/*Assigned Time Doughnut Chart*/
 		//set bgColors
-		var bgColorAtime = "#009bd7";
-		var bgColorUatime = "#E74121";
+		var bgColorAtime = "#609ae1";
+		var bgColorUatime = "#ff836d";
 		//get data from webpage
 		var assignedHoursGraph = $('#assigned-hours-graph').text();
 		var unassignedWorkHoursGraph = $('#unassigned-hours-graph').text();

@@ -7,6 +7,9 @@ License: MIT,
 /*----------------------------------------*/
 /*Colors*/
 /*----------------------------------------*/
+//BASIC
+$white: #fff;
+$black: #000;
 //GREEN
 $green: #00AD1A;
 $li-green: #2EBB43;
@@ -23,6 +26,7 @@ $aqua: #007071;
 //RED
 $red: #a02828;
 $orange:#E74121;
+$li-orange: #ff836d;
 //GRAY
 $gray: #38453d;
 $li-gray: #ddd;
@@ -31,4 +35,3 @@ $li-gray: #ddd;
 $success: $green;
 $danger: lighten($orange, 0%);
 $primary: darken($eledus-blue, 5%);
-

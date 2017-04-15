@@ -344,13 +344,14 @@ h4 {
 		border: none;
 		font-family: arial;
 		margin-bottom: 4px;
-		background: none;
+		//background: none;
 		@include border-radius(0);
 			.panel-title {
 				margin: 0px;
 				font-size: 1.1em;
-				font-weight: 600;
-				text-transform: uppercase;
+				//font-weight: 600;
+				font-weight: 400;
+				//text-transform: uppercase;
 			}
 			.question {
 				color: darken($li-gray, 15%);
@@ -380,15 +381,19 @@ h4 {
 	.panel-primary {
 		border: none;
 		.panel-heading {
+			background: $primary;
 			.panel-title {
-				color: $primary;
+				//color: $primary;
+				color: $white;
 			}
 		}
 	}
 	.panel-default {
 		.panel-heading {
+			background: $gray;
 			.panel-title {
-				color: $gray;
+				//color: $gray;
+				color: $white;
 			}
 		}
 	}
@@ -712,12 +717,12 @@ h4 {
 .alert-danger {
 	background: $danger;
 	color: lighten($danger, 35%);
-	outline: $danger 1px solid;
+	outline: $danger 0px solid;
 }
 .alert-success {
 	background: darken($primary, 2%);
 	color: lighten($primary, 40%);
-	outline: $primary 1px solid;
+	outline: $primary 0px solid;
 }
 /*----------------------------------------*/
 .footer {
