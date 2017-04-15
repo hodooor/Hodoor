@@ -1,6 +1,13 @@
 {% extends 'attendance/base.html' %}
 {% load static %}
 
+{% block scripts %}
+<!--Data Tables-->
+<script type="text/javascript" language="javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript" language="javascript" src="{% static 'js/dataTables.bootstrap.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+{% endblock %}
+
 {% block title %}Administrator's section{% endblock %}
 {% block aside %}
 <div class="panel panel-default">
