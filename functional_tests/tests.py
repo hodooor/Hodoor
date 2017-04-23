@@ -100,7 +100,7 @@ class FunctionalTest(StaticLiveServerTestCase):
 class LoginLogoutTest(FunctionalTest):
     def test_login_and_logut_users(self):
 
-        user = UserFactory.build()
+        user = UserFactory.create()
         self.browser.get(self.server_url)
 
         self.create_pre_authenticated_session(user.username)
@@ -108,14 +108,14 @@ class LoginLogoutTest(FunctionalTest):
 
         sessions_header = self.browser.find_element_by_tag_name("h1").text
         self.wait_to_be_logged_in(user)
-        self.assertIn("profile", sessions_header)
+        self.assertIn("Dashboard", sessions_header)
         self.assertEqual(self.server_url + "/user/" + user.username+ "/",self.browser.current_url)
         self.browser.find_element_by_class_name('a-logout').click()
         self.wait_to_be_logged_out(user.username)
         self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
     def test_new_pre_auth(self):
-        user = UserFactory.build()
+        user = UserFactory.create()
         self.browser.get(self.server_url)
         self.wait_to_be_logged_out(user.username)
 
