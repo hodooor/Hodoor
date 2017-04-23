@@ -83,9 +83,7 @@ class FunctionalTest(StaticLiveServerTestCase):
 
     def wait_to_be_logged_out(self, username):
         self.wait_for_element_with_id('id_login')
-        self.assertIn("Login",
-                self.browser.find_element_by_tag_name("body").text
-        )
+        self.assertIn("login", self.browser.find_element_by_tag_name("body").text)
 
     def create_pre_authenticated_session(self, username):
         if self.against_staging:
@@ -121,7 +119,6 @@ class LoginLogoutTest(FunctionalTest):
         self.browser.get(self.server_url)
         self.wait_to_be_logged_out(user.username)
 
-        print(user.username)
         self.create_pre_authenticated_session(user.username)
 
         self.browser.get(self.server_url)
