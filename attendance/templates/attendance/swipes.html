@@ -1,26 +1,59 @@
 {% extends 'attendance/base.html' %}
 {% load static %}
-{% block header_text %}
-Swipe records
-{% endblock %}
 
-{% block content-top %}
-<div class="col-md-2 col-md-offset-10">
-  <button id="showAll" type="button" class="btn btn-primary pull-right" data-toggle="tooltip" data-placement="bottom" data-original-title="Click to show all of swipes">
-   <span id="showAllSpan" class="glyphicon glyphicon-chevron-down"></span> View All Swipes
-  </button>
+{% block scripts %}
+<!--Data Tables-->
+<script type="text/javascript" language="javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript" language="javascript" src="{% static 'js/dataTables.bootstrap.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+{% endblock %}
+{% block title %}Swipes{% endblock %}
+{% block aside %}
+<div class="panel panel-default">
+  <div class="panel-heading clickable">
+    <h3 class="panel-title">
+      <i class="fa fa-question panel-icon" aria-hidden="true"></i>
+      Helpers
+    </h3>
+  </div>
+  <div class="panel-body">
+  	<p class="text-justify">Table in main content is sortable. You can sort any column you need, by clicking on sorting icons. Description of icons is shown in table below.</p>
+  	<table class="table table-condensed table-primary-inverse">
+  		<thead>
+  			<th>Icon</th>
+  			<th>Description</th>
+  		</thead>
+			<tr>
+				<td><i class="fa fa-exchange fa-rotate-90" aria-hidden="true"></i></td>
+				<td>Sorting enabled</td>
+			</tr>
+			<tr>
+				<td><i class="fa fa-sort-amount-asc" aria-hidden="true"></i></td>
+				<td>Ascend sorting</td>
+			</tr>
+			<tr>
+				<td><i class="fa fa-sort-amount-desc" aria-hidden="true"></i></td>
+				<td>Descend sorting</td>
+			</tr>
+		</table>
+  </div>
 </div>
-<table class="table table-striped table-hover table-responsive">
+{% endblock %}
+{% block content %}
+<div class="page-header">
+	<h1><i class="fa fa-cube"></i> Swipes - <small>all of swipe informations are here</small></h1>
+</div>
+<table class="table table-striped table-hover table-bordered table-responsive table-primary" id="swipes-table">
 <thead>
-  <tr>
-    <th>DATE</th>
-    <th>TIME</th>
-    <th>TYPE</th>
-    <th>SESSION</th>
-    <th>SOURCE</th>
-  	<th>CORRECTION OF SWIPE</th>
-  	<th>ID</th>
-  	<th class="text-center"></th>
+  <tr class="upper">
+    <th>Date</th>
+    <th>Time</th>
+    <th>Type</th>
+    <th>Session</th>
+    <th>Source</th>
+  	<th>Swipe correction</th>
+  	<th>Id</th>
+  	<th class="text-center no-sort btn-fill"></th>
   </tr>
 </thead>
 <tbody>
@@ -28,10 +61,11 @@ Swipe records
 	{% for swipe in swipes %}
 
 	<tr class="hiddenRow">
-		<td>{{swipe.datetime| date:'D d.m.Y'}}</td>
+		<td>{{swipe.datetime| date:'Y-m-d | D'}}</td>
 		<td>{{swipe.datetime| date:'H:i:s'}}</td>
-		<td>
-			<a href="#" data-toggle="tooltip" data-placement="right" title="
+		<td class="text-center">
+			<span data-toggle="tooltip" data-placement="right"
+			title="
 					{% if swipe.swipe_type == 'IN' %} Coming to work
 					{% elif swipe.swipe_type == 'OUT' %} Leave work
 					{% elif swipe.swipe_type == 'OBR' %} Break
@@ -40,25 +74,54 @@ Swipe records
 					{% elif swipe.swipe_type == 'FTR' %} From work trip
 					{% endif %}
 			">
-				<img src="
-					{% if swipe.swipe_type == 'IN' %}{% static "img/incom.svg" %}
-					{% elif swipe.swipe_type == 'OUT' %}{% static "img/outgo.svg" %}
-					{% elif swipe.swipe_type == 'OBR' %}{% static "img/break.svg" %}
-					{% elif swipe.swipe_type == 'FBR' %}{% static "img/break_ret.svg" %}
-					{% elif swipe.swipe_type == 'OTR' %}{% static "img/trip.svg" %}
-					{% elif swipe.swipe_type == 'FTR' %}{% static "img/trip_ret.svg" %}
-					{% endif %}
-				" />
-			</a>
+			{% if swipe.swipe_type == 'IN' %}
+				<i class="fa fa-sign-in swipe-int-icon" aria-hidden="true"></i>
+			{% elif swipe.swipe_type == 'OUT' %}
+				<i class="fa fa-sign-out swipe-int-icon" aria-hidden="true"></i>
+			{% elif swipe.swipe_type == 'OBR' %}
+				<i class="fa fa-coffee swipe-int-icon" aria-hidden="true"></i>
+			{% elif swipe.swipe_type == 'FBR' %}
+				<i class="fa fa-clock-o swipe-int-icon" aria-hidden="true"></i>
+			{% elif swipe.swipe_type == 'OTR' %}
+				<i class="fa fa-suitcase swipe-int-icon" aria-hidden="true"></i>
+			{% elif swipe.swipe_type == 'FTR' %}
+				<i class="fa fa-share-square swipe-int-icon" aria-hidden="true"></i>
+			{% endif %}
+
+			</span>
 		</td>
 		<td><a href="{% url 'session_detail' username=user.username id=swipe.session.id %}">{{swipe.session}}</a></td>
 		<td></td>
 		<td>{% if swipe.correction_of_swipe%}<a href="{% url 'swipe_detail' username=user.username id=swipe.correction_of_swipe.id %}">{{ swipe.correction_of_swipe.id}}</a>{% endif %}</td>
 		<td>{{swipe.id}}</td>
-		<td class="text-center"><a href="{% url 'swipe_detail' username=user.username id=swipe.id %}" class="btn btn-info">Detail</a></td>
+		<td class="text-center btn-fill">
+			<a href="{% url 'swipe_detail' username=user.username id=swipe.id %}" class="btn btn-sm btn-info">
+			Detail</a>
+		</td>
 	</tr>
 
 	{% endfor %}
 </tbody>
 </table>
+<div class="visible-md visible-lg">
+	<p>&nbsp;</p>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#swipes-table').DataTable({
+    "aaSorting": [
+    	[0,'desc']
+  	],
+    "columnDefs": [{
+    	targets: 'no-sort',
+    	orderable: false
+    }],
+    "lengthMenu": [
+    	[15, 50, 100, -1],
+    	[15, 50, 100, "All"]
+    ]
+  }); //dataTables
+
+});
+</script>
 {% endblock %}

@@ -136,7 +136,7 @@ def user(request, username):
     quota_difference = hours_work_this_month + unassigned_closed_session_hours - current_quota
     quota_difference_abs = abs(quota_difference)
     avg_work_hours_fullfill_quota = (hours_quota - unassigned_closed_session_hours - hours_work_this_month) / (num_of_workdays - num_of_elapsed_workdays) 
-
+    
     context = {
         "user": u,
         "session_list": s,
@@ -368,7 +368,7 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
         else:
             user["looks_ok"] = False
 
-    locale.setlocale(locale.LC_ALL, "cs_CZ.utf-8")
+    locale.setlocale(locale.LC_ALL, "en_US.utf8")
 
     context = {
             "month": month,

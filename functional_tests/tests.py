@@ -76,16 +76,14 @@ class FunctionalTest(StaticLiveServerTestCase):
                 )
         )
 
-    def wait_to_be_logged_in(self, username):
-        self.wait_for_element_with_id('id_logout')
-        navbar = self.browser.find_element_by_css_selector('.navbar')
-        self.assertIn(username, navbar.text)
+    def wait_to_be_logged_in(self, user):
+        self.wait_for_element_with_id('main-username')
+        userinfo = self.browser.find_element_by_class_name("userinfo")
+        self.assertIn(user.first_name, userinfo.text)
 
     def wait_to_be_logged_out(self, username):
         self.wait_for_element_with_id('id_login')
-        self.assertIn("Login",
-                self.browser.find_element_by_tag_name("body").text
-        )
+        self.assertIn("login", self.browser.find_element_by_tag_name("body").text)
 
     def create_pre_authenticated_session(self, username):
         if self.against_staging:
@@ -100,32 +98,34 @@ class FunctionalTest(StaticLiveServerTestCase):
         ))
 
 class LoginLogoutTest(FunctionalTest):
-    def test_login_and_logut_users(self):
+    def test_login_and_logout_users(self):
 
-        user = UserFactory.build()
+        user = UserFactory.create()
         self.browser.get(self.server_url)
 
         self.create_pre_authenticated_session(user.username)
         self.browser.get(self.server_url)
 
         sessions_header = self.browser.find_element_by_tag_name("h1").text
-        self.wait_to_be_logged_in(user.username)
-        self.assertIn("profile", sessions_header)
+        self.wait_to_be_logged_in(user)
+        self.assertIn("Dashboard", sessions_header)
         self.assertEqual(self.server_url + "/user/" + user.username+ "/",self.browser.current_url)
-        self.browser.find_element_by_class_name('a-logout').click()
+
+        self.browser.find_element_by_class_name('menu-icon').click()
+        self.browser.find_element_by_class_name('fa-power-off').click()
+
         self.wait_to_be_logged_out(user.username)
         self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
     def test_new_pre_auth(self):
-        user = UserFactory.build()
+        user = UserFactory.create()
         self.browser.get(self.server_url)
         self.wait_to_be_logged_out(user.username)
 
-        print(user.username)
         self.create_pre_authenticated_session(user.username)
 
         self.browser.get(self.server_url)
-        self.wait_to_be_logged_in(user.username)
+        self.wait_to_be_logged_in(user)
 class LayoutStylingTest(FunctionalTest):
 
     def test_admin_layout_and_styling(self):
@@ -141,64 +141,71 @@ class PageNavigationTest(FunctionalTest):
     def test_click_on_logo_returns_home_page(self):
 
         user = UserFactory.create()
-
-        #logged out - just refreshing page
         self.browser.get(self.server_url)
-        self.browser.find_element_by_class_name('navbar-brand').click()
-        self.assertEqual(
-                self.server_url + "/login/?next=/",
-                self.browser.current_url
-        )
 
-        #login - logo taking us to profile page
         self.login_by_form(user.username,"password", self.browser)
         self.assertEqual(
                 self.server_url + "/user/" + user.username + "/",
                 self.browser.current_url
         )
-        self.browser.find_element_by_class_name('navbar-brand').click()
+
+        self.browser.find_element_by_class_name('menu-icon').click()
+        self.browser.find_element_by_class_name('fa-id-card-o').click()
         self.assertEqual(
                 self.server_url + "/user/" + user.username + "/",
                 self.browser.current_url
         )
-        self.browser.find_element_by_class_name('a-logout').click()
+        self.browser.find_element_by_class_name('menu-icon').click()
+        self.browser.find_element_by_class_name('fa-power-off').click()
         self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
     def test_click_on_logout(self):
 
         user = UserFactory.create()
+        self.browser.get(self.server_url)
         self.login_by_form(user.username,"password", self.browser)
         self.assertEqual(
                 self.server_url + "/user/" + user.username + "/",
                 self.browser.current_url
         )
-        self.browser.find_element_by_class_name('a-logout').click()
+        self.browser.find_element_by_class_name('menu-icon').click()
+        self.browser.find_element_by_class_name('fa-power-off').click()
         self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
 
     def test_click_on_sessions(self):
         user = UserFactory.create()
+        self.browser.get(self.server_url)
         self.login_by_form(user.username,"password", self.browser)
-        self.browser.find_element_by_class_name('a-sessions').click()
+
+        self.browser.find_element_by_class_name('menu-icon').click()
+        self.browser.find_element_by_class_name('fa-cubes').click()
 
         self.assertIn(
                 self.server_url + "/sessions/" + user.username + "/",
                 self.browser.current_url
         )
-        self.browser.find_element_by_class_name('a-logout').click()
+
+        self.browser.find_element_by_class_name('menu-icon').click()
+        self.browser.find_element_by_class_name('fa-power-off').click()
         self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
     def test_click_on_swipes(self):
         user = UserFactory.create()
+        self.browser.get(self.server_url)
 
         self.login_by_form(user.username,"password", self.browser)
-        self.browser.find_element_by_class_name('a-swipes').click()
+
+        self.browser.find_element_by_class_name('menu-icon').click()
+        self.browser.find_element_by_class_name('fa-cube').click()
 
         self.assertEqual(
                 self.server_url + "/swipes/" + user.username + "/",
                 self.browser.current_url
         )
-        self.browser.find_element_by_class_name('a-logout').click()
+
+        self.browser.find_element_by_class_name('menu-icon').click()
+        self.browser.find_element_by_class_name('fa-power-off').click()
         self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
 

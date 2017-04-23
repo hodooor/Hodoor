@@ -18,10 +18,5 @@ class Command(BaseCommand):
 
 def create_pre_authenticated_session(username):
     client = Client()
-
-    user = UserFactory(username=username, password="password")
-
-
-    client.login(username = user.username, password="password")
-
+    client.force_login(User.objects.get(username=username))
     return client.session.session_key

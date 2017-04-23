@@ -1,71 +1,230 @@
 {% extends 'attendance/base.html' %}
-{% load crispy_forms_tags %}
+{% load static %}
 
-{% block header_text %}
-Swipe {{ id }} - detail
+{% block scripts %}
+<!--Moment.js: used for timepicker-->
+<script src="{% static 'modules/moment-js/moment.js'%}"></script>
+<!--bootstrap-DateTimePicker-->
+<script type="text/javascript" language="javascript" src="{% static 'modules/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'modules/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css' %}">
 {% endblock %}
 
-{% block content-top %}
-<div class="col-md-2 col-md-offset-10">
-	<a class="btn btn-danger" href="{% url 'swipes' user.username %}"><span class="glyphicon glyphicon-chevron-left"></span> Go back to swipes page</a>
+{% block title %}Swipe detail{% endblock %}
+{% block aside %}
+
+{% endblock %}
+{% block content %}
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content modal-primary">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">
+        {% if not swipe.swipe_set.count %}
+        	Swipe from session: {{swipe.session}} - detail info<span class="modal-icon fa fa-info pull-right"></span>
+      	{% else %}
+      		Swipe detail <span class="modal-icon fa fa-check pull-right"></span>
+      	{% endif %}
+        </h4>
+      </div>
+      <div class="modal-body">
+				<table class="table table-primary-inverse">
+					<thead>
+					<tr class="upper">
+					  <th class="col-md-2">Parameter</th>
+					  <th class="col-md-4">Value</th>
+					  <th class="col-md-6">Description</th>
+					</tr>
+					</thead>
+					<tbody>
+						<tr>
+						    <td data-field="key" class="key">Swipe Type</td>
+						    <td data-field="value" id="swipeType">{{swipe.swipe_type}}</td>
+								<td><i id="swipe-icon" class="fa fa-2x "></i></td>
+						</tr>
+						<tr>
+						    <td data-field="key" class="key">Belongs to Session</td>
+						    <td data-field="value">{% if swipe.session %}<a href="{% url 'session_detail' username=user.username id=swipe.session.id %}">{{swipe.session}}</a>{% endif %}</td>
+								<td></td>
+						</tr>
+						{% if corrected_by %}
+						<tr>
+							<td data-field="key" class="key">Was corrected by</td>
+							<td data-field="key" class="key"><a href="{% url 'swipe_detail' username=user.username id=corrected_by.id %}">{{ corrected_by.id}}</a></td>
+							<td data-field="key" class="key"></td>
+						</tr>
+						{% endif %}
+
+						{% if swipe.correction_of_swipe %}
+							<td data-field="key" class="key">Is Correction of Swipe</td>
+							<td data-field="key" class="key"><a href="{% url 'swipe_detail' username=user.username id=swipe.correction_of_swipe.id %}">{{ swipe.correction_of_swipe.id}}</a></td>
+							<td data-field="key" class="key"></td>
+						{% endif %}
+
+						{% if not swipe.swipe_set.count %}
+              <tr>
+                <td>
+                  Default values:
+                </td>
+                <td>
+                  <p id="default-date"></p>
+                </td>
+                <td>
+                  <p id="default-time"></p>
+                </td>
+              </tr>
+							<tr>
+							    <td data-field="key" class="key">Datetime</td>
+							    <form method='POST' action=''>{% csrf_token %}
+							   	{% for f in form %}
+									<td>
+										{{f}}
+										<div class="form-inline">
+											<div class="form-group">
+												<div class='input-group date' id='datepicker'>
+													<input id="PickerDate" type="text" name="PickerDate" class="form-control text-center" />
+                          <div class="input-group-addon" data-toggle="tooltip" title="Open Date Picker"><i class="fa fa-calendar"></i></div>
+												</div>
+											</div>
+										</div>
+									</td>
+								{% endfor %}
+									<td>
+                    <div class="form-inline col-md-9">
+											<div class="form-group">
+												<div class="input-group bootstrap-timepicker" id="timepicker">
+													<input id="PickerTime" type="text" name="PickerTime" class="form-control text-center" />
+                          <div class="input-group-addon" data-toggle="tooltip" title="Open Time Picker"><i class="fa fa-clock-o"></i></div>
+												</div>
+											</div>
+										</div>
+									</td>
+							</tr>
+						{% else %}
+							<tr>
+							  <td data-field="key" class="key">Datetime</td>
+								<td>{{swipe.datetime | date:'D d.m.Y H:i:s'}}</td>
+								<td> <div class="badge badge-success"> Swipe was successfuly corrected <i class="fa fa-check"></i></div></td>
+							</tr>
+						{% endif %}
+					</tbody>
+				</table>
+				{{form.errors}}
+				<div class="col-md-3">
+				</div>
+
+      </div><!--/modal body-->
+      <div class="modal-footer">
+      <div class="row">
+      	<div class="col-md-3">
+      		<a class="btn btn-danger" href="{% url 'swipes' user.username %}"><i class="fa fa-arrow-left"></i> Back to Swipes page</a>
+      	</div>
+      	<div class="col-md-4 col-md-offset-5">
+      	{% if not swipe.swipe_set.count %}
+      		<button id="submit" type='submit' class="btn btn-primary" value='Submit Change'>Submit change <i class="fa fa-check"></i></button>
+      	{% endif %}
+      	</div>
+      	</form>
+      </div>
+      </div>
+    </div><!--/modal-->
+  </div>
 </div>
-<table class="table table-hover">
 
-	<thead>
-	<tr>
-	  <th class="col-md-2">PARAMETER</th>
-	  <th class="col-md-4">VALUE</th>
-	  <th class="col-md-6">DESCRIPTION</th>
-	</tr>
-	</thead>
-	<tbody>
-	<tr>
-	    <td data-field="key" class="key">Swipe Type</td>
-	    <td data-field="value">{{swipe.swipe_type}}</td>
-			<td></td>
-	</tr>
-	<tr>
-	    <td data-field="key" class="key">Belongs to Session</td>
-	    <td data-field="value">{% if swipe.session %}<a href="{% url 'session_detail' username=user.username id=swipe.session.id %}">{{swipe.session}}</a>{% endif %}</td>
-			<td></td>
-	</tr>
-	
-	{% if corrected_by %}
-	<tr>
-		<td data-field="key" class="key">Was corrected by</td>
-		<td data-field="key" class="key"><a href="{% url 'swipe_detail' username=user.username id=corrected_by.id %}">{{ corrected_by.id}}</a></td>
-		<td data-field="key" class="key"></td>
-	</tr>
-	{% endif %}
-	
-	{% if swipe.correction_of_swipe %} 
-		<td data-field="key" class="key">Is Correction of Swipe</td>
-		<td data-field="key" class="key"><a href="{% url 'swipe_detail' username=user.username id=swipe.correction_of_swipe.id %}">{{ swipe.correction_of_swipe.id}}</a></td>
-		<td data-field="key" class="key"></td>
-	{% endif %}
-	
-	{% if not swipe.swipe_set.count %} 
-		<tr>
-		    <td data-field="key" class="key">Datetime</td>
-		    <form method='POST' action=''>{% csrf_token %}
-		   	{% for f in form %}
-				<td>{{f}}</td>
-			{% endfor %}
-				<td><input id="submit" type='submit' class="btn btn-primary" value ='Submit Change'/></td>
-			</form>
-		</tr>
+<script type="text/javascript">
+  $(document).ready(function(){
+  	//Time and Date picker preparing data - script
+  	if ($('#id_datetime').length){ //Test if element exist
+  		$('#id_datetime').addClass('form-control hidden');
+  		//read data from python form
+	  	var PickerDateTime = $('#id_datetime').attr("value");
+	  	//split these two strings and put it into array
+	  	var PickerDateArray = PickerDateTime.split(' ');
+      //default values
+      var defaultDate = PickerDateArray[0];
+      var defaultTime = PickerDateArray[1];
+	  	//show these values in another inputs
+	  	$('#PickerDate').attr("value", PickerDateArray[0]);
+	  	$('#PickerTime').attr("value", PickerDateArray[1]);
+	  	//save values before change
+			$('#PickerDate').data("NewDate", PickerDateArray[0]);
+	  	$('#PickerTime').data("NewTime", PickerDateArray[1]);
 
-	{% else %}
-		<tr>
-		    <td data-field="key" class="key">Datetime</td>
-			<td>{{swipe.datetime | date:'D d.m.Y H:i:s'}}</td>
-		</tr>
-	{% endif %}
+      /*Older construction, works without BS DateTimePicker*/
+	  	//on change val do this - DATE
+	  	/*$('#PickerDate').on("change", function(){
+	        $(this).data("NewDate", $(this).val()); //make it as new data
+	        //display it in python form
+	        $('#id_datetime').val( $(this).data("NewDate")+" "+$('#PickerTime').data("NewTime") );
+	        console.log("New date: "+$(this).data("NewDate"));
+	  	});
+	  	//on change val do this - TIME
+	  	$('#PickerTime').on("change", function(){
+	        $(this).data("NewTime", $(this).val()); //make it as new data
+	        //display it in python form
+	        $('#id_datetime').val( $('#PickerDate').data("NewDate")+" "+$(this).data("NewTime") );
+	        console.log("New time: "+$(this).data("NewTime"));
+	  	});*/
+      /*Use DATE and TIME Pickers*/
+      $('#datepicker').datetimepicker({ //show BS popover with Date
+        format: "YYYY-MM-DD",
+      });
 
+      $('#timepicker').datetimepicker({ //show BS popover with Time
+        format: "HH:mm:ss",
+      });
+      //After change, yeld new values to default python form
+      //for time
+      $("#timepicker").on("dp.change", function(e) {
+        $('#PickerTime').data("NewTime", $('#PickerTime').val()); //make it as new data
+        //display it in python form
+        $('#id_datetime').val( $('#PickerDate').data("NewDate")+" "+$('#PickerTime').data("NewTime") );
+        console.log("New time: "+$('#PickerTime').data("NewTime"));
+      });
+      //for date
+      $("#datepicker").on("dp.change", function(e) {
+        $('#PickerDate').data("NewDate", $('#PickerDate').val()); //make it as new data
+        //display it in python form
+        $('#id_datetime').val( $('#PickerDate').data("NewDate")+" "+$('#PickerTime').data("NewTime") );
+        console.log("New date: "+$('#PickerDate').data("NewDate"));
+      });
+      //eof datetimepicker
 
-</tbody>
-</table>
-{{form.errors}}
-<div class="col-md-3">
-</div>
+	  	console.log("DATE: "+PickerDateArray[0]+"\nTIME: "+PickerDateArray[1]);
+
+      /*Write default values into table under fields*/
+      $('#default-date').text(defaultDate);
+      $('#default-time').text(defaultTime);
+		}//eof if exist
+
+    setTimeout(function(){ //set timeout for modal to be shown -like delay
+        $('#myModal').modal('show');
+      }, 1000);
+    /*Add class to see fontawesomes in swipe infos*/
+    var swipeType = $('#swipeType').text();
+    var swipeIcon = $('#swipe-icon');
+    switch(swipeType) {
+    case 'IN':
+      swipeIcon.addClass('fa-sign-in');
+      break;
+    case 'OUT':
+      swipeIcon.addClass('fa-sign-out');
+      break;
+    case 'FBR':
+      swipeIcon.addClass('fa-clock-o');
+      break;
+    case 'OBR':
+      swipeIcon.addClass('fa-coffee');
+      break;
+		case 'OTR':
+      swipeIcon.addClass('fa-suitcase');
+      break;
+    case 'FTR':
+      swipeIcon.addClass('fa-share-square');
+      break;
+    default:
+    	break;
+		}
+  });
+</script>
 {% endblock %}

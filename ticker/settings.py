@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'datetimewidget',
     'functional_tests',
     'debug_toolbar',
+    'compressor',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -168,3 +169,16 @@ AUTH_PASSWORD_VALIDATORS = [
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    # other finders..
+    'compressor.finders.CompressorFinder',
+)
+
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
+)
+
+
