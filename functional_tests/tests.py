@@ -98,7 +98,7 @@ class FunctionalTest(StaticLiveServerTestCase):
         ))
 
 class LoginLogoutTest(FunctionalTest):
-    def test_login_and_logut_users(self):
+    def test_login_and_logout_users(self):
 
         user = UserFactory.create()
         self.browser.get(self.server_url)
@@ -110,7 +110,10 @@ class LoginLogoutTest(FunctionalTest):
         self.wait_to_be_logged_in(user)
         self.assertIn("Dashboard", sessions_header)
         self.assertEqual(self.server_url + "/user/" + user.username+ "/",self.browser.current_url)
-        self.browser.find_element_by_class_name('a-logout').click()
+
+        self.browser.find_element_by_class_name('menu-icon').click()
+        self.browser.find_element_by_class_name('fa-power-off').click()
+
         self.wait_to_be_logged_out(user.username)
         self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
