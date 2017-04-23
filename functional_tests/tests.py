@@ -141,27 +141,22 @@ class PageNavigationTest(FunctionalTest):
     def test_click_on_logo_returns_home_page(self):
 
         user = UserFactory.create()
-
-        #logged out - just refreshing page
         self.browser.get(self.server_url)
-        self.browser.find_element_by_class_name('navbar-brand').click()
-        self.assertEqual(
-                self.server_url + "/login/?next=/",
-                self.browser.current_url
-        )
 
-        #login - logo taking us to profile page
         self.login_by_form(user.username,"password", self.browser)
         self.assertEqual(
                 self.server_url + "/user/" + user.username + "/",
                 self.browser.current_url
         )
-        self.browser.find_element_by_class_name('navbar-brand').click()
+
+        self.browser.find_element_by_class_name('menu-icon').click()
+        self.browser.find_element_by_class_name('fa-id-card-o').click()
         self.assertEqual(
                 self.server_url + "/user/" + user.username + "/",
                 self.browser.current_url
         )
-        self.browser.find_element_by_class_name('a-logout').click()
+        self.browser.find_element_by_class_name('menu-icon').click()
+        self.browser.find_element_by_class_name('fa-power-off').click()
         self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
     def test_click_on_logout(self):
