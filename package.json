@@ -1,0 +1,30 @@
+{
+  "name": "hodoor-server",
+  "version": "2.1.0",
+  "description": "casual attendance system",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hodooor/Hodoor.git"
+  },
+  "author": "Ondrej.Vicar, Patrik.Predny",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hodooor/Hodoor/issues"
+  },
+  "homepage": "https://github.com/hodooor/Hodoor#readme",
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "chart.js": "^2.5.0",
+    "datatables.net": "^1.10.15",
+    "datatables.net-bs": "^1.10.15",
+    "eonasdan-bootstrap-datetimepicker": "^4.17.47",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.2.1",
+    "moment": "^2.18.1",
+    "moment-timezone": "^0.4.1"
+  }
+}

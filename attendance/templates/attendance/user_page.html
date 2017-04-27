@@ -3,11 +3,11 @@
 
 {% block scripts %}
 <!--Charts.JS module-->
-<script type="text/javascript" language="javascript" src="{% static 'modules/charts-js/Chart.bundle.min.js' %}"></script>
+<script type="text/javascript" language="javascript" src="{% static 'chart.js/dist/Chart.bundle.min.js' %}"></script>
 <!--My tooltips-->
 <script type="text/javascript" language="javascript" src="{% static 'js/tooltips.js' %}"></script>
 <!--PhilterJS - for images-->
-<script type="text/javascript" language="javascript" src="{% static 'modules/philter/philter.min.js' %}"></script>
+<!--<script type="text/javascript" language="javascript" src="{% static 'philter/bin/philter.js' %}"></script>-->
 {% endblock %}
 {% block title %}Dashboard{% endblock %}
 {% block aside %}
@@ -421,9 +421,9 @@
 	  $('#Elapsed-Work-Days-Bar').css('width', printDaysUpdate+'%');
 
 	  /*Image filtrations*/
-	  new Philter({
+	  //new Philter({
 		//transitionTime: 0.3
-	  });
+	  //});
 	  if(thesis) {
 		$('#users-at-work-img').hide();
 		$('#users-on-break-img').hide();
