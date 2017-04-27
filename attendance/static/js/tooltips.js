@@ -32,7 +32,11 @@ $(document).ready(function() {
 	MaxTooltipNum = Math.max.apply(Math,TooltipsIds);
 
 	for(var n=0; n<=numOfTooltips; n++) {
-		$('#tooltip'+(n+MinTooltipNum)).attr('data-content', tooltipData[n+MinTooltipNum-1]); //insert text into data content		
+		if($('#tooltip'+(n+MinTooltipNum)).attr('data-toggle','popover')) {
+			$('#tooltip'+(n+MinTooltipNum)).attr('data-content', tooltipData[n+MinTooltipNum-1]); //insert text into data content
+		} else {
+			$('#tooltip'+(n+MinTooltipNum)).attr('title', tooltipData[n+MinTooltipNum-1]); //insert text into data content		
+		}		
 	} //popover: data-content, tooltip: title!
 
 });

@@ -4,7 +4,7 @@ Title: My own JS functions, used for Hodoor
 Year: 2017,
 License: MIT,
 ------------------------------------------*/
-
+console.info("functions.js loaded");
 //CONFIGURATION VARIABLES
 var debug = 0; //set true or false, true enables debugging mode
 var thesis = 1; //presentation in school, disable some features
@@ -54,13 +54,13 @@ $(document).ready(function(){
     /*Enable tooltips*/
     $(function () {
       $('[data-toggle="tooltip"]').tooltip({
-		  placement: 'bottom',
+		  //placement: 'bottom'
 	  });
     })
 	$(function () {
       $('[data-toggle="popover"]').popover({
 		  trigger: 'hover',
-		  container: 'body'
+		  container: 'body',
 	  });
     })
     /* //__TOOLTIPS__ */
