@@ -7,7 +7,7 @@ License: MIT,
 
 //CONFIGURATION VARIABLES
 var debug = 0; //set true or false, true enables debugging mode
-var thesis = 0; //presentation in school, disable some features
+var thesis = 1; //presentation in school, disable some features
 //Functions
 var variable;
 function debugLog(variable) {
@@ -15,16 +15,6 @@ function debugLog(variable) {
   return 0;
 }
 if(debug) console.info("You are in debugging mode");
-
-/*
-function getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++ ) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-}*/
 
 $(document).ready(function(){
     var temp;
@@ -63,7 +53,15 @@ $(document).ready(function(){
     /* __TOOLTIPS__ */
     /*Enable tooltips*/
     $(function () {
-      $('[data-toggle="tooltip"]').tooltip();
+      $('[data-toggle="tooltip"]').tooltip({
+		  placement: 'bottom',
+	  });
+    })
+	$(function () {
+      $('[data-toggle="popover"]').popover({
+		  trigger: 'hover',
+		  container: 'body'
+	  });
     })
     /* //__TOOLTIPS__ */
 
@@ -118,7 +116,8 @@ $(document).ready(function(){
             scrollTop: $(scrollToId).offset().top -55
         }, 'fast');
     });
-
+	
+	//automatize menu size 
     $('#myDropdown').data("width", $('#myDropdown').width());
       debugLog("Width is: "+$('#myDropdown').data("width")+'px');
     $('#myDropdown > .dropdown-menu').css('width', $('#myDropdown').data("width") );

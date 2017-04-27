@@ -123,12 +123,37 @@
 </div>
 
 <div class="row gutter-small"> <!-- if needed add class: equal-height-panels-->
+	
     <div class="col-md-3"><!--first col-->
+	<!--this month work time-->
+	<!--
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h2 class="panel-title navigable" id="this-month-work-time" title="This month - Work time">
+            <i class="fa fa-calendar-check-o" aria-hidden="true"></i> This month - work time <i id="tooltip2" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="bottom" title="Tooltip text"></i>
+          </h2>
+        </div>
+        <div class="panel-body">
+          <ul class="dash-list-group">
+            <li class="">Work Hours: <span class="primary" id="work-hours-graph">{{ hours_work_this_month | floatformat:2}}</span> hour(s)</li>
+            <li class="">Not-work Hours: <span class="gray" id="not-work-hours-graph">{{ hours_not_work_this_month| floatformat:2}}</span> hour(s)</li>
+            <li class="list-separator"></li>
+            <li class="">Total Hours: <span class="bold">{{ hours_total_this_month|floatformat:2}}</span> hour(s)</li>
+          </ul>
+          <canvas id="Work-Time-Chart" class="doughnut-chart" width="auto" height="250"></canvas>
+          <script>
 
-      <div class="panel panel-primary"><!--This month quota-->
+          </script>
+        </div>
+        <div class="panel-footer">
+
+        </div>
+      </div><!--/this mont work time-->
+	  
+	  <div class="panel panel-primary"><!--This month quota-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="this-month-quota" title="This month - Quota">
-            <i class="fa fa-calendar-check-o" aria-hidden="true"></i> This month - quota <i id="tooltip1" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title=" "></i>
+            <i class="fa fa-calendar-check-o" aria-hidden="true"></i> This month - quota <i id="tooltip1" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="bottom"></i>
           </h2>
         </div>
         <div class="panel-body">
@@ -191,40 +216,15 @@
         {% endif %}
         </div>
       </div><!--this month quota-->
-
+	  
+	  
     </div><!--/first col-->
 
     <div class="col-md-3"><!--second col-->
-
-      <div class="panel panel-primary"><!--this month work time-->
-        <div class="panel-heading">
-          <h2 class="panel-title navigable" id="this-month-work-time" title="This month - Work time">
-            <i class="fa fa-calendar-check-o" aria-hidden="true"></i> This month - work time <i id="tooltip2" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Tooltip text"></i>
-          </h2>
-        </div>
-        <div class="panel-body">
-          <ul class="dash-list-group">
-            <li class="">Work Hours: <span class="primary" id="work-hours-graph">{{ hours_work_this_month | floatformat:2}}</span> hour(s)</li>
-            <li class="">Not-work Hours: <span class="gray" id="not-work-hours-graph">{{ hours_not_work_this_month| floatformat:2}}</span> hour(s)</li>
-            <li class="list-separator"></li>
-            <li class="">Total Hours: <span class="bold">{{ hours_total_this_month|floatformat:2}}</span> hour(s)</li>
-          </ul>
-          <canvas id="Work-Time-Chart" class="doughnut-chart" width="auto" height="250"></canvas>
-          <script>
-
-          </script>
-        </div>
-        <div class="panel-footer">
-
-        </div>
-      </div><!--/this mont work time-->
-    </div><!--/second col-->
-
-    <div class="col-md-3"><!--third col-->
       <div class="panel panel-primary"><!--this month assign time-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="this-month-assigned" title="This month - Assigned time">
-            <i class="fa fa-calendar-check-o" aria-hidden="true"></i> This month - assign. <i id="tooltip3" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Tooltip text"></i>
+            <i class="fa fa-calendar-check-o" aria-hidden="true"></i> This month - work time<i id="tooltip3" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="bottom"></i>
           </h2>
         </div>
         <div class="panel-body">
@@ -242,7 +242,9 @@
             </span> hour(s)</li>
             <li class="">Unassigned Hours: <span class="danger" id="unassigned-hours-graph">{{ hours_unassigned_this_month | floatformat:2}}</span> ({{unassigned_closed_session_hours | floatformat:2}})</li>
             <li class="list-separator"></li>
-            <li class="">Total Hours: <span class="bold" id="total-work-hours">{{ hours_total_this_month|floatformat:2}}</span> hour(s)</li>
+			<li class="">Not-work Hours: <span class="gray" id="not-work-hours-graph">{{ hours_not_work_this_month| floatformat:2}}</span> hour(s)</li>
+            <li class="list-separator"></li>
+			<li class="">Total Hours: <span class="bold" id="total-work-hours">{{ hours_total_this_month|floatformat:2}}</span> hour(s)</li>
           </ul>
           <canvas id="Assigned-Time-Chart" class="doughnut-chart" width="auto" height="250"></canvas>
         </div>
@@ -271,15 +273,29 @@
 					{% endif %}
         </div>
       </div><!--/this month assign time-->
-    </div><!--third col-->
+    </div><!--/second col-->
 
-    <div class="col-md-3"><!--fourth col-->
+    <div class="col-md-3"><!--third col-->
 
 
-      <div class="panel panel-primary"><!--todays info panel-->
+
+      <!--
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <h2 class="panel-title navigable" id="terminal-emulator" title="Local Weather">
+           <i class="fa fa-sun-o" aria-hidden="true"></i> Local Weather <i id="tooltip6" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="top"></i>
+          </h2>
+        </div>
+        <div class="panel-body">
+          Pocasi
+        </div>
+      </div>
+      -->
+	  
+	  <div class="panel panel-primary"><!--todays info panel-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="today-info" title="Today - info">
-           <i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Today - info <i id="tooltip4" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Tooltip text"></i>
+           <i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Today - info <i id="tooltip4" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="bottom"></i>
           </h2>
         </div>
         {% if last_swipe %}
@@ -304,10 +320,15 @@
           {%endif%}
       </div><!--/todays info panel-->
 
-      <div class="panel panel-default"><!--terminal emulator-->
+      
+    </div><!--/third col-->
+	
+	<div class="col-md-3"><!--fourth col--> 
+	
+	  <div class="panel panel-default"><!--terminal emulator-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="terminal-emulator" title="Terminal Emulator">
-           <i class="fa fa-calculator" aria-hidden="true"></i> Terminal emulator <i id="tooltip5" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Tooltip text"></i>
+           <i class="fa fa-calculator" aria-hidden="true"></i> Terminal emulator <i id="tooltip5" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="left"></i>
           </h2>
         </div>
         <div class="panel-body">
@@ -346,23 +367,10 @@
         </div>
       </div><!--/terminal emulator-->
 
-      <!--
-      <div class="panel panel-info">
-        <div class="panel-heading">
-          <h2 class="panel-title navigable" id="terminal-emulator" title="Local Weather">
-           <i class="fa fa-sun-o" aria-hidden="true"></i> Local Weather <i id="tooltip6" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Tooltip text"></i>
-          </h2>
-        </div>
-        <div class="panel-body">
-          Pocasi
-        </div>
-      </div>
-      -->
-
-      <div class="panel panel-default"><!--last month-->
+	<div class="panel panel-default"><!--last month-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="last-month" title="Last month info">
-            <i class="fa fa-calendar-minus-o" aria-hidden="true"></i> Last month <i id="tooltip6" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Tooltip teXxt"></i>
+            <i class="fa fa-calendar-minus-o" aria-hidden="true"></i> Last month <i id="tooltip6" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="left"></i>
           </h2>
         </div>
         <div class="panel-body">
@@ -400,108 +408,75 @@
         {% endif %}
         </div>
       </div> <!--/last month-->
-    </div><!--fourth col-->
+	
+    </div><!--/fourth col-->
 
   </div><!--//row equal panels-->
 <script type="text/javascript">
 	$(document).ready(function () {
-  /*Update progress bar with actual width*/
-  var maxWorkDays = {{ num_of_workdays }};
-  var elapsedWorkDays = {{ num_of_elapsed_workdays }};
-  var printDaysUpdate = (elapsedWorkDays/maxWorkDays)*100;
-  $('#Elapsed-Work-Days-Bar').css('width', printDaysUpdate+'%');
+	  /*Update progress bar with actual width*/
+	  var maxWorkDays = {{ num_of_workdays }};
+	  var elapsedWorkDays = {{ num_of_elapsed_workdays }};
+	  var printDaysUpdate = (elapsedWorkDays/maxWorkDays)*100;
+	  $('#Elapsed-Work-Days-Bar').css('width', printDaysUpdate+'%');
 
-  /*Image filtrations*/
-  new Philter({
-    //transitionTime: 0.3
-  });
-  if(thesis) {
-    $('#users-at-work-img').hide();
-    $('#users-on-break-img').hide();
-    $('#users-on-trip-img').hide();
-  }
-
-  if($('#users-at-work li').length != 0) {
-    $('#users-at-work-img').removeAttr('data-philter-grayscale');
-  }
-  if($('#users-on-break li').length != 0) {
-     $('#users-on-break-img').removeAttr('data-philter-grayscale');
-  }
-  if($('#users-on-trip li').length != 0) {
-    $('#users-on-trip-img').removeAttr('data-philter-grayscale');
-  }
-
-  //$('.panel-img').removeAttr('data-philter-grayscale',"90 0");
-  /*$('.panel-img').mouseover(function(){
-    $(this).attr('data-philter-grayscale',"90 90");
-  });*/
-  /*Add aditional classes*/
-  //If you should work less than 0 hours show it green else red
-  if($('#you_should_work_hours').text() <= 0) {
-    $('#you_should_work_hours').addClass('success');
-  } else {
-    $('#you_should_work_hours').addClass('danger');
-  }
-
-	/*Work Time Doughnut Chart*/
-		//set bgColors
-		var bgColorWtime = "#609ae1";
-		var bgColorNwtime = "#cccccc";
-		//get data from webpage
-		var workHoursGraph = $('#work-hours-graph').text();
-		var notWorkHoursGraph = $('#not-work-hours-graph').text();
-			if((workHoursGraph == 0) && (notWorkHoursGraph == 0)) {
-				notWorkHoursGraph = 999.999;
-				workHoursGraph = "XXX";
-			  bgColorNwtime = "#f2f2f2";
-			};
-
-		//Graph rendering
-	  var ctx = $("#Work-Time-Chart");
-	  var dataWorkTime = [workHoursGraph, notWorkHoursGraph];
-	  var labelsWorkTime = ["Work Hours", "Not-work Hours"];
-	  var bgcolorsWorkTime = [bgColorWtime, bgColorNwtime];
-
-	  var myChart = new Chart(ctx, {
-	  type: 'doughnut',
-	  data: {
-	    labels: labelsWorkTime,
-	    datasets: [{
-	      backgroundColor: bgcolorsWorkTime,
-	      data: dataWorkTime
-	    }]
-	  }
+	  /*Image filtrations*/
+	  new Philter({
+		//transitionTime: 0.3
 	  });
+	  if(thesis) {
+		$('#users-at-work-img').hide();
+		$('#users-on-break-img').hide();
+		$('#users-on-trip-img').hide();
+	  }
 
-	/*Assigned Time Doughnut Chart*/
+	  if($('#users-at-work li').length != 0) {
+		$('#users-at-work-img').removeAttr('data-philter-grayscale');
+	  }
+	  if($('#users-on-break li').length != 0) {
+		 $('#users-on-break-img').removeAttr('data-philter-grayscale');
+	  }
+	  if($('#users-on-trip li').length != 0) {
+		$('#users-on-trip-img').removeAttr('data-philter-grayscale');
+	  }
+
+	  /*Add aditional classes*/
+	  //If you should work less than 0 hours show it green else red
+	  if($('#you_should_work_hours').text() <= {{workhours_per_day}}) {
+		$('#you_should_work_hours').addClass('success');
+	  } else {
+		$('#you_should_work_hours').addClass('danger');
+	  }
+	  //if you shouldnt work
+	  if($('#you_should_work_hours').text().includes("-")){
+		$('#you_should_work_hours').text('0.00');
+	  }
+
+		/*Assigned Time Doughnut Chart*/
 		//set bgColors
 		var bgColorAtime = "#609ae1";
 		var bgColorUatime = "#ff836d";
+		var bgColorNwtime = "#cccccc";
 		//get data from webpage
 		var assignedHoursGraph = $('#assigned-hours-graph').text();
+		var notWorkHoursGraph = $('#not-work-hours-graph').text();
 		var unassignedWorkHoursGraph = $('#unassigned-hours-graph').text();
-			if((assignedHoursGraph == 0) && (unassignedWorkHoursGraph == 0)) {
-				unassignedWorkHoursGraph = 999.999;
-				assignedHoursGraph = "XXX";
-			  bgColorUatime = "#f2f2f2";
-			};
 
-	  var ctx = $("#Assigned-Time-Chart");
-	  var dataWorkTime = [assignedHoursGraph, unassignedWorkHoursGraph];
-	  var labelsWorkTime = ["Assigned Hours", "Unassigned Hours"];
-	  var bgcolorsWorkTime = [bgColorAtime, bgColorUatime];
+		  var ctx = $("#Assigned-Time-Chart");
+		  var dataWorkTime = [assignedHoursGraph, unassignedWorkHoursGraph, unassignedWorkHoursGraph];
+		  var labelsWorkTime = ["Assigned Hours", "Unassigned Hours", "Not-work hours"];
+		  var bgcolorsWorkTime = [bgColorAtime, bgColorUatime, bgColorNwtime];
 
-	  var myChart = new Chart(ctx, {
-	  type: 'doughnut',
-	  data: {
-	    labels: labelsWorkTime,
-	    datasets: [{
-	      backgroundColor: bgcolorsWorkTime,
-	      data: dataWorkTime
-	    }]
-	  }
+		  var myChart = new Chart(ctx, {
+		  type: 'doughnut',
+		  data: {
+			labels: labelsWorkTime,
+			datasets: [{
+			  backgroundColor: bgcolorsWorkTime,
+			  data: dataWorkTime
+			}]
+		  }
 	  });
-
 	});
 </script>
 {% endblock %}
