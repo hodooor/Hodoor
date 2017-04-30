@@ -55,13 +55,14 @@ $(document).ready(function(){
     $(function () {
       $('[data-toggle="tooltip"]').tooltip({
 		  //placement: 'bottom'
-	  });
+	   });
     })
+
 	$(function () {
       $('[data-toggle="popover"]').popover({
-		  trigger: 'hover',
-		  container: 'body',
-	  });
+	      trigger: 'hover',
+        container: 'body',
+	   });
     })
     /* //__TOOLTIPS__ */
 
@@ -100,6 +101,8 @@ $(document).ready(function(){
 
     /* __Navigable links from h2 titles generator__*/
     //navigable-bar
+    //you can see it only on xs and sm screens,
+    //navigables generates scrollable links
     var navigables = [];
     var navigableTitles = [];
     $('.navigable').each(function(i) {
@@ -116,8 +119,8 @@ $(document).ready(function(){
             scrollTop: $(scrollToId).offset().top -55
         }, 'fast');
     });
-	
-	//automatize menu size 
+
+	//automatize menu size
     $('#myDropdown').data("width", $('#myDropdown').width());
       debugLog("Width is: "+$('#myDropdown').data("width")+'px');
     $('#myDropdown > .dropdown-menu').css('width', $('#myDropdown').data("width") );

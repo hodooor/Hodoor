@@ -149,22 +149,6 @@
 	  	//save values before change
 			$('#PickerDate').data("NewDate", PickerDateArray[0]);
 	  	$('#PickerTime').data("NewTime", PickerDateArray[1]);
-
-      /*Older construction, works without BS DateTimePicker*/
-	  	//on change val do this - DATE
-	  	/*$('#PickerDate').on("change", function(){
-	        $(this).data("NewDate", $(this).val()); //make it as new data
-	        //display it in python form
-	        $('#id_datetime').val( $(this).data("NewDate")+" "+$('#PickerTime').data("NewTime") );
-	        console.log("New date: "+$(this).data("NewDate"));
-	  	});
-	  	//on change val do this - TIME
-	  	$('#PickerTime').on("change", function(){
-	        $(this).data("NewTime", $(this).val()); //make it as new data
-	        //display it in python form
-	        $('#id_datetime').val( $('#PickerDate').data("NewDate")+" "+$(this).data("NewTime") );
-	        console.log("New time: "+$(this).data("NewTime"));
-	  	});*/
       /*Use DATE and TIME Pickers*/
       $('#datepicker').datetimepicker({ //show BS popover with Date
         format: "YYYY-MM-DD",
