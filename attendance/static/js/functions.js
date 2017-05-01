@@ -7,7 +7,6 @@ License: MIT,
 console.info("functions.js loaded");
 //CONFIGURATION VARIABLES
 var debug = 0; //set true or false, true enables debugging mode
-var thesis = 1; //presentation in school, disable some features
 //Functions
 var variable;
 function debugLog(variable) {

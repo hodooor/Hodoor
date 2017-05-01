@@ -6,8 +6,6 @@
 <script type="text/javascript" language="javascript" src="{% static 'chart.js/dist/Chart.bundle.min.js' %}"></script>
 <!--My tooltips-->
 <script type="text/javascript" language="javascript" src="{% static 'js/tooltips.js' %}"></script>
-<!--PhilterJS - for images-->
-<!--<script type="text/javascript" language="javascript" src="{% static 'philter/bin/philter.js' %}"></script>-->
 {% endblock %}
 {% block title %}Dashboard{% endblock %}
 {% block aside %}
@@ -38,9 +36,6 @@
       Working users
       <span class="badge pull-right">{{at_work_users | length}}</span>
     </h3>
-    <div id="users-at-work-img" data-philter-grayscale="100">
-      <img id="" class="panel-img" src="https://media.giphy.com/media/3oEdv1EbS2Ss1NvrUc/giphy.gif">
-    </div>
   </div>
   <div class="panel-body">
     <ul class="collabsible-list list-group " id="users-at-work">
@@ -58,9 +53,6 @@
       Users on break
       <span class="badge pull-right">{{on_break_users | length}}</span>
     </h3>
-    <div id="users-on-break-img" data-philter-grayscale="100">
-      <img id="" class="panel-img" src="https://media.giphy.com/media/129fSchexp3aPC/giphy.gif">
-    </div>
   </div>
   <div class="panel-body">
     <ul class="collabsible-list list-group" id="users-on-break">
@@ -78,9 +70,6 @@
       Users on trip
       <span class="badge pull-right">{{on_trip_users | length}}</span>
     </h3>
-    <div id="users-on-trip-img" data-philter-grayscale="100">
-      <img id="" class="panel-img" src="https://media.giphy.com/media/xT0GqvRHBZqIRoSCly/giphy.gif">
-    </div>
   </div>
   <div class="panel-body">
     <ul class="collabsible-list list-group" id="users-on-trip">
@@ -123,7 +112,7 @@
 </div>
 
 <div class="row gutter-small"> <!-- if needed add class: equal-height-panels-->
-	
+
     <div class="col-md-3"><!--first col-->
 	<!--this month work time-->
 	<!--
@@ -149,7 +138,7 @@
 
         </div>
       </div><!--/this mont work time-->
-	  
+
 	  <div class="panel panel-primary"><!--This month quota-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="this-month-quota" title="This month - Quota">
@@ -216,8 +205,8 @@
         {% endif %}
         </div>
       </div><!--this month quota-->
-	  
-	  
+
+
     </div><!--/first col-->
 
     <div class="col-md-3"><!--second col-->
@@ -291,7 +280,7 @@
         </div>
       </div>
       -->
-	  
+
 	  <div class="panel panel-primary"><!--todays info panel-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="today-info" title="Today - info">
@@ -320,11 +309,11 @@
           {%endif%}
       </div><!--/todays info panel-->
 
-      
+
     </div><!--/third col-->
-	
-	<div class="col-md-3"><!--fourth col--> 
-	
+
+	<div class="col-md-3"><!--fourth col-->
+
 	  <div class="panel panel-default"><!--terminal emulator-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="terminal-emulator" title="Terminal Emulator">
@@ -408,7 +397,7 @@
         {% endif %}
         </div>
       </div> <!--/last month-->
-	
+
     </div><!--/fourth col-->
 
   </div><!--//row equal panels-->
