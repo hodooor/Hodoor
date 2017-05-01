@@ -409,16 +409,6 @@
 	  var printDaysUpdate = (elapsedWorkDays/maxWorkDays)*100;
 	  $('#Elapsed-Work-Days-Bar').css('width', printDaysUpdate+'%');
 
-	  /*Image filtrations*/
-	  //new Philter({
-		//transitionTime: 0.3
-	  //});
-	  if(thesis) {
-		$('#users-at-work-img').hide();
-		$('#users-on-break-img').hide();
-		$('#users-on-trip-img').hide();
-	  }
-
 	  if($('#users-at-work li').length != 0) {
 		$('#users-at-work-img').removeAttr('data-philter-grayscale');
 	  }

@@ -1156,12 +1156,17 @@ input[type="color"]:focus,
 	//fix the whitespaces on sides
 	margin: -15px;
 	margin-bottom: 15px;
+	//defines menu buttons
 	.dropmenu-item-btn {
+		overflow: hidden;
+		text-overflow: ellipsis;
 	  text-align: center;
 	  width: 130px;
 	  height: 130px;
 	}
 	.dropmenu-item-btn-wide {
+		overflow: hidden;
+		text-overflow: ellipsis;
 		text-align: center;
 		width: 90%;
 		height: 130px;
