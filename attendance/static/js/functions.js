@@ -17,6 +17,14 @@ function debugLog(variable) {
 if(debug) console.info("You are in debugging mode");
 
 $(document).ready(function(){
+    /*Loader fnction only for content*/
+    $('.content').ready(function(){
+      $('.loader').fadeOut('fast',function(){
+        $('.content').fadeIn('fast');
+      });
+    });
+    //$('.aside').hide();
+
     var temp;
     $('.ext-link').append(' <i class="fa fa-external-link" aria-hidden="true"></i>');
     /* __DROPDOWN MENUS__*/

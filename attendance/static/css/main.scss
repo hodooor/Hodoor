@@ -320,7 +320,28 @@ h4 {
      margin-right: auto;
 }
 /*----------------------------------------*/
+$loader-border: 17px;
+$loader-size: 9em;
+.loader-spin {
+    border: $loader-border solid $white; /* Light grey */
+    border-top: $loader-border solid $primary; /* Blue */
+    border-radius: 50%;
+		display: block;
+    width: $loader-size;
+    height: $loader-size;
+    animation: spin 0.7s linear infinite;
+    position: absolute;
+    top: 15em;
+    left: 45%;
+		vertical-align: middle;
+}
+@keyframes spin { //for loader-spin
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+//Content
 .content {
+	display: none; //for loader show
 	background-color: lighten($li-gray, 5%);
 	margin: -11px -15px -15px -15px;
 	padding: 21px 20px 5px 20px;
