@@ -14,13 +14,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--BS-->
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}">
+    <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css'%}">
     <!--jQuery-->
-    <script src="{% static 'js/jquery-3.1.1.min.js'%}"></script>
-    <script src="{% static 'js/bootstrap.min.js'%}"></script>
+	  <script src="{% static 'jquery/dist/jquery.min.js'%}"></script>
+    <script src="{% static 'bootstrap/dist/js/bootstrap.min.js'%}"></script>
     <!--ICONIC PACKS and FONTS-->
     <!--Font awesome-->
-    <link href="{% static 'css/font-awesome.min.css'%}" rel="stylesheet">
+    <link href="{% static 'font-awesome/css/font-awesome.min.css'%}" rel="stylesheet">
     <!--Custom fonts-->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <!--Own CSS Styles-->
@@ -76,18 +76,32 @@
                     </a>
                   </li>
               <!--Next row-->
-                  <!--<li class="col-xs-6">
+                  <!--
+                  <li class="col-xs-6">
                     <a class="dropmenu-item-btn disabled" href="#">
                       <i class="fa fa-cogs" aria-hidden="true"></i>
                       Settings
                     </a>
-                  </li>-->
+                  </li>
                   <li class="col-xs-12">
                     <a class="dropmenu-item-btn-wide" href="{%url 'logout' %}">
                       <i class="fa fa-power-off" aria-hidden="true"></i>
                       <span>Logout</span>
                     </a>
                   </li>
+                -->
+                <li class="col-xs-6">
+                  <a class="dropmenu-item-btn" href="/admin/" target="_blank">
+                    <i class="fa fa-cogs" aria-hidden="true"></i>
+                    Settings
+                  </a>
+                </li>
+                <li class="col-xs-6">
+                  <a class="dropmenu-item-btn" href="{%url 'logout' %}">
+                    <i class="fa fa-power-off" aria-hidden="true"></i>
+                    <span>Logout</span>
+                  </a>
+                </li>
                 <!--//List of items-->
                 {% endif %}
                 </ul>
@@ -100,6 +114,10 @@
           </div>
         </div>
         <div class="col-md-10">
+          <div class="loader">
+            <div class="loader-spin"></div>
+            <!--<div class="loader-text">Loading...</div>-->            
+          </div>
           <div class="content">
           <!--content here-->
           {% block content %}

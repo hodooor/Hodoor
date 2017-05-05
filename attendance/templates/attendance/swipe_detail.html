@@ -3,10 +3,10 @@
 
 {% block scripts %}
 <!--Moment.js: used for timepicker-->
-<script src="{% static 'modules/moment-js/moment.js'%}"></script>
+<script src="{% static 'moment/moment.js'%}"></script>
 <!--bootstrap-DateTimePicker-->
-<script type="text/javascript" language="javascript" src="{% static 'modules/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}"></script>
-<link rel="stylesheet" href="{% static 'modules/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css' %}">
+<script type="text/javascript" language="javascript" src="{% static 'eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}">
 {% endblock %}
 
 {% block title %}Swipe detail{% endblock %}
@@ -149,22 +149,6 @@
 	  	//save values before change
 			$('#PickerDate').data("NewDate", PickerDateArray[0]);
 	  	$('#PickerTime').data("NewTime", PickerDateArray[1]);
-
-      /*Older construction, works without BS DateTimePicker*/
-	  	//on change val do this - DATE
-	  	/*$('#PickerDate').on("change", function(){
-	        $(this).data("NewDate", $(this).val()); //make it as new data
-	        //display it in python form
-	        $('#id_datetime').val( $(this).data("NewDate")+" "+$('#PickerTime').data("NewTime") );
-	        console.log("New date: "+$(this).data("NewDate"));
-	  	});
-	  	//on change val do this - TIME
-	  	$('#PickerTime').on("change", function(){
-	        $(this).data("NewTime", $(this).val()); //make it as new data
-	        //display it in python form
-	        $('#id_datetime').val( $('#PickerDate').data("NewDate")+" "+$(this).data("NewTime") );
-	        console.log("New time: "+$(this).data("NewTime"));
-	  	});*/
       /*Use DATE and TIME Pickers*/
       $('#datepicker').datetimepicker({ //show BS popover with Date
         format: "YYYY-MM-DD",

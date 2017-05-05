@@ -5,7 +5,7 @@ Hodoor was developed, because my company [ELEDUS](http://www.eledus.cz/) needed 
 Hoodor is Django Web Application with REST API, which can be accessed from clients or directly controlled via web interface. We are using our [Electron](http://electron.atom.io/) application (will be available soon) on Raspberry Pi with RFID scanner as front end.
 
 What can Hodoor do:
-* Record single actions (Swipes) 
+* Record single actions (Swipes)
 * Insert Swipes into Sessions (Workdays)
 * Measure Sessions time
 * Assign Session time into projects
@@ -16,7 +16,8 @@ What can Hodoor do:
 * Can show Users at work / on break
 
 #Development
-You need Python 3.4+ and probably [virtual enviroment](https://virtualenv.pypa.io/en/stable/) (if you have more python projects on your machine). 
+You need Python 3.4+ and probably [virtual enviroment](https://virtualenv.pypa.io/en/stable/) (if you have more python projects on your machine). You also need [npm](https://www.npmjs.com/) to install dependencies
+
 You should create similar folder structure:
 ```
 [Project Folder]
@@ -31,6 +32,7 @@ If you have prepared folder structure and activated virutalenv you can:
 ```
 cd repo
 pip install -r requirements.txt
+npm install
 python manage.py migrate
 python manage.py runserver
 ```
@@ -40,7 +42,7 @@ You can create superuser by running:
 python manage.py createsuperuser
 ```
 #Server deployment
-Deployment process was inspired by great book [Test-Driven Web Development with Python](http://chimera.labs.oreilly.com/books/1234000000754/ch08.html) - Chapter8 and Chapter 9. I'm using apache2 instead of Nginx. You can use template [config file](deploy_tools/apache.conf.template) for apache2 https access with self-signed certificate. 
+Deployment process was inspired by great book [Test-Driven Web Development with Python](http://chimera.labs.oreilly.com/books/1234000000754/ch08.html) - Chapter8 and Chapter 9. I'm using apache2 instead of Nginx. You can use template [config file](deploy_tools/apache.conf.template) for apache2 https access with self-signed certificate.
 
 Deployment process was automated by [Fabric](http://www.fabfile.org/) - [fabfile](deploy_tools/fabfile.py). You need python2 to be able to run fab script. After webserver configuration, deployment of new version should be as easy as:
 ```

@@ -2,8 +2,12 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
-
 {% block scripts %}
+<!--Moment.js: used for timepicker-->
+<script src="{% static 'moment/moment.js'%}"></script>
+<!--bootstrap-DateTimePicker-->
+<script type="text/javascript" language="javascript" src="{% static 'eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}">
 <!--My tooltips-->
 <script type="text/javascript" language="javascript" src="{% static 'js/tooltips.js' %}"></script>
 {% endblock %}
@@ -161,8 +165,8 @@
         {% for separation in separations %}
         <tr>
           <td>{{separation.project}}</td>
-              <td>{{separation.time_spend}}</td>
-              <td>{{separation.description}}</td>
+          <td>{{separation.time_spend}}</td>
+          <td>{{separation.description}}</td>
         </tr>
         {% endfor %}
         <form method='POST' action=''>{% csrf_token %}
@@ -170,7 +174,7 @@
           {% for field in project_separation_form %}
             <td>{{field}}</td>
           {% endfor %}
-          <td><input type="submit" class="btn btn-primary" value="Add" /></td>
+          <td><input type="submit" class="btn btn-success" value="Add" /></td>
         </tr>
         </form>
 
@@ -178,5 +182,45 @@
     </table>
   </div>
 </div>
+<script>
+/*Add timepicker to this field*/
+//separate max values
+var separateTime = $('#id_time_spend').val().split(":");
+var TimeHours = separateTime[0];
+var TimeMinutes = separateTime[1];
+var TimeSeconds = separateTime[2];
+//add timepicker with options
+$('#id_time_spend').datetimepicker({
+  format: "HH:mm:ss",
+  maxDate: moment({
+    h:TimeHours,
+    m:TimeMinutes,
+    s:TimeSeconds
+  })
+});
+/*
+$('#id_time_spend').parent().wrapInner('<div/>');
+$('#id_time_spend').parent().addClass('input-group');
+$('#id_time_spend').parent().parent().wrapInner('<div/>');
+$('#id_time_spend').parent().parent().addClass('form-group');
+$('#id_time_spend').parent().parent().parent().wrapInner('<div/>');
+$('#id_time_spend').parent().parent().parent().addClass('form-inline col-md-9');
+$('#id_time_spend').addClass('form-control');
+$('#id_time_spend').parent().append(
+  '<div id="id_time_spend_opener" class="input-group-addon" data-toggle="tooltip" title="Open Time Picker"><i class="fa fa-clock-o"></i></div></div>'
+);
+*/
 
+/*Edit Bootstrap default form-controls on this page*/
+$('tbody > tr > td > select').each(function() {
+  $(this).addClass('form-control');
+});
+$('tbody > tr > td > input').each(function() {
+  $(this).addClass('form-control');
+});
+$('tbody > tr > td > textarea').each(function() {
+  $(this).addClass('form-control');
+  $(this).attr('rows', '1');
+});
+</script>
 {% endblock %}
