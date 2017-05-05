@@ -84,3 +84,5 @@ def _set_database_permissions(site_folder):
     run('sudo chmod 770 %s' % (database_folder, ))
     run('sudo chmod 770 %s/db.sqlite3' % (database_folder, ))
     run('sudo chmod -R 770 %s' % (static_folder, ))
+def _set_restart_apache():
+    run('sudo systemctl restart apache2')
