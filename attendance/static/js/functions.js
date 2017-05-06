@@ -20,6 +20,9 @@ if(debug) console.info("You are in debugging mode");
 /*Call jQuery*/
 $(document).ready(function(){
     /*Dynamically resize menu after window resize*/
+    $('#myDropdown').on('click', function(){
+      autoMenuResize();
+    });
     $(window).on('resize', function(){
       autoMenuResize();
     });
