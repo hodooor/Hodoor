@@ -20,7 +20,7 @@ if(debug) console.info("You are in debugging mode");
 /*Call jQuery*/
 $(document).ready(function(){
     /*Dynamically resize menu after window resize*/
-    $(window).on('load resize', function(){
+    $(window).on('resize', function(){
       autoMenuResize();
     });
 
