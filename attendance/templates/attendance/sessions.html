@@ -166,7 +166,7 @@
   </tr>
 </thead>
 <tbody>
-  {% for session in sessions%}
+  {% for session in sessions %}
   <form method='POST' action=''>{% csrf_token %}
     <tr>
      <td>{{session.get_date|date:'D d.m.'}}</td>
@@ -243,6 +243,29 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
+
+  /*Option sorting for projects*/
+  //set variables
+  let my_options = [];
+  let selected = [];
+  $('select').each(function(e){
+    $(this).addClass('hello'+e);
+      my_options[e] = $(".hello"+e+" option");
+      selected[e] = $(".hello"+e).val();
+      //do a jQuery sort
+      my_options[e].sort(function(a,b) {
+          if (a.text > b.text) return 1;
+          if (a.text < b.text) return -1;
+          return 0
+      })
+      //rebuild list of select options
+      $(".hello"+e).empty().append(my_options[e]);
+      $(".hello"+e).val(selected[e]);
+    //});
+  });
+
+
+
 
 	//Make width of content larger in case of larger table
   var Content = $('.content'); //save indetifier to var
