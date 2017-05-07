@@ -198,7 +198,12 @@ $('#id_time_spend').datetimepicker({
     s:TimeSeconds
   })
 });
-/*
+
+/*If there are zeros only, dont display parent table row*/
+let test = $('#id_time_spend').val();
+(test == "00:00:00") ? $('#id_time_spend').parent('td').parent('tr').hide() : void
+
+/*testing timepicker*/
 $('#id_time_spend').parent().wrapInner('<div/>');
 $('#id_time_spend').parent().addClass('input-group');
 $('#id_time_spend').parent().parent().wrapInner('<div/>');
@@ -209,7 +214,16 @@ $('#id_time_spend').addClass('form-control');
 $('#id_time_spend').parent().append(
   '<div id="id_time_spend_opener" class="input-group-addon" data-toggle="tooltip" title="Open Time Picker"><i class="fa fa-clock-o"></i></div></div>'
 );
-*/
+/*$('#id_time_spend_opener').css('color', 'red');
+$('#id_time_spend_opener').datetimepicker({
+  format: "HH:mm:ss",
+  maxDate: moment({
+    h:TimeHours,
+    m:TimeMinutes,
+    s:TimeSeconds
+  })
+});
+/**/
 
 /*Edit Bootstrap default form-controls on this page*/
 $('tbody > tr > td > select').each(function() {
