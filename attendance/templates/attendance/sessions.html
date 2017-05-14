@@ -278,6 +278,8 @@ $(document).ready(function(){
   let TimeMinutes = [];
   let TimeSeconds = [];
   $('input[name=time_spend]').each(function(e){
+    //add icons
+    //$(this).parent().append('<i class="fa fa-clock-o"></i>');
     //separate max values
     separateTime[e] = $('.timepicker'+e).val().split(":");
     TimeHours[e] = separateTime[e][0];
