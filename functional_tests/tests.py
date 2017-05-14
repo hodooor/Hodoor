@@ -106,9 +106,8 @@ class LoginLogoutTest(FunctionalTest):
         self.create_pre_authenticated_session(user.username)
         self.browser.get(self.server_url)
 
-        sessions_header = self.browser.find_element_by_tag_name("h1").text
         self.wait_to_be_logged_in(user)
-        self.assertIn("Dashboard", sessions_header)
+        self.assertIn("Dashboard", self.browser.page_source)
         self.assertEqual(self.server_url + "/user/" + user.username+ "/",self.browser.current_url)
 
         self.browser.find_element_by_class_name('menu-icon').click()
