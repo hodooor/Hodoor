@@ -135,7 +135,7 @@ def user(request, username):
     current_quota = num_of_elapsed_workdays * WORKHOURS_PER_DAY
     quota_difference = hours_work_this_month + unassigned_closed_session_hours - current_quota
     quota_difference_abs = abs(quota_difference)
-    avg_work_hours_fullfill_quota = (hours_quota - unassigned_closed_session_hours - hours_work_this_month) / (num_of_workdays - num_of_elapsed_workdays) 
+    avg_work_hours_fullfill_quota = (hours_quota - unassigned_closed_session_hours - hours_work_this_month) / max(1,num_of_workdays - num_of_elapsed_workdays) 
     
     context = {
         "user": u,
