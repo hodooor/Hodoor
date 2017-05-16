@@ -33,7 +33,7 @@ class FunctionalTest(StaticLiveServerTestCase):
     def setUpClass(cls):
         for arg in sys.argv:
             if 'liveserver' in arg:
-                cls.browser = webdriver.Firefox()
+                cls.browser = webdriver.Chrome()
                 cls.browser.implicitly_wait(3)
                 cls.server_user, cls.server_host = arg.split('=')[1].split('@')
                 print("server host: " + cls.server_host )
@@ -45,7 +45,7 @@ class FunctionalTest(StaticLiveServerTestCase):
         super(FunctionalTest, cls).setUpClass()
         cls.against_staging = False
         cls.server_url = cls.live_server_url
-        cls.browser = webdriver.Firefox()
+        cls.browser = webdriver.Chrome()
         cls.browser.implicitly_wait(3)
 
     @classmethod
@@ -64,7 +64,7 @@ class FunctionalTest(StaticLiveServerTestCase):
 
         username.send_keys(usr)
         password.send_keys(pswd)
-
+        time.sleep(1)
         webdriver.find_element_by_css_selector("input[type='submit']").click()
 
 
@@ -112,6 +112,7 @@ class LoginLogoutTest(FunctionalTest):
         self.assertEqual(self.server_url + "/user/" + user.username+ "/",self.browser.current_url)
 
         self.browser.find_element_by_class_name('menu-icon').click()
+        time.sleep(1)
         self.browser.find_element_by_class_name('fa-power-off').click()
 
         self.wait_to_be_logged_out(user.username)
@@ -156,6 +157,7 @@ class PageNavigationTest(FunctionalTest):
                 self.browser.current_url
         )
         self.browser.find_element_by_class_name('menu-icon').click()
+        time.sleep(1)
         self.browser.find_element_by_class_name('fa-power-off').click()
         self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
@@ -169,6 +171,7 @@ class PageNavigationTest(FunctionalTest):
                 self.browser.current_url
         )
         self.browser.find_element_by_class_name('menu-icon').click()
+        time.sleep(1)
         self.browser.find_element_by_class_name('fa-power-off').click()
         self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
@@ -179,6 +182,7 @@ class PageNavigationTest(FunctionalTest):
         self.login_by_form(user.username,"password", self.browser)
 
         self.browser.find_element_by_class_name('menu-icon').click()
+        time.sleep(1)
         self.browser.find_element_by_class_name('fa-cubes').click()
 
         self.assertIn(
@@ -187,6 +191,7 @@ class PageNavigationTest(FunctionalTest):
         )
 
         self.browser.find_element_by_class_name('menu-icon').click()
+        time.sleep(1)
         self.browser.find_element_by_class_name('fa-power-off').click()
         self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
@@ -197,6 +202,7 @@ class PageNavigationTest(FunctionalTest):
         self.login_by_form(user.username,"password", self.browser)
 
         self.browser.find_element_by_class_name('menu-icon').click()
+        time.sleep(1)
         self.browser.find_element_by_class_name('fa-cube').click()
 
         self.assertEqual(
@@ -205,6 +211,7 @@ class PageNavigationTest(FunctionalTest):
         )
 
         self.browser.find_element_by_class_name('menu-icon').click()
+        time.sleep(1)
         self.browser.find_element_by_class_name('fa-power-off').click()
         self.assertIn(self.server_url + "/login/",self.browser.current_url)
 

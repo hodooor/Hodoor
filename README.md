@@ -39,6 +39,11 @@ You can create superuser by running:
 ```
 python manage.py createsuperuser
 ```
+For using chromedriver on Linux when running functional tests you need to install it. How to install at 
+https://developers.supportbee.com/blog/setting-up-cucumber-to-run-with-Chrome-on-Linux/
+If this doesn't work go to https://sites.google.com/a/chromium.org/chromedriver/downloads download latest version of ChromeDriver 
+and put it in the functinal_tests folder in your Hodoor repo.
+
 #Server deployment
 Deployment process was inspired by great book [Test-Driven Web Development with Python](http://chimera.labs.oreilly.com/books/1234000000754/ch08.html) - Chapter8 and Chapter 9. I'm using apache2 instead of Nginx. You can use template [config file](deploy_tools/apache.conf.template) for apache2 https access with self-signed certificate. 
 
