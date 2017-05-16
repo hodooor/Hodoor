@@ -141,9 +141,9 @@
 </div>
 
 <!--<div class="col-md-2 col-md-offset-8">
-	<a class="btn btn-danger pull-right" value="Previous Page"
-	href="{{ return_url }}">
-	<span class="glyphicon glyphicon-chevron-left"></span> Go back to sessions page</a>
+    <a class="btn btn-danger pull-right" value="Previous Page"
+    href="{{ return_url }}">
+    <span class="glyphicon glyphicon-chevron-left"></span> Go back to sessions page</a>
 </div>-->
 
 <div class="panel panel-default">
@@ -192,6 +192,11 @@ var TimeSeconds = separateTime[2];
 //add timepicker with options
 $('#id_time_spend').datetimepicker({
   format: "HH:mm:ss",
+  minDate: moment({
+    h:0,
+    m:0,
+    s:0
+  }),
   maxDate: moment({
     h:TimeHours,
     m:TimeMinutes,
