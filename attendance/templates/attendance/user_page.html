@@ -80,21 +80,54 @@
   </div>
 </div>
 
-<!--
-<div class="wheater">
-	<div class="panel panel-primary">
-		<div class="panel-heading"></div>
-		<div class="panel-body"></div>
-	</div>
-</div>
--->
-
 <div class="visible-xs visible-sm">
   &nbsp;
 </div>
 {% endblock %}
 
 {% block content %}
+<div class="panel panel-default visible-sm visible-xs"><!--terminal emulator-->
+    <div class="panel-heading">
+      <h2 class="panel-title navigable" id="terminal-emulator" title="Terminal Emulator">
+       <i class="fa fa-calculator" aria-hidden="true"></i> Terminal emulator <i id="tooltip5" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="left"></i>
+      </h2>
+    </div>
+    <div class="panel-body">
+      <div class="terminal-buttons">
+        <form action="{% url 'user' username=user.username %}" method="post">
+          {% csrf_token %}
+          {% for swipe_type in next_swipes %}
+              {% if swipe_type == "IN" %}
+              <button type="submit" class="btn btn-primary" value="Incoming" name = "{{swipe_type}}" data-toggle="tooltip" title="Incoming">
+                <i class="fa fa-sign-in fa-2x" aria-hidden="true"></i></br>Incoming
+              </button>
+              {% endif %}
+              {% if swipe_type == "OUT" %}
+                <button type="submit" class="btn btn-primary" value="Outgoing" name = "{{swipe_type}}" data-toggle="tooltip" title="Outgoing"><i class="fa fa-sign-out fa-2x" aria-hidden="true"></i></br>Outgoing
+                </button>
+              {% endif %}
+              {% if swipe_type == "OBR" %}
+                <button type="submit" class="btn btn-primary" value="Break" name = "{{swipe_type}}" data-toggle="tooltip" title="Break"><i class="fa fa-coffee fa-2x" aria-hidden="true"></i></br>Break
+                </button>
+              {% endif %}
+              {% if swipe_type == "FBR" %}
+                <button type="submit" class="btn btn-primary" value="Break Return" name = "{{swipe_type}}" data-toggle="tooltip" title="Break Return"><i class="fa fa-clock-o fa-2x" aria-hidden="true"></i></br>Break Return
+                </button>
+              {% endif %}
+              {% if swipe_type == "OTR" %}
+                <button type="submit" class="btn btn-primary" value="Trip" name = "{{swipe_type}}" data-toggle="tooltip" title="Work Trip"><i class="fa fa-suitcase fa-2x" aria-hidden="true"></i></br>Work Trip
+                </button>
+              {% endif %}
+              {% if swipe_type == "FTR" %}
+                <button type="submit" class="btn btn-primary" value="Trip Return" name = "{{swipe_type}}" data-toggle="tooltip" title="Trip Return"><i class="fa fa-share-square fa-2x" aria-hidden="true"></i></br>Trip Return
+                </button>
+              {% endif %}
+          {%endfor %}
+        </form>
+      </div><!--//Terminal buttons-->
+    </div>
+  </div><!--/terminal emulator-->
+
 <div class="visible-xs visible-sm hidden-print">
   <label>Navigation:</label>
   <div class="navigable-bar">
@@ -114,31 +147,6 @@
 <div class="row gutter-small"> <!-- if needed add class: equal-height-panels-->
 
     <div class="col-md-3"><!--first col-->
-	<!--this month work time-->
-	<!--
-      <div class="panel panel-primary">
-        <div class="panel-heading">
-          <h2 class="panel-title navigable" id="this-month-work-time" title="This month - Work time">
-            <i class="fa fa-calendar-check-o" aria-hidden="true"></i> This month - work time <i id="tooltip2" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="bottom" title="Tooltip text"></i>
-          </h2>
-        </div>
-        <div class="panel-body">
-          <ul class="dash-list-group">
-            <li class="">Work Hours: <span class="primary" id="work-hours-graph">{{ hours_work_this_month | floatformat:2}}</span> hour(s)</li>
-            <li class="">Not-work Hours: <span class="gray" id="not-work-hours-graph">{{ hours_not_work_this_month| floatformat:2}}</span> hour(s)</li>
-            <li class="list-separator"></li>
-            <li class="">Total Hours: <span class="bold">{{ hours_total_this_month|floatformat:2}}</span> hour(s)</li>
-          </ul>
-          <canvas id="Work-Time-Chart" class="doughnut-chart" width="auto" height="250"></canvas>
-          <script>
-
-          </script>
-        </div>
-        <div class="panel-footer">
-
-        </div>
-      </div><!--/this mont work time-->
-
 	  <div class="panel panel-primary"><!--This month quota-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="this-month-quota" title="This month - Quota">
@@ -266,21 +274,6 @@
 
     <div class="col-md-3"><!--third col-->
 
-
-
-      <!--
-      <div class="panel panel-info">
-        <div class="panel-heading">
-          <h2 class="panel-title navigable" id="terminal-emulator" title="Local Weather">
-           <i class="fa fa-sun-o" aria-hidden="true"></i> Local Weather <i id="tooltip6" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="top"></i>
-          </h2>
-        </div>
-        <div class="panel-body">
-          Pocasi
-        </div>
-      </div>
-      -->
-
 	  <div class="panel panel-primary"><!--todays info panel-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="today-info" title="Today - info">
@@ -314,7 +307,7 @@
 
 	<div class="col-md-3"><!--fourth col-->
 
-	  <div class="panel panel-default"><!--terminal emulator-->
+	  <div class="panel panel-default hidden-sm hidden-xs"><!--terminal emulator-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="terminal-emulator" title="Terminal Emulator">
            <i class="fa fa-calculator" aria-hidden="true"></i> Terminal emulator <i id="tooltip5" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="left"></i>

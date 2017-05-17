@@ -4,6 +4,11 @@
 {% block scripts %}
 <!--Charts.JS module-->
 <script type="text/javascript" language="javascript" src="{% static 'chart.js/dist/Chart.bundle.min.js' %}"></script>
+<!--Moment.js: used for timepicker-->
+<script src="{% static 'moment/moment.js'%}"></script>
+<!--bootstrap-DateTimePicker-->
+<script type="text/javascript" language="javascript" src="{% static 'eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}">
 {% endblock %}
 
 {% block title %}Sessions{% endblock %}
@@ -166,7 +171,7 @@
   </tr>
 </thead>
 <tbody>
-  {% for session in sessions%}
+  {% for session in sessions %}
   <form method='POST' action=''>{% csrf_token %}
     <tr>
      <td>{{session.get_date|date:'D d.m.'}}</td>
@@ -232,17 +237,70 @@
   </tbody>
 </table>
 
+<!--To make top distance-->
+ <div class="row">
+   <div class="col-md-12">
+     <p class="visible-md visible-lg">&nbsp;</p>
+     <p class="visible-sm visible-xs"></p>
+   </div>
+ </div>
+ <!--/-->
+
 <script type="text/javascript">
 $(document).ready(function(){
 
-	//Make width of content larger in case of larger table
+  /*Option sorting for projects*/
+  //set variables
+  let my_options = [];
+  let selected = [];
+  $('select').each(function(e){
+    $(this).addClass('select-project'+e);
+      my_options[e] = $(".select-project"+e+" option");
+      selected[e] = $(".select-project"+e).val();
+      //do a jQuery sort
+      my_options[e].sort(function(a,b) {
+          if (a.text > b.text) return 1;
+          if (a.text < b.text) return -1;
+          return 0
+      })
+      //rebuild list of select options
+      $(".select-project"+e).empty().append(my_options[e]);
+      $(".select-project"+e).val(selected[e]);
+  });
+
+  /*Timepickers*/
+  $('input[name=time_spend]').each(function(e){
+    $(this).addClass('timepicker'+e);
+  });
+  //you have to add class to all of elem. then do a JS functions
+  let separateTime = [];
+  let TimeHours = [];
+  let TimeMinutes = [];
+  let TimeSeconds = [];
+  $('input[name=time_spend]').each(function(e){
+    //add icons
+    //$(this).parent().append('<i class="fa fa-clock-o"></i>');
+    //separate max values
+    separateTime[e] = $('.timepicker'+e).val().split(":");
+    TimeHours[e] = separateTime[e][0];
+    TimeMinutes[e] = separateTime[e][1];
+    TimeSeconds[e] = separateTime[e][2];
+    //add timepicker with options
+    $('.timepicker'+e).datetimepicker({
+      format: "HH:mm:ss",
+      maxDate: moment({
+        h:TimeHours[e],
+        m:TimeMinutes[e],
+        s:TimeSeconds[e]
+      })
+    });
+  });
+  //Make width of content larger in case of larger table
   var Content = $('.content'); //save indetifier to var
   var Table = $('#sessions-table'); //save indetifier to var
 
   Table.data("width", $('#sessions-table').width()); //alocate dynamic var
   Content.data("width", $('.content').width()); //alocate dynamic var
-    //console.log("Content width is: "+Content.data("width")+'px');
-    //console.log("table width is: "+Table.data("width")+'px');
   if(Table.data("width") > Content.data("width")) { //compare widths
     $('.content').css('min-width','100vw'); //if table is wider than content, make content bigger(width to vw)
   }
