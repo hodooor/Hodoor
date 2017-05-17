@@ -10,6 +10,8 @@
 <link rel="stylesheet" href="{% static 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}">
 <!--My tooltips-->
 <script type="text/javascript" language="javascript" src="{% static 'js/tooltips.js' %}"></script>
+<!--DateTimePickerCreater.JS module-->
+<script type="text/javascript" language="javascript" src="{% static 'js/DateTimePickerCreater.js' %}"></script>
 {% endblock %}
 
 {% block title %}Session detail{% endblock %}
@@ -183,26 +185,7 @@
   </div>
 </div>
 <script>
-/*Add timepicker to this field*/
-//separate max values
-var separateTime = $('#id_time_spend').val().split(":");
-var TimeHours = separateTime[0];
-var TimeMinutes = separateTime[1];
-var TimeSeconds = separateTime[2];
-//add timepicker with options
-$('#id_time_spend').datetimepicker({
-  format: "HH:mm:ss",
-  minDate: moment({
-    h:0,
-    m:0,
-    s:0
-  }),
-  maxDate: moment({
-    h:TimeHours,
-    m:TimeMinutes,
-    s:TimeSeconds
-  })
-});
+addDateTimePicker('#id_time_spend');
 /*
 $('#id_time_spend').parent().wrapInner('<div/>');
 $('#id_time_spend').parent().addClass('input-group');
