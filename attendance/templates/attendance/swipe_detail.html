@@ -156,6 +156,16 @@
 
       $('#timepicker').datetimepicker({ //show BS popover with Time
         format: "HH:mm:ss",
+        minDate: moment({
+          h:0,
+          m:0,
+          s:0
+        }),
+        maxDate: moment({
+          h:23,
+          m:59,
+          s:59
+        })
       });
       //After change, yeld new values to default python form
       //for time

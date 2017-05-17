@@ -288,6 +288,11 @@ $(document).ready(function(){
     //add timepicker with options
     $('.timepicker'+e).datetimepicker({
       format: "HH:mm:ss",
+      minDate: moment({
+        h:0,
+        m:0,
+        s:0
+      }),
       maxDate: moment({
         h:TimeHours[e],
         m:TimeMinutes[e],

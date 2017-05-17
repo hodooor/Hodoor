@@ -208,6 +208,11 @@ var TimeSeconds = separateTime[2];
 //add timepicker with options
 $('#id_time_spend').datetimepicker({
   format: "HH:mm:ss",
+  minDate: moment({
+    h:0,
+    m:0,
+    s:0
+  }),
   maxDate: moment({
     h:TimeHours,
     m:TimeMinutes,
