@@ -74,3 +74,11 @@ def last_month(this_month=datetime.now().month):
 			return this_month-1
 	else: 
 		raise ValueError("Number of month does not exist")
+
+def daily_hours(hours):
+    if hours > 24 :
+        return 24
+    elif hours < 0 :
+        return 0
+    else:
+        return hours
