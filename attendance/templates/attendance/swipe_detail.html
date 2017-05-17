@@ -38,14 +38,14 @@
 					</thead>
 					<tbody>
 						<tr>
-						    <td data-field="key" class="key">Swipe Type</td>
-						    <td data-field="value" id="swipeType">{{swipe.swipe_type}}</td>
-								<td><i id="swipe-icon" class="fa fa-2x "></i></td>
+              <td data-field="key" class="key">Swipe Type</td>
+              <td data-field="value" id="swipeType">{{swipe.swipe_type}}</td>
+              <td><i id="swipe-icon" class="fa fa-2x "></i></td>
 						</tr>
 						<tr>
-						    <td data-field="key" class="key">Belongs to Session</td>
-						    <td data-field="value">{% if swipe.session %}<a href="{% url 'session_detail' username=user.username id=swipe.session.id %}">{{swipe.session}}</a>{% endif %}</td>
-								<td></td>
+              <td data-field="key" class="key">Belongs to Session</td>
+              <td data-field="value">{% if swipe.session %}<a href="{% url 'session_detail' username=user.username id=swipe.session.id %}">{{swipe.session}}</a>{% endif %}</td>
+              <td></td>
 						</tr>
 						{% if corrected_by %}
 						<tr>
@@ -74,31 +74,31 @@
                 </td>
               </tr>
 							<tr>
-							    <td data-field="key" class="key">Datetime</td>
-							    <form method='POST' action=''>{% csrf_token %}
-							   	{% for f in form %}
-									<td>
-										{{f}}
-										<div class="form-inline">
-											<div class="form-group">
-												<div class='input-group' id='datepicker'>
-													<input id="PickerDate" type="text" name="PickerDate" class="form-control text-center" />
-                          <div class="input-group-addon" data-toggle="tooltip" title="Open Date Picker"><i class="fa fa-calendar"></i></div>
-												</div>
-											</div>
-										</div>
-									</td>
-								{% endfor %}
-									<td>
-                    <div class="form-inline col-md-9">
-											<div class="form-group">
-												<div class="input-group" id="timepicker">
-													<input id="PickerTime" type="text" name="PickerTime" class="form-control text-center" />
-                          <div class="input-group-addon" data-toggle="tooltip" title="Open Time Picker"><i class="fa fa-clock-o"></i></div>
-												</div>
-											</div>
-										</div>
-									</td>
+                <td data-field="key" class="key">Datetime</td>
+                <form method='POST' action=''>{% csrf_token %}
+                {% for f in form %}
+                <td>
+                  {{f}}
+                  <div class="form-inline">
+                    <div class="form-group">
+                      <div class='input-group' id='datepicker'>
+                        <input id="PickerDate" type="text" name="PickerDate" class="form-control text-center" />
+                        <div class="input-group-addon" data-toggle="tooltip" title="Open Date Picker"><i class="fa fa-calendar"></i></div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              {% endfor %}
+                <td>
+                  <div class="form-inline col-md-9">
+                    <div class="form-group">
+                      <div class="input-group" id="timepicker">
+                        <input id="PickerTime" type="text" name="PickerTime" class="form-control text-center" />
+                        <div class="input-group-addon" data-toggle="tooltip" title="Open Time Picker"><i class="fa fa-clock-o"></i></div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
 							</tr>
 						{% else %}
 							<tr>

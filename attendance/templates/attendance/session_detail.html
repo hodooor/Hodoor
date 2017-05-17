@@ -28,44 +28,43 @@
         <th class="">PARAM.</th>
         <th class="">VALUE</th>
         <th class=""></th>
-        <!--<th class="col-md-10">DESCRIPTION</th>-->
       </tr>
       </thead>
       <tbody>
       <tr>
-          <td data-field="key" class="key">Overall Duration</td>
-          <td data-field="value">{{session.session_duration_overall}}</td>
-          <td><i id="tooltip7" class="fa fa-question-circle question " aria-hidden="true" data-toggle="tooltip" data-placement="right" title=""></i></td>
+        <td data-field="key" class="key">Overall Duration</td>
+        <td data-field="value">{{session.session_duration_overall}}</td>
+        <td><i id="tooltip7" class="fa fa-question-circle question " aria-hidden="true" data-toggle="tooltip" data-placement="right" title=""></i></td>
       </tr>
       <tr>
-          <td data-field="key" class="key">Work Duration</td>
-          <td data-field="value">{{session.session_duration}}</td>
-          <td><i id="tooltip8" class="fa fa-question-circle question " aria-hidden="true" data-toggle="tooltip" data-placement="right" title=""></i></td>
+        <td data-field="key" class="key">Work Duration</td>
+        <td data-field="value">{{session.session_duration}}</td>
+        <td><i id="tooltip8" class="fa fa-question-circle question " aria-hidden="true" data-toggle="tooltip" data-placement="right" title=""></i></td>
       </tr>
       <tr>
-          <td data-field="key" class="key">Not Assigned Duration</td>
-          <td data-field="value" class="not-assigned">{{session.get_not_assigned_duration}}</td>
-          <td><i id="tooltip9" class="fa fa-question-circle question " aria-hidden="true" data-toggle="tooltip" data-placement="right"></i></td>
+        <td data-field="key" class="key">Not Assigned Duration</td>
+        <td data-field="value" class="not-assigned">{{session.get_not_assigned_duration}}</td>
+        <td><i id="tooltip9" class="fa fa-question-circle question " aria-hidden="true" data-toggle="tooltip" data-placement="right"></i></td>
       </tr>
       <tr>
-          <td data-field="key" class="key">Number of Breaks</td>
-          <td data-field="value">{{session.num_of_breaks}}</td>
-          <td><i id="tooltip10" class="fa fa-question-circle question " aria-hidden="true" data-toggle="tooltip" data-placement="right"></i></td>
+        <td data-field="key" class="key">Number of Breaks</td>
+        <td data-field="value">{{session.num_of_breaks}}</td>
+        <td><i id="tooltip10" class="fa fa-question-circle question " aria-hidden="true" data-toggle="tooltip" data-placement="right"></i></td>
       </tr>
       <tr>
-          <td data-field="key" class="key">Breaks Duration</td>
-          <td data-field="value">{{session.breaks_duration}}</td>
-          <td><i id="tooltip11" class="fa fa-question-circle question " aria-hidden="true" data-toggle="tooltip" data-placement="right"></i></td>
+        <td data-field="key" class="key">Breaks Duration</td>
+        <td data-field="value">{{session.breaks_duration}}</td>
+        <td><i id="tooltip11" class="fa fa-question-circle question " aria-hidden="true" data-toggle="tooltip" data-placement="right"></i></td>
       </tr>
       <tr>
-          <td data-field="key" class="key">Session Status</td>
-          <td data-field="value" class="status">{{ session.is_session_complete |yesno:"Complete, Open" }}</td>
-          <td><i id="tooltip12" class="fa fa-question-circle question " aria-hidden="true" data-toggle="tooltip" data-placement="right"></i></td>
+        <td data-field="key" class="key">Session Status</td>
+        <td data-field="value" class="status">{{ session.is_session_complete |yesno:"Complete, Open" }}</td>
+        <td><i id="tooltip12" class="fa fa-question-circle question " aria-hidden="true" data-toggle="tooltip" data-placement="right"></i></td>
       </tr>
       <tr>
-          <td data-field="key" class="key">Session Modified</td>
-          <td data-field="value">{{ session.modified }}</td>
-          <td><i id="tooltip13" class="fa fa-question-circle question " aria-hidden="true" data-toggle="tooltip" data-placement="right"></i></td>
+        <td data-field="key" class="key">Session Modified</td>
+        <td data-field="value">{{ session.modified }}</td>
+        <td><i id="tooltip13" class="fa fa-question-circle question " aria-hidden="true" data-toggle="tooltip" data-placement="right"></i></td>
       </tr>
       </tbody>
     </table>
@@ -133,7 +132,6 @@
           <td>{{swipe.id}}</td>
           <td class="text-center"><a href="{% url 'swipe_detail' username=user.username id=swipe.id %}" class="btn btn-info">Detail</a></td>
         </tr>
-
         {% endfor %}
       </tbody>
     </table>
@@ -166,12 +164,11 @@
         <form method='POST' action=''>{% csrf_token %}
         <tr>
           {% for field in project_separation_form %}
-            <td>{{field}}</td>
+          <td>{{field}}</td>
           {% endfor %}
           <td><input id="form-submit-btn" type="submit" class="btn btn-success" value="Add" /></td>
         </tr>
         </form>
-
       </tbody>
     </table>
   </div>
