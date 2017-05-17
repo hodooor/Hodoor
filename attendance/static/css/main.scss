@@ -560,6 +560,8 @@ $loader-size: 9em;
 			font-size: 1.3em;
 		}
 	}
+	.input-group-addon {
+	}
 }
 
 /*----------------------------------------*/
@@ -1161,15 +1163,11 @@ input[type="color"]:focus,
 		overflow: hidden;
 		text-overflow: ellipsis;
 	  text-align: center;
-	  width: 130px;
-	  height: 130px;
 	}
 	.dropmenu-item-btn-wide {
 		overflow: hidden;
 		text-overflow: ellipsis;
 		text-align: center;
-		width: 90%;
-		height: 130px;
 	}
 	.disabled {
 		cursor: not-allowed;

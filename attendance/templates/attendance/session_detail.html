@@ -81,7 +81,7 @@
 
 <div class="panel panel-primary">
   <div class="panel-heading">
-    <h2 class="panel-title">Swipes related to session</h2>
+    <h2 class="panel-title">Swipes related to session ID: {{ id }}</h2>
   </div>
   <div class="panel-body">
     <table class="table table-striped table-hover table-responsive table-primary">
@@ -129,7 +129,7 @@
           </td>
           <td><a href="{% url 'session_detail' username=user.username id=swipe.session.id %}">{{swipe.session}}</a></td>
           <td></td>
-          <td>{% if swipe.correction_of_swipe%}<a href="{% url 'swipe_detail' username=user.username id=swipe.correction_of_swipe.id %}">{{ swipe.correction_of_swipe.id}}</a>{% endif %}</td>
+          <td>{% if swipe.correction_of_swipe %}<a href="{% url 'swipe_detail' username=user.username id=swipe.correction_of_swipe.id %}">{{ swipe.correction_of_swipe.id}}</a>{% endif %}</td>
           <td>{{swipe.id}}</td>
           <td class="text-center"><a href="{% url 'swipe_detail' username=user.username id=swipe.id %}" class="btn btn-info">Detail</a></td>
         </tr>
@@ -139,12 +139,6 @@
     </table>
   </div>
 </div>
-
-<!--<div class="col-md-2 col-md-offset-8">
-	<a class="btn btn-danger pull-right" value="Previous Page"
-	href="{{ return_url }}">
-	<span class="glyphicon glyphicon-chevron-left"></span> Go back to sessions page</a>
-</div>-->
 
 <div class="panel panel-default">
   <div class="panel-heading">
@@ -174,7 +168,7 @@
           {% for field in project_separation_form %}
             <td>{{field}}</td>
           {% endfor %}
-          <td><input type="submit" class="btn btn-success" value="Add" /></td>
+          <td><input id="form-submit-btn" type="submit" class="btn btn-success" value="Add" /></td>
         </tr>
         </form>
 
@@ -183,6 +177,28 @@
   </div>
 </div>
 <script>
+/*Enable/disable button if theres no project assigned*/
+/*let projectSelected = $('#id_project').val();
+$('#id_project').on('change', function() {
+  if(projectSelected == "---------" ) {
+    $('#form-submit-btn').addClass('disabled');
+  };
+});*/
+
+/*Option sorting for projects*/
+//set variables
+let my_options = $("#id_project option");
+let selected = $("#id_project").val();
+//do a jQuery sort
+my_options.sort(function(a,b) {
+    if (a.text > b.text) return 1;
+    if (a.text < b.text) return -1;
+    return 0
+})
+//rebuild list of select options
+$("#id_project").empty().append( my_options );
+$("#id_project").val(selected);
+
 /*Add timepicker to this field*/
 //separate max values
 var separateTime = $('#id_time_spend').val().split(":");
@@ -199,17 +215,33 @@ $('#id_time_spend').datetimepicker({
   })
 });
 /*
-$('#id_time_spend').parent().wrapInner('<div/>');
-$('#id_time_spend').parent().addClass('input-group');
+/*Timepicker's styling and elem. adding*/
+//Danger! Styles below must be in this exact order!!!
+/*$('#id_time_spend').parent().wrapInner('<div/>');
+$('#id_time_spend').parent().addClass('input-group').attr('id', 'timepicker');
 $('#id_time_spend').parent().parent().wrapInner('<div/>');
 $('#id_time_spend').parent().parent().addClass('form-group');
 $('#id_time_spend').parent().parent().parent().wrapInner('<div/>');
 $('#id_time_spend').parent().parent().parent().addClass('form-inline col-md-9');
-$('#id_time_spend').addClass('form-control');
+$('#id_time_spend').addClass('form-control text-center');
+//create time icon
 $('#id_time_spend').parent().append(
-  '<div id="id_time_spend_opener" class="input-group-addon" data-toggle="tooltip" title="Open Time Picker"><i class="fa fa-clock-o"></i></div></div>'
+  '<div class="input-group-addon" data-toggle="tooltip" title="Open Time Picker" style="position: relative; right:-9px;"><i class="fa fa-clock-o"></i></div></div>'
 );
-*/
+//enable timepicker
+$('#id_time_spend').datetimepicker({
+  format: "HH:mm:ss",
+  maxDate: moment({
+    h:TimeHours,
+    m:TimeMinutes,
+    s:TimeSeconds
+  })
+});
+/**/
+
+/*If there are zeros only, dont display parent table row*/
+let timeSpendVal = $('#id_time_spend').val();
+(timeSpendVal == "00:00:00") ? $('#id_time_spend').parent('td').parent('tr').hide() : void
 
 /*Edit Bootstrap default form-controls on this page*/
 $('tbody > tr > td > select').each(function() {
