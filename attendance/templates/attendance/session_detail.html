@@ -177,14 +177,6 @@
   </div>
 </div>
 <script>
-/*Enable/disable button if theres no project assigned*/
-/*let projectSelected = $('#id_project').val();
-$('#id_project').on('change', function() {
-  if(projectSelected == "---------" ) {
-    $('#form-submit-btn').addClass('disabled');
-  };
-});*/
-
 /*Option sorting for projects*/
 //set variables
 let my_options = $("#id_project option");
@@ -214,30 +206,6 @@ $('#id_time_spend').datetimepicker({
     s:TimeSeconds
   })
 });
-/*
-/*Timepicker's styling and elem. adding*/
-//Danger! Styles below must be in this exact order!!!
-/*$('#id_time_spend').parent().wrapInner('<div/>');
-$('#id_time_spend').parent().addClass('input-group').attr('id', 'timepicker');
-$('#id_time_spend').parent().parent().wrapInner('<div/>');
-$('#id_time_spend').parent().parent().addClass('form-group');
-$('#id_time_spend').parent().parent().parent().wrapInner('<div/>');
-$('#id_time_spend').parent().parent().parent().addClass('form-inline col-md-9');
-$('#id_time_spend').addClass('form-control text-center');
-//create time icon
-$('#id_time_spend').parent().append(
-  '<div class="input-group-addon" data-toggle="tooltip" title="Open Time Picker" style="position: relative; right:-9px;"><i class="fa fa-clock-o"></i></div></div>'
-);
-//enable timepicker
-$('#id_time_spend').datetimepicker({
-  format: "HH:mm:ss",
-  maxDate: moment({
-    h:TimeHours,
-    m:TimeMinutes,
-    s:TimeSeconds
-  })
-});
-/**/
 
 /*If there are zeros only, dont display parent table row*/
 let timeSpendVal = $('#id_time_spend').val();
