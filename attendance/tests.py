@@ -21,6 +21,7 @@ from attendance.views import sessions_month
 from attendance.factories import UserFactory, SwipeFactory, ProjectFactory, ProjectSeparationFactory
 from .forms import SwipeEditForm
 from .utils import get_num_of_elapsed_workdays_in_month
+from .views import last_month
 
 def dict_to_database(serializer_class, list_of_dict):
     '''
@@ -346,4 +347,9 @@ class UtilsTestCase(TestCase):
         self.assertEqual(f(date(2017, 1, 1)), 0)
         self.assertEqual(f(date(2017, 1, 2)), 0)
         self.assertEqual(f(date(2017, 1, 3)), 1)
-        
+    
+    def test_last_month(self):
+        self.assertEqual(last_month(12),11)    
+        self.assertEqual(last_month(1),12)
+        self.assertEqual(last_month(0),"Number of month out of range")
+        self.assertEqual(last_month(13),"Number of month out of range")

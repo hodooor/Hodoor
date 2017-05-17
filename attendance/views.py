@@ -42,7 +42,16 @@ def user_check(request, username):
         return True
     else:
         return False
-
+        
+def last_month(this_month=datetime.now().month):
+	if(this_month > 0 and this_month <= 12):
+		if(this_month==1):
+			return 12
+		else:
+			return this_month-1
+	else: 
+		return "Number of month out of range"
+		
 @login_required(login_url='/login/')
 def user(request, username):
     if not user_check(request, username):
@@ -119,12 +128,12 @@ def user(request, username):
         last_swipe = None
         next_swipes = ('IN',)  # empty database - first swipe is IN
 
-    hours_total_last_month = Session.objects.get_hours_month(u.id, datetime.now().month-1)
-    hours_unassigned_last_month = Session.objects.get_unassigned_hours_month(u.id, datetime.now().month-1)
+    hours_total_last_month = Session.objects.get_hours_month(u.id, last_month())
+    hours_unassigned_last_month = Session.objects.get_unassigned_hours_month(u.id, last_month())
     hours_total_this_month = Session.objects.get_hours_this_month(u.id)
     hours_unassigned_this_month = Session.objects.get_unassigned_hours_month(u.id, datetime.now().month)
     hours_not_work_this_month = Session.objects.get_not_work_hours_month(u.id, datetime.now().month)
-    hours_not_work_last_month = Session.objects.get_not_work_hours_month(u.id, datetime.now().month-1)
+    hours_not_work_last_month = Session.objects.get_not_work_hours_month(u.id, last_month())
     hours_work_last_month = hours_total_last_month - hours_unassigned_last_month - hours_not_work_last_month
     hours_work_this_month = hours_total_this_month - hours_unassigned_this_month - hours_not_work_this_month
     
