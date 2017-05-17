@@ -2,7 +2,7 @@ from fabric.contrib.files import append, exists, sed
 from fabric.api import env, local, run
 import random
 
-REPO_URL = 'https://github.com/OndrejVicar/Hodoor/'
+REPO_URL = 'https://github.com/hodooor/Hodoor/'
 
 def deploy():
     site_folder = '/home/%s/sites/%s' % (env.user, env.host)
@@ -75,7 +75,14 @@ def _update_database(source_folder):
     ))
 def _set_database_permissions(site_folder):
     database_folder = site_folder + "/database"
+    static_folder = site_folder + "/static"
+
     run('sudo chgrp www-data %s' % (database_folder, )) #set group to folder
     run('sudo chgrp www-data %s/db.sqlite3' % (database_folder, )) #and file
+    run('sudo chgrp www-data -R %s' % (static_folder, ))
+
     run('sudo chmod 770 %s' % (database_folder, ))
     run('sudo chmod 770 %s/db.sqlite3' % (database_folder, ))
+    run('sudo chmod -R 770 %s' % (static_folder, ))
+def _set_restart_apache():
+    run('sudo systemctl restart apache2')
