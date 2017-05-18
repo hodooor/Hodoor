@@ -14,7 +14,7 @@ from django.utils import timezone
 from django.db.models import Q
 import locale
 from django.db.models import Prefetch
-from attendance.utils import get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days
+from attendance.utils import get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days, last_month
 
 WORKHOURS_PER_DAY = 8
 
@@ -43,15 +43,6 @@ def user_check(request, username):
     else:
         return False
         
-def last_month(this_month=datetime.now().month):
-	if(this_month > 0 and this_month <= 12):
-		if(this_month==1):
-			return 12
-		else:
-			return this_month-1
-	else: 
-		return "Number of month out of range"
-		
 @login_required(login_url='/login/')
 def user(request, username):
     if not user_check(request, username):
