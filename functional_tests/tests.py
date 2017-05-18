@@ -2,6 +2,10 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.support.wait import WebDriverWait
 
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 from attendance.models import Key, Swipe, Session
 from attendance.factories import UserFactory, SwipeFactory
 
@@ -65,9 +69,7 @@ class FunctionalTest(StaticLiveServerTestCase):
         username.send_keys(usr)
         password.send_keys(pswd)
         
-        self.wait_for_element_with_id('id_username')
-        webdriver.find_element_by_css_selector("input[type='submit']").click()
-
+        self.wait_for_element_to_be_clickable_with_css_selector_click("input[type='submit']")
 
     def wait_for_element_with_id(self, element_id):
         WebDriverWait(self.browser, timeout = 30).until(
@@ -76,7 +78,11 @@ class FunctionalTest(StaticLiveServerTestCase):
                 element_id, self.browser.find_element_by_tag_name("body").text
                 )
         )
-
+        
+    def wait_for_element_to_be_clickable_with_css_selector_click(self, css_selector):
+        element = WebDriverWait(self.browser, timeout = 30).until(EC.element_to_be_clickable((By.CSS_SELECTOR, css_selector)));
+        element.click();
+        
     def wait_to_be_logged_in(self, user):
         self.wait_for_element_with_id('main-username')
         userinfo = self.browser.find_element_by_class_name("userinfo")
@@ -112,9 +118,7 @@ class LoginLogoutTest(FunctionalTest):
         self.assertEqual(self.server_url + "/user/" + user.username+ "/",self.browser.current_url)
 
         self.browser.find_element_by_class_name('menu-icon').click()
-        self.wait_for_element_with_id("myDropdown")
-        self.browser.find_element_by_class_name('fa-power-off').click()
-
+        self.wait_for_element_to_be_clickable_with_css_selector_click("i[class='fa fa-power-off']")
         self.wait_to_be_logged_out(user.username)
         self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
@@ -151,15 +155,13 @@ class PageNavigationTest(FunctionalTest):
         )
 
         self.browser.find_element_by_class_name('menu-icon').click()
-        self.wait_for_element_with_id("myDropdown")
-        self.browser.find_element_by_class_name('fa-id-card-o').click()
+        self.wait_for_element_to_be_clickable_with_css_selector_click("i[class='fa fa-id-card-o']")
         self.assertEqual(
                 self.server_url + "/user/" + user.username + "/",
                 self.browser.current_url
         )
         self.browser.find_element_by_class_name('menu-icon').click()
-        self.wait_for_element_with_id("myDropdown")
-        self.browser.find_element_by_class_name('fa-power-off').click()
+        self.wait_for_element_to_be_clickable_with_css_selector_click("i[class='fa fa-power-off']")
         self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
     def test_click_on_logout(self):
@@ -172,8 +174,7 @@ class PageNavigationTest(FunctionalTest):
                 self.browser.current_url
         )
         self.browser.find_element_by_class_name('menu-icon').click()
-        self.wait_for_element_with_id("myDropdown")
-        self.browser.find_element_by_class_name('fa-power-off').click()
+        self.wait_for_element_to_be_clickable_with_css_selector_click("i[class='fa fa-power-off']")
         self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
 
@@ -183,8 +184,7 @@ class PageNavigationTest(FunctionalTest):
         self.login_by_form(user.username,"password", self.browser)
 
         self.browser.find_element_by_class_name('menu-icon').click()
-        self.wait_for_element_with_id("myDropdown")
-        self.browser.find_element_by_class_name('fa-cubes').click()
+        self.wait_for_element_to_be_clickable_with_css_selector_click("i[class='fa fa-cubes']")
 
         self.assertIn(
                 self.server_url + "/sessions/" + user.username + "/",
@@ -192,8 +192,7 @@ class PageNavigationTest(FunctionalTest):
         )
 
         self.browser.find_element_by_class_name('menu-icon').click()
-        self.wait_for_element_with_id("myDropdown")
-        self.browser.find_element_by_class_name('fa-power-off').click()
+        self.wait_for_element_to_be_clickable_with_css_selector_click("i[class='fa fa-power-off']")
         self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
     def test_click_on_swipes(self):
@@ -203,8 +202,7 @@ class PageNavigationTest(FunctionalTest):
         self.login_by_form(user.username,"password", self.browser)
 
         self.browser.find_element_by_class_name('menu-icon').click()
-        self.wait_for_element_with_id("myDropdown")
-        self.browser.find_element_by_class_name('fa-cube').click()
+        self.wait_for_element_to_be_clickable_with_css_selector_click("i[class='fa fa-cube']")
 
         self.assertEqual(
                 self.server_url + "/swipes/" + user.username + "/",
@@ -212,8 +210,7 @@ class PageNavigationTest(FunctionalTest):
         )
 
         self.browser.find_element_by_class_name('menu-icon').click()
-        self.wait_for_element_with_id("myDropdown")
-        self.browser.find_element_by_class_name('fa-power-off').click()
+        self.wait_for_element_to_be_clickable_with_css_selector_click("i[class='fa fa-power-off']")
         self.assertIn(self.server_url + "/login/",self.browser.current_url)
 
 
