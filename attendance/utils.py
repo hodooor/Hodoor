@@ -1,4 +1,4 @@
-from datetime import timedelta, date
+from datetime import timedelta, date, datetime
 from czech_holidays import holidays
 import calendar
 
@@ -59,3 +59,18 @@ def get_num_of_elapsed_workdays_in_month(date):
         return number_of_workdays - 1
     else:
         return number_of_workdays
+        
+def last_month(this_month=datetime.now().month):
+	"""
+	Return previus month
+	
+	When It's January return December last year.
+	
+	"""
+	if 0 < this_month <= 12:
+		if this_month == 1:
+			return 12
+		else:
+			return this_month-1
+	else: 
+		raise ValueError("Number of month does not exist")
