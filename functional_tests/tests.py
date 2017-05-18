@@ -96,6 +96,8 @@ class FunctionalTest(StaticLiveServerTestCase):
                 value=session_key,
                 path='/',
         ))
+    
+        
 
 class LoginLogoutTest(FunctionalTest):
     def test_login_and_logout_users(self):
@@ -308,6 +310,18 @@ class SessionTest(FunctionalTest):
             finally:
                 self.browser.get(self.server_url + "/logout/")
                 self.assertIn(self.server_url + "/login/",self.browser.current_url)
+                
+    def test_user_can_refresh_page_without_resending_forms(self):
+        user = UserFactory.create()
+        self.browser.get(self.server_url)
+
+        self.login_by_form(user.username,"password", self.browser)
+        self.browser.find_element_by_name('IN').click()
+        self.wait_for_element_with_id('myDropdown')
+        self.browser.refresh();
+        self.assertIn(self.server_url + "/user/",self.browser.current_url)
+        
+         
 
 class APITest(FunctionalTest):
     '''

@@ -84,6 +84,7 @@ def user(request, username):
                     user = request.user,
                     datetime = timezone.now(),
             )
+        return HttpResponseRedirect(""); # hard reload the page without any forms
     u = User.objects.get(username=username)
     s = Session.objects.get_sessions_this_month(user=u)
 
