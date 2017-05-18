@@ -20,12 +20,7 @@ from time import sleep
 from attendance.views import sessions_month
 from attendance.factories import UserFactory, SwipeFactory, ProjectFactory, ProjectSeparationFactory
 from .forms import SwipeEditForm
-<<<<<<< HEAD
-from .utils import get_num_of_elapsed_workdays_in_month, last_month
-=======
-from .utils import get_num_of_elapsed_workdays_in_month
-from .views import daily_hours
->>>>>>> daily hours + test
+from .utils import get_num_of_elapsed_workdays_in_month, last_month, daily_hours
 
 def dict_to_database(serializer_class, list_of_dict):
     '''

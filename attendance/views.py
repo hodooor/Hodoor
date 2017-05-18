@@ -14,7 +14,8 @@ from django.utils import timezone
 from django.db.models import Q
 import locale
 from django.db.models import Prefetch
-from attendance.utils import get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days, last_month
+from attendance.utils import get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days, last_month, daily_hours
+
 
 WORKHOURS_PER_DAY = 8
 
@@ -42,7 +43,7 @@ def user_check(request, username):
         return True
     else:
         return False
-        
+
 @login_required(login_url='/login/')
 def user(request, username):
     if not user_check(request, username):
