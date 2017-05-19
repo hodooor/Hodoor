@@ -35,10 +35,10 @@ from django.conf import settings
 class FunctionalTest(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):
-        browser_path = "./node_modules/chromedriver/lib/chromedriver/chromedriver"
+        DRIVER_PATH = "./node_modules/chromedriver/lib/chromedriver/chromedriver"
         for arg in sys.argv:
             if 'liveserver' in arg:
-                cls.browser = webdriver.Chrome(browser_path)
+                cls.browser = webdriver.Chrome(DRIVER_PATH)
                 cls.browser.implicitly_wait(3)
                 cls.server_user, cls.server_host = arg.split('=')[1].split('@')
                 print("server host: " + cls.server_host )
@@ -50,7 +50,7 @@ class FunctionalTest(StaticLiveServerTestCase):
         super(FunctionalTest, cls).setUpClass()
         cls.against_staging = False
         cls.server_url = cls.live_server_url
-        cls.browser = webdriver.Chrome(browser_path)
+        cls.browser = webdriver.Chrome(DRIVER_PATH)
         cls.browser.implicitly_wait(3)
 
     @classmethod
