@@ -1,6 +1,6 @@
 language: python
 addons:
-    firefox: "49.0"
+    firefox: "52.0"
 python:
     - "3.6"
 install:
@@ -13,4 +13,4 @@ before_script:
     - "sh -e /etc/init.d/xvfb start"
     - sleep 3 # give xvfb some time to start
 script:
-    - python manage.py test
+    - python manage.py test -v 3
