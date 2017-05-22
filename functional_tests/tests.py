@@ -1,6 +1,7 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.action_chains import ActionChains
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -323,14 +324,16 @@ class SessionTest(FunctionalTest):
     def test_user_can_refresh_page_without_resending_forms(self):
         user = UserFactory.create()
         self.browser.get(self.server_url)
-
         self.login_by_form(user.username,"password", self.browser)
-        self.browser.find_element_by_name('IN').click()
+        element = self.browser.find_element_by_name('IN')
+        actions = ActionChains(self.browser)
+        actions.move_to_element(element)
+        actions.click(element)
         self.wait_for_element_with_id('myDropdown')
         self.browser.refresh();
-        self.assertIn(self.server_url + "/user/",self.browser.current_url)
-        
-         
+        self.wait_for_element_with_id('myDropdown')
+        self.assertIn(self.server_url + "/user/", self.browser.current_url)
+
 
 class APITest(FunctionalTest):
     '''
