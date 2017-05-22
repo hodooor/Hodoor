@@ -70,8 +70,21 @@
   <div class="panel-body">
     <ul class="collabsible-list list-group" id="users-on-break">
     {% for user in on_break_users %}
-			<li><i class="fa fa-circle-o" aria-hidden="true"></i> {{user.first_name}} {{user.last_name}}</li>
-		{%endfor %}
+            <li>
+			  <table><tr><td>
+              <i class="fa fa-circle-o" aria-hidden="true"></i> {{user.first_name}} {{user.last_name}}
+              {% if request.user.is_staff %}
+                </td><td>
+                <form action="{% url 'user' username=user.username %}" method="post">
+                  {% csrf_token %}
+                  <input type = "hidden" name = "username" value = {{user.username}}>
+                  <button type ="submit" class="btn btn-primary" value="BreakUserOut" name = "OUTUSER" data-toggle="tooltip" title="Swipe user Out"><i class="fa fa-sign-out fa-2x" aria-hidden="true"></i>
+                  </button>
+                </form>
+              {%endif %}
+              </td></tr></table>
+            </li>
+        {%endfor %}
     </ul>
   </div>
 </div>
@@ -87,8 +100,21 @@
   <div class="panel-body">
     <ul class="collabsible-list list-group" id="users-on-trip">
     {% for user in on_trip_users %}
-			<li><i class="fa fa-circle-o" aria-hidden="true"></i> {{user.first_name}} {{user.last_name}}</li>
-		{%endfor %}
+            <li>
+			  <table><tr><td>
+              <i class="fa fa-circle-o" aria-hidden="true"></i> {{user.first_name}} {{user.last_name}}
+              {% if request.user.is_staff %}
+                </td><td>
+                <form action="{% url 'user' username=user.username %}" method="post">
+                  {% csrf_token %}
+                  <input type = "hidden" name = "username" value = {{user.username}}>
+                  <button type ="submit" class="btn btn-primary" value="TripUserOut" name = "OUTUSER" data-toggle="tooltip" title="Swipe user Out"><i class="fa fa-sign-out fa-2x" aria-hidden="true"></i>
+                  </button>
+                </form>
+              {%endif %}
+              </td></tr></table>
+            </li>
+        {%endfor %}
     </ul>
   </div>
 </div>
