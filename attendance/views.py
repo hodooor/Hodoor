@@ -85,6 +85,12 @@ def user(request, username):
                     user = request.user,
                     datetime = timezone.now(),
             )
+        if request.POST.get("OUTUSER"):
+            Swipe.objects.create(
+                    swipe_type = "OUT",
+                    user = User.objects.get(username=(request.POST.get("username"))),
+                    datetime = timezone.now(),
+            )
         return HttpResponseRedirect(reverse(user, args=[request.user.username])); # hard reload the page without any forms
     u = User.objects.get(username=username)
     s = Session.objects.get_sessions_this_month(user=u)
