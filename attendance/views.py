@@ -14,7 +14,8 @@ from django.utils import timezone
 from django.db.models import Q
 import locale
 from django.db.models import Prefetch
-from attendance.utils import get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days, last_month
+from attendance.utils import get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days, last_month, daily_hours
+
 
 WORKHOURS_PER_DAY = 8
 
@@ -42,7 +43,7 @@ def user_check(request, username):
         return True
     else:
         return False
-        
+
 @login_required(login_url='/login/')
 def user(request, username):
     if not user_check(request, username):
@@ -136,7 +137,7 @@ def user(request, username):
     current_quota = num_of_elapsed_workdays * WORKHOURS_PER_DAY
     quota_difference = hours_work_this_month + unassigned_closed_session_hours - current_quota
     quota_difference_abs = abs(quota_difference)
-    avg_work_hours_fullfill_quota = (hours_quota - unassigned_closed_session_hours - hours_work_this_month) / max(1,num_of_workdays - num_of_elapsed_workdays) 
+    avg_work_hours_fullfill_quota = daily_hours((hours_quota - unassigned_closed_session_hours - hours_work_this_month) / max(1,num_of_workdays - num_of_elapsed_workdays))
     
     context = {
         "user": u,
