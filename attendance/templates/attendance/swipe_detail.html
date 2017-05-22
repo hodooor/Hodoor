@@ -21,47 +21,47 @@
       <div class="modal-header">
         <h4 class="modal-title" id="myModalLabel">
         {% if not swipe.swipe_set.count %}
-        	Swipe from session: {{swipe.session}} - detail info<span class="modal-icon fa fa-info pull-right"></span>
-      	{% else %}
-      		Swipe detail <span class="modal-icon fa fa-check pull-right"></span>
-      	{% endif %}
+            Swipe from session: {{swipe.session}} - detail info<span class="modal-icon fa fa-info pull-right"></span>
+        {% else %}
+            Swipe detail <span class="modal-icon fa fa-check pull-right"></span>
+        {% endif %}
         </h4>
       </div>
       <div class="modal-body">
-				<table class="table table-primary-inverse">
-					<thead>
-					<tr class="upper">
-					  <th class="col-md-2">Parameter</th>
-					  <th class="col-md-4">Value</th>
-					  <th class="col-md-6">Description</th>
-					</tr>
-					</thead>
-					<tbody>
-						<tr>
+                <table class="table table-primary-inverse">
+                    <thead>
+                    <tr class="upper">
+                      <th class="col-md-2">Parameter</th>
+                      <th class="col-md-4">Value</th>
+                      <th class="col-md-6">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
               <td data-field="key" class="key">Swipe Type</td>
               <td data-field="value" id="swipeType">{{swipe.swipe_type}}</td>
               <td><i id="swipe-icon" class="fa fa-2x "></i></td>
-						</tr>
-						<tr>
+                        </tr>
+                        <tr>
               <td data-field="key" class="key">Belongs to Session</td>
               <td data-field="value">{% if swipe.session %}<a href="{% url 'session_detail' username=user.username id=swipe.session.id %}">{{swipe.session}}</a>{% endif %}</td>
               <td></td>
-						</tr>
-						{% if corrected_by %}
-						<tr>
-							<td data-field="key" class="key">Was corrected by</td>
-							<td data-field="key" class="key"><a href="{% url 'swipe_detail' username=user.username id=corrected_by.id %}">{{ corrected_by.id}}</a></td>
-							<td data-field="key" class="key"></td>
-						</tr>
-						{% endif %}
+                        </tr>
+                        {% if corrected_by %}
+                        <tr>
+                            <td data-field="key" class="key">Was corrected by</td>
+                            <td data-field="key" class="key"><a href="{% url 'swipe_detail' username=user.username id=corrected_by.id %}">{{ corrected_by.id}}</a></td>
+                            <td data-field="key" class="key"></td>
+                        </tr>
+                        {% endif %}
 
-						{% if swipe.correction_of_swipe %}
-							<td data-field="key" class="key">Is Correction of Swipe</td>
-							<td data-field="key" class="key"><a href="{% url 'swipe_detail' username=user.username id=swipe.correction_of_swipe.id %}">{{ swipe.correction_of_swipe.id}}</a></td>
-							<td data-field="key" class="key"></td>
-						{% endif %}
+                        {% if swipe.correction_of_swipe %}
+                            <td data-field="key" class="key">Is Correction of Swipe</td>
+                            <td data-field="key" class="key"><a href="{% url 'swipe_detail' username=user.username id=swipe.correction_of_swipe.id %}">{{ swipe.correction_of_swipe.id}}</a></td>
+                            <td data-field="key" class="key"></td>
+                        {% endif %}
 
-						{% if not swipe.swipe_set.count %}
+                        {% if not swipe.swipe_set.count %}
               <tr>
                 <td>
                   Default values:
@@ -73,7 +73,7 @@
                   <p id="default-time"></p>
                 </td>
               </tr>
-							<tr>
+                            <tr>
                 <td data-field="key" class="key">Datetime</td>
                 <form method='POST' action=''>{% csrf_token %}
                 {% for f in form %}
@@ -99,32 +99,32 @@
                     </div>
                   </div>
                 </td>
-							</tr>
-						{% else %}
-							<tr>
-							  <td data-field="key" class="key">Datetime</td>
-								<td>{{swipe.datetime | date:'D d.m.Y H:i:s'}}</td>
-								<td> <div class="badge badge-success"> Swipe was successfuly corrected <i class="fa fa-check"></i></div></td>
-							</tr>
-						{% endif %}
-					</tbody>
-				</table>
-				{{form.errors}}
-				<div class="col-md-3">
-				</div>
+                            </tr>
+                        {% else %}
+                            <tr>
+                              <td data-field="key" class="key">Datetime</td>
+                                <td>{{swipe.datetime | date:'D d.m.Y H:i:s'}}</td>
+                                <td> <div class="badge badge-success"> Swipe was successfuly corrected <i class="fa fa-check"></i></div></td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+                {{form.errors}}
+                <div class="col-md-3">
+                </div>
 
       </div><!--/modal body-->
       <div class="modal-footer">
       <div class="row">
-      	<div class="col-md-3">
-      		<a class="btn btn-danger" href="{% url 'swipes' user.username %}"><i class="fa fa-arrow-left"></i> Back to Swipes page</a>
-      	</div>
-      	<div class="col-md-4 col-md-offset-5">
-      	{% if not swipe.swipe_set.count %}
-      		<button id="submit" type='submit' class="btn btn-primary" value='Submit Change'>Submit change <i class="fa fa-check"></i></button>
-      	{% endif %}
-      	</div>
-      	</form>
+        <div class="col-md-3">
+            <a class="btn btn-danger" href="{% url 'swipes' user.username %}"><i class="fa fa-arrow-left"></i> Back to Swipes page</a>
+        </div>
+        <div class="col-md-4 col-md-offset-5">
+        {% if not swipe.swipe_set.count %}
+            <button id="submit" type='submit' class="btn btn-primary" value='Submit Change'>Submit change <i class="fa fa-check"></i></button>
+        {% endif %}
+        </div>
+        </form>
       </div>
       </div>
     </div><!--/modal-->
@@ -133,22 +133,22 @@
 
 <script type="text/javascript">
   $(document).ready(function(){
-  	//Time and Date picker preparing data - script
-  	if ($('#id_datetime').length){ //Test if element exist
-  		$('#id_datetime').addClass('form-control hidden');
-  		//read data from python form
-	  	var PickerDateTime = $('#id_datetime').attr("value");
-	  	//split these two strings and put it into array
-	  	var PickerDateArray = PickerDateTime.split(' ');
+    //Time and Date picker preparing data - script
+    if ($('#id_datetime').length){ //Test if element exist
+        $('#id_datetime').addClass('form-control hidden');
+        //read data from python form
+        var PickerDateTime = $('#id_datetime').attr("value");
+        //split these two strings and put it into array
+        var PickerDateArray = PickerDateTime.split(' ');
       //default values
       var defaultDate = PickerDateArray[0];
       var defaultTime = PickerDateArray[1];
-	  	//show these values in another inputs
-	  	$('#PickerDate').attr("value", PickerDateArray[0]);
-	  	$('#PickerTime').attr("value", PickerDateArray[1]);
-	  	//save values before change
-			$('#PickerDate').data("NewDate", PickerDateArray[0]);
-	  	$('#PickerTime').data("NewTime", PickerDateArray[1]);
+        //show these values in another inputs
+        $('#PickerDate').attr("value", PickerDateArray[0]);
+        $('#PickerTime').attr("value", PickerDateArray[1]);
+        //save values before change
+            $('#PickerDate').data("NewDate", PickerDateArray[0]);
+        $('#PickerTime').data("NewTime", PickerDateArray[1]);
       /*Use DATE and TIME Pickers*/
       $('#datepicker').datetimepicker({ //show BS popover with Date
         format: "YYYY-MM-DD",
@@ -156,6 +156,16 @@
 
       $('#timepicker').datetimepicker({ //show BS popover with Time
         format: "HH:mm:ss",
+        minDate: moment({
+          h:0,
+          m:0,
+          s:0
+        }),
+        maxDate: moment({
+          h:23,
+          m:59,
+          s:59
+        })
       });
       //After change, yeld new values to default python form
       //for time
@@ -174,12 +184,12 @@
       });
       //eof datetimepicker
 
-	  	console.log("DATE: "+PickerDateArray[0]+"\nTIME: "+PickerDateArray[1]);
+        console.log("DATE: "+PickerDateArray[0]+"\nTIME: "+PickerDateArray[1]);
 
       /*Write default values into table under fields*/
       $('#default-date').text(defaultDate);
       $('#default-time').text(defaultTime);
-		}//eof if exist
+        }//eof if exist
 
     setTimeout(function(){ //set timeout for modal to be shown -like delay
         $('#myModal').modal('show');
@@ -200,15 +210,15 @@
     case 'OBR':
       swipeIcon.addClass('fa-coffee');
       break;
-		case 'OTR':
+        case 'OTR':
       swipeIcon.addClass('fa-suitcase');
       break;
     case 'FTR':
       swipeIcon.addClass('fa-share-square');
       break;
     default:
-    	break;
-		}
+        break;
+        }
   });
 </script>
 {% endblock %}
