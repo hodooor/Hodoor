@@ -172,7 +172,7 @@
 </thead>
 <tbody>
   {% for session in sessions %}
-  <form method='POST' action=''>{% csrf_token %}
+  <form id='sessionForm' method='POST' action=''>{% csrf_token %}
     <tr>
      <td>{{session.get_date|date:'D d.m.'}}</td>
      <td>
@@ -234,6 +234,11 @@
     </tr>
   </form>
   {% endfor %}
+	<tr>
+	 <td>
+		 <input id="submit-all" type='submit' form='sessionForm' class="btn btn-sm btn-success" value='Submit'/+>
+	 </td>
+	</tr>
   </tbody>
 </table>
 
