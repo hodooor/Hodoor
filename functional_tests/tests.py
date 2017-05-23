@@ -36,12 +36,21 @@ from django.conf import settings
 class FunctionalTest(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):
-        DRIVER_PATH = "./node_modules/chromedriver/lib/chromedriver/chromedriver"
-        options = webdriver.ChromeOptions()
-        options.add_argument("--start-maximized")
+        firefox=False
+        for arg in sys.argv:
+            if ('firefox' in arg)or(arg == '-f'):
+                firefox=True
+        
+        if not firefox:
+            DRIVER_PATH = "./node_modules/chromedriver/lib/chromedriver/chromedriver"
+            options = webdriver.ChromeOptions()
+            options.add_argument("--start-maximized")
         for arg in sys.argv:
             if 'liveserver' in arg:
-                cls.browser = webdriver.Chrome(DRIVER_PATH, chrome_options=options)
+                if firefox:
+                    cls.browser = webdriver.Firefox()
+                else:
+                    cls.browser = webdriver.Chrome(DRIVER_PATH, chrome_options=options)
                 cls.browser.implicitly_wait(3)
                 cls.server_user, cls.server_host = arg.split('=')[1].split('@')
                 print("server host: " + cls.server_host )
@@ -53,7 +62,10 @@ class FunctionalTest(StaticLiveServerTestCase):
         super(FunctionalTest, cls).setUpClass()
         cls.against_staging = False
         cls.server_url = cls.live_server_url
-        cls.browser = webdriver.Chrome(DRIVER_PATH, chrome_options=options)
+        if firefox:
+            cls.browser = webdriver.Firefox()
+        else:
+            cls.browser = webdriver.Chrome(DRIVER_PATH, chrome_options=options)
         cls.browser.implicitly_wait(3)
 
     @classmethod
