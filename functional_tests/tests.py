@@ -40,7 +40,6 @@ class FunctionalTest(StaticLiveServerTestCase):
         for arg in sys.argv:
             if ('firefox' in arg)or(arg == '-f'):
                 firefox=True
-        
         if not firefox:
             DRIVER_PATH = "./node_modules/chromedriver/lib/chromedriver/chromedriver"
             options = webdriver.ChromeOptions()
@@ -93,6 +92,11 @@ class FunctionalTest(StaticLiveServerTestCase):
                 "Could not find element with id {}. Page text was:\n{}".format(
                 element_id, self.browser.find_element_by_tag_name("body").text
                 )
+        )
+    def wait_for_element_with_name(self, element_name):
+        WebDriverWait(self.browser, timeout = 30).until(
+                lambda b: b.find_element_by_name(element_name),
+                "Could not find element with name {}".format(element_name)
         )
         
     def wait_for_element_to_be_clickable_with_css_selector_click(self, css_selector):
@@ -345,7 +349,22 @@ class SessionTest(FunctionalTest):
         self.browser.refresh();
         self.wait_for_element_with_id('myDropdown')
         self.assertIn(self.server_url + "/user/", self.browser.current_url)
-
+    
+    def test_admin_can_swipe_user_out(self):
+        user1 = UserFactory.create(is_staff = True)
+        user2 = UserFactory.create()
+        self.browser.get(self.server_url)
+        swipe = SwipeFactory(user = user2, swipe_type = "IN")
+        self.login_by_form(user1.username,"password", self.browser)
+        self.wait_for_element_with_name("OUTUSER")
+        self.browser.find_element_by_name('OUTUSER').click()
+        WebDriverWait(self.browser, 3).until(EC.alert_is_present(),
+                                   'Timed out waiting for PA creation ' +
+                                   'confirmation popup to appear.')
+        self.browser.switch_to_alert().accept()
+        self.browser.get(self.server_url + "/logout/")
+        self.login_by_form(user2.username,"password", self.browser)
+        self.wait_for_element_with_name("IN")
 
 class APITest(FunctionalTest):
     '''
