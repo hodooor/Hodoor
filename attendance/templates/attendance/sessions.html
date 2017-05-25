@@ -172,7 +172,7 @@
 </thead>
 <tbody>
   {% for session in sessions %}
-  <form id='sessionForm' method='POST' action=''>{% csrf_token %}
+  <form method='POST' action=''>{% csrf_token %}
     <tr>
      <td>{{session.get_date|date:'D d.m.'}}</td>
      <td>
@@ -217,7 +217,7 @@
      		</td>
        	<td>
           {% if session.get_not_assigned_duration%}
-           <input id="submit" type='submit' class="btn btn-sm btn-success" value ='Submit'/>
+           <input id="btnSubmit" type='submit' class="btn btn-sm btn-success" value ='Submit'/>
           {% endif %}
        	</td>
        </tr>
@@ -236,7 +236,7 @@
   {% endfor %}
 	<tr>
 	 <td>
-		 <input id="submit-all" type='submit' form='sessionForm' class="btn btn-sm btn-success" value='Submit'/+>
+	  <input id='submit-all' type='submit' value='Submit All' class="btn btn-sm btn-success" />
 	 </td>
 	</tr>
   </tbody>
@@ -252,6 +252,22 @@
  <!--/-->
 
 <script type="text/javascript">
+function post_form_data(data) {
+    $.ajax({
+        type: 'POST',
+        data: data,
+        success: function () {},
+        error: function () {}
+    });
+}
+
+$('#submit-all').on('click', function () {
+    $('form').each(function () {
+        post_form_data($(this).serialize());
+    });
+    location.reload();
+});
+
 $(document).ready(function(){
 
   /*Option sorting for projects*/
