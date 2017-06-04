@@ -351,6 +351,7 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
             'session_set',
             queryset=Session.objects.filter(
                 swipe__datetime__month=month,
+                swipe__datetime__year=year,
                 swipe__swipe_type="IN"
             ).prefetch_related("swipe_set").prefetch_related("projectseparation_set")
         )
