@@ -360,9 +360,9 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
         if user.session_set.all():
             user_data.append({
                     "user": user,
-                    "hours_total": Session.objects.get_hours_month(user.id, month, user.session_set.all()),
-                    "hours_unassigned": Session.objects.get_unassigned_hours_month(user.id, month, user.session_set.all()),
-                    "hours_not_work": Session.objects.get_not_work_hours_month(user.id, month, user.session_set.all()),
+                    "hours_total": Session.objects.get_hours_month(user.id, month, int(year), sessions_month=user.session_set.all()),
+                    "hours_unassigned": Session.objects.get_unassigned_hours_month(user.id, month, int(year), sessions_month=user.session_set.all()),
+                    "hours_not_work": Session.objects.get_not_work_hours_month(user.id, month, int(year), sessions_month=user.session_set.all()),
                     "looks_ok": False,
                     "hours_work": 0
             })
