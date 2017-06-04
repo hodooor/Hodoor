@@ -121,15 +121,21 @@ def user(request, username):
         last_swipe = None
         next_swipes = ('IN',)  # empty database - first swipe is IN
 
-    hours_total_last_month = Session.objects.get_hours_month(u.id, last_month())
-    hours_unassigned_last_month = Session.objects.get_unassigned_hours_month(u.id, last_month())
+    last_month_ = last_month()
+    if last_month == 12:
+        year = datetime.now().year - 1
+    else:
+        year = datetime.now().year
+
+    hours_total_last_month = Session.objects.get_hours_month(u.id, last_month_, year)
+    hours_unassigned_last_month = Session.objects.get_unassigned_hours_month(u.id, last_month_, year)
     hours_total_this_month = Session.objects.get_hours_this_month(u.id)
-    hours_unassigned_this_month = Session.objects.get_unassigned_hours_month(u.id, datetime.now().month)
-    hours_not_work_this_month = Session.objects.get_not_work_hours_month(u.id, datetime.now().month)
-    hours_not_work_last_month = Session.objects.get_not_work_hours_month(u.id, last_month())
+    hours_unassigned_this_month = Session.objects.get_unassigned_hours_month(u.id, last_month_, year)
+    hours_not_work_this_month = Session.objects.get_not_work_hours_month(u.id, datetime.now().month, datetime.now().year)
+    hours_not_work_last_month = Session.objects.get_not_work_hours_month(u.id, last_month_, year)
     hours_work_last_month = hours_total_last_month - hours_unassigned_last_month - hours_not_work_last_month
     hours_work_this_month = hours_total_this_month - hours_unassigned_this_month - hours_not_work_this_month
-    
+
     num_of_workdays = get_number_of_work_days(date.today().year, date.today().month)
     unassigned_closed_session_hours = hours_unassigned_this_month - current_session_work_hours
     hours_quota = get_quota_work_hours(datetime.now().year, datetime.now().month, WORKHOURS_PER_DAY)
@@ -233,9 +239,9 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
         else:
             projects[separation.project.name] = separation.time_spend.seconds/3600
 
-    not_work_hours = Session.objects.get_not_work_hours_month(u, month)
-    total_hours = Session.objects.get_hours_month(u.id, month)
-    unassigned_hours = Session.objects.get_unassigned_hours_month(u.id, month)
+    not_work_hours = Session.objects.get_not_work_hours_month(u, month, year)
+    total_hours = Session.objects.get_hours_month(u.id, month, year)
+    unassigned_hours = Session.objects.get_unassigned_hours_month(u.id, month, year)
     work_hours = total_hours - unassigned_hours - not_work_hours
     context = {
             "sessions": sessions,

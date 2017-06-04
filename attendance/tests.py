@@ -359,4 +359,16 @@ class UtilsTestCase(TestCase):
         self.assertEqual(daily_hours(0),0)
         self.assertEqual(daily_hours(24),24)
         self.assertEqual(daily_hours(-10),0)
-        
+
+
+class ManagersTestCase(TestCase):
+    def test_number_work_hours_after_year(self):
+        self.user = UserFactory()
+        base_datetime = timezone.now() - timedelta(days=365)
+        self.swipe1 = SwipeFactory(user=self.user, swipe_type="IN", datetime=base_datetime)
+        self.swipe2 = SwipeFactory(user=self.user, swipe_type="OUT", datetime=base_datetime + timedelta(hours=1))
+        self.assertEqual(0, Session.objects.get_hours_this_month(self.user), "Should have 0 hours")
+
+        self.swipe1 = SwipeFactory(user=self.user, swipe_type="IN")
+        self.swipe2 = SwipeFactory(user=self.user, swipe_type="OUT", datetime=timezone.now() + timedelta(hours=1))
+        self.assertEqual(1, Session.objects.get_hours_this_month(self.user))
