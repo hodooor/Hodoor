@@ -37,7 +37,6 @@ class KeyAdmin(admin.ModelAdmin):
 class SwipeAdmin(admin.ModelAdmin):
     list_select_related = ['user']
     fields = ('datetime', 'user', 'swipe_type', 'source')
-    readonly_fields = ('user', 'swipe_type')
 
     def has_delete_permission(self, request, obj=None):
         return False
