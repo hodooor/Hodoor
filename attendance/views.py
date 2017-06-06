@@ -130,7 +130,7 @@ def user(request, username):
     hours_total_last_month = Session.objects.get_hours_month(u.id, last_month_, year)
     hours_unassigned_last_month = Session.objects.get_unassigned_hours_month(u.id, last_month_, year)
     hours_total_this_month = Session.objects.get_hours_this_month(u.id)
-    hours_unassigned_this_month = Session.objects.get_unassigned_hours_month(u.id, last_month_, year)
+    hours_unassigned_this_month = Session.objects.get_unassigned_hours_month(u.id, datetime.now().month, year)
     hours_not_work_this_month = Session.objects.get_not_work_hours_month(u.id, datetime.now().month, datetime.now().year)
     hours_not_work_last_month = Session.objects.get_not_work_hours_month(u.id, last_month_, year)
     hours_work_last_month = hours_total_last_month - hours_unassigned_last_month - hours_not_work_last_month
