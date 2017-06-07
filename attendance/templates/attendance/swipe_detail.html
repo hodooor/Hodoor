@@ -132,6 +132,23 @@
 </div>
 
 <script type="text/javascript">
+	function formatDate(date) {
+
+		  var day = date.getDate();
+		  var monthIndex = ("0" + (date.getMonth() + 1)).slice(-2)
+		  var year = date.getFullYear();
+
+		  return year + '-' + monthIndex + '-' + day;
+		}
+		
+	function isItToday(date){
+		var today = formatDate(new Date());
+		if (today.localeCompare(date) == 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
   $(document).ready(function(){
   	//Time and Date picker preparing data - script
   	if ($('#id_datetime').length){ //Test if element exist
@@ -152,11 +169,33 @@
       /*Use DATE and TIME Pickers*/
       $('#datepicker').datetimepicker({ //show BS popover with Date
         format: "YYYY-MM-DD",
+        maxDate: 'now',
       });
-
-      $('#timepicker').datetimepicker({ //show BS popover with Time
-        format: "HH:mm:ss",
-      });
+	  if(isItToday($('#PickerDate').data("NewDate"))){
+		  $('#timepicker').datetimepicker({ //show BS popover with Time
+			format: "HH:mm:ss",
+			minDate: moment({
+			h:0,
+			m:0,
+			s:0
+			}),
+			maxDate: moment(),
+		  });
+	  }else{
+		  $('#timepicker').datetimepicker({ //show BS popover with Time
+			format: "HH:mm:ss",
+			minDate: moment({
+			h:0,
+			m:0,
+			s:0
+			}),
+			maxDate: moment({
+			h:23,
+			m:59,
+			s:59
+			}),
+		  });
+	  }
       //After change, yeld new values to default python form
       //for time
       $("#timepicker").on("dp.change", function(e) {
@@ -170,6 +209,15 @@
         $('#PickerDate').data("NewDate", $('#PickerDate').val()); //make it as new data
         //display it in python form
         $('#id_datetime').val( $('#PickerDate').data("NewDate")+" "+$('#PickerTime').data("NewTime") );
+        if(isItToday($('#PickerDate').data("NewDate"))){
+			$('#timepicker').data("DateTimePicker").maxDate(moment());
+		}else{
+			$('#timepicker').data("DateTimePicker").maxDate(moment({
+			h:23,
+			m:59,
+			s:59
+			}));
+		};
         console.log("New date: "+$('#PickerDate').data("NewDate"));
       });
       //eof datetimepicker
