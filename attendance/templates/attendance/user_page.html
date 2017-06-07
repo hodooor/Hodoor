@@ -41,17 +41,22 @@
     <ul class="collabsible-list list-group " id="users-at-work">
     {% for user in at_work_users %}
       <li>
+		<table style="width:100%">
         {% if request.user.is_staff or request.user.is_superuser %}
         <form action="{% url 'user' username=user.username %}" method="post" onsubmit="return confirm('Are you sure that you want to swipe {{user.first_name}} {{user.last_name}} out?')">
           {% csrf_token %}
+          <tr><td>
           <i class="fa fa-circle-o" aria-hidden="true"></i> {{user.first_name}} {{user.last_name}}
+          </td><td>
           <input type = "hidden" name = "username" value = {{user.username}}>
           <button type ="submit" class="pull-right btn-primary" value="SwipeUserOut" name = "OUTUSER" data-toggle="tooltip" title="Swipe user Out"><i class="fa fa-sign-out fa-2x" aria-hidden="true"></i>
+          </td></tr>
           </button>
           </form>
         {% else %}
           <i class="fa fa-circle-o" aria-hidden="true"></i> {{user.first_name}} {{user.last_name}}
         {%endif %}
+        </table>
       </li>
     {%endfor %}
     </ul>
@@ -70,17 +75,22 @@
     <ul class="collabsible-list list-group" id="users-on-break">
     {% for user in on_break_users %}
       <li>
+        <table style="width:100%">
         {% if request.user.is_staff or request.user.is_superuser %}
         <form action="{% url 'user' username=user.username %}" method="post" onsubmit="return confirm('Are you sure that you want to swipe {{user.first_name}} {{user.last_name}} out?')">
           {% csrf_token %}
+          <tr><td>
           <i class="fa fa-circle-o" aria-hidden="true"></i> {{user.first_name}} {{user.last_name}}
+          </td><td>
           <input type = "hidden" name = "username" value = {{user.username}}>
           <button type ="submit" class="pull-right btn-primary" value="BreakUserOut" name = "OUTUSER" data-toggle="tooltip" title="Swipe user Out"><i class="fa fa-sign-out fa-2x" aria-hidden="true"></i>
           </button>
           </form>
+          </td></tr>
         {% else %}
           <i class="fa fa-circle-o" aria-hidden="true"></i> {{user.first_name}} {{user.last_name}}
         {%endif %}
+        </table>
       </li>
     {%endfor %}
     </ul>
@@ -99,17 +109,22 @@
     <ul class="collabsible-list list-group" id="users-on-trip">
     {% for user in on_trip_users %}
       <li>
+        <table style="width:100%">
         {% if request.user.is_staff or request.user.is_superuser %}
         <form action="{% url 'user' username=user.username %}" method="post" onsubmit="return confirm('Are you sure that you want to swipe {{user.first_name}} {{user.last_name}} out?')">
           {% csrf_token %}
+          <tr><td>
           <i class="fa fa-circle-o" aria-hidden="true"></i> {{user.first_name}} {{user.last_name}}
+          </td><td>
           <input type = "hidden" name = "username" value = {{user.username}}>
           <button type ="submit" class="pull-right btn-primary" value="TripUserOut" name = "OUTUSER" data-toggle="tooltip" title="Swipe user Out"><i class="fa fa-sign-out fa-2x" aria-hidden="true"></i>
           </button>
           </form>
+          </td></tr>
         {% else %}
           <i class="fa fa-circle-o" aria-hidden="true"></i> {{user.first_name}} {{user.last_name}}
         {%endif %}
+        </table>
       </li>
     {%endfor %}
     </ul>
