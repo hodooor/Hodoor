@@ -250,6 +250,17 @@ class Key(models.Model):
 
     def __str__(self):
         return self.id + " " + self.user.username + " " + self.key_type
+        
+class Holiday(models.Model):
+    '''
+    Saves information data about time spended on holidays
+    ''' 
+    user = models.ForeignKey(User)
+    date = models.DateField(default=None)
+    time_spend = models.DurationField(null=True, blank=True, default=None)
+        
+    def __str__(self):
+        return self.user.username + " " + str(self.date) + " >> " + str(self.time_spend)
 
 
 
