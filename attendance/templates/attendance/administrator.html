@@ -119,6 +119,8 @@
               <th>HOURS UNASSIGNED</th>
               <th>HOURS TOTAL</th>
               <th>Status</th>
+              <th>HOLIDAY SPEND</th>
+              <th>HOLIDAY LEFT</th>	  
               <th class="no-sort">DETAIL</th>
             </tr>
           </thead>
@@ -138,6 +140,8 @@
                 <td>{{user.hours_unassigned |floatformat:2}}</td>
                 <td>{{user.hours_total |floatformat:2}}</td>
                 <td>{{user.looks_ok | yesno:"OK, Not OK" }}</td>
+                <td></td>
+                <td></td>
                 <td class="btn-fill">
                   <a href="{% url 'sessions_month' username=user.user.username year=year month=month %}"
                   type="button" class="btn btn-sm btn-block btn-info">Detail</a>
