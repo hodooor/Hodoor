@@ -324,7 +324,6 @@
     </div><!--/second col-->
 
     <div class="col-md-3"><!--third col-->
-
 	  <div class="panel panel-primary"><!--todays info panel-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="today-info" title="Today - info">
@@ -352,12 +351,22 @@
           </div>
           {%endif%}
       </div><!--/todays info panel-->
-
-
+      
+	  <div class="panel panel-primary"><!--holidays info panel-->
+        <div class="panel-heading">
+          <h2 class="panel-title navigable" id="holiday-info" title="Holiday-info">
+           <i class="fa fa-plane" aria-hidden="true"></i> Holiday - info <i id="tooltip4" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="bottom"></i>
+          </h2>
+        </div>
+        <div class="panel-body">
+			<p>Your aviable holidays: </p>
+			<p>Already taken holiday: </p>
+			<a href="{% url 'holiday_detail' username=user.username %}" class="btn btn-info btn-block">Manage Holiday</a>
+		</div>
+      </div><!--/holiday info panel-->
     </div><!--/third col-->
-
+    
 	<div class="col-md-3"><!--fourth col-->
-
 	  <div class="panel panel-default hidden-sm hidden-xs"><!--terminal emulator-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="terminal-emulator" title="Terminal Emulator">
@@ -441,9 +450,7 @@
         {% endif %}
         </div>
       </div> <!--/last month-->
-
     </div><!--/fourth col-->
-
   </div><!--//row equal panels-->
 <script type="text/javascript">
 	$(document).ready(function () {
