@@ -1,5 +1,5 @@
 from django.contrib import admin
-from attendance.models import Session, Swipe, Key, Project, ProjectSeparation, Holiday
+from attendance.models import Session, Swipe, Key, Project, ProjectSeparation, Holiday, Profile, Contract
 
 
 class ProjectSeparationInline(admin.TabularInline):
@@ -43,3 +43,5 @@ class SwipeAdmin(admin.ModelAdmin):
 
 admin.site.register(Project)
 admin.site.register(Holiday)
+admin.site.register(Profile)
+admin.site.register(Contract)

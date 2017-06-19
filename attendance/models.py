@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from datetime import datetime, timezone, timedelta
 from .managers import SessionManager
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Project(models.Model):
@@ -20,7 +21,35 @@ class Project(models.Model):
     def __str__(self):
         """Just name of project."""
         return self.name
-
+        
+        
+class Contract(models.Model):
+    contract_type = models.CharField(
+        max_length=20,
+        null=False,
+        blank=False
+    )
+    hours_quota = models.IntegerField(
+        default=0,
+        validators=[
+            MaxValueValidator(8),
+            MinValueValidator(0)
+        ]
+     )
+    
+    def __str__(self):
+        """Just contract type."""
+        return self.contract_type;
+        
+        
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    contract = models.ManyToManyField(Contract)
+    
+    def __str__(self):
+        """Just name of owner of profile."""
+        return self.user.username;
+    
 
 class Session(models.Model):
     user = models.ForeignKey(User)
