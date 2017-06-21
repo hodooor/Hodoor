@@ -103,6 +103,7 @@
 <ul class="nav nav-tabs">
   <li class="active"><a href="#with-sessions" data-toggle="tab">Users With Sessions</a></li>
   <li><a href="#without-sessions" data-toggle="tab">Users Without Sessions</a></li>
+  <li><a href="#users-holidays" data-toggle="tab">Users holidays</a></li>
 </ul>
 <div class="tab-content">
   <div id="with-sessions" class="tab-pane fade in active">
@@ -119,8 +120,6 @@
               <th>HOURS UNASSIGNED</th>
               <th>HOURS TOTAL</th>
               <th>Status</th>
-              <th>HOLIDAY SPEND</th>
-              <th>HOLIDAY LEFT</th>	  
               <th class="no-sort">DETAIL</th>
             </tr>
           </thead>
@@ -140,8 +139,6 @@
                 <td>{{user.hours_unassigned |floatformat:2}}</td>
                 <td>{{user.hours_total |floatformat:2}}</td>
                 <td>{{user.looks_ok | yesno:"OK, Not OK" }}</td>
-                <td></td>
-                <td></td>
                 <td class="btn-fill">
                   <a href="{% url 'sessions_month' username=user.user.username year=year month=month %}"
                   type="button" class="btn btn-sm btn-block btn-info">Detail</a>
@@ -177,6 +174,43 @@
                 </td>
               </tr>
             {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div id="users-holidays" class="tab-pane fade">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <table id="users-holidays" class="table table-striped table-responsive table-default" cellspacing="0" width="100%">
+          <thead class="text-center">
+            <tr class="upper">
+              <th>Last name</th>
+              <th>First name</th>
+              <th>Username</th>
+              <th>Months worked</th>
+              <th>Holiday entitlement </br> this year</th>
+              <th>Holiday entitlement </br> overall</th>
+              <th>Already taken</th>
+              <th>Left to take</th>
+              <th class="btn-fill no-sort text-center">Requests</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></a></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="btn-fill text-center">
+                  <a href=""
+                  type="button" class="btn btn-sm btn-warning">Requst</a>
+                </td>
+              </tr>
           </tbody>
         </table>
       </div>
