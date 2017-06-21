@@ -15,9 +15,8 @@ from django.db.models import Q
 import locale
 from django.db.models import Prefetch
 from attendance.utils import get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days, last_month, daily_hours
+from attendance.models import Profile
 
-
-WORKHOURS_PER_DAY = 8
 
 @login_required(login_url='/login/')
 def home_page(request):
@@ -156,7 +155,9 @@ def user(request, username):
         year = datetime.now().year - 1
     else:
         year = datetime.now().year
-
+    
+    workhours_per_day = Profile.objects.get(user = u).get_hours_quota()
+    
     hours_total_last_month = Session.objects.get_hours_month(u.id, last_month_, year)
     hours_unassigned_last_month = Session.objects.get_unassigned_hours_month(u.id, last_month_, year)
     hours_total_this_month = Session.objects.get_hours_this_month(u.id)
@@ -168,9 +169,9 @@ def user(request, username):
 
     num_of_workdays = get_number_of_work_days(date.today().year, date.today().month)
     unassigned_closed_session_hours = hours_unassigned_this_month - current_session_work_hours
-    hours_quota = get_quota_work_hours(datetime.now().year, datetime.now().month, WORKHOURS_PER_DAY)
+    hours_quota = get_quota_work_hours(datetime.now().year, datetime.now().month, workhours_per_day)
     num_of_elapsed_workdays = get_num_of_elapsed_workdays_in_month(date.today())
-    current_quota = num_of_elapsed_workdays * WORKHOURS_PER_DAY
+    current_quota = num_of_elapsed_workdays * workhours_per_day
     quota_difference = hours_work_this_month + unassigned_closed_session_hours - current_quota
     quota_difference_abs = abs(quota_difference)
     avg_work_hours_fullfill_quota = daily_hours((hours_quota - unassigned_closed_session_hours - hours_work_this_month) / max(1,num_of_workdays - num_of_elapsed_workdays))
@@ -201,7 +202,7 @@ def user(request, username):
         "quota_difference": quota_difference,
         "quota_difference_abs": quota_difference_abs,
         "avg_work_hours_fullfill_qoota": avg_work_hours_fullfill_quota,
-        "workhours_per_day": WORKHOURS_PER_DAY
+        "workhours_per_day": workhours_per_day
     }
     return render(request, "attendance/user_page.html", context)
 

@@ -39,16 +39,22 @@ class Contract(models.Model):
     
     def __str__(self):
         """Just contract type."""
-        return self.contract_type;
+        return self.contract_type
         
         
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    contract = models.ManyToManyField(Contract)
+    contracts = models.ManyToManyField(Contract)
     
+    def get_hours_quota(self):
+        hours = 0
+        for contract in self.contracts.all():
+            hours += contract.hours_quota
+        return hours
+        
     def __str__(self):
         """Just name of owner of profile."""
-        return self.user.username;
+        return self.user.username
     
 
 class Session(models.Model):
