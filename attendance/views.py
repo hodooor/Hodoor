@@ -15,7 +15,6 @@ from django.db.models import Q
 import locale
 from django.db.models import Prefetch
 from attendance.utils import get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days, last_month, daily_hours
-from attendance.models import Profile
 
 
 @login_required(login_url='/login/')
@@ -156,7 +155,10 @@ def user(request, username):
     else:
         year = datetime.now().year
     
-    workhours_per_day = Profile.objects.get(user = u).get_hours_quota()
+    if hasattr(u, "profile"):
+        workhours_per_day = u.profile.get_hours_quota()
+    else:
+        workhours_per_day = 8
     
     hours_total_last_month = Session.objects.get_hours_month(u.id, last_month_, year)
     hours_unassigned_last_month = Session.objects.get_unassigned_hours_month(u.id, last_month_, year)

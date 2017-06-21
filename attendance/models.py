@@ -53,8 +53,11 @@ class Profile(models.Model):
         return hours
         
     def __str__(self):
-        """Just name of owner of profile."""
-        return self.user.username
+        """Name of owner of profile and his contracts."""
+        text = self.user.username + ":"
+        for contract in self.contracts.all():
+            text += " " + contract.contract_type + ","
+        return text[:-1]
     
 
 class Session(models.Model):

@@ -218,7 +218,10 @@
             <div class="col-xs-1">{{ num_of_workdays }}</div>
           </div>
           <ul class="dash-list-group">
-            <li class="">You should work: <span class="" id="you_should_work_hours">{{ avg_work_hours_fullfill_qoota | floatformat:2}} </span>hour(s)/day</li>
+			{% if user.profile.get_hours_quota == 0 %}
+				<li class="">You might work as you need to.</li>
+			{% else %}
+				<li class="">You should work: <span class="" id="you_should_work_hours">{{ avg_work_hours_fullfill_qoota | floatformat:2}} </span>hour(s)/day</li>
           </ul>
           <div class="separator"></div>
           <ul class="dash-list-group">
@@ -261,6 +264,7 @@
             hours below quota (<strong>{{current_quota}}</strong> hours).
             You should work <strong>{{ avg_work_hours_fullfill_qoota | floatformat:2}}</strong> hours per work day to fullfill quota until end of month.</p>
           </div>
+        {% endif %}
         {% endif %}
         </div>
       </div><!--this month quota-->
@@ -351,7 +355,7 @@
           </div>
           {%endif%}
       </div><!--/todays info panel-->
-      
+     {% if user.profile.get_hours_quota > 0 %}
 	  <div class="panel panel-primary"><!--holidays info panel-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="holiday-info" title="Holiday-info">
@@ -364,6 +368,7 @@
 			<a class="btn btn-info btn-block">Manage Holiday</a>
 		</div>
       </div><!--/holiday info panel-->
+      {% endif %}
     </div><!--/third col-->
     
 	<div class="col-md-3"><!--fourth col-->
