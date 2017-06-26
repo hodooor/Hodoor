@@ -375,7 +375,7 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
 
     if not (request.user.is_superuser or request.user.is_staff):
         return HttpResponse("Restricted to staff.")
-    user_data, empty_users = [], []
+    all_users, user_data, empty_users = [], [], []
     users = User.objects.filter().prefetch_related(
         Prefetch(
             'session_set',
@@ -399,6 +399,11 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
             })
         else:
             empty_users.append(user)
+    
+    for user in users:
+        all_users.append({
+                    "user":user     
+        })        
 
     for user in user_data:
         user["hours_work"] = user["hours_total"] - user["hours_unassigned"] - user["hours_not_work"]
@@ -414,6 +419,7 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
             "year": year,
             "user_data": sorted(user_data, key=lambda dic: (locale.strxfrm(dic["user"].last_name))),
             "empty_users": sorted(empty_users, key=lambda user: (locale.strxfrm(user.last_name))), 
+            "all_users": sorted(all_users, key=lambda dic: (locale.strxfrm(dic["user"].last_name))),
     }
     return render(request, "attendance/administrator.html", context)
 
@@ -427,3 +433,14 @@ def holidays(request, username,year=str(datetime.now().year)):
     }
            
     return render(request, "attendance/holidays.html", context)
+    
+@login_required(login_url='/login/')
+def holidays_request(request, username,year=str(datetime.now().year)):
+    if not (request.user.is_superuser or request.user.is_staff):
+        return HttpResponse("Restricted to staff.")
+        
+    context = {
+            "year" : year,
+    }
+           
+    return render(request, "attendance/holidays_request.html", context)    
