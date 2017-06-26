@@ -419,3 +419,14 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
             "empty_users": sorted(empty_users, key=lambda user: (locale.strxfrm(user.last_name))), 
     }
     return render(request, "attendance/administrator.html", context)
+
+@login_required(login_url='/login/')
+def holidays(request, username,year=str(datetime.now().year)):
+    if not user_check(request, username):
+        return HttpResponse("Restricted to " + username)
+       
+    context = {
+            "year" : year,
+    }
+           
+    return render(request, "attendance/holidays.html", context)

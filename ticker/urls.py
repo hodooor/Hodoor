@@ -82,6 +82,11 @@ urlpatterns = [
     url(r'^administrator/$',
         views.administrator,
         name='default_administrator'),
+    
+    # /user/user.name/holiday
+    url(r'^holiday/(?P<username>[\w.@+-]+)/$',
+		views.holidays,
+        name='holidays'),
 ]
 
 if settings.DEBUG:

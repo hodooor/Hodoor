@@ -1,0 +1,178 @@
+{% extends 'attendance/base.html' %}
+{% load static %}
+
+{% block scripts %}
+<!--Moment.js: used for timepicker-->
+<script src="{% static 'moment/moment.js'%}"></script>
+<!--bootstrap-DateTimePicker-->
+<script type="text/javascript" language="javascript" src="{% static 'eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}">
+{% endblock %}
+
+{% block title %}Swipe detail{% endblock %}
+{% block aside %}
+
+{% endblock %}
+{% block content %}
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content modal-primary">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">
+        	Holiday assingment<span class="modal-icon fa fa-plane pull-right"></span>
+        </h4>
+      </div>
+      <div class="modal-body">
+				<table class="table table-primary-inverse">
+					<thead>
+					<tr class="upper">
+					  <th class="col-md-2"></th>
+					  <th class="col-md-4"></th>
+					  <th class="col-md-6"></th>
+					</tr>
+					</thead>
+					<tbody>
+						<tr>
+						    <td data-field="key" class="key">Username</td>
+						</tr>
+						<tr>
+						    <td data-field="key" class="key">Reason</td>
+						</tr>
+						{% if swipe.correction_of_swipe %}
+							<td data-field="key" class="key">Is Correction of Swipe</td>
+							<td data-field="key" class="key"><a href="{% url 'swipe_detail' username=user.username id=swipe.correction_of_swipe.id %}">{{ swipe.correction_of_swipe.id}}</a></td>
+							<td data-field="key" class="key"></td>
+						{% endif %}
+
+						{% if not swipe.swipe_set.count %}
+              <tr>
+                <td>
+                  Default values:
+                </td>
+                <td>
+                  <p id="default-date"></p>
+                </td>
+                <td>
+                  <p id="default-time"></p>
+                </td>
+              </tr>
+							<tr>
+							    <td data-field="key" class="key">Datetime</td>
+							    <form method='POST' action=''>{% csrf_token %}
+							   	{% for f in form %}
+									<td>
+										{{f}}
+										<div class="form-inline">
+											<div class="form-group">
+												<div class='input-group' id='datepicker'>
+													<input id="PickerDate" type="text" name="PickerDate" class="form-control text-center" />
+                          <div class="input-group-addon" data-toggle="tooltip" title="Open Date Picker"><i class="fa fa-calendar"></i></div>
+												</div>
+											</div>
+										</div>
+									</td>
+								{% endfor %}
+							</tr>
+						{% else %}
+							<tr>
+							  <td data-field="key" class="key">Datetime</td>
+								<td>{{swipe.datetime | date:'D d.m.Y H:i:s'}}</td>
+								<td> <div class="badge badge-success"> Swipe was successfuly corrected <i class="fa fa-check"></i></div></td>
+							</tr>
+						{% endif %}
+					</tbody>
+				</table>
+				{{form.errors}}
+				<div class="col-md-3">
+				</div>
+
+      </div><!--/modal body-->
+      <div class="modal-footer">
+      <div class="row">
+      	<div class="col-md-3">
+      		<a class="btn btn-danger" href="{% url 'user' user.username %}"><i class="fa fa-arrow-left"></i> Back to Dashboard</a>
+      	</div>
+      	<div class="col-md-4 col-md-offset-5">
+      	{% if not swipe.swipe_set.count %}
+      		<button id="send-requist" type='submit' class="btn btn-primary" value='Send Requist'>Send Request</button>
+      	{% endif %}
+      	</div>
+      	</form>
+      </div>
+      </div>
+    </div><!--/modal-->
+  </div>
+</div>
+
+<script type="text/javascript">
+	function formatDate(date) {
+
+		  var day = date.getDate();
+		  var monthIndex = ("0" + (date.getMonth() + 1)).slice(-2)
+		  var year = date.getFullYear();
+
+		  return year + '-' + monthIndex + '-' + day;
+		}
+		
+	function isItToday(date){
+		var today = formatDate(new Date());
+		if (today.localeCompare(date) == 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
+  $(document).ready(function(){
+  	//Time and Date picker preparing data - script
+  	if ($('#id_datetime').length){ //Test if element exist
+  		$('#id_datetime').addClass('form-control hidden');
+  		//read data from python form
+	  	var PickerDateTime = $('#id_datetime').attr("value");
+	  	//split these two strings and put it into array
+	  	var PickerDateArray = PickerDateTime.split(' ');
+      //default values
+      var defaultDate = PickerDateArray[0];
+      var defaultTime = PickerDateArray[1];
+	  	//show these values in another inputs
+	  	$('#PickerDate').attr("value", PickerDateArray[0]);
+	  	$('#PickerTime').attr("value", PickerDateArray[1]);
+	  	//save values before change
+			$('#PickerDate').data("NewDate", PickerDateArray[0]);
+	  	$('#PickerTime').data("NewTime", PickerDateArray[1]);
+      /*Use DATE and TIME Pickers*/
+      $('#datepicker').datetimepicker({ //show BS popover with Date
+        format: "YYYY-MM-DD",
+      });
+      //After change, yeld new values to default python form
+      //for time
+      $("#timepicker").on("dp.change", function(e) {
+        $('#PickerTime').data("NewTime", $('#PickerTime').val()); //make it as new data
+        //display it in python form
+        $('#id_datetime').val( $('#PickerDate').data("NewDate")+" "+$('#PickerTime').data("NewTime") );
+        console.log("New time: "+$('#PickerTime').data("NewTime"));
+      });
+      //for date
+      $("#datepicker").on("dp.change", function(e) {
+        $('#PickerDate').data("NewDate", $('#PickerDate').val()); //make it as new data
+        //display it in python form
+        $('#id_datetime').val( $('#PickerDate').data("NewDate")+" "+$('#PickerTime').data("NewTime") )
+        console.log("New date: "+$('#PickerDate').data("NewDate"));
+      });
+      //eof datetimepicker
+
+	  	console.log("DATE: "+PickerDateArray[0]+"\nTIME: "+PickerDateArray[1]);
+
+      /*Write default values into table un};der fields*/
+      $('#default-date').text(defaultDate);
+      $('#default-time').text(defaultTime);
+		}//eof if exist
+
+    setTimeout(function(){ //set timeout for modal to be shown -like delay
+        $('#myModal').modal('show');
+      }, 1000);
+
+  });
+</script>
+{% endblock %}
+
