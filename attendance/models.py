@@ -45,6 +45,12 @@ class Contract(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     contracts = models.ManyToManyField(Contract)
+    aviable_holidays = models.FloatField(
+        default=0,
+        validators=[
+            MinValueValidator(0.5)
+        ]
+     )
     
     def get_hours_quota(self):
         hours = 0
@@ -293,12 +299,18 @@ class Holiday(models.Model):
     '''
     Saves information data about time spended on holidays
     ''' 
-    user = models.ForeignKey(User)
-    date = models.DateField(default=None)
-    time_spend = models.DurationField(null=True, blank=True, default=None)
+    profile = models.ForeignKey(Profile)
+    date = models.DateField(default = None)
+    days_spend = models.FloatField(
+        default=0,
+        validators=[
+            MinValueValidator(0.5)
+        ]
+     )
+    verified = models.BooleanField(default = False)
         
     def __str__(self):
-        return self.user.username + " " + str(self.date) + " >> " + str(self.time_spend)
+        return self.profile.user.username + " " + str(self.date) + " >> " + str(self.days_spend) + " day(s)"
 
 
 
