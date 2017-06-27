@@ -177,6 +177,9 @@ def user(request, username):
     quota_difference = hours_work_this_month + unassigned_closed_session_hours - current_quota
     quota_difference_abs = abs(quota_difference)
     avg_work_hours_fullfill_quota = daily_hours((hours_quota - unassigned_closed_session_hours - hours_work_this_month) / max(1,num_of_workdays - num_of_elapsed_workdays))
+    holidays = u.profile.get_number_of_holidays()
+    holihours = u.profile.get_number_of_holidays() * u.profile.get_hours_quota()
+    aviable_holidays = 
     
     context = {
         "user": u,
@@ -204,7 +207,9 @@ def user(request, username):
         "quota_difference": quota_difference,
         "quota_difference_abs": quota_difference_abs,
         "avg_work_hours_fullfill_qoota": avg_work_hours_fullfill_quota,
-        "workhours_per_day": workhours_per_day
+        "workhours_per_day": workhours_per_day,
+        "taken_holidays": holidays,
+        "taken_holihours": holihours
     }
     return render(request, "attendance/user_page.html", context)
 

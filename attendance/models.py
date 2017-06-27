@@ -58,6 +58,13 @@ class Profile(models.Model):
             hours += contract.hours_quota
         return hours
         
+    def get_number_of_holidays(self):
+        hours = 0
+        for holiday in self.holidays.all():
+            if holiday.verified:
+                hours += holiday.days_spend
+        return hours
+        
     def __str__(self):
         """Name of owner of profile and his contracts."""
         text = self.user.username + ":"
@@ -299,7 +306,7 @@ class Holiday(models.Model):
     '''
     Saves information data about time spended on holidays
     ''' 
-    profile = models.ForeignKey(Profile)
+    profile = models.ForeignKey(Profile, related_name="holidays")
     date = models.DateField(default = None)
     days_spend = models.FloatField(
         default=0,
