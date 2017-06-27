@@ -27,9 +27,8 @@
 				<table class="table table-primary-inverse">
 					<thead>
 					<tr class="upper">
-					  <th class="col-md-2">Parameter</th>
+					  <th class="col-md-4">Parameter</th>
 					  <th class="col-md-4">Value</th>
-					  <th class="col-md-6">Description</th>
 					</tr>
 					</thead>
 					<tbody>
@@ -40,56 +39,19 @@
 						<tr>
 						    <td data-field="key" class="key">Last Name</td>
 						    <td data-field="value">{{user.last_name}}</td>
-								<td></td>
 						</tr>
-							<tr>
-							    <td data-field="key" class="key">Date since:</td>
-							    <form method='POST' action=''>{% csrf_token %}
-									<td>
-										<div class="form-inline">
-											<div class="form-group">
-												<div class='input-group' id='datepicker'>
-													<input id="PickerDate" type="text" name="PickerDate" class="form-control text-center" />
-                          <div class="input-group-addon" data-toggle="tooltip" title="Open Date Picker"><i class="fa fa-calendar"></i></div>
-												</div>
-											</div>
-										</div>
-									</td>
-									<td>
-                    <div class="form-inline col-md-9">
-											<div class="form-group">
-												<div class="input-group" id="timepicker">
-													<input id="PickerTime" type="text" name="PickerTime" class="form-control text-center" />
-                          <div class="input-group-addon" data-toggle="tooltip" title="Open Time Picker"><i class="fa fa-clock-o"></i></div>
-												</div>
-											</div>
-										</div>
-									</td>
-							</tr>
-							<tr>
-							    <td data-field="key" class="key">Date to:</td>
-							    <form method='POST' action=''>{% csrf_token %}
-									<td>
-										<div class="form-inline">
-											<div class="form-group">
-												<div class='input-group' id='datepicker'>
-													<input id="PickerDate" type="text" name="PickerDate" class="form-control text-center" />
-                          <div class="input-group-addon" data-toggle="tooltip" title="Open Date Picker"><i class="fa fa-calendar"></i></div>
-												</div>
-											</div>
-										</div>
-									</td>
-									<td>
-                    <div class="form-inline col-md-9">
-											<div class="form-group">
-												<div class="input-group" id="timepicker">
-													<input id="PickerTime" type="text" name="PickerTime" class="form-control text-center" />
-                          <div class="input-group-addon" data-toggle="tooltip" title="Open Time Picker"><i class="fa fa-clock-o"></i></div>
-												</div>
-											</div>
-										</div>
-									</td>
-							</tr>
+						<tr>
+						    <td data-field="key" class="key">Reason</td>
+						    <td></td>
+						</tr>
+						<tr>
+							<td data-field="key" class="key">Date from:</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td data-field="key" class="key">Date to:</td>
+							<td></td>
+						</tr>
 					</tbody>
 				</table>
 				{{form.errors}}
@@ -100,10 +62,13 @@
       <div class="modal-footer">
       <div class="row">
       	<div class="col-md-3">
-      		<a class="btn btn-danger" href="{% url 'user' user.username %}"><i class="fa fa-arrow-left"></i> Back to Dashboard</a>
+      		<a class="btn btn-danger" href="{% url 'default_administrator'%}"><i class="fa fa-arrow-left"></i> Back to Admin page</a>
       	</div>
-      	<div class="col-md-4 col-md-offset-5">
-      		<button id="submit" type='submit' class="btn btn-primary" value='Send request'>Send Request</button>
+      	<div class="col-md-4">
+      		<button id="send-requist" type='submit' class="btn btn-warning" value='Decline'>Decline</button>
+      	</div>
+      	<div class="col-md-2 col-md-offset-1">
+      		<button id="send-requist" type='submit' class="btn btn-primary" value='Verify'>Verify</button>
       	</div>
       	</form>
       </div>

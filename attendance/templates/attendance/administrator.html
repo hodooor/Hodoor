@@ -182,7 +182,7 @@
   <div id="users-holidays" class="tab-pane fade">
     <div class="panel panel-default">
       <div class="panel-body">
-        <table id="users-holidays" class="table table-striped table-responsive table-default" cellspacing="0" width="100%">
+        <table id="users-holidays" class="table table-striped table-responsive table-primary" cellspacing="0" width="100%">
           <thead class="text-center">
             <tr class="upper">
               <th>Last name</th>
@@ -197,20 +197,22 @@
             </tr>
           </thead>
           <tbody>
-              <tr>
-                <td></td>
-                <td></td>
-                <td></a></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td class="btn-fill text-center">
-                  <a href=""
-                  type="button" class="btn btn-sm btn-warning">Requst</a>
-                </td>
-              </tr>
+			  {% for user in all_users %}
+				  <tr>
+					<td>{{user.user.last_name}}</td>
+					<td>{{user.user.first_name}}</td>
+					<td>{{user.user.username}}</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td class="btn-fill text-center">
+					  <a href="{% url 'holidays_request' username=user.user.username %}"
+					  type="button" class="btn btn-sm btn-warning">Requst</a>
+					</td>
+				  </tr>
+              {% endfor %}
           </tbody>
         </table>
       </div>
