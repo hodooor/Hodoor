@@ -165,7 +165,9 @@ def user(request, username):
     hours_not_work_last_month = Session.objects.get_not_work_hours_month(u.id, last_month_, year)
     hours_work_last_month = hours_total_last_month - hours_unassigned_last_month - hours_not_work_last_month
     hours_work_this_month = hours_total_this_month - hours_unassigned_this_month - hours_not_work_this_month
-
+    
+    hours_work_this_year = Session.objects.get_hours_this_year(u.id)
+    
     num_of_workdays = get_number_of_work_days(date.today().year, date.today().month)
     unassigned_closed_session_hours = hours_unassigned_this_month - current_session_work_hours
     hours_quota = get_quota_work_hours(datetime.now().year, datetime.now().month, WORKHOURS_PER_DAY)
@@ -174,6 +176,9 @@ def user(request, username):
     quota_difference = hours_work_this_month + unassigned_closed_session_hours - current_quota
     quota_difference_abs = abs(quota_difference)
     avg_work_hours_fullfill_quota = daily_hours((hours_quota - unassigned_closed_session_hours - hours_work_this_month) / max(1,num_of_workdays - num_of_elapsed_workdays))
+    
+    holihours_aviable_this_year = hours_work_this_year/52 * 4
+    holidays_aviable_this_year = (hours_work_this_year/52 * 4)/8
     
     context = {
         "user": u,
@@ -201,7 +206,10 @@ def user(request, username):
         "quota_difference": quota_difference,
         "quota_difference_abs": quota_difference_abs,
         "avg_work_hours_fullfill_qoota": avg_work_hours_fullfill_quota,
-        "workhours_per_day": WORKHOURS_PER_DAY
+        "workhours_per_day": WORKHOURS_PER_DAY,
+        "hours_work_this_year": hours_work_this_year,
+        "holihours_aviable" :  holihours_aviable_this_year,
+        "holidays_aviable" :  holidays_aviable_this_year
     }
     return render(request, "attendance/user_page.html", context)
 
