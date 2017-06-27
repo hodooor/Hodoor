@@ -168,7 +168,9 @@ def user(request, username):
     hours_not_work_last_month = Session.objects.get_not_work_hours_month(u.id, last_month_, year)
     hours_work_last_month = hours_total_last_month - hours_unassigned_last_month - hours_not_work_last_month
     hours_work_this_month = hours_total_this_month - hours_unassigned_this_month - hours_not_work_this_month
-
+    
+    hours_work_this_year = Session.objects.get_hours_this_year(u.id)
+    
     num_of_workdays = get_number_of_work_days(date.today().year, date.today().month)
     unassigned_closed_session_hours = hours_unassigned_this_month - current_session_work_hours
     hours_quota = get_quota_work_hours(datetime.now().year, datetime.now().month, workhours_per_day)
@@ -180,6 +182,9 @@ def user(request, username):
     holidays = u.profile.get_number_of_holidays()
     holihours = u.profile.get_number_of_holidays() * u.profile.get_hours_quota()
     aviable_holidays = None
+    
+    holihours_aviable_this_year = hours_work_this_year/52 * 4
+    holidays_aviable_this_year = (hours_work_this_year/52 * 4)/8
     
     context = {
         "user": u,
@@ -209,7 +214,10 @@ def user(request, username):
         "avg_work_hours_fullfill_qoota": avg_work_hours_fullfill_quota,
         "workhours_per_day": workhours_per_day,
         "taken_holidays": holidays,
-        "taken_holihours": holihours
+        "taken_holihours": holihours,
+        "hours_work_this_year": hours_work_this_year,
+        "holihours_aviable" :  holihours_aviable_this_year,
+        "holidays_aviable" :  holidays_aviable_this_year
     }
     return render(request, "attendance/user_page.html", context)
 

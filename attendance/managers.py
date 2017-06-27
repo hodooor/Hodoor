@@ -29,7 +29,14 @@ class SessionManager(models.Manager):
             return new_dur.total_seconds()/3600
         else:
             return 0
-
+            
+    def get_hours_this_year(self, user):
+        """Return number of hours this year (already finished sessions)."""
+        hours_year = 0;
+        for i in range(1, 12):
+            hours_year += self.get_hours_month(user, i, datetime.now().year)
+        return hours_year   
+        
     def get_hours_this_month(self, user):
         """Return number of hours this month (already finished sessions)."""
         return self.get_hours_month(user, datetime.now().month, datetime.now().year)
