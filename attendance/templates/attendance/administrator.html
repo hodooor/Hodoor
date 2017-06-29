@@ -188,7 +188,7 @@
               <th>Last name</th>
               <th>First name</th>
               <th>Username</th>
-              <th>Months worked</th>
+              <th>Hours Worked</th>
               <th>Holiday entitlement </br> this year</th>
               <th>Holiday entitlement </br> overall</th>
               <th>Already taken</th>
@@ -202,10 +202,10 @@
 					<td>{{user.user.last_name}}</td>
 					<td>{{user.user.first_name}}</td>
 					<td>{{user.user.username}}</td>
+					<td>{{user.hours_worked_this_year | floatformat:2}}</td>
+					<td>{{user.holiday_this_year | floatformat:2}}</td>
 					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
+					<td>{{user.already_taken}}</td>
 					<td></td>
 					<td class="btn-fill text-center">
 					  <a href="{% url 'holidays_request' username=user.user.username %}"

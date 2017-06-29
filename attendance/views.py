@@ -411,6 +411,11 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
         )
     )
 
+    if hasattr(User.objects, "profile"):
+        workhours_per_day = User.objects.profile.get_hours_quota()
+    else:
+        workhours_per_day = 8
+        
     for user in users:
         if user.session_set.all():
             user_data.append({
@@ -424,9 +429,14 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
         else:
             empty_users.append(user)
     
+    
+    
     for user in users:
         all_users.append({
-                    "user":user     
+                    "user":user,  
+                    "holiday_this_year": (Session.objects.get_hours_this_year(user.id)/52 * user.profile.aviable_holidays)/ max(1,workhours_per_day),
+                    "already_taken": user.profile.get_number_of_holidays(), 
+                    "hours_worked_this_year": Session.objects.get_hours_this_year(user.id)
         })        
 
     for user in user_data:
@@ -452,8 +462,10 @@ def holidays(request, username,year=str(datetime.now().year)):
     if not user_check(request, username):
         return HttpResponse("Restricted to " + username)
        
+               
     context = {
             "year" : year,
+            "datetime" : datetime.now(),
     }
            
     return render(request, "attendance/holidays.html", context)

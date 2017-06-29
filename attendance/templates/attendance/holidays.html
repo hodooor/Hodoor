@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="{% static 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}">
 {% endblock %}
 
-{% block title %}Swipe detail{% endblock %}
+{% block title %}Holiday Assignment{% endblock %}
 {% block aside %}
 
 {% endblock %}
@@ -29,7 +29,6 @@
 					<tr class="upper">
 					  <th class="col-md-2">Parameter</th>
 					  <th class="col-md-4">Value</th>
-					  <th class="col-md-6">Description</th>
 					</tr>
 					</thead>
 					<tbody>
@@ -44,52 +43,34 @@
 						</tr>
 							<tr>
 							    <td data-field="key" class="key">Date since:</td>
-							    <form method='POST' action=''>{% csrf_token %}
-									<td>
-										<div class="form-inline">
-											<div class="form-group">
-												<div class='input-group' id='datepicker'>
-													<input id="PickerDate" type="text" name="PickerDate" class="form-control text-center" />
-                          <div class="input-group-addon" data-toggle="tooltip" title="Open Date Picker"><i class="fa fa-calendar"></i></div>
-												</div>
+							    <td class="col-md-10">
+									<div>
+										<div class="form-group">
+											<div class='input-group' id='datetimepicker1'>
+												<input type='text' class="form-control" />
+												 <div class="input-group-addon" data-toggle="tooltip" title="Open Time Picker"><i class="fa fa-clock-o"></i></div>
 											</div>
 										</div>
-									</td>
-									<td>
-                    <div class="form-inline col-md-9">
-											<div class="form-group">
-												<div class="input-group" id="timepicker">
-													<input id="PickerTime" type="text" name="PickerTime" class="form-control text-center" />
-                          <div class="input-group-addon" data-toggle="tooltip" title="Open Time Picker"><i class="fa fa-clock-o"></i></div>
-												</div>
-											</div>
-										</div>
-									</td>
+									</div>
+								</td>
 							</tr>
 							<tr>
-							    <td data-field="key" class="key">Date to:</td>
-							    <form method='POST' action=''>{% csrf_token %}
-									<td>
-										<div class="form-inline">
-											<div class="form-group">
-												<div class='input-group' id='datepicker'>
-													<input id="PickerDate" type="text" name="PickerDate" class="form-control text-center" />
-                          <div class="input-group-addon" data-toggle="tooltip" title="Open Date Picker"><i class="fa fa-calendar"></i></div>
-												</div>
+							    <td data-field="key" class="key">Date To:</td>
+							    <td class="col-md-10">
+									<div>
+										<div class="form-group">
+											<div class='input-group' id='datetimepicker2'>
+												<input type='text' class="form-control"/>
+												 <div class="input-group-addon" data-toggle="tooltip" title="Open Time Picker"><i class="fa fa-clock-o"></i></div>
 											</div>
 										</div>
-									</td>
-									<td>
-                    <div class="form-inline col-md-9">
-											<div class="form-group">
-												<div class="input-group" id="timepicker">
-													<input id="PickerTime" type="text" name="PickerTime" class="form-control text-center" />
-                          <div class="input-group-addon" data-toggle="tooltip" title="Open Time Picker"><i class="fa fa-clock-o"></i></div>
-												</div>
-											</div>
-										</div>
-									</td>
+									</div>
+								</td>
 							</tr>
+						<tr>
+							<td>Hours</td>
+							<td><input type="text" id="TextBox3"/></td>
+						</tr>
 					</tbody>
 				</table>
 				{{form.errors}}
@@ -113,107 +94,34 @@
 </div>
 
 <script type="text/javascript">
-	function formatDate(date) {
-
-		  var day = date.getDate();
-		  var monthIndex = ("0" + (date.getMonth() + 1)).slice(-2)
-		  var year = date.getFullYear();
-
-		  return year + '-' + monthIndex + '-' + day;
+ $(document).ready(function(){
+    $('#datetimepicker1').datetimepicker({
+        viewMode: 'days',
+        format: 'DD/MM/YYYY',
+    }), 
+     
+    $('#datetimepicker2').datetimepicker({
+        viewMode: 'days',
+        format: 'DD/MM/YYYY',
+    });
+    
+    $('#datetimepicker2').on("dp.change", function (e){
+		TimeDifference();
+		});  
+		     
+	function TimeDifference(){
+		var start = $('#datetimepicker1').data("DateTimePicker").date();
+		var end = $('#datetimepicker2').data("DateTimePicker").date();
+		var timeDiff = 0;
+		timeDiff = (end - start);
+		var dateDiff = Math.floor(timeDiff / (60 * 60 * 1000));
+		$('#TextBox3').val(dateDiff);                                   //problem when correcting a second form and not correwcting the first
 		}
-		
-	function isItToday(date){
-		var today = formatDate(new Date());
-		if (today.localeCompare(date) == 0){
-			return true;
-		}else{
-			return false;
-		}
-	}
-  $(document).ready(function(){
-  	//Time and Date picker preparing data - script
-  	if ($('#id_datetime').length){ //Test if element exist
-  		$('#id_datetime').addClass('form-control hidden');
-  		//read data from python form
-	  	var PickerDateTime = $('#id_datetime').attr("value");
-	  	//split these two strings and put it into array
-	  	var PickerDateArray = PickerDateTime.split(' ');
-      //default values
-      var defaultDate = PickerDateArray[0];
-      var defaultTime = PickerDateArray[1];
-	  	//show these values in another inputs
-	  	$('#PickerDate').attr("value", PickerDateArray[0]);
-	  	$('#PickerTime').attr("value", PickerDateArray[1]);
-	  	//save values before change
-			$('#PickerDate').data("NewDate", PickerDateArray[0]);
-	  	$('#PickerTime').data("NewTime", PickerDateArray[1]);
-      /*Use DATE and TIME Pickers*/
-      $('#datepicker').datetimepicker({ //show BS popover with Date
-        format: "YYYY-MM-DD",
-        maxDate: 'now',
-      });
-	  if(isItToday($('#PickerDate').data("NewDate"))){
-		  $('#timepicker').datetimepicker({ //show BS popover with Time
-			format: "HH:mm:ss",
-			minDate: moment({
-			h:0,
-			m:0,
-			s:0
-			}),
-			maxDate: moment(),
-		  });
-	  }else{
-		  $('#timepicker').datetimepicker({ //show BS popover with Time
-			format: "HH:mm:ss",
-			minDate: moment({
-			h:0,
-			m:0,
-			s:0
-			}),
-			maxDate: moment({
-			h:23,
-			m:59,
-			s:59
-			}),
-		  });
-	  }
-      //After change, yeld new values to default python form
-      //for time
-      $("#timepicker").on("dp.change", function(e) {
-        $('#PickerTime').data("NewTime", $('#PickerTime').val()); //make it as new data
-        //display it in python form
-        $('#id_datetime').val( $('#PickerDate').data("NewDate")+" "+$('#PickerTime').data("NewTime") );
-        console.log("New time: "+$('#PickerTime').data("NewTime"));
-      });
-      //for date
-      $("#datepicker").on("dp.change", function(e) {
-        $('#PickerDate').data("NewDate", $('#PickerDate').val()); //make it as new data
-        //display it in python form
-        $('#id_datetime').val( $('#PickerDate').data("NewDate")+" "+$('#PickerTime').data("NewTime") );
-        if(isItToday($('#PickerDate').data("NewDate"))){
-			$('#timepicker').data("DateTimePicker").maxDate(moment());
-		}else{
-			$('#timepicker').data("DateTimePicker").maxDate(moment({
-			h:23,
-			m:59,
-			s:59
-			}));
-		};
-        console.log("New date: "+$('#PickerDate').data("NewDate"));
-      });
-      //eof datetimepicker
-
-	  	console.log("DATE: "+PickerDateArray[0]+"\nTIME: "+PickerDateArray[1]);
-
-      /*Write default values into table under fields*/
-      $('#default-date').text(defaultDate);
-      $('#default-time').text(defaultTime);
-		}//eof if exist
-
+		     
     setTimeout(function(){ //set timeout for modal to be shown -like delay
         $('#myModal').modal('show');
       }, 1000);
-    /*Add class to see fontawesomes in swipe infos*/
   });
+    /*Add class to see fontawesomes in swipe infos*/
 </script>
 {% endblock %}
