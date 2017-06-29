@@ -53,10 +53,10 @@ class Profile(models.Model):
             hours += contract.hours_quota
         return hours
         
-    def get_number_of_holidays(self):
+    def get_number_of_holidays(self, verified = True):
         hours = 0
         for holiday in self.holidays.all():
-            if holiday.verified:
+            if holiday.verified == verified:
                 hours += holiday.days_spend
         return hours
         

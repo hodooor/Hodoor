@@ -155,7 +155,9 @@ def user(request, username):
     else:
         year = datetime.now().year
     
+    curent_user_have_profile = False
     if hasattr(u, "profile"):
+        curent_user_have_profile = True
         workhours_per_day = u.profile.get_hours_quota()
     else:
         workhours_per_day = 8
@@ -182,10 +184,13 @@ def user(request, username):
     
     holidays = 0
     holihours_aviable = 0
-    if hasattr(u, "profile"):
+    holidays_requared = 0
+    if curent_user_have_profile:
         holidays = u.profile.get_number_of_holidays()       
         holihours_aviable_this_year = hours_work_this_year/52 * 4
         holihours_aviable = holihours_aviable_this_year + u.profile.aviable_holidays
+        holidays_requared = u.profile.get_number_of_holidays(verified = False)
+    holihours_requared = holidays_requared * workhours_per_day
     holidays_aviable = holihours_aviable / max(1,workhours_per_day)
     holihours = holidays * u.profile.get_hours_quota()
 
@@ -221,7 +226,10 @@ def user(request, username):
         "taken_holihours": holihours,
         "hours_work_this_year": hours_work_this_year,
         "holihours_aviable" :  holihours_aviable,
-        "holidays_aviable" :  holidays_aviable
+        "holidays_aviable" :  holidays_aviable,
+        "holidays_requared": holidays_requared,
+        "holihours_requared": holihours_requared,
+        "curent_user_have_profile": curent_user_have_profile
     }
     return render(request, "attendance/user_page.html", context)
 
