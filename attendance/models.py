@@ -46,6 +46,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     contracts = models.ManyToManyField(Contract)
     aviable_holidays = models.FloatField(default=0)
+    last_time_year = models.IntegerField(default = 2017)
     
     def get_hours_quota(self):
         hours = 0
@@ -59,6 +60,14 @@ class Profile(models.Model):
             if holiday.verified == verified:
                 hours += holiday.hours_spend
         return hours
+        
+    def new_year(self):
+        self.last_time_year = datetime.now().year
+        self.aviable_holidays += Session.objects.get_hours_last_year(self.user.id) / 52 * 4 
+        
+    def is_new_year(self):
+        if datetime.now().year != self.last_time_year:
+            self.new_year()
         
     def __str__(self):
         """Name of owner of profile and his contracts."""

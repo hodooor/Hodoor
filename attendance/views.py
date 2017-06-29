@@ -116,6 +116,7 @@ def user(request, username):
         return HttpResponseRedirect(reverse(user, args=[request.user.username])); # hard reload the page without any forms
     u = User.objects.get(username=username)
     s = Session.objects.get_sessions_this_month(user=u)
+    
 
     open_sessions = Session.objects.get_open_sessions()
     try:
@@ -159,6 +160,7 @@ def user(request, username):
     if hasattr(u, "profile"):
         curent_user_have_profile = True
         workhours_per_day = u.profile.get_hours_quota()
+        u.profile.is_new_year()
     else:
         workhours_per_day = 8
     
