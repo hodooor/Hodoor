@@ -189,7 +189,7 @@ def user(request, username):
     holihours_requared = 0
     if curent_user_have_profile:
         holihours = u.profile.get_hours_of_holidays()       
-        holihours_aviable_this_year = hours_work_this_year/52 * 4
+        holihours_aviable_this_year = hours_work_this_year/52 * u.profile.weeks_of_holidays_per_year
         holihours_aviable = holihours_aviable_this_year + u.profile.aviable_holidays
         holihours_requared = u.profile.get_hours_of_holidays(verified = False)
     holidays_requared = holihours_requared / max(1,workhours_per_day)
