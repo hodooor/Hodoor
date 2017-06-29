@@ -179,12 +179,16 @@ def user(request, username):
     quota_difference = hours_work_this_month + unassigned_closed_session_hours - current_quota
     quota_difference_abs = abs(quota_difference)
     avg_work_hours_fullfill_quota = daily_hours((hours_quota - unassigned_closed_session_hours - hours_work_this_month) / max(1,num_of_workdays - num_of_elapsed_workdays))
-    holidays = u.profile.get_number_of_holidays()
-    holihours = u.profile.get_number_of_holidays() * u.profile.get_hours_quota()
-    aviable_holidays = None
     
-    holihours_aviable_this_year = hours_work_this_year/52 * 4
-    holidays_aviable_this_year = (hours_work_this_year/52 * 4)/8
+    holidays = 0
+    holihours_aviable = 0
+    if hasattr(u, "profile"):
+        holidays = u.profile.get_number_of_holidays()       
+        holihours_aviable_this_year = hours_work_this_year/52 * 4
+        holihours_aviable = holihours_aviable_this_year + u.profile.aviable_holidays
+    holidays_aviable = holihours_aviable / max(1,workhours_per_day)
+    holihours = holidays * u.profile.get_hours_quota()
+
     
     context = {
         "user": u,
@@ -216,8 +220,8 @@ def user(request, username):
         "taken_holidays": holidays,
         "taken_holihours": holihours,
         "hours_work_this_year": hours_work_this_year,
-        "holihours_aviable" :  holihours_aviable_this_year,
-        "holidays_aviable" :  holidays_aviable_this_year
+        "holihours_aviable" :  holihours_aviable,
+        "holidays_aviable" :  holidays_aviable
     }
     return render(request, "attendance/user_page.html", context)
 
@@ -248,7 +252,7 @@ def swipes(request, username):
 def sessions_month(request, username, year=datetime.now().year, month = datetime.now().month):
     if not user_check(request, username):
         return HttpResponse("Restricted to " + username)
-
+        
     if request.method == "POST":
         form = ProjectSeparationForm(request.POST)
         if form.is_valid():
@@ -284,7 +288,11 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
             projects[separation.project.name] += separation.time_spend.seconds/3600
         else:
             projects[separation.project.name] = separation.time_spend.seconds/3600
-
+    if hasattr(User.objects, "profile"):
+        workhours_per_day = User.objects.profile.get_hours_quota()
+    else:
+        workhours_per_day = 8
+        
     not_work_hours = Session.objects.get_not_work_hours_month(u, month, year)
     total_hours = Session.objects.get_hours_month(u.id, month, year)
     unassigned_hours = Session.objects.get_unassigned_hours_month(u.id, month, year)
@@ -298,7 +306,7 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
             "work_hours": work_hours,
             "not_work_hours": not_work_hours,
             "list_of_projects": projects,
-            "hours_quota": get_quota_work_hours(int(year), int(month), WORKHOURS_PER_DAY),
+            "hours_quota": get_quota_work_hours(int(year), int(month), workhours_per_day),
             "form": form
     }
     return render(request, "attendance/sessions.html", context)
