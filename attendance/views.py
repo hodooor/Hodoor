@@ -186,7 +186,7 @@ def user(request, username):
         holidays = u.profile.get_number_of_holidays()       
         holihours_aviable_this_year = hours_work_this_year/52 * 4
         holihours_aviable = holihours_aviable_this_year + u.profile.aviable_holidays
-    holidays_aviable = holihours_aviable / workhours_per_day
+    holidays_aviable = holihours_aviable / max(1,workhours_per_day)
     holihours = holidays * u.profile.get_hours_quota()
 
     
