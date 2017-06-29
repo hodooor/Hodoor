@@ -53,11 +53,11 @@ class Profile(models.Model):
             hours += contract.hours_quota
         return hours
         
-    def get_number_of_holidays(self, verified = True):
+    def get_hours_of_holidays(self, verified = True):
         hours = 0
         for holiday in self.holidays.all():
             if holiday.verified == verified:
-                hours += holiday.days_spend
+                hours += holiday.hours_spend
         return hours
         
     def __str__(self):
@@ -303,7 +303,7 @@ class Holiday(models.Model):
     ''' 
     profile = models.ForeignKey(Profile, related_name="holidays")
     date = models.DateField(default = None)
-    days_spend = models.FloatField(
+    hours_spend = models.FloatField(
         default=0,
         validators=[
             MinValueValidator(0.5)
@@ -312,7 +312,7 @@ class Holiday(models.Model):
     verified = models.BooleanField(default = False)
         
     def __str__(self):
-        return self.profile.user.username + " " + str(self.date) + " >> " + str(self.days_spend) + " day(s)"
+        return self.profile.user.username + " " + str(self.date) + " >> " + str(self.hours_spend) + " hours"
 
 
 

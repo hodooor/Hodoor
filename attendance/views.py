@@ -182,17 +182,17 @@ def user(request, username):
     quota_difference_abs = abs(quota_difference)
     avg_work_hours_fullfill_quota = daily_hours((hours_quota - unassigned_closed_session_hours - hours_work_this_month) / max(1,num_of_workdays - num_of_elapsed_workdays))
     
-    holidays = 0
+    holihours = 0
     holihours_aviable = 0
-    holidays_requared = 0
+    holihours_requared = 0
     if curent_user_have_profile:
-        holidays = u.profile.get_number_of_holidays()       
+        holihours = u.profile.get_hours_of_holidays()       
         holihours_aviable_this_year = hours_work_this_year/52 * 4
         holihours_aviable = holihours_aviable_this_year + u.profile.aviable_holidays
-        holidays_requared = u.profile.get_number_of_holidays(verified = False)
-    holihours_requared = holidays_requared * workhours_per_day
+        holihours_requared = u.profile.get_hours_of_holidays(verified = False)
+    holidays_requared = holihours_requared / max(1,workhours_per_day)
     holidays_aviable = holihours_aviable / max(1,workhours_per_day)
-    holihours = holidays * u.profile.get_hours_quota()
+    holidays = holihours / max(1,workhours_per_day)
 
     
     context = {
