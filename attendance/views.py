@@ -191,7 +191,7 @@ def user(request, username):
         holihours = u.profile.get_hours_of_holidays()       
         holihours_aviable_this_year = u.profile.get_aviable_holidays_this_year() * u.profile.get_hours_quota()
         holihours_requared = u.profile.get_hours_of_holidays(verified = False)
-        holihours_aviable = holihours_aviable_this_year + u.profile.aviable_holidays - holihours_requared - holihours
+        holihours_aviable = holihours_aviable_this_year + (u.profile.aviable_holidays * u.profile.get_hours_quota()) - holihours_requared - holihours
     holidays_requared = holihours_requared / max(1,workhours_per_day)
     holidays_aviable = holihours_aviable / max(1,workhours_per_day)
     holidays = holihours / max(1,workhours_per_day)
@@ -423,47 +423,53 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
 
     for user in users:
         if user.session_set.all():
-            if hasattr(user, "profile"):
-                have_profile = True
-            else:
-                have_profile = False
             user_data.append({
                     "user": user,
-                    "have_profile": have_profile,
                     "hours_total": Session.objects.get_hours_month(user.id, month, int(year), sessions_month=user.session_set.all()),
                     "hours_unassigned": Session.objects.get_unassigned_hours_month(user.id, month, int(year), sessions_month=user.session_set.all()),
                     "hours_not_work": Session.objects.get_not_work_hours_month(user.id, month, int(year), sessions_month=user.session_set.all()),
                     "looks_ok": False,
-                    "hours_work": 0,
-                    "months_worked": 0,
-                    "this_year_holiday_aviable": 0,
-                    "overall_holiday_aviable": 0,
-                    "already_taken_holidays": 0,
-                    "left_to_take_holidays": 0,
-                    "requested_holidays": 0
+                    "hours_work": 0
             })
         else:
             empty_users.append(user)
     
     for user in users:
+        if hasattr(user, "profile"):
+            have_profile = True
+        else:
+            have_profile = False
         all_users.append({
-                    "user":user     
+                    "user":user,
+                    "hours_total": Session.objects.get_hours_month(user.id, month, int(year), sessions_month=user.session_set.all()),
+                    "hours_unassigned": Session.objects.get_unassigned_hours_month(user.id, month, int(year), sessions_month=user.session_set.all()),
+                    "hours_not_work": Session.objects.get_not_work_hours_month(user.id, month, int(year), sessions_month=user.session_set.all()),
+                    "have_profile": have_profile,
+                    "months_worked": 0,
+                    "this_year_holiday_aviable": 0,
+                    "overall_holiday_aviable": 0,
+                    "already_taken_holidays": 0,
+                    "left_to_take_holidays": 0,
+                    "requested_holidays": 0     
         })        
 
     for user in user_data:
         user["hours_work"] = user["hours_total"] - user["hours_unassigned"] - user["hours_not_work"]
-        if user["have_profile"]:
-            hours_work_this_year = Session.objects.get_hours_this_year(user["user"].id)
-            user["months_worked"] = hours_work_this_year / (user["user"].profile.get_hours_quota() * 21)
-            user["this_year_holiday_aviable"] = user["user"].profile.get_aviable_holidays_this_year() 
-            user["overall_holiday_aviable"] = user["this_year_holiday_aviable"] + user["user"].profile.aviable_holidays
-            user["already_taken_holidays"] = user["user"].profile.get_hours_of_holidays(year = year) / user["user"].profile.get_hours_quota()
-            user["requested_holidays"] = user["user"].profile.get_hours_of_holidays(verified = False) / user["user"].profile.get_hours_quota()
-            user["left_to_take_holidays"] = user["overall_holiday_aviable"] - user["user"].profile.get_hours_of_holidays() / user["user"].profile.get_hours_quota() - user["requested_holidays"]
         if user['hours_unassigned'] == 0 and user['hours_total'] > 0:
             user["looks_ok"] = True
         else:
             user["looks_ok"] = False
+            
+        for user in all_users:
+            user["hours_work"] = user["hours_total"] - user["hours_unassigned"] - user["hours_not_work"]
+            if user["have_profile"]:
+                hours_work_this_year = Session.objects.get_hours_this_year(user["user"].id)
+                user["months_worked"] = hours_work_this_year / (user["user"].profile.get_hours_quota() * 21)
+                user["this_year_holiday_aviable"] = user["user"].profile.get_aviable_holidays_this_year() 
+                user["overall_holiday_aviable"] = user["this_year_holiday_aviable"] + user["user"].profile.aviable_holidays
+                user["already_taken_holidays"] = user["user"].profile.get_hours_of_holidays(year = year) / user["user"].profile.get_hours_quota()
+                user["requested_holidays"] = user["user"].profile.get_hours_of_holidays(verified = False) / user["user"].profile.get_hours_quota()
+                user["left_to_take_holidays"] = user["overall_holiday_aviable"] - user["user"].profile.get_hours_of_holidays() / user["user"].profile.get_hours_quota() - user["requested_holidays"]
 
     locale.setlocale(locale.LC_ALL, "en_US.utf8")
 
