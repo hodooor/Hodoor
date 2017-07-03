@@ -55,11 +55,12 @@ class Profile(models.Model):
             hours += contract.hours_quota
         return hours
         
-    def get_hours_of_holidays(self, verified = True):
+    def get_hours_of_holidays(self, verified = True, year = None):
         hours = 0
         for holiday in self.holidays.all():
-            if holiday.verified == verified:
-                hours += holiday.hours_spend
+            if (year == None) or (year == str(holiday.date_since.year)):
+                if holiday.verified == verified:
+                    hours += holiday.hours_spend
         return hours
         
     def new_year(self):
@@ -69,6 +70,10 @@ class Profile(models.Model):
     def is_new_year(self):
         if datetime.now().year != self.last_time_year:
             self.new_year()
+        
+    def get_aviable_holidays_this_year(self):
+        hours_work_this_year = Session.objects.get_hours_this_year(self.user.id)
+        return hours_work_this_year/(52 * self.get_hours_quota()) * self.weeks_of_holidays_per_year
         
     def __str__(self):
         """Name of owner of profile and his contracts."""
