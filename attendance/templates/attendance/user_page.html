@@ -225,7 +225,7 @@
           </ul>
           <div class="separator"></div>
           <ul class="dash-list-group">
-            <li class="">Full-time quota: <span class="primary">{{workhours_per_day}} </span>hours/day</li>
+            <li class="">Your quota: <span class="primary">{{workhours_per_day}} </span>hours/day</li>
             <li class="">Month quota hours: <span class="bold">{{ hours_quota }}</span> hours</li>
             <li class="">Work days: <span class="bold">{{ num_of_workdays }}</span> days</li>
           </ul>
@@ -355,7 +355,8 @@
           </div>
           {%endif%}
       </div><!--/todays info panel-->
-     {% if user.profile.get_hours_quota > 0 %}
+      
+     {% if user.profile.get_hours_quota > 0 and curent_user_have_profile %}
 	  <div class="panel panel-primary"><!--holidays info panel-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="holiday-info" title="Holiday-info">
@@ -363,9 +364,14 @@
           </h2>
         </div>
         <div class="panel-body">
-			<p>Your work hours this year: {{hours_work_this_year | floatformat:0}}</p>
-            <p>Your aviable holidays: {{holidays_aviable | floatformat:1}} days <br/> ({{holihours_aviable | floatformat:0}} hours)</p>
-			<p>Already taken holiday: {{taken_holidays | floatformat:1}} days ({{taken_holihours | floatformat:0}} hours)</p>
+          <ul class="dash-list-group">
+			  <li class="">Aviable holidays: <span class="primary" id="aviable-holidays-graph">{{holidays_aviable | floatformat:1}}</span> day(s) ({{holihours_aviable | floatformat:0}} hours)</li>
+              <li class="list-separator"></li>
+              <li class="">Already taken holiday: <span class="gray" id="taken-holidays-graph">{{taken_holidays | floatformat:1}} </span> day(s) ({{taken_holihours | floatformat:0}} hours)</li>
+              <li class="list-separator"></li>
+              <li class="">Requared holidays: <span class="danger" id="requared-holidays-graph">{{ holidays_requared|floatformat:1}}</span> day(s) ({{holihours_requared | floatformat:0}} hours)</li>
+            </ul>
+			<canvas id="Holiday-Time-Chart" class="doughnut-chart" width="auto" height="250"></canvas>
 			<a href="{% url 'holidays' username=user.username %}" class="btn btn-info btn-block">Manage Holiday</a>
 		</div>
       </div><!--/holiday info panel-->
@@ -510,6 +516,25 @@
             datasets: [{
               backgroundColor: bgcolorsWorkTime,
               data: dataWorkTime
+            }]
+          }
+      });
+      
+		var aviableHolidaysGraph = $('#aviable-holidays-graph').text();
+        var takenHolidaysGraph = $('#taken-holidays-graph').text();
+        var requaredHolidaysGraph = $('#requared-holidays-graph').text();
+      
+        var ctx = $("#Holiday-Time-Chart");
+        var dataHoliTime = [aviableHolidaysGraph, requaredHolidaysGraph, takenHolidaysGraph];
+        var labelsHoliTime = ["Aviable holidays", "Requared holidays", "Taken holidays"];
+        var bgcolorsHoliTime = [bgColorAtime, bgColorUatime, bgColorNwtime]; 
+        var myChartHoli = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: labelsHoliTime,
+            datasets: [{
+              backgroundColor: bgcolorsWorkTime,
+              data: dataHoliTime
             }]
           }
       });

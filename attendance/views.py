@@ -116,6 +116,7 @@ def user(request, username):
         return HttpResponseRedirect(reverse(user, args=[request.user.username])); # hard reload the page without any forms
     u = User.objects.get(username=username)
     s = Session.objects.get_sessions_this_month(user=u)
+    
 
     open_sessions = Session.objects.get_open_sessions()
     try:
@@ -155,8 +156,11 @@ def user(request, username):
     else:
         year = datetime.now().year
     
+    curent_user_have_profile = False
     if hasattr(u, "profile"):
+        curent_user_have_profile = True
         workhours_per_day = u.profile.get_hours_quota()
+        u.profile.is_new_year()
     else:
         workhours_per_day = 8
     
@@ -180,14 +184,17 @@ def user(request, username):
     quota_difference_abs = abs(quota_difference)
     avg_work_hours_fullfill_quota = daily_hours((hours_quota - unassigned_closed_session_hours - hours_work_this_month) / max(1,num_of_workdays - num_of_elapsed_workdays))
     
-    holidays = 0
+    holihours = 0
     holihours_aviable = 0
-    if hasattr(u, "profile"):
-        holidays = u.profile.get_number_of_holidays()       
-        holihours_aviable_this_year = hours_work_this_year/52 * 4
-        holihours_aviable = holihours_aviable_this_year + u.profile.aviable_holidays
+    holihours_requared = 0
+    if curent_user_have_profile:
+        holihours = u.profile.get_hours_of_holidays()       
+        holihours_aviable_this_year = u.profile.get_aviable_holidays_this_year() * u.profile.get_hours_quota()
+        holihours_requared = u.profile.get_hours_of_holidays(verified = False)
+        holihours_aviable = holihours_aviable_this_year + (u.profile.aviable_holidays * u.profile.get_hours_quota()) - holihours_requared - holihours
+    holidays_requared = holihours_requared / max(1,workhours_per_day)
     holidays_aviable = holihours_aviable / max(1,workhours_per_day)
-    holihours = holidays * u.profile.get_hours_quota()
+    holidays = holihours / max(1,workhours_per_day)
 
     
     context = {
@@ -221,7 +228,10 @@ def user(request, username):
         "taken_holihours": holihours,
         "hours_work_this_year": hours_work_this_year,
         "holihours_aviable" :  holihours_aviable,
-        "holidays_aviable" :  holidays_aviable
+        "holidays_aviable" :  holidays_aviable,
+        "holidays_requared": holidays_requared,
+        "holihours_requared": holihours_requared,
+        "curent_user_have_profile": curent_user_have_profile
     }
     return render(request, "attendance/user_page.html", context)
 
@@ -432,11 +442,22 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
     
     
     for user in users:
+        if hasattr(user, "profile"):
+            have_profile = True
+        else:
+            have_profile = False
         all_users.append({
-                    "user":user,  
-                    "holiday_this_year": (Session.objects.get_hours_this_year(user.id)/52 * user.profile.aviable_holidays)/ max(1,workhours_per_day),
-                    "already_taken": user.profile.get_number_of_holidays(), 
-                    "hours_worked_this_year": Session.objects.get_hours_this_year(user.id)
+                    "user":user,
+                    "hours_total": Session.objects.get_hours_month(user.id, month, int(year), sessions_month=user.session_set.all()),
+                    "hours_unassigned": Session.objects.get_unassigned_hours_month(user.id, month, int(year), sessions_month=user.session_set.all()),
+                    "hours_not_work": Session.objects.get_not_work_hours_month(user.id, month, int(year), sessions_month=user.session_set.all()),
+                    "have_profile": have_profile,
+                    "months_worked": 0,
+                    "this_year_holiday_aviable": 0,
+                    "overall_holiday_aviable": 0,
+                    "already_taken_holidays": 0,
+                    "left_to_take_holidays": 0,
+                    "requested_holidays": 0     
         })        
 
     for user in user_data:
@@ -445,6 +466,17 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
             user["looks_ok"] = True
         else:
             user["looks_ok"] = False
+            
+        for user in all_users:
+            user["hours_work"] = user["hours_total"] - user["hours_unassigned"] - user["hours_not_work"]
+            if user["have_profile"]:
+                hours_work_this_year = Session.objects.get_hours_this_year(user["user"].id)
+                user["months_worked"] = hours_work_this_year / (user["user"].profile.get_hours_quota() * 21)
+                user["this_year_holiday_aviable"] = user["user"].profile.get_aviable_holidays_this_year() 
+                user["overall_holiday_aviable"] = user["this_year_holiday_aviable"] + user["user"].profile.aviable_holidays
+                user["already_taken_holidays"] = user["user"].profile.get_hours_of_holidays(year = year) / user["user"].profile.get_hours_quota()
+                user["requested_holidays"] = user["user"].profile.get_hours_of_holidays(verified = False) / user["user"].profile.get_hours_quota()
+                user["left_to_take_holidays"] = user["overall_holiday_aviable"] - user["user"].profile.get_hours_of_holidays() / user["user"].profile.get_hours_quota() - user["requested_holidays"]
 
     locale.setlocale(locale.LC_ALL, "en_US.utf8")
 

@@ -46,6 +46,8 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     contracts = models.ManyToManyField(Contract)
     aviable_holidays = models.FloatField(default=0)
+    weeks_of_holidays_per_year = models.IntegerField(default=0)
+    last_time_year = models.IntegerField(default = 2017)
     
     def get_hours_quota(self):
         hours = 0
@@ -53,12 +55,25 @@ class Profile(models.Model):
             hours += contract.hours_quota
         return hours
         
-    def get_number_of_holidays(self):
+    def get_hours_of_holidays(self, verified = True, year = None):
         hours = 0
         for holiday in self.holidays.all():
-            if holiday.verified:
-                hours += holiday.days_spend
+            if (year == None) or (year == str(holiday.date_since.year)):
+                if holiday.verified == verified:
+                    hours += holiday.hours_spend
         return hours
+        
+    def new_year(self):
+        self.last_time_year = datetime.now().year
+        self.aviable_holidays += Session.objects.get_hours_last_year(self.user.id) / 52 * 4 
+        
+    def is_new_year(self):
+        if datetime.now().year != self.last_time_year:
+            self.new_year()
+        
+    def get_aviable_holidays_this_year(self):
+        hours_work_this_year = Session.objects.get_hours_this_year(self.user.id)
+        return hours_work_this_year/(52 * self.get_hours_quota()) * self.weeks_of_holidays_per_year
         
     def __str__(self):
         """Name of owner of profile and his contracts."""
@@ -302,17 +317,20 @@ class Holiday(models.Model):
     Saves information data about time spended on holidays
     ''' 
     profile = models.ForeignKey(Profile, related_name="holidays")
-    date = models.DateField(default = None)
-    days_spend = models.FloatField(
+    date_since = models.DateField(default = None)
+    date_to = models.DateField(default = None)
+    hours_spend = models.FloatField(
         default=0,
         validators=[
             MinValueValidator(0.5)
         ]
      )
     verified = models.BooleanField(default = False)
+    reason = models.CharField(max_length = 20, null = True, blank = True)
         
     def __str__(self):
-        return self.profile.user.username + " " + str(self.date) + " >> " + str(self.days_spend) + " day(s)"
+        return self.profile.user.username + " " + str(self.date_since) 
+        + "to" + str(self.date_to) + " >> " + str(self.hours_spend) + " hours"
 
 
 
