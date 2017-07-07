@@ -326,7 +326,7 @@ class Holiday(models.Model):
         ]
      )
     verified = models.BooleanField(default = False)
-    reason = models.CharField(max_length = 20, null = True, blank = True)
+    reason = models.CharField(max_length = 50, null = True, blank = True)
         
     def __str__(self):
         return self.profile.user.username + " " + str(self.date_since) 

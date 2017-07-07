@@ -1,5 +1,5 @@
 from django import forms
-from .models import Session, ProjectSeparation, Swipe
+from .models import Session, ProjectSeparation, Swipe, Holiday
 from django.contrib.admin.widgets import AdminDateWidget
 from datetimewidget.widgets import DateTimeWidget
 from datetime import timedelta
@@ -57,3 +57,8 @@ class SwipeEditForm(forms.ModelForm):
                 raise forms.ValidationError("Conflict with next swipe " + str(next_swipe))
 
         return  data
+
+class HolidayRequestForm(forms.ModelForm):
+    class Meta:
+        model = Holiday
+        fields = ['date_since','date_to','hours_spend','reason']
