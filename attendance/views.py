@@ -505,7 +505,7 @@ def holidays(request, username):
                         profile = User.objects.get(username=username).profile,
                         date_since = cleaned_data["date_since"],
                         date_to = cleaned_data["date_to"],
-                        hours_spend = cleaned_data["hours_spend"],
+                        work_hours = cleaned_data["work_hours"],
                         verified = False,
                         reason = cleaned_data["reason"]
              )
@@ -519,10 +519,11 @@ def holidays(request, username):
     context = {
         "user" : user,
         "czech_holidays" : czech_holidays_for_js,
-        "quota" : user.profile.get_hours_quota()
+        "quota" : user.profile.get_hours_quota(),
+        "form" : form
     }
            
-    return render(request, "attendance/holidays.html", {'form': form})
+    return render(request, "attendance/holidays.html", context)
     
 @login_required(login_url='/login/')
 def holidays_request(request, username,year=str(datetime.now().year)):
