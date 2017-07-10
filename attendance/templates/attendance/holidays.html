@@ -34,7 +34,7 @@
 					<tbody>
 						<tr>
 						    <td data-field="key" class="key">First name</td>
-						    <td data-field="value" id="swipeType">{{user.first_name}}</td>
+						    <td data-field="value">{{user.first_name}}</td>
 						</tr>
 						<tr>
 						    <td data-field="key" class="key">Last Name</td>
@@ -68,8 +68,12 @@
 								</td>
 							</tr>
 						<tr>
-							<td>Hours</td>
-							<td><input type="text" id="TextBox3"/></td>
+							<td>Workhours during this time:</td>
+							<td><input type="number" id='HoursMod' min="0" max="{{ quota }}" value = 0></td>
+						</tr>
+						<tr>
+							<td>Total:</td>
+							<td><span id='TotalSum' class="bold small"></span></td>
 						</tr>
 					</tbody>
 				</table>
@@ -104,19 +108,63 @@
         viewMode: 'days',
         format: 'DD/MM/YYYY',
     });
+    $('#HoursMod').on("change", function (e){
+		TimeDifference();
+		});  
     
     $('#datetimepicker2').on("dp.change", function (e){
 		TimeDifference();
 		});  
-		     
+    $('#datetimepicker1').on("dp.change", function (e){
+	    TimeDifference();
+    }); 
 	function TimeDifference(){
 		var start = $('#datetimepicker1').data("DateTimePicker").date();
 		var end = $('#datetimepicker2').data("DateTimePicker").date();
-		var timeDiff = 0;
-		timeDiff = (end - start);
-		var dateDiff = Math.floor(timeDiff / (60 * 60 * 1000));
-		$('#TextBox3').val(dateDiff);                                   //problem when correcting a second form and not correwcting the first
+		if (start!=null && end!=null){
+			start = new Date(start);
+			  start.setHours(0);
+			  start.setMinutes(0);
+			  start.setSeconds(0);
+			  start.setMilliseconds(0);
+			end = new Date(end);
+			  end.setHours(0);
+			  end.setMinutes(0);
+			  end.setSeconds(0);
+			  end.setMilliseconds(0);
+		    var dateDiff = DateRange(start,end);
+		    timeDiff = dateDiff * {{ quota|safe }};
+		    timeDiff -= parseInt(document.getElementById("HoursMod").value);
+		    $('#TotalSum').text(timeDiff / {{ quota|safe }} + ' day(s) (' + timeDiff + ' hour(s))');
 		}
+	}
+		
+	function DateRange(timeFrom, timeTo){
+		var czechHolidaysFromDJango = {{ czech_holidays|safe }};
+		var czechHolidays = [];
+		for (var i = 0; i< czechHolidaysFromDJango.length; i++){
+		    czechHolidays.push((new Date(czechHolidaysFromDJango[i][0],czechHolidaysFromDJango[i][1]-1,czechHolidaysFromDJango[i][2])).toDateString());
+		}
+		var currentDate = timeFrom;
+		var result = 0;
+		var weekDay = 0; 
+		while (currentDate.getTime() <= timeTo.getTime()){
+			weekDay = currentDate.getDay();
+			if (weekDay != 0 && weekDay != 6){
+				var holiday = false;
+				for (var i = 0; i< czechHolidays.length; i++){
+					if (currentDate.toDateString() === czechHolidays[i]){
+						holiday = true;
+					}
+				}
+				if (holiday == false){
+					result ++;
+				}
+			}
+		    currentDate.setDate(currentDate.getDate()+1); 
+		}
+		return result;
+	}
 		     
     setTimeout(function(){ //set timeout for modal to be shown -like delay
         $('#myModal').modal('show');
