@@ -61,4 +61,4 @@ class SwipeEditForm(forms.ModelForm):
 class HolidayRequestForm(forms.ModelForm):
     class Meta:
         model = Holiday
-        fields = ['date_since','date_to','hours_spend','reason']
+        fields = ['date_since','date_to','work_hours','reason']
