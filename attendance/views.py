@@ -15,6 +15,7 @@ from django.db.models import Q
 import locale
 from django.db.models import Prefetch
 from attendance.utils import get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days, last_month, daily_hours
+from czech_holidays import holidays as czech_holidays
 
 @login_required(login_url='/login/')
 def home_page(request):
@@ -492,7 +493,9 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
 def holidays(request, username):
     if not user_check(request, username):
         return HttpResponse("Restricted to " + username)
-      
+       
+    user = User.objects.get(username=username)
+
     if request.method == "POST":
          form = HolidayRequestForm(request.POST);
          print(form.is_valid())
@@ -508,10 +511,16 @@ def holidays(request, username):
              )
     else:
         form = HolidayRequestForm();
+                
+    czech_holidays_for_js = []
+    for h in czech_holidays:
+        czech_holidays_for_js.append([h.year, h.month, h.day])   
         
     context = {
-            "user" : User.objects.get(username=username),
-            }
+        "user" : user,
+        "czech_holidays" : czech_holidays_for_js,
+        "quota" : user.profile.get_hours_quota()
+    }
            
     return render(request, "attendance/holidays.html", {'form': form})
     
