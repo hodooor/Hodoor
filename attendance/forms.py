@@ -62,3 +62,8 @@ class HolidayRequestForm(forms.ModelForm):
     class Meta:
         model = Holiday
         fields = ['date_since','date_to','work_hours','reason']
+        
+class HolidayVerifyForm(forms.ModelForm):
+    class Meta:
+        model = Holiday
+        fields = ['verified']

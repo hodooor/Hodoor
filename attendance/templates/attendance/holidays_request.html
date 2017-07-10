@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="{% static 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}">
 {% endblock %}
 
-{% block title %}Swipe detail{% endblock %}
+{% block title %}Holiday Assignment{% endblock %}
 {% block aside %}
 
 {% endblock %}
@@ -20,53 +20,72 @@
     <div class="modal-content modal-primary">
       <div class="modal-header">
         <h4 class="modal-title" id="myModalLabel">
-        	Holiday assignment<span class="modal-icon fa fa-info pull-right"></span>
+            Holiday assignment - {{user.username}}<span class="modal-icon fa fa-info pull-right"></span>
         </h4>
       </div>
       <div class="modal-body">
-				<table class="table table-primary-inverse">
-					<thead>
-					<tr class="upper">
-					  <th class="col-md-4">Parameter</th>
-					  <th class="col-md-4">Value</th>
-					</tr>
-					</thead>
-					<tbody>
-						<tr>
-						    <td data-field="key" class="key">First name</td>
-						    <td data-field="value" id="swipeType">{{user.first_name}}</td>
-						</tr>
-						<tr>
-						    <td data-field="key" class="key">Last Name</td>
-						    <td data-field="value">{{user.last_name}}</td>
-						</tr>
-						<tr>
-							<td data-field="key" class="key">Date from:</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td data-field="key" class="key">Date to:</td>
-							<td></td>
-						</tr>
-					</tbody>
-				</table>
-				{{form.errors}}
-				<div class="col-md-3">
-				</div>
-
+                <table class="table table-primary-inverse">
+                    <thead>
+                    <tr class="upper">
+                      <th class="col-md-2">Parameter</th>
+                      <th class="col-md-4">Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                            <tr>
+                                <td data-field="key" class="key">Date since:</td>
+                                <form method='POST' action=''>{% csrf_token %}
+                                <td class="col-md-10">
+                                    <div>
+                                        <div class="form-group">
+                                            <div class='input-group' id='datetimepicker1'>
+                                                <input type='text' name='date_since' id='id_date_since' class="form-control" />
+                                                 <div class="input-group-addon" data-toggle="tooltip" title="Open Date Picker"><i class="fa fa-clock-o"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-field="key" class="key">Date To:</td>
+                                <td class="col-md-10">
+                                    <div>
+                                        <div class="form-group">
+                                            <div class='input-group' id='datetimepicker2'>
+                                                <input type='text'  name='date_to' id='date_to' class="form-control"/>
+                                                 <div class="input-group-addon" data-toggle="tooltip" title="Open Date Picker"><i class="fa fa-clock-o"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-field="key" class="key">Reason</td>
+                                <td><input type='text' name='reason' id='id_reason' class="form-control" /></td>
+                            </tr>
+                            <tr>
+                                <td>Workhours during this time:</td>
+                                <td><input type="number" name='work_hours' id='work_hours' min="0" max="{{ quota }}" value = 0></td>
+                            </tr>
+                            <tr>
+                                <td>Total:</td>
+                                <td><span id='TotalSum' class="bold small"></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                {{form.errors}}
+                <div class="col-md-3">
+                </div>
       </div><!--/modal body-->
       <div class="modal-footer">
       <div class="row">
-      	<div class="col-md-3">
-      		<a class="btn btn-danger" href="{% url 'default_administrator'%}"><i class="fa fa-arrow-left"></i> Back to Admin page</a>
-      	</div>
-      	<div class="col-md-4">
-      		<button id="send-requist" type='submit' class="btn btn-warning" value='Decline'>Decline</button>
-      	</div>
-      	<div class="col-md-2 col-md-offset-1">
-      		<button id="send-requist" type='submit' class="btn btn-primary" value='Verify'>Verify</button>
-      	</div>
-      	</form>
+        <div class="col-md-3">
+            <a class="btn btn-danger" href="{% url 'user' user.username %}"><i class="fa fa-arrow-left"></i> Back to Dashboard</a>
+        </div>
+        <div class="col-md-4 col-md-offset-5">
+            <button id="submit" type='submit' class="btn btn-primary" value='Send request'>Send Request</button>
+        </div>
+        </form>
       </div>
       </div>
     </div><!--/modal-->
@@ -74,107 +93,80 @@
 </div>
 
 <script type="text/javascript">
-	function formatDate(date) {
+ $(document).ready(function(){
+    $('#datetimepicker1').datetimepicker({
+        viewMode: 'days',
+        format: 'YYYY-MM-DD',
+    }), 
+     
+    $('#datetimepicker2').datetimepicker({
+        viewMode: 'days',
+        format: 'YYYY-MM-DD',
+    });
 
-		  var day = date.getDate();
-		  var monthIndex = ("0" + (date.getMonth() + 1)).slice(-2)
-		  var year = date.getFullYear();
-
-		  return year + '-' + monthIndex + '-' + day;
-		}
-		
-	function isItToday(date){
-		var today = formatDate(new Date());
-		if (today.localeCompare(date) == 0){
-			return true;
-		}else{
-			return false;
-		}
-	}
-  $(document).ready(function(){
-  	//Time and Date picker preparing data - script
-  	if ($('#id_datetime').length){ //Test if element exist
-  		$('#id_datetime').addClass('form-control hidden');
-  		//read data from python form
-	  	var PickerDateTime = $('#id_datetime').attr("value");
-	  	//split these two strings and put it into array
-	  	var PickerDateArray = PickerDateTime.split(' ');
-      //default values
-      var defaultDate = PickerDateArray[0];
-      var defaultTime = PickerDateArray[1];
-	  	//show these values in another inputs
-	  	$('#PickerDate').attr("value", PickerDateArray[0]);
-	  	$('#PickerTime').attr("value", PickerDateArray[1]);
-	  	//save values before change
-			$('#PickerDate').data("NewDate", PickerDateArray[0]);
-	  	$('#PickerTime').data("NewTime", PickerDateArray[1]);
-      /*Use DATE and TIME Pickers*/
-      $('#datepicker').datetimepicker({ //show BS popover with Date
-        format: "YYYY-MM-DD",
-        maxDate: 'now',
-      });
-	  if(isItToday($('#PickerDate').data("NewDate"))){
-		  $('#timepicker').datetimepicker({ //show BS popover with Time
-			format: "HH:mm:ss",
-			minDate: moment({
-			h:0,
-			m:0,
-			s:0
-			}),
-			maxDate: moment(),
-		  });
-	  }else{
-		  $('#timepicker').datetimepicker({ //show BS popover with Time
-			format: "HH:mm:ss",
-			minDate: moment({
-			h:0,
-			m:0,
-			s:0
-			}),
-			maxDate: moment({
-			h:23,
-			m:59,
-			s:59
-			}),
-		  });
-	  }
-      //After change, yeld new values to default python form
-      //for time
-      $("#timepicker").on("dp.change", function(e) {
-        $('#PickerTime').data("NewTime", $('#PickerTime').val()); //make it as new data
-        //display it in python form
-        $('#id_datetime').val( $('#PickerDate').data("NewDate")+" "+$('#PickerTime').data("NewTime") );
-        console.log("New time: "+$('#PickerTime').data("NewTime"));
-      });
-      //for date
-      $("#datepicker").on("dp.change", function(e) {
-        $('#PickerDate').data("NewDate", $('#PickerDate').val()); //make it as new data
-        //display it in python form
-        $('#id_datetime').val( $('#PickerDate').data("NewDate")+" "+$('#PickerTime').data("NewTime") );
-        if(isItToday($('#PickerDate').data("NewDate"))){
-			$('#timepicker').data("DateTimePicker").maxDate(moment());
-		}else{
-			$('#timepicker').data("DateTimePicker").maxDate(moment({
-			h:23,
-			m:59,
-			s:59
-			}));
-		};
-        console.log("New date: "+$('#PickerDate').data("NewDate"));
-      });
-      //eof datetimepicker
-
-	  	console.log("DATE: "+PickerDateArray[0]+"\nTIME: "+PickerDateArray[1]);
-
-      /*Write default values into table under fields*/
-      $('#default-date').text(defaultDate);
-      $('#default-time').text(defaultTime);
-		}//eof if exist
+    $('#work_hours').on("change", function (e){
+        TimeDifference();
+        });  
+    
+    $('#datetimepicker2').on("dp.change", function (e){
+        TimeDifference();
+        });  
+    $('#datetimepicker1').on("dp.change", function (e){
+        TimeDifference();
+    }); 
+    
+    function TimeDifference(){
+        var start = $('#datetimepicker1').data("DateTimePicker").date();
+        var end = $('#datetimepicker2').data("DateTimePicker").date();
+        if (start!=null && end!=null){
+            start = new Date(start);
+              start.setHours(0);
+              start.setMinutes(0);
+              start.setSeconds(0);
+              start.setMilliseconds(0);
+            end = new Date(end);
+              end.setHours(0);
+              end.setMinutes(0);
+              end.setSeconds(0);
+              end.setMilliseconds(0);
+            var dateDiff = DateRange(start,end);
+            timeDiff = dateDiff * {{ quota|safe }};
+            timeDiff -= parseInt(document.getElementById("work_hours").value);
+            $('#TotalSum').text(timeDiff / {{ quota|safe }} + ' day(s) (' + timeDiff + ' hour(s))');
+        }
+    }
+        
+    function DateRange(timeFrom, timeTo){
+        var czechHolidaysFromDJango = {{ czech_holidays|safe }};
+        var czechHolidays = [];
+        for (var i = 0; i< czechHolidaysFromDJango.length; i++){
+            czechHolidays.push((new Date(czechHolidaysFromDJango[i][0],czechHolidaysFromDJango[i][1]-1,czechHolidaysFromDJango[i][2])).toDateString());
+        }
+        var currentDate = timeFrom;
+        var result = 0;
+        var weekDay = 0; 
+        while (currentDate.getTime() <= timeTo.getTime()){
+            weekDay = currentDate.getDay();
+            if (weekDay != 0 && weekDay != 6){
+                var holiday = false;
+                for (var i = 0; i< czechHolidays.length; i++){
+                    if (currentDate.toDateString() === czechHolidays[i]){
+                        holiday = true;
+                    }
+                }
+                if (holiday == false){
+                    result ++;
+                }
+            }
+            currentDate.setDate(currentDate.getDate()+1); 
+        }
+        return result;
+    }
 
     setTimeout(function(){ //set timeout for modal to be shown -like delay
         $('#myModal').modal('show');
       }, 1000);
-    /*Add class to see fontawesomes in swipe infos*/
   });
+    /*Add class to see fontawesomes in swipe infos*/
 </script>
 {% endblock %}

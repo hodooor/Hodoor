@@ -332,7 +332,7 @@ class Holiday(models.Model):
         return -(((self.date_since - self.date_to).days) * self.profile.get_hours_quota() - self.work_hours)
         
     def __str__(self):
-        return self.profile.user.username + " " + str(self.date_since) 
+        return str(self.id) + " " + self.profile.user.username + " " + str(self.date_since)
         + "to" + str(self.date_to) + " >> " + str(self.hours_spend()) + " hours"
 
 

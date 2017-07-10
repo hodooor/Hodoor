@@ -218,10 +218,10 @@
             <div class="col-xs-1">{{ num_of_workdays }}</div>
           </div>
           <ul class="dash-list-group">
-			{% if user.profile.get_hours_quota == 0 %}
-				<li class="">You might work as you need to.</li>
-			{% else %}
-				<li class="">You should work: <span class="" id="you_should_work_hours">{{ avg_work_hours_fullfill_qoota | floatformat:2}} </span>hour(s)/day</li>
+            {% if user.profile.get_hours_quota == 0 %}
+                <li class="">You might work as you need to.</li>
+            {% else %}
+                <li class="">You should work: <span class="" id="you_should_work_hours">{{ avg_work_hours_fullfill_qoota | floatformat:2}} </span>hour(s)/day</li>
           </ul>
           <div class="separator"></div>
           <ul class="dash-list-group">
@@ -357,7 +357,7 @@
       </div><!--/todays info panel-->
       
      {% if user.profile.get_hours_quota > 0 and curent_user_have_profile %}
-	  <div class="panel panel-primary"><!--holidays info panel-->
+      <div class="panel panel-primary"><!--holidays info panel-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="holiday-info" title="Holiday-info">
            <i class="fa fa-plane" aria-hidden="true"></i> Holiday - info <i id="tooltip4" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="bottom"></i>
@@ -365,15 +365,15 @@
         </div>
         <div class="panel-body">
           <ul class="dash-list-group">
-			  <li class="">Aviable holidays: <span class="primary" id="aviable-holidays-graph">{{holidays_aviable | floatformat:1}}</span> day(s) ({{holihours_aviable | floatformat:0}} hours)</li>
+              <li class="">Aviable holidays: <span class="primary" id="aviable-holidays-graph">{{holidays_aviable | floatformat:1}}</span> day(s) ({{holihours_aviable | floatformat:0}} hours)</li>
               <li class="list-separator"></li>
               <li class="">Already taken holiday: <span class="gray" id="taken-holidays-graph">{{taken_holidays | floatformat:1}} </span> day(s) ({{taken_holihours | floatformat:0}} hours)</li>
               <li class="list-separator"></li>
               <li class="">Requared holidays: <span class="danger" id="requared-holidays-graph">{{ holidays_requared|floatformat:1}}</span> day(s) ({{holihours_requared | floatformat:0}} hours)</li>
             </ul>
-			<canvas id="Holiday-Time-Chart" class="doughnut-chart" width="auto" height="250"></canvas>
-			<a href="{% url 'holidays' username=user.username %}" class="btn btn-info btn-block">Manage Holiday</a>
-		</div>
+            <canvas id="Holiday-Time-Chart" class="doughnut-chart" width="auto" height="250"></canvas>
+            <a href="{% url 'h_request' username=user.username %}" class="btn btn-info btn-block">Manage Holiday</a>
+        </div>
       </div><!--/holiday info panel-->
       {% endif %}
     </div><!--/third col-->
@@ -520,7 +520,7 @@
           }
       });
       
-		var aviableHolidaysGraph = $('#aviable-holidays-graph').text();
+        var aviableHolidaysGraph = $('#aviable-holidays-graph').text();
         var takenHolidaysGraph = $('#taken-holidays-graph').text();
         var requaredHolidaysGraph = $('#requared-holidays-graph').text();
       
