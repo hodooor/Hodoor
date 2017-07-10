@@ -329,7 +329,7 @@ class Holiday(models.Model):
     reason = models.CharField(max_length = 50, null = True, blank = True)
     
     def hours_spend(self):
-        return (self.date_to - self.date_since) * self.profile.get_hours_quota() - self.work_hours
+        return -(((self.date_since - self.date_to).days) * self.profile.get_hours_quota() - self.work_hours)
         
     def __str__(self):
         return self.profile.user.username + " " + str(self.date_since) 
