@@ -3,20 +3,19 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from rest_framework import viewsets
 from .serializers import SwipeSerializer,UserSerializer,KeySerializer
-from .models import Swipe, Key, Session,ProjectSeparation, Project
+from .models import Swipe, Key, Session,ProjectSeparation, Project, Holiday
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.decorators import login_required
 from rest_framework import permissions
 from datetime import datetime, date
-from .forms import ProjectSeparationForm, SwipeEditForm
+from .forms import ProjectSeparationForm, SwipeEditForm, HolidayRequestForm
 from django.utils import timezone
 from django.db.models import Q
 import locale
 from django.db.models import Prefetch
 from attendance.utils import get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days, last_month, daily_hours
 from czech_holidays import holidays as czech_holidays
-
 
 @login_required(login_url='/login/')
 def home_page(request):
@@ -374,7 +373,7 @@ def swipe_detail(request, username, id):
 
         if request.method == "POST":
             form = SwipeEditForm(request.POST, instance = swipe)
-
+            print(form.is_valid())
             if form.is_valid():
                 cleaned_data = form.cleaned_data
                 swipe.datetime = cleaned_data["datetime"]
@@ -491,20 +490,32 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
     return render(request, "attendance/administrator.html", context)
 
 @login_required(login_url='/login/')
-def holidays(request, username,year=str(datetime.now().year)):
+def holidays(request, username):
     if not user_check(request, username):
         return HttpResponse("Restricted to " + username)
        
     user = User.objects.get(username=username)
 
+    if request.method == "POST":
+         form = HolidayRequestForm(request.POST);
+         print("LUL");
+         Holiday.objects.create(
+                    profile = User.objects.get(username=username).profile,
+                    date_since = form.date_since, 
+                    date_to = form.date_to,
+                    time_spend = form.time_spend,
+                    verified = False,
+                    reason = form.reason
+                )
+                
     czech_holidays_for_js = []
     for h in czech_holidays:
-        czech_holidays_for_js.append([h.year, h.month, h.day])
-               
+        czech_holidays_for_js.append([h.year, h.month, h.day])   
+                
     context = {
-            "user" : user,
-            "czech_holidays" : czech_holidays_for_js,
-            "quota" : user.profile.get_hours_quota()
+        "user" : user,
+        "czech_holidays" : czech_holidays_for_js,
+        "quota" : user.profile.get_hours_quota()
     }
            
     return render(request, "attendance/holidays.html", context)
@@ -516,6 +527,6 @@ def holidays_request(request, username,year=str(datetime.now().year)):
         
     context = {
             "year" : year,
-    }
+    } 
            
     return render(request, "attendance/holidays_request.html", context)    
