@@ -319,12 +319,7 @@ class Holiday(models.Model):
     profile = models.ForeignKey(Profile, related_name="holidays")
     date_since = models.DateField(default = None)
     date_to = models.DateField(default = None)
-    work_hours = models.FloatField(
-        default=0,
-        validators=[
-            MinValueValidator(0.5)
-        ]
-     )
+    work_hours = models.FloatField(default = 0)
     verified = models.BooleanField(default = False)
     reason = models.CharField(max_length = 50, null = True, blank = True)
     
@@ -332,8 +327,7 @@ class Holiday(models.Model):
         return -(((self.date_since - self.date_to).days) * self.profile.get_hours_quota() - self.work_hours)
         
     def __str__(self):
-        return self.profile.user.username + " " + str(self.date_since) 
-        + "to" + str(self.date_to) + " >> " + str(self.hours_spend()) + " hours"
+        return self.profile.user.username + " " + str(self.date_since) + " to " + str(self.date_to) + ": " + str(int(self.hours_spend())) + " hours"
 
 
 
