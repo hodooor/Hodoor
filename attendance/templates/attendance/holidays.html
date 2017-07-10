@@ -65,7 +65,7 @@
 							</tr>
 						<tr>
 							<td>Workhours during this time:</td>
-							<td><input type="number" id='HoursMod' min="0" max="{{ quota }}" value = 0></td>
+							<td><input type="number" id='work_hours' min="0" max="{{ quota }}" value = 0></td>
 						</tr>
 						<tr>
 							<td>Total:</td>
@@ -130,7 +130,7 @@
 			  end.setMilliseconds(0);
 		    var dateDiff = DateRange(start,end);
 		    timeDiff = dateDiff * {{ quota|safe }};
-		    timeDiff -= parseInt(document.getElementById("HoursMod").value);
+		    timeDiff -= parseInt(document.getElementById("work_hours").value);
 		    $('#TotalSum').text(timeDiff / {{ quota|safe }} + ' day(s) (' + timeDiff + ' hour(s))');
 		}
 	}
