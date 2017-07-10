@@ -60,7 +60,7 @@ class Profile(models.Model):
         for holiday in self.holidays.all():
             if (year == None) or (year == str(holiday.date_since.year)):
                 if holiday.verified == verified:
-                    hours += holiday.hours_spend
+                    hours += holiday.hours_spend()
         return hours
         
     def new_year(self):
@@ -319,7 +319,7 @@ class Holiday(models.Model):
     profile = models.ForeignKey(Profile, related_name="holidays")
     date_since = models.DateField(default = None)
     date_to = models.DateField(default = None)
-    hours_spend = models.FloatField(
+    work_hours = models.FloatField(
         default=0,
         validators=[
             MinValueValidator(0.5)
@@ -327,10 +327,13 @@ class Holiday(models.Model):
      )
     verified = models.BooleanField(default = False)
     reason = models.CharField(max_length = 50, null = True, blank = True)
+    
+    def hours_spend(self):
+        return -(((self.date_since - self.date_to).days) * self.profile.get_hours_quota() - self.work_hours)
         
     def __str__(self):
         return self.profile.user.username + " " + str(self.date_since) 
-        + "to" + str(self.date_to) + " >> " + str(self.hours_spend) + " hours"
+        + "to" + str(self.date_to) + " >> " + str(self.hours_spend()) + " hours"
 
 
 
