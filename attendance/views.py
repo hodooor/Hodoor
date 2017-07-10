@@ -495,21 +495,25 @@ def holidays(request, username):
       
     if request.method == "POST":
          form = HolidayRequestForm(request.POST);
-         print("LUL");
-         Holiday.objects.create(
-                    profile = User.objects.get(username=username).profile,
-                    date_since = form.date_since, 
-                    date_to = form.date_to,
-                    time_spend = form.time_spend,
-                    verified = False,
-                    reason = form.reason
-                )
-               
+         print(form.is_valid())
+         if form.is_valid():
+             cleaned_data = form.cleaned_data;
+             Holiday.objects.create(
+                        profile = User.objects.get(username=username).profile,
+                        date_since = cleaned_data["date_since"],
+                        date_to = cleaned_data["date_to"],
+                        hours_spend = cleaned_data["hours_spend"],
+                        verified = False,
+                        reason = cleaned_data["reason"]
+             )
+    else:
+        form = HolidayRequestForm();
+        
     context = {
             "user" : User.objects.get(username=username),
             }
            
-    return render(request, "attendance/holidays.html", context)
+    return render(request, "attendance/holidays.html", {'form': form})
     
 @login_required(login_url='/login/')
 def holidays_request(request, username,year=str(datetime.now().year)):
