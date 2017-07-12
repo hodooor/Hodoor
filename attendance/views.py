@@ -465,16 +465,16 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
         else:
             user["looks_ok"] = False
             
-        for user in all_users:
-            user["hours_work"] = user["hours_total"] - user["hours_unassigned"] - user["hours_not_work"]
-            if user["have_profile"]:
-                hours_work_this_year = Session.objects.get_hours_this_year(user["user"].id)
-                user["months_worked"] = hours_work_this_year / (user["user"].profile.get_hours_quota() * 21)
-                user["this_year_holiday_aviable"] = user["user"].profile.get_aviable_holidays_this_year() 
-                user["overall_holiday_aviable"] = user["this_year_holiday_aviable"] + user["user"].profile.aviable_holidays
-                user["already_taken_holidays"] = user["user"].profile.get_hours_of_holidays(year = year) / user["user"].profile.get_hours_quota()
-                user["requested_holidays"] = user["user"].profile.get_hours_of_holidays(verified = False) / user["user"].profile.get_hours_quota()
-                user["left_to_take_holidays"] = user["user"].profile.get_hours_of_holidays_aviable_to_take() / user["user"].profile.get_hours_quota()
+    for user in all_users:
+        user["hours_work"] = user["hours_total"] - user["hours_unassigned"] - user["hours_not_work"]
+        if user["have_profile"]:
+            hours_work_this_year = Session.objects.get_hours_this_year(user["user"].id)
+            user["months_worked"] = hours_work_this_year / (user["user"].profile.get_hours_quota() * 21)
+            user["this_year_holiday_aviable"] = user["user"].profile.get_aviable_holidays_this_year()
+            user["overall_holiday_aviable"] = user["this_year_holiday_aviable"] + user["user"].profile.aviable_holidays
+            user["already_taken_holidays"] = user["user"].profile.get_hours_of_holidays(year = year) / user["user"].profile.get_hours_quota()
+            user["requested_holidays"] = user["user"].profile.get_hours_of_holidays(verified = False) / user["user"].profile.get_hours_quota()
+            user["left_to_take_holidays"] = user["user"].profile.get_hours_of_holidays_aviable_to_take() / user["user"].profile.get_hours_quota()
 
     locale.setlocale(locale.LC_ALL, "en_US.utf8")
     
@@ -535,17 +535,20 @@ def holidays_verification(request, username, id):
         return HttpResponse("Restricted to staff.")
     holidays = get_object_or_404(Holiday, pk = int(id))
     days_on_holidays = holidays.hours_on_holidays / holidays.profile.get_hours_quota()
-    
+    check = 0
     if request.method == "POST":
         if request.POST.get("verify"):
             holidays.verified = True
             holidays.save()
+            check = 1
         if request.POST.get("decline"):
             holidays.delete()
+            check = 2
     context = {
             "id" : id,
             'holiday': holidays,
-            "days_on_holidays": days_on_holidays
+            "days_on_holidays": days_on_holidays,
+            "check": check
     } 
            
     return render(request, "attendance/holidays_verification.html", context)

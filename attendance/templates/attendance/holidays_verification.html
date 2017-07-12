@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="{% static 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}">
 {% endblock %}
 
-{% block title %}Swipe detail{% endblock %}
+{% block title %}Holidays Verification{% endblock %}
 {% block aside %}
 
 {% endblock %}
@@ -20,7 +20,13 @@
     <div class="modal-content modal-primary">
       <div class="modal-header">
         <h4 class="modal-title" id="myModalLabel">
-            Holiday verification - {{holiday.profile.user.username}}<span class="modal-icon fa fa-info pull-right"></span>
+            {% if check == 1 %}
+                Holidays verified <span class="modal-icon fa fa-info pull-right"></span>
+            {% elif check == 2 %}
+                Holidays declined <span class="modal-icon fa fa-info pull-right"></span>
+            {% else %}
+                Holidays verification - {{holiday.profile.user.username}}<span class="modal-icon fa fa-info pull-right"></span>
+            {% endif %}   
         </h4>
       </div>
       <div class="modal-body">
@@ -59,16 +65,22 @@
                                     <a class="btn btn-danger" href="{% url 'default_administrator'%}"><i class="fa fa-arrow-left"></i> Back to Admin page</a>
                                 </div>
                             </td>
-                            <td>
-                                <div class="col-md-3">
-                                    <button id="id_decline" name="decline" type='submit' class="btn btn-warning" value='Decline'>Decline</button>
-                                </div>
-                            </td>  
-                            <td>
-                                <div class="col-md-3">
-                                    <button id="id_verify" name="verify" type='submit' class="btn btn-primary" value='Verify'>Verify</button>
-                                </div>
-                            </td>      
+                            {% if check == 1 %}
+                                <td colspan = "2"> <div class="badge badge-success"> Holidays has been successfuly verified <i class="fa fa-check"></i></div></td>
+                            {% elif check == 2 %}
+                                <td colspan = "2"> <div class="badge badge-success"> Holidays has been successfuly declined <i class="fa fa-check"></i></div></td>
+                            {% else %}
+                                <td>
+                                    <div class="col-md-3">
+                                        <button id="id_decline" name="decline" type='submit' class="btn btn-warning" value='Decline'>Decline</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="col-md-3">
+                                        <button id="id_verify" name="verify" type='submit' class="btn btn-primary" value='Verify'>Verify</button>
+                                    </div>
+                                </td>
+                            {% endif %}
                         </tr>
                     </tbody>
                 </table>

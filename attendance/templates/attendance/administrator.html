@@ -198,25 +198,25 @@
             </tr>
           </thead>
           <tbody>
-			  {% for user in all_users %}
-			    {% if user.have_profile %}
-				  <tr>
-					<td>{{user.user.last_name}}</td>
-					<td>{{user.user.first_name}}</td>
-					<td>{{user.user.username}}</td>
-					<td>{{user.hours_work |floatformat:2}}</td>
-					<td>{{user.this_year_holiday_aviable | floatformat:1}}</td>
-					<td>{{user.already_taken_holidays | floatformat:1}}</td>
-					<td><b>{{user.overall_holiday_aviable | floatformat:1}}</b></td>
-					<td><b>{{user.left_to_take_holidays | floatformat:1}}</b></td>
-					<td>
+              {% for user in all_users %}
+                {% if user.have_profile %}
+                  <tr>
+                    <td>{{user.user.last_name}}</td>
+                    <td>{{user.user.first_name}}</td>
+                    <td>{{user.user.username}}</td>
+                    <td>{{user.hours_work |floatformat:2}}</td>
+                    <td>{{user.this_year_holiday_aviable | floatformat:1}}</td>
+                    <td>{{user.already_taken_holidays | floatformat:1}}</td>
+                    <td><b>{{user.overall_holiday_aviable | floatformat:1}}</b></td>
+                    <td><b>{{user.left_to_take_holidays | floatformat:1}}</b></td>
+                    <td>
                     {% if user.requested_holidays > 0%}
                       <span class="bold text-danger">{{user.requested_holidays | floatformat:1}}</span>
                     {% else %}
                         {{user.requested_holidays | floatformat:1}}
                     {% endif %}
                     </td>
-                    <td class="btn-fill text-center">
+                    <td>
                     {% for holiday in holidays %}  
                         {% if user.requested_holidays > 0 and holiday.profile.user.username == user.user.username %}
                                 <a href="{% url 'h_verification' username=user.user.username id=holiday.id %}"

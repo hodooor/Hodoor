@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="{% static 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}">
 {% endblock %}
 
-{% block title %}Holiday Assignment{% endblock %}
+{% block title %}Holidays Assignment{% endblock %}
 {% block aside %}
 
 {% endblock %}
@@ -32,10 +32,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td data-field="key" class="key">Reason</td>
-                            <td><input type='text' name='reason' id='id_reason' class="form-control" /></td>
-                        </tr>   
                             <tr>
                                 <td data-field="key" class="key">Date since:</td>
                                 <form method='POST' action=''>{% csrf_token %}
@@ -62,6 +58,10 @@
                                         </div>
                                     </div>
                                 </td>
+                        <tr>
+                            <td data-field="key" class="key">Reason</td>
+                            <td><input type='text' name='reason' id='id_reason' class="form-control" /></td>
+                        </tr>
                             </tr>
                         <tr>
                             <td>Workhours during this time:</td>
