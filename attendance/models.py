@@ -45,9 +45,9 @@ class Contract(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     contracts = models.ManyToManyField(Contract)
-    aviable_holidays = models.FloatField(default=0)
-    weeks_of_holidays_per_year = models.IntegerField(default=0)
-    last_time_year = models.IntegerField(default = 2017)
+    aviable_holidays = models.FloatField("Already aviable holideys in hours", default=0)
+    weeks_of_holidays_per_year = models.IntegerField(default=4)
+    last_action_time = datetime.now().year
     
     def get_hours_quota(self):
         hours = 0
@@ -56,6 +56,7 @@ class Profile(models.Model):
         return hours
         
     def get_hours_of_holidays(self, verified = True, year = None):
+        self.time_passed()
         hours = 0
         for holiday in self.holidays.all():
             if (year == None) or (year == str(holiday.date_since.year)):
@@ -64,18 +65,21 @@ class Profile(models.Model):
         return hours
         
     def new_year(self):
-        self.last_time_year = datetime.now().year
-        self.aviable_holidays += Session.objects.get_hours_last_year(self.user.id) / 52 * 4 
+        self.aviable_holidays += Session.objects.get_hours_last_year(self.user.id) /(52 * self.get_hours_quota()) * self.weeks_of_holidays_per_year
         
-    def is_new_year(self):
-        if datetime.now().year != self.last_time_year:
-            self.new_year()
+    def time_passed(self):
+        if self.last_action_time != None:
+            if datetime.now().year > self.last_action_time.year:
+                self.new_year()
+        self.last_action_time = datetime.now()
         
     def get_aviable_holidays_this_year(self):
+        self.time_passed()
         hours_work_this_year = Session.objects.get_hours_this_year(self.user.id)
         return hours_work_this_year/(52 * self.get_hours_quota()) * self.weeks_of_holidays_per_year
     
     def get_hours_of_holidays_aviable_to_take(self):
+        self.time_passed()
         hours = self.get_aviable_holidays_this_year() * self.get_hours_quota() + self.aviable_holidays
         print(hours)
         hours -= self.get_hours_of_holidays(verified = True)

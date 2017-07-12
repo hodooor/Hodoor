@@ -160,7 +160,6 @@ def user(request, username):
     if hasattr(u, "profile"):
         curent_user_have_profile = True
         workhours_per_day = u.profile.get_hours_quota()
-        u.profile.is_new_year()
     else:
         workhours_per_day = 8
     
@@ -194,6 +193,7 @@ def user(request, username):
     holidays_requared = holihours_requared / max(1,workhours_per_day)
     holidays_aviable = holihours_aviable / max(1,workhours_per_day)
     holidays = holihours / max(1,workhours_per_day)
+    
 
     
     context = {
