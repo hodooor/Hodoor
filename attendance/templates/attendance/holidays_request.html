@@ -32,6 +32,10 @@
                     </tr>
                     </thead>
                     <tbody>
+                        <tr>
+                            <td data-field="key" class="key">Reason</td>
+                            <td><input type='text' name='reason' id='id_reason' class="form-control" /></td>
+                        </tr>   
                             <tr>
                                 <td data-field="key" class="key">Date since:</td>
                                 <form method='POST' action=''>{% csrf_token %}
@@ -59,21 +63,22 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
-                                <td data-field="key" class="key">Reason</td>
-                                <td><input type='text' name='reason' id='id_reason' class="form-control" /></td>
-                            </tr>
-                            <tr>
-                                <td>Workhours during this time:</td>
-                                <td><input type="number" name='work_hours' id='work_hours' min="0" max="{{ quota }}" value = 0></td>
-                            </tr>
-                            <tr>
-                                <td>Total:</td>
-                                <td><span id='TotalSum' class="bold small"></span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                {{form.errors}}
+                        <tr>
+                            <td>Workhours during this time:</td>
+                            <td><input type="number" name='work_hours' id='work_hours' min="0" max="{{ quota }}" value = 0></td>
+                        </tr>
+                        <tr>
+                            <td>Total:</td>
+                            <td><span id='days_on_holidays' class="bold small">0</span> days (<span id='hours_on_holidaysSpan' name='hours_on_holidaysSpan' class="bold small">0</span> hours)</td>
+                            <input type='hidden' id='hours_on_holidays' name='hours_on_holidays' value=0 />
+                        </tr>
+                    </tbody>
+                </table>
+                {% if not succes %}
+                    {{form.errors}}
+                {% else %}
+                    <td> <div class="badge badge-success"> Holidays has been successfuly requested <i class="fa fa-check"></i></div></td>
+                {% endif %}
                 <div class="col-md-3">
                 </div>
       </div><!--/modal body-->
@@ -103,7 +108,6 @@
         viewMode: 'days',
         format: 'YYYY-MM-DD',
     });
-
     $('#work_hours').on("change", function (e){
         TimeDifference();
         });  
@@ -114,7 +118,6 @@
     $('#datetimepicker1').on("dp.change", function (e){
         TimeDifference();
     }); 
-    
     function TimeDifference(){
         var start = $('#datetimepicker1').data("DateTimePicker").date();
         var end = $('#datetimepicker2').data("DateTimePicker").date();
@@ -132,7 +135,9 @@
             var dateDiff = DateRange(start,end);
             timeDiff = dateDiff * {{ quota|safe }};
             timeDiff -= parseInt(document.getElementById("work_hours").value);
-            $('#TotalSum').text(timeDiff / {{ quota|safe }} + ' day(s) (' + timeDiff + ' hour(s))');
+            $('#days_on_holidays').text(timeDiff / {{ quota|safe }});
+            $('#hours_on_holidays').val(timeDiff);
+            $('#hours_on_holidaysSpan').text($('#hours_on_holidays').val());
         }
     }
         
@@ -162,7 +167,7 @@
         }
         return result;
     }
-
+             
     setTimeout(function(){ //set timeout for modal to be shown -like delay
         $('#myModal').modal('show');
       }, 1000);

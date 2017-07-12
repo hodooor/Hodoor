@@ -534,6 +534,7 @@ def holidays_verification(request, username, id):
     if not (request.user.is_superuser or request.user.is_staff):
         return HttpResponse("Restricted to staff.")
     holidays = get_object_or_404(Holiday, pk = int(id))
+    days_on_holidays = holidays.hours_on_holidays / holidays.profile.get_hours_quota()
     
     if request.method == "POST":
         if request.POST.get("verify"):
@@ -543,7 +544,8 @@ def holidays_verification(request, username, id):
             holidays.delete()
     context = {
             "id" : id,
-            'holiday': holidays
+            'holiday': holidays,
+            "days_on_holidays": days_on_holidays
     } 
            
     return render(request, "attendance/holidays_verification.html", context)
