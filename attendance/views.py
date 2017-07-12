@@ -199,6 +199,7 @@ def user(request, username):
     holidays_requared = holihours_requared / max(1,workhours_per_day)
     holidays_aviable = holihours_aviable / max(1,workhours_per_day)
     holidays = holihours / max(1,workhours_per_day)
+    
 
     context = {
         "user": u,
@@ -478,7 +479,7 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
         if user["have_profile"]:
             hours_work_this_year = Session.objects.get_hours_this_year(user["user"].id)
             user["months_worked"] = hours_work_this_year / (user["user"].profile.get_hours_quota() * 21)
-            user["this_year_holiday_aviable"] = user["user"].profile.get_aviable_holidays_this_year()
+            user["this_year_holiday_aviable"] = user["user"].profile.get_aviable_holidays_this_year() 
             user["overall_holiday_aviable"] = user["this_year_holiday_aviable"] + user["user"].profile.aviable_holidays
             user["already_taken_holidays"] = user["user"].profile.get_hours_of_holidays(year = year) / user["user"].profile.get_hours_quota()
             user["requested_holidays"] = user["user"].profile.get_hours_of_holidays(verified = False) / user["user"].profile.get_hours_quota()
