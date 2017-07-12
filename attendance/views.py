@@ -189,9 +189,8 @@ def user(request, username):
     holihours_requared = 0
     if curent_user_have_profile:
         holihours = u.profile.get_hours_of_holidays()       
-        holihours_aviable_this_year = u.profile.get_aviable_holidays_this_year() * u.profile.get_hours_quota()
         holihours_requared = u.profile.get_hours_of_holidays(verified = False)
-        holihours_aviable = holihours_aviable_this_year + (u.profile.aviable_holidays * u.profile.get_hours_quota()) - holihours_requared - holihours
+        holihours_aviable = u.profile.get_hours_of_holidays_aviable_to_take()
     holidays_requared = holihours_requared / max(1,workhours_per_day)
     holidays_aviable = holihours_aviable / max(1,workhours_per_day)
     holidays = holihours / max(1,workhours_per_day)
@@ -476,7 +475,7 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
                 user["overall_holiday_aviable"] = user["this_year_holiday_aviable"] + user["user"].profile.aviable_holidays
                 user["already_taken_holidays"] = user["user"].profile.get_hours_of_holidays(year = year) / user["user"].profile.get_hours_quota()
                 user["requested_holidays"] = user["user"].profile.get_hours_of_holidays(verified = False) / user["user"].profile.get_hours_quota()
-                user["left_to_take_holidays"] = user["overall_holiday_aviable"] - user["user"].profile.get_hours_of_holidays() / user["user"].profile.get_hours_quota() - user["requested_holidays"]
+                user["left_to_take_holidays"] = user["user"].profile.get_hours_of_holidays_aviable_to_take() / user["user"].profile.get_hours_quota()
 
     locale.setlocale(locale.LC_ALL, "en_US.utf8")
 
@@ -495,17 +494,18 @@ def holidays(request, username):
         return HttpResponse("Restricted to " + username)
        
     user = User.objects.get(username=username)
-
+    succes = False
     if request.method == "POST":
-         form = HolidayRequestForm(request.POST);
+         form = HolidayRequestForm(request.POST, user=user);
          print(form.is_valid())
          if form.is_valid():
+             succes = True
              cleaned_data = form.cleaned_data;
              Holiday.objects.create(
-                        profile = User.objects.get(username=username).profile,
+                        profile = user.profile,
                         date_since = cleaned_data["date_since"],
                         date_to = cleaned_data["date_to"],
-                        work_hours = cleaned_data["work_hours"],
+                        hours_on_holidays = cleaned_data["hours_on_holidays"],
                         verified = False,
                         reason = cleaned_data["reason"]
              )
@@ -520,7 +520,8 @@ def holidays(request, username):
         "user" : user,
         "czech_holidays" : czech_holidays_for_js,
         "quota" : user.profile.get_hours_quota(),
-        "form" : form
+        "form" : form,
+        "succes": succes
     }
            
     return render(request, "attendance/holidays.html", context)

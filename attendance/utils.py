@@ -86,3 +86,7 @@ def daily_hours(hours):
         return 0
     else:
         return hours
+
+def get_number_of_work_days_in_daterange(start_date, end_date):
+    dates = daterange(start_date, end_date)
+    return sum(1 for d in dates if is_workday(d))

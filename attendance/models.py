@@ -74,6 +74,13 @@ class Profile(models.Model):
     def get_aviable_holidays_this_year(self):
         hours_work_this_year = Session.objects.get_hours_this_year(self.user.id)
         return hours_work_this_year/(52 * self.get_hours_quota()) * self.weeks_of_holidays_per_year
+    
+    def get_hours_of_holidays_aviable_to_take(self):
+        hours = self.get_aviable_holidays_this_year() * self.get_hours_quota() + self.aviable_holidays
+        print(hours)
+        hours -= self.get_hours_of_holidays(verified = True)
+        hours -= self.get_hours_of_holidays(verified = False)
+        return hours
         
     def __str__(self):
         """Name of owner of profile and his contracts."""
@@ -319,16 +326,15 @@ class Holiday(models.Model):
     profile = models.ForeignKey(Profile, related_name="holidays")
     date_since = models.DateField(default = None)
     date_to = models.DateField(default = None)
-    work_hours = models.FloatField(default = 0)
+    hours_on_holidays = models.FloatField(default = 0)
     verified = models.BooleanField(default = False)
     reason = models.CharField(max_length = 50, null = True, blank = True)
     
     def hours_spend(self):
-        return -(((self.date_since - self.date_to).days) * self.profile.get_hours_quota() - self.work_hours)
+        return self.hours_on_holidays
         
     def __str__(self):
         return self.profile.user.username + " " + str(self.date_since) + " to " + str(self.date_to) + ": " + str(int(self.hours_spend())) + " hours"
-
 
 
 
