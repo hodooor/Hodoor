@@ -186,7 +186,7 @@ def user(request, username):
     holihours = 0
     holihours_aviable = 0
     holihours_requared = 0
-    if curent_user_have_profile:
+    if curent_user_have_profile and workhours_per_day != 0:
         holihours = u.profile.get_hours_of_holidays()       
         holihours_requared = u.profile.get_hours_of_holidays(verified = False)
         holihours_aviable = u.profile.get_hours_of_holidays_aviable_to_take()

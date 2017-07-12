@@ -47,7 +47,7 @@ class Profile(models.Model):
     contracts = models.ManyToManyField(Contract)
     aviable_holidays = models.FloatField("Already aviable holideys in hours", default=0)
     weeks_of_holidays_per_year = models.IntegerField(default=4)
-    last_action_time = datetime.now().year
+    last_action_time = datetime.now()
     
     def get_hours_quota(self):
         hours = 0
