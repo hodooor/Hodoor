@@ -81,3 +81,8 @@ class HolidayRequestForm(forms.ModelForm):
         if self.user.profile.get_hours_of_holidays_aviable_to_take() < hours_on_holidays:
             raise forms.ValidationError("You can take only " + str(int(self.user.profile.get_hours_of_holidays_aviable_to_take() / self.user.profile.get_hours_quota())) + " days of holidays.")
         return hours_on_holidays
+        
+class HolidayVerifyForm(forms.ModelForm):
+    class Meta:
+        model = Holiday
+        fields = ['verified']

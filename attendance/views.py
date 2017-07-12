@@ -9,7 +9,7 @@ from django.views.generic import ListView, DetailView
 from django.contrib.auth.decorators import login_required
 from rest_framework import permissions
 from datetime import datetime, date
-from .forms import ProjectSeparationForm, SwipeEditForm, HolidayRequestForm
+from .forms import ProjectSeparationForm, SwipeEditForm, HolidayRequestForm, HolidayVerifyForm
 from django.utils import timezone
 from django.db.models import Q
 import locale
@@ -372,7 +372,6 @@ def swipe_detail(request, username, id):
 
         if request.method == "POST":
             form = SwipeEditForm(request.POST, instance = swipe)
-            print(form.is_valid())
             if form.is_valid():
                 cleaned_data = form.cleaned_data
                 swipe.datetime = cleaned_data["datetime"]
@@ -478,8 +477,12 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
                 user["left_to_take_holidays"] = user["user"].profile.get_hours_of_holidays_aviable_to_take() / user["user"].profile.get_hours_quota()
 
     locale.setlocale(locale.LC_ALL, "en_US.utf8")
-
+    
+    holidays = Holiday.objects.filter(
+            verified = False,
+    )
     context = {
+            "holidays" : holidays,
             "month": month,
             "year": year,
             "user_data": sorted(user_data, key=lambda dic: (locale.strxfrm(dic["user"].last_name))),
@@ -489,7 +492,7 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
     return render(request, "attendance/administrator.html", context)
 
 @login_required(login_url='/login/')
-def holidays(request, username):
+def holidays_request(request, username):
     if not user_check(request, username):
         return HttpResponse("Restricted to " + username)
        
@@ -524,15 +527,23 @@ def holidays(request, username):
         "succes": succes
     }
            
-    return render(request, "attendance/holidays.html", context)
+    return render(request, "attendance/holidays_request.html", context)
     
 @login_required(login_url='/login/')
-def holidays_request(request, username,year=str(datetime.now().year)):
+def holidays_verification(request, username, id):
     if not (request.user.is_superuser or request.user.is_staff):
         return HttpResponse("Restricted to staff.")
-        
+    holidays = get_object_or_404(Holiday, pk = int(id))
+    
+    if request.method == "POST":
+        if request.POST.get("verify"):
+            holidays.verified = True
+            holidays.save()
+        if request.POST.get("decline"):
+            holidays.delete()
     context = {
-            "year" : year,
+            "id" : id,
+            'holiday': holidays
     } 
            
-    return render(request, "attendance/holidays_request.html", context)    
+    return render(request, "attendance/holidays_verification.html", context)

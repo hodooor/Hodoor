@@ -73,25 +73,25 @@
     </h3>
   </div>
   <div class="panel-body">
-  	<p class="text-justify">Table in main content is sortable. You can sort any column you need, by clicking on sorting icons. Description of icons is shown in table below.</p>
-  	<table class="table table-condensed table-primary-inverse">
-  		<thead>
-  			<th>Icon</th>
-  			<th>Description</th>
-  		</thead>
-			<tr>
-				<td><i class="fa fa-exchange fa-rotate-90" aria-hidden="true"></i></td>
-				<td>Sorting enabled</td>
-			</tr>
-			<tr>
-				<td><i class="fa fa-sort-amount-asc" aria-hidden="true"></i></td>
-				<td>Ascend sorting</td>
-			</tr>
-			<tr>
-				<td><i class="fa fa-sort-amount-desc" aria-hidden="true"></i></td>
-				<td>Descend sorting</td>
-			</tr>
-		</table>
+    <p class="text-justify">Table in main content is sortable. You can sort any column you need, by clicking on sorting icons. Description of icons is shown in table below.</p>
+    <table class="table table-condensed table-primary-inverse">
+        <thead>
+            <th>Icon</th>
+            <th>Description</th>
+        </thead>
+            <tr>
+                <td><i class="fa fa-exchange fa-rotate-90" aria-hidden="true"></i></td>
+                <td>Sorting enabled</td>
+            </tr>
+            <tr>
+                <td><i class="fa fa-sort-amount-asc" aria-hidden="true"></i></td>
+                <td>Ascend sorting</td>
+            </tr>
+            <tr>
+                <td><i class="fa fa-sort-amount-desc" aria-hidden="true"></i></td>
+                <td>Descend sorting</td>
+            </tr>
+        </table>
   </div>
 </div>
 {% endblock %}
@@ -210,20 +210,22 @@
 					<td><b>{{user.overall_holiday_aviable | floatformat:1}}</b></td>
 					<td><b>{{user.left_to_take_holidays | floatformat:1}}</b></td>
 					<td>
-					{% if user.requested_holidays > 0%}
-					  <span class="bold text-danger">{{user.requested_holidays | floatformat:1}}</span>
-					{% else %}
-						{{user.requested_holidays | floatformat:1}}
-					{% endif %}
-					</td>
-					<td class="btn-fill text-center">
-					  {% if user.requested_holidays > 0%}
-					    <a href="{% url 'holidays_request' username=user.user.username %}"
-					    type="button" class="btn btn-sm btn-warning">Requst</a>
-					  {% endif %}
-					</td>
-				  </tr>
-				{% endif %}
+                    {% if user.requested_holidays > 0%}
+                      <span class="bold text-danger">{{user.requested_holidays | floatformat:1}}</span>
+                    {% else %}
+                        {{user.requested_holidays | floatformat:1}}
+                    {% endif %}
+                    </td>
+                    <td class="btn-fill text-center">
+                    {% for holiday in holidays %}  
+                        {% if user.requested_holidays > 0 and holiday.profile.user.username == user.user.username %}
+                                <a href="{% url 'h_verification' username=user.user.username id=holiday.id %}"
+                                type="button" class="btn btn-sm btn-warning">Requst</a>
+                        {% endif %}
+                    {% endfor %} 
+                    </td>
+                  </tr>
+                {% endif %}
               {% endfor %}
           </tbody>
         </table>
@@ -236,82 +238,82 @@
 <script type="text/javascript">
 $(document).ready(function(){
   /*Year value select display function*/
-	var yearToPrint = 'Year';
-	var url = window.location.href;
-	if(url.indexOf("2015") > -1) {
-		yearToPrint = '2015';
-	} else
-	if(url.indexOf("2016") > -1){
-		yearToPrint = '2016';
-	} else {
-		yearToPrint = '2017';
-	}
-	$('.print-year').text(yearToPrint);
+    var yearToPrint = 'Year';
+    var url = window.location.href;
+    if(url.indexOf("2015") > -1) {
+        yearToPrint = '2015';
+    } else
+    if(url.indexOf("2016") > -1){
+        yearToPrint = '2016';
+    } else {
+        yearToPrint = '2017';
+    }
+    $('.print-year').text(yearToPrint);
 
-	/*Month value select display function*/
-	var monthToPrint = 'Month';
-	if(url.indexOf("/01") > -1) {
-		monthToPrint = "January";
-	} else
-	if(url.indexOf("/02") > -1) {
-		monthToPrint = "February";
-	} else
-	if(url.indexOf("/03") > -1) {
-		monthToPrint = "March";
-	} else
-	if(url.indexOf("/04") > -1) {
-		monthToPrint = "April";
-	} else
-	if(url.indexOf("/05") > -1) {
-		monthToPrint = "May";
-	} else
-	if(url.indexOf("/06") > -1) {
-		monthToPrint = "June";
-	} else
-	if(url.indexOf("/07") > -1) {
-		monthToPrint = "July";
-	} else
-	if(url.indexOf("/08") > -1) {
-		monthToPrint = "August";
-	} else
-	if(url.indexOf("/09") > -1) {
-		monthToPrint = "September";
-	} else
-	if(url.indexOf("/10") > -1) {
-		monthToPrint = "October";
-	} else
-	if(url.indexOf("/11") > -1) {
-		monthToPrint = "November";
-	} else {
-		monthToPrint = "December";
-	}
+    /*Month value select display function*/
+    var monthToPrint = 'Month';
+    if(url.indexOf("/01") > -1) {
+        monthToPrint = "January";
+    } else
+    if(url.indexOf("/02") > -1) {
+        monthToPrint = "February";
+    } else
+    if(url.indexOf("/03") > -1) {
+        monthToPrint = "March";
+    } else
+    if(url.indexOf("/04") > -1) {
+        monthToPrint = "April";
+    } else
+    if(url.indexOf("/05") > -1) {
+        monthToPrint = "May";
+    } else
+    if(url.indexOf("/06") > -1) {
+        monthToPrint = "June";
+    } else
+    if(url.indexOf("/07") > -1) {
+        monthToPrint = "July";
+    } else
+    if(url.indexOf("/08") > -1) {
+        monthToPrint = "August";
+    } else
+    if(url.indexOf("/09") > -1) {
+        monthToPrint = "September";
+    } else
+    if(url.indexOf("/10") > -1) {
+        monthToPrint = "October";
+    } else
+    if(url.indexOf("/11") > -1) {
+        monthToPrint = "November";
+    } else {
+        monthToPrint = "December";
+    }
   $('.print-month').text(monthToPrint);
 
   //Making tables sortable
   $('#users-with-sessions').DataTable({
     "aaSorting": [
-    	[0,'asc']
-  	],
+        [0,'asc']
+    ],
     "columnDefs": [{
       targets: 'no-sort',
       orderable: false
     }],
     "lengthMenu": [
-    	[-1, 100, 50, 15],
-    	["All", 100, 50, 15]
+        [-1, 100, 50, 15],
+        ["All", 100, 50, 15]
     ]
   });
   $('#users-without-sessions').DataTable({
     "aaSorting": [
-    	[0,'asc']
-  	],
+        [0,'asc']
+    ],
     "columnDefs": [{
       targets: 'no-sort',
       orderable: false
     }],
     "lengthMenu": [
-    	[-1, 100, 50, 15],
-    	["All", 100, 50, 15]
+        [-1, 100, 50, 15],
+        ["All", 100, 50, 15]
     ]
   });
 });

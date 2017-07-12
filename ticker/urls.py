@@ -54,6 +54,7 @@ urlpatterns = [
     url(r'^sessions/(?P<username>[\w.@+-]+)/id(?P<id>\d+)/$',
         views.session_detail,
         name='session_detail'),
+        
     url(r'^swipes/(?P<username>[\w.@+-]+)/id(?P<id>\d+)/$',
         views.swipe_detail,
         name='swipe_detail'),
@@ -83,15 +84,15 @@ urlpatterns = [
         views.administrator,
         name='default_administrator'),
     
-    # /holiday/username/
-    url(r'^holiday/(?P<username>[\w.@+-]+)/$',
-		views.holidays,
-        name='holidays'),
+    # /h_request/username/
+    url(r'^h_request/(?P<username>[\w.@+-]+)/$',
+        views.holidays_request,
+        name='h_request'),
     
-    # /request/username/
-    url(r'^request/(?P<username>[\w.@+-]+)/$',
-		views.holidays_request,
-        name='holidays_request'),    
+    # /h_verification/username/id1/
+    url(r'^h_verification/(?P<username>[\w.@+-]+)/id(?P<id>\d+)/$',
+        views.holidays_verification,
+        name='h_verification'),
 ]
 
 if settings.DEBUG:

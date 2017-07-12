@@ -1,0 +1,185 @@
+{% extends 'attendance/base.html' %}
+{% load static %}
+
+{% block scripts %}
+<!--Moment.js: used for timepicker-->
+<script src="{% static 'moment/moment.js'%}"></script>
+<!--bootstrap-DateTimePicker-->
+<script type="text/javascript" language="javascript" src="{% static 'eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}">
+{% endblock %}
+
+{% block title %}Swipe detail{% endblock %}
+{% block aside %}
+
+{% endblock %}
+{% block content %}
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content modal-primary">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">
+            Holiday verification - {{holiday.profile.user.username}}<span class="modal-icon fa fa-info pull-right"></span>
+        </h4>
+      </div>
+      <div class="modal-body">
+                <table class="table table-primary-inverse">
+                    <thead>
+                    <tr class="upper">
+                      <th class="col-md-3">Parameter</th>
+                      <th class="col-md-3">Value</th>
+                      <th class="col-md-3">Parameter</th> 
+                      <th class="col-md-3">Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-field="key" class="key">First Name:</td>
+                            <td data-field="value" id="swipeType">{{holiday.profile.user.first_name}}</td>
+                            <td data-field="key" class="key">Last Name:</td>
+                            <td data-field="value">{{holiday.profile.user.last_name}}</td>
+                        </tr>
+                        <tr>
+                            <td data-field="key" class="key">Date since:</td>
+                            <td>{{holiday.date_since}}</td>
+                            <td data-field="key" class="key">Date to:</td>
+                            <td>{{holiday.date_to}}</td>
+                        </tr>
+                        <tr>
+                            <td data-field="key" class="key">Reason:</td>
+                            <td>{{holiday.reason}}</td>
+                            <td data-field="key" class="key">Hours on holiday:</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <form method='POST' action=''>{% csrf_token %}
+                            <td colspan="2">
+                                <div class="col-md-6">
+                                    <a class="btn btn-danger" href="{% url 'default_administrator'%}"><i class="fa fa-arrow-left"></i> Back to Admin page</a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="col-md-3">
+                                    <button id="id_decline" name="decline" type='submit' class="btn btn-warning" value='Decline'>Decline</button>
+                                </div>
+                            </td>  
+                            <td>
+                                <div class="col-md-3">
+                                    <button id="id_verify" name="verify" type='submit' class="btn btn-primary" value='Verify'>Verify</button>
+                                </div>
+                            </td>      
+                        </tr>
+                    </tbody>
+                </table>
+                {{form.errors}}
+      </div><!--/modal body-->
+    </div><!--/modal-->
+  </div>
+</div>
+
+<script type="text/javascript">
+    function formatDate(date) {
+
+          var day = date.getDate();
+          var monthIndex = ("0" + (date.getMonth() + 1)).slice(-2)
+          var year = date.getFullYear();
+
+          return year + '-' + monthIndex + '-' + day;
+        }
+        
+    function isItToday(date){
+        var today = formatDate(new Date());
+        if (today.localeCompare(date) == 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+  $(document).ready(function(){
+    //Time and Date picker preparing data - script
+    if ($('#id_datetime').length){ //Test if element exist
+        $('#id_datetime').addClass('form-control hidden');
+        //read data from python form
+        var PickerDateTime = $('#id_datetime').attr("value");
+        //split these two strings and put it into array
+        var PickerDateArray = PickerDateTime.split(' ');
+      //default values
+      var defaultDate = PickerDateArray[0];
+      var defaultTime = PickerDateArray[1];
+        //show these values in another inputs
+        $('#PickerDate').attr("value", PickerDateArray[0]);
+        $('#PickerTime').attr("value", PickerDateArray[1]);
+        //save values before change
+            $('#PickerDate').data("NewDate", PickerDateArray[0]);
+        $('#PickerTime').data("NewTime", PickerDateArray[1]);
+      /*Use DATE and TIME Pickers*/
+      $('#datepicker').datetimepicker({ //show BS popover with Date
+        format: "YYYY-MM-DD",
+        maxDate: 'now',
+      });
+      if(isItToday($('#PickerDate').data("NewDate"))){
+          $('#timepicker').datetimepicker({ //show BS popover with Time
+            format: "HH:mm:ss",
+            minDate: moment({
+            h:0,
+            m:0,
+            s:0
+            }),
+            maxDate: moment(),
+          });
+      }else{
+          $('#timepicker').datetimepicker({ //show BS popover with Time
+            format: "HH:mm:ss",
+            minDate: moment({
+            h:0,
+            m:0,
+            s:0
+            }),
+            maxDate: moment({
+            h:23,
+            m:59,
+            s:59
+            }),
+          });
+      }
+      //After change, yeld new values to default python form
+      //for time
+      $("#timepicker").on("dp.change", function(e) {
+        $('#PickerTime').data("NewTime", $('#PickerTime').val()); //make it as new data
+        //display it in python form
+        $('#id_datetime').val( $('#PickerDate').data("NewDate")+" "+$('#PickerTime').data("NewTime") );
+        console.log("New time: "+$('#PickerTime').data("NewTime"));
+      });
+      //for date
+      $("#datepicker").on("dp.change", function(e) {
+        $('#PickerDate').data("NewDate", $('#PickerDate').val()); //make it as new data
+        //display it in python form
+        $('#id_datetime').val( $('#PickerDate').data("NewDate")+" "+$('#PickerTime').data("NewTime") );
+        if(isItToday($('#PickerDate').data("NewDate"))){
+            $('#timepicker').data("DateTimePicker").maxDate(moment());
+        }else{
+            $('#timepicker').data("DateTimePicker").maxDate(moment({
+            h:23,
+            m:59,
+            s:59
+            }));
+        };
+        console.log("New date: "+$('#PickerDate').data("NewDate"));
+      });
+      //eof datetimepicker
+
+        console.log("DATE: "+PickerDateArray[0]+"\nTIME: "+PickerDateArray[1]);
+
+      /*Write default values into table under fields*/
+      $('#default-date').text(defaultDate);
+      $('#default-time').text(defaultTime);
+        }//eof if exist
+
+    setTimeout(function(){ //set timeout for modal to be shown -like delay
+        $('#myModal').modal('show');
+      }, 1000);
+    /*Add class to see fontawesomes in swipe infos*/
+  });
+</script>
+{% endblock %}
