@@ -276,6 +276,10 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
     total_hours = Session.objects.get_hours_month(u.id, month, year)
     unassigned_hours = Session.objects.get_unassigned_hours_month(u.id, month, year)
     work_hours = total_hours - unassigned_hours - not_work_hours
+    if hasattr(u, "profile"):
+        workhours_per_day = u.profile.get_hours_quota()
+    else:
+        workhours_per_day = 8
     context = {
             "sessions": sessions,
             "year": year,
@@ -285,7 +289,7 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
             "work_hours": work_hours,
             "not_work_hours": not_work_hours,
             "list_of_projects": projects,
-            "hours_quota": get_quota_work_hours(int(year), int(month), WORKHOURS_PER_DAY),
+            "hours_quota": get_quota_work_hours(int(year), int(month), workhours_per_day),
             "form": form
     }
     return render(request, "attendance/sessions.html", context)

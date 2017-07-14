@@ -51,6 +51,12 @@ class Profile(models.Model):
         for contract in self.contracts.all():
             hours += contract.hours_quota
         return hours
+    
+    def create_profile(sender,**kwargs):
+        user = kwargs["instance"]
+        if kwargs["created"]:
+            user_profile = Profile(user = user)
+            user_profile.save()
         
     def __str__(self):
         """Name of owner of profile and his contracts."""
@@ -59,6 +65,7 @@ class Profile(models.Model):
             text += " " + contract.contract_type + ","
         return text[:-1]
     
+    post_save.connect(create_profile, sender = User)
 
 class Session(models.Model):
     user = models.ForeignKey(User)
