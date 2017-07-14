@@ -117,6 +117,7 @@ def user(request, username):
     u = User.objects.get(username=username)
     s = Session.objects.get_sessions_this_month(user=u)
     
+    holidays = Holiday.objects.filter(verified = True)
 
     open_sessions = Session.objects.get_open_sessions()
     try:
@@ -133,7 +134,7 @@ def user(request, username):
             Swipe.objects.filter(session=session).order_by("-datetime")[0]
         )
 
-    at_work_users, on_break_users, on_trip_users = [], [], []
+    at_work_users, on_break_users, on_trip_users, on_holidays_users = [], [], [], []
 
     for swipe in latest_swipes:
         if swipe.swipe_type == "IN" or swipe.swipe_type == "FBR" or swipe.swipe_type == "FTR":
@@ -143,6 +144,11 @@ def user(request, username):
         elif swipe.swipe_type == "OTR":
             on_trip_users.append(swipe.user)
 
+    for holiday in holidays:
+        aware_date_since = timezone.make_aware(datetime.combine(holiday.date_since, datetime.min.time()), timezone.get_current_timezone())
+        aware_date_to = timezone.make_aware(datetime.combine(holiday.date_to, datetime.min.time()), timezone.get_current_timezone())
+        if (aware_date_since < timezone.now() and aware_date_to > timezone.now()):
+            on_holidays_users.append(holiday.profile.user)
     try:
         last_swipe = Swipe.objects.filter(user=u).order_by("-datetime")[0]
         next_swipes = last_swipe.get_next_allowed_types()
@@ -162,7 +168,7 @@ def user(request, username):
         workhours_per_day = u.profile.get_hours_quota()
     else:
         workhours_per_day = 8
-    
+
     hours_total_last_month = Session.objects.get_hours_month(u.id, last_month_, year)
     hours_unassigned_last_month = Session.objects.get_unassigned_hours_month(u.id, last_month_, year)
     hours_total_this_month = Session.objects.get_hours_this_month(u.id)
@@ -193,9 +199,7 @@ def user(request, username):
     holidays_requared = holihours_requared / max(1,workhours_per_day)
     holidays_aviable = holihours_aviable / max(1,workhours_per_day)
     holidays = holihours / max(1,workhours_per_day)
-    
 
-    
     context = {
         "user": u,
         "session_list": s,
@@ -206,6 +210,7 @@ def user(request, username):
         "at_work_users": at_work_users,
         "on_break_users": on_break_users,
         "on_trip_users": on_trip_users,
+        "on_holidays_users": on_holidays_users,
         "hours_total_last_month": hours_total_last_month,
         "hours_unassigned_last_month": hours_unassigned_last_month,
         "hours_not_work_this_month": hours_not_work_this_month,
@@ -269,6 +274,7 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
             url = reverse('sessions_month', kwargs={"username": username, "year": year, "month": month})
             return HttpResponseRedirect(url)
 
+    u = User.objects.get(username=username)
     in_swipes_ids = Swipe.objects.filter(
         swipe_type="IN",
         user__username=username,
@@ -276,12 +282,14 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
         datetime__year=int(year),
     ).values_list('session', flat=True)
     sessions = Session.objects.filter(pk__in=in_swipes_ids)
-    u = User.objects.get(username=username)
-
+    holidays = Holiday.objects.filter(profile = u.profile, verified=True)
+    sessions_and_holidays = []
+    for session in sessions:
+        sessions_and_holidays.append(session)
+    for holiday in holidays:
+        sessions_and_holidays.append(holiday)
     separations = ProjectSeparation.objects.filter(session__in=sessions)
-
     form = ProjectSeparationForm()
-
     for session in sessions:
         session.form = ProjectSeparationForm(
                 initial={
@@ -307,7 +315,7 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
     unassigned_hours = Session.objects.get_unassigned_hours_month(u.id, month, year)
     work_hours = total_hours - unassigned_hours - not_work_hours
     context = {
-            "sessions": sessions,
+            "sessions_and_holidays": sessions_and_holidays,
             "year": year,
             "month": month,
             "total_hours": total_hours,
@@ -500,7 +508,6 @@ def holidays_request(request, username):
     succes = False
     if request.method == "POST":
          form = HolidayRequestForm(request.POST, user=user);
-         print(form.is_valid())
          if form.is_valid():
              succes = True
              cleaned_data = form.cleaned_data;

@@ -49,6 +49,15 @@ class Profile(models.Model):
     weeks_of_holidays_per_year = models.IntegerField(default=4)
     last_action_time = datetime.now()
     
+    
+
+    def create_profile(sender, **kwargs):
+        user = kwargs["instance"]
+        if kwargs["created"]:
+            user_profile = UserProfile(user=user, aviable_holidays = 0, )
+            user_profile.save()
+    post_save.connect(create_profile, sender=User)
+
     def get_hours_quota(self):
         hours = 0
         for contract in self.contracts.all():
@@ -81,7 +90,6 @@ class Profile(models.Model):
     def get_hours_of_holidays_aviable_to_take(self):
         self.time_passed()
         hours = self.get_aviable_holidays_this_year() * self.get_hours_quota() + self.aviable_holidays
-        print(hours)
         hours -= self.get_hours_of_holidays(verified = True)
         hours -= self.get_hours_of_holidays(verified = False)
         return hours
@@ -181,7 +189,9 @@ class Session(models.Model):
                 if "unsupported operand type(s) for" not in str(err):
                     raise
         return time_spend_sum
-
+    def get_model_name(self):
+        model_name = 'Session'
+        return model_name
     def __str__(self):
         """Id and User."""
         return str(self.id) + " " + str(self.user)
@@ -336,7 +346,11 @@ class Holiday(models.Model):
     
     def hours_spend(self):
         return self.hours_on_holidays
-        
+
+    def get_model_name(self):
+        model_name = 'Holiday'
+        return model_name
+
     def __str__(self):
         return self.profile.user.username + " " + str(self.date_since) + " to " + str(self.date_to) + ": " + str(int(self.hours_spend())) + " hours"
 

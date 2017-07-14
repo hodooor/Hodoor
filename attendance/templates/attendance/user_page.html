@@ -131,6 +131,32 @@
   </div>
 </div>
 
+<div class="panel panel-default">
+  <div class="panel-heading clickable"  id="holiday-users"> <!--panel-collapsed-->
+    <h3 class="panel-title">
+      <i class="fa fa-plane panel-icon" aria-hidden="true"></i>
+      Users on holiday
+      <span class="badge pull-right">{{on_holidays_users | length}}</span>
+    </h3>
+  </div>
+  <div class="panel-body">
+    <ul class="collabsible-list list-group" id="users-on-holidays">
+    {% for user in on_holidays_users %}
+      <li>
+        <table style="width:100%">
+          {% csrf_token %}
+          <tr>
+            <td>
+             <i class="fa fa-circle-o" aria-hidden="true"></i> {{user.first_name}} {{user.last_name}}
+            </td>
+          </tr>
+        </table>
+      </li>
+    {%endfor %}
+    </ul>
+  </div>
+</div>
+
 <div class="visible-xs visible-sm">
   &nbsp;
 </div>
