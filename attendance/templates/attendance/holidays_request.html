@@ -20,7 +20,7 @@
     <div class="modal-content modal-primary">
       <div class="modal-header">
         <h4 class="modal-title" id="myModalLabel">
-            Holiday assignment - {{user.username}}<span class="modal-icon fa fa-info pull-right"></span>
+            Holidays assignment - {{user.username}}<span class="modal-icon fa fa-plane pull-right"></span>
         </h4>
       </div>
       <div class="modal-body">
@@ -135,7 +135,7 @@
             var dateDiff = DateRange(start,end);
             timeDiff = dateDiff * {{ quota|safe }};
             timeDiff -= parseInt(document.getElementById("work_hours").value);
-            $('#days_on_holidays').text(timeDiff / {{ quota|safe }});
+            $('#days_on_holidays').text((timeDiff / {{ quota|safe }}).toPrecision(3));
             $('#hours_on_holidays').val(timeDiff);
             $('#hours_on_holidaysSpan').text($('#hours_on_holidays').val());
         }
