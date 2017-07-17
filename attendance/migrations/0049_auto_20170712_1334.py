@@ -12,18 +12,14 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='profile',
-            name='last_action_time',
-        ),
         migrations.AlterField(
             model_name='profile',
             name='aviable_holidays',
-            field=models.FloatField(default=0, verbose_name='Already aviable holideys in hours'),
+            field=models.FloatField(default=0, verbose_name='Already aviable holidays in hours'),
         ),
         migrations.AlterField(
             model_name='profile',
-            name='weeks_of_holidays_per_year',
-            field=models.IntegerField(default=4),
+            name='days_of_holidays_per_year',
+            field=models.IntegerField(default=20),
         ),
     ]

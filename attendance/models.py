@@ -46,14 +46,13 @@ class Contract(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     contracts = models.ManyToManyField(Contract)
-    aviable_holidays = models.FloatField("Already aviable holideys in hours", default=0)
-    weeks_of_holidays_per_year = models.IntegerField(default=4)
-    last_action_time = models.DateTimeField(default = None)
+    aviable_holidays = models.FloatField("Already aviable holidays in hours", default=0)
+    days_of_holidays_per_year = models.IntegerField(default=20)
 
     def create_profile(sender, **kwargs):
         user = kwargs["instance"]
         if kwargs["created"]:
-            user_profile = UserProfile(user=user, aviable_holidays = 0, )
+            user_profile = Profile(user=user, aviable_holidays = 0, )
             user_profile.save()
     post_save.connect(create_profile, sender=User)
 
