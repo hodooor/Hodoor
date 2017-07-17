@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from datetime import datetime, timezone, timedelta
 from .managers import SessionManager
 from django.core.validators import MinValueValidator, MaxValueValidator
+from .utils import is_workday
 
 
 class Project(models.Model):
@@ -63,7 +64,6 @@ class Profile(models.Model):
         return hours
         
     def get_hours_of_holidays(self, verified = True, year = None):
-        self.time_passed()
         hours = 0
         for holiday in self.holidays.all():
             if (year == None) or (year == str(holiday.date_since.year)):
@@ -71,22 +71,23 @@ class Profile(models.Model):
                     hours += holiday.hours_spend()
         return hours
         
-    def new_year(self):
-        self.aviable_holidays += Session.objects.get_hours_last_year(self.user.id) /(52 * self.get_hours_quota()) * self.weeks_of_holidays_per_year
-        
-    def time_passed(self):
-        if self.last_action_time != None:
-            if datetime.now().year > self.last_action_time.year:
-                self.new_year()
-        self.last_action_time = datetime.now()
-        
     def get_aviable_holidays_this_year(self):
-        self.time_passed()
         hours_work_this_year = Session.objects.get_hours_this_year(self.user.id)
-        return hours_work_this_year/(52 * self.get_hours_quota()) * self.weeks_of_holidays_per_year
+        return hours_work_this_year/(52 * self.get_hours_quota()) * (self.days_of_holidays_per_year/5)
+    
+    def need_for_holiday(self):
+        i = 0
+        dangerous_date = datetime(year = datetime.now().year, month = 12, day = 31)
+        num_of_days = (self.get_hours_of_holidays_aviable_to_take()/self.get_hours_quota())+5
+        while (i < num_of_days) or (dangerous_date.weekday() != 0):
+            dangerous_date -= timedelta(days = 1)
+            if is_workday(dangerous_date):
+                i += 1
+        if datetime.now() > dangerous_date:
+            return True
+        return False
     
     def get_hours_of_holidays_aviable_to_take(self):
-        self.time_passed()
         hours = self.get_aviable_holidays_this_year() * self.get_hours_quota() + self.aviable_holidays
         hours -= self.get_hours_of_holidays(verified = True)
         hours -= self.get_hours_of_holidays(verified = False)

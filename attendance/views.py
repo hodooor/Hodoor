@@ -192,10 +192,12 @@ def user(request, username):
     holihours = 0
     holihours_aviable = 0
     holihours_requared = 0
+    holiday_alert = False
     if curent_user_have_profile and workhours_per_day != 0:
         holihours = u.profile.get_hours_of_holidays()       
         holihours_requared = u.profile.get_hours_of_holidays(verified = False)
         holihours_aviable = u.profile.get_hours_of_holidays_aviable_to_take()
+        holiday_alert = u.profile.need_for_holiday()
     holidays_requared = holihours_requared / max(1,workhours_per_day)
     holidays_aviable = holihours_aviable / max(1,workhours_per_day)
     holidays = holihours / max(1,workhours_per_day)
@@ -236,7 +238,8 @@ def user(request, username):
         "holidays_aviable" :  holidays_aviable,
         "holidays_requared": holidays_requared,
         "holihours_requared": holihours_requared,
-        "curent_user_have_profile": curent_user_have_profile
+        "curent_user_have_profile": curent_user_have_profile,
+        "holiday_alert": holiday_alert
     }
     return render(request, "attendance/user_page.html", context)
 

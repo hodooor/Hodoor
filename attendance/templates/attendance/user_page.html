@@ -390,7 +390,8 @@
           </h2>
         </div>
         <div class="panel-body">
-          <ul class="dash-list-group">
+          <div>
+            <ul class="dash-list-group">
               <li class="">Aviable holidays: <span class="primary" id="aviable-holidays-graph">{{holidays_aviable | floatformat:1}}</span> day(s) ({{holihours_aviable | floatformat:0}} hours)</li>
               <li class="list-separator"></li>
               <li class="">Already taken holiday: <span class="gray" id="taken-holidays-graph">{{taken_holidays | floatformat:1}} </span> day(s) ({{taken_holihours | floatformat:0}} hours)</li>
@@ -398,7 +399,23 @@
               <li class="">Requared holidays: <span class="danger" id="requared-holidays-graph">{{ holidays_requared|floatformat:1}}</span> day(s) ({{holihours_requared | floatformat:0}} hours)</li>
             </ul>
             <canvas id="Holiday-Time-Chart" class="doughnut-chart" width="auto" height="250"></canvas>
-            <a href="{% url 'h_request' username=user.username %}" class="btn btn-info btn-block">Manage Holiday</a>
+          </div>
+            {% if not holiday_alert %}  
+              <div>
+                <a href="{% url 'h_request' username=user.username %}" class="btn btn-info btn-block">Manage Holidays</a>
+              </div>
+            {% else %}
+              <div class="alert alert-danger" role="alert">
+                <div class="title">
+                  <label>This Month:</label>
+                  <i class="fa fa-frown-o alert-icon" aria-hidden="true"></i>
+                </div>
+                <p>
+                  You have <strong>{{ holidays_aviable | floatformat:1}}</strong> days of untaken holidays. You have to take them until end of year.
+                </p>
+                <a href="{% url 'h_request' username=user.username %}" class="btn btn-danger btn-block">Manage Holidays</a>
+              </div>
+            {% endif %}
         </div>
       </div><!--/holiday info panel-->
       {% endif %}
