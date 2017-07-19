@@ -56,7 +56,7 @@
                             <td data-field="key" class="key">Reason:</td>
                             <td>{{holiday.reason}}</td>
                             <td data-field="key" class="key">Hours on holiday:</td>
-                            <td>{{days_on_holidays|floatformat:1}} days ({{holiday.hours_on_holidays|floatformat:0}} hours)</td>
+                            <td>{{days_on_holidays|floatformat:1}} days ({{hours_on_holidays|floatformat:0}} hours)</td>
                         </tr>
                         <tr>
                             <form method='POST' action=''>{% csrf_token %}

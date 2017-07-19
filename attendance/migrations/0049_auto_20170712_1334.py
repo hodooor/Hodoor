@@ -17,9 +17,4 @@ class Migration(migrations.Migration):
             name='aviable_holidays',
             field=models.FloatField(default=0, verbose_name='Already aviable holidays in hours'),
         ),
-        migrations.AlterField(
-            model_name='profile',
-            name='days_of_holidays_per_year',
-            field=models.IntegerField(default=20),
-        ),
     ]

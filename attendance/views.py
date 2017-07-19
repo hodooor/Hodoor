@@ -168,15 +168,32 @@ def user(request, username):
         workhours_per_day = u.profile.get_hours_quota()
     else:
         workhours_per_day = 8
+    
+    holihours = 0
+    holihours_aviable = 0
+    holihours_requared = 0
+    holiday_alert = False
+    holidays_month = 0
+    holidays_last_month = 0
+    if curent_user_have_profile and workhours_per_day != 0:
+        holihours = u.profile.get_hours_of_holidays()       
+        holihours_requared = u.profile.get_hours_of_holidays(verified = False)
+        holihours_aviable = u.profile.get_hours_of_holidays_aviable_to_take()
+        holiday_alert = u.profile.need_for_holiday()
+        holidays_month = Holiday.objects.get_holidays_hours_this_month(u.profile)
+        holidays_last_month = Holiday.objects.get_holidays_hours_month(u.profile, last_month_, year)
+    holidays_requared = holihours_requared / max(1,workhours_per_day)
+    holidays_aviable = holihours_aviable / max(1,workhours_per_day)
+    holidays = holihours / max(1,workhours_per_day)
 
-    hours_total_last_month = Session.objects.get_hours_month(u.id, last_month_, year)
+    hours_total_last_month = Session.objects.get_hours_month(u.id, last_month_, year) + holidays_last_month
     hours_unassigned_last_month = Session.objects.get_unassigned_hours_month(u.id, last_month_, year)
-    hours_total_this_month = Session.objects.get_hours_this_month(u.id)
+    hours_total_this_month = Session.objects.get_hours_this_month(u.id) + holidays_month
     hours_unassigned_this_month = Session.objects.get_unassigned_hours_month(u.id, datetime.now().month, year)
     hours_not_work_this_month = Session.objects.get_not_work_hours_month(u.id, datetime.now().month, datetime.now().year)
     hours_not_work_last_month = Session.objects.get_not_work_hours_month(u.id, last_month_, year)
-    hours_work_last_month = hours_total_last_month - hours_unassigned_last_month - hours_not_work_last_month
-    hours_work_this_month = hours_total_this_month - hours_unassigned_this_month - hours_not_work_this_month
+    hours_work_last_month = hours_total_last_month - hours_unassigned_last_month - hours_not_work_last_month - holidays_last_month
+    hours_work_this_month = hours_total_this_month - hours_unassigned_this_month - hours_not_work_this_month - holidays_month
     
     hours_work_this_year = Session.objects.get_hours_this_year(u.id)
     
@@ -188,19 +205,6 @@ def user(request, username):
     quota_difference = hours_work_this_month + unassigned_closed_session_hours - current_quota
     quota_difference_abs = abs(quota_difference)
     avg_work_hours_fullfill_quota = daily_hours((hours_quota - unassigned_closed_session_hours - hours_work_this_month) / max(1,num_of_workdays - num_of_elapsed_workdays))
-    
-    holihours = 0
-    holihours_aviable = 0
-    holihours_requared = 0
-    holiday_alert = False
-    if curent_user_have_profile and workhours_per_day != 0:
-        holihours = u.profile.get_hours_of_holidays()       
-        holihours_requared = u.profile.get_hours_of_holidays(verified = False)
-        holihours_aviable = u.profile.get_hours_of_holidays_aviable_to_take()
-        holiday_alert = u.profile.need_for_holiday()
-    holidays_requared = holihours_requared / max(1,workhours_per_day)
-    holidays_aviable = holihours_aviable / max(1,workhours_per_day)
-    holidays = holihours / max(1,workhours_per_day)
     
 
     context = {
@@ -239,7 +243,9 @@ def user(request, username):
         "holidays_requared": holidays_requared,
         "holihours_requared": holihours_requared,
         "curent_user_have_profile": curent_user_have_profile,
-        "holiday_alert": holiday_alert
+        "holiday_alert": holiday_alert,
+        "holidays_month": holidays_month,
+        "holidays_last_month": holidays_last_month
     }
     return render(request, "attendance/user_page.html", context)
 
@@ -519,7 +525,7 @@ def holidays_request(request, username):
                         profile = user.profile,
                         date_since = cleaned_data["date_since"],
                         date_to = cleaned_data["date_to"],
-                        hours_on_holidays = cleaned_data["hours_on_holidays"],
+                        work_hours = cleaned_data["work_hours"],
                         verified = False,
                         reason = cleaned_data["reason"]
              )
@@ -545,7 +551,8 @@ def holidays_verification(request, username, id):
     if not (request.user.is_superuser or request.user.is_staff):
         return HttpResponse("Restricted to staff.")
     holidays = get_object_or_404(Holiday, pk = int(id))
-    days_on_holidays = holidays.hours_on_holidays / holidays.profile.get_hours_quota()
+    hours_on_holidays = holidays.hours_spend()
+    days_on_holidays = hours_on_holidays / holidays.profile.get_hours_quota()
     check = 0
     if request.method == "POST":
         if request.POST.get("verify"):
@@ -559,6 +566,7 @@ def holidays_verification(request, username, id):
             "id" : id,
             'holiday': holidays,
             "days_on_holidays": days_on_holidays,
+            "hours_on_holidays": hours_on_holidays,
             "check": check
     } 
            

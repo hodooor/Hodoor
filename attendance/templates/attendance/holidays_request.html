@@ -69,8 +69,7 @@
                         </tr>
                         <tr>
                             <td>Total:</td>
-                            <td><span id='days_on_holidays' class="bold small">0</span> days (<span id='hours_on_holidaysSpan' name='hours_on_holidaysSpan' class="bold small">0</span> hours)</td>
-                            <input type='hidden' id='hours_on_holidays' name='hours_on_holidays' value=0 />
+                            <td><span id='days_on_holidays' class="bold small">0</span> days (<span id='hours_on_holidays' name='hours_on_holidaysSpan' class="bold small">0</span> hours)</td>
                         </tr>
                     </tbody>
                 </table>
@@ -136,8 +135,7 @@
             timeDiff = dateDiff * {{ quota|safe }};
             timeDiff -= parseInt(document.getElementById("work_hours").value);
             $('#days_on_holidays').text((timeDiff / {{ quota|safe }}).toPrecision(3));
-            $('#hours_on_holidays').val(timeDiff);
-            $('#hours_on_holidaysSpan').text($('#hours_on_holidays').val());
+            $('#hours_on_holidays').text(timeDiff);
         }
     }
         

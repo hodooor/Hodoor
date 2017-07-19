@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from datetime import datetime, timezone, timedelta
-from .managers import SessionManager
+from .managers import SessionManager, HolidayManager
 from django.core.validators import MinValueValidator, MaxValueValidator
 from .utils import is_workday
 
@@ -338,16 +338,36 @@ class Holiday(models.Model):
     profile = models.ForeignKey(Profile, related_name="holidays")
     date_since = models.DateField(default = None)
     date_to = models.DateField(default = None)
-    hours_on_holidays = models.FloatField(default = 0)
+    work_hours = models.FloatField(default = 0)
     verified = models.BooleanField(default = False)
     reason = models.CharField(max_length = 50, null = True, blank = True)
+    objects = HolidayManager()
     
     def hours_spend(self):
-        return self.hours_on_holidays
+        hours = 0
+        i = 0
+        date = self.date_since
+        while date <= self.date_to:
+            if is_workday(date):
+                hours += self.profile.get_hours_quota()
+            date += timedelta(days = 1)
+        return hours - self.work_hours
 
     def get_model_name(self):
         model_name = 'Holiday'
         return model_name
+        
+    def get_hours_month(self, month, year):
+        i = 0
+        date = self.date_since
+        hours = 0
+        while date <= self.date_to and (date.month== month and date.year==year):
+            if is_workday(date):
+                hours += self.profile.get_hours_quota()
+            date += timedelta(days = 1)
+        if self.date_to + timedelta(days = 1) == date:
+            hours -= self.work_hours
+        return hours
 
     def __str__(self):
         return self.profile.user.username + " " + str(self.date_since) + " to " + str(self.date_to) + ": " + str(int(self.hours_spend())) + " hours"

@@ -312,12 +312,15 @@
                 $(document).ready(function(){
                     var workHours = $('#total-work-hours').text();
                     var unassignedHours = $('#unassigned-hours-graph').text();
-                    var assignedHours = workHours - unassignedHours;
+                    var holidayHours = $('#holidays-hours-graph').text();
+                    var assignedHours = workHours - unassignedHours - holidayHours;
                     $('#assigned-hours-graph').text(assignedHours.toFixed(2));
                             //end of document.ready()
                             });
                 </script>
             </span> hour(s)</li>
+            <li class="">Holidays Hours: <span class="primary" id="holidays-hours-graph">{{ holidays_month| floatformat:2}}</span> hour(s)</li>
+            <li class="list-separator"></li>
             <li class="">Unassigned Hours: <span class="danger" id="unassigned-hours-graph">{{ hours_unassigned_this_month | floatformat:2}}</span> ({{unassigned_closed_session_hours | floatformat:2}})</li>
             <li class="list-separator"></li>
             <li class="">Not-work Hours: <span class="gray" id="not-work-hours-graph">{{ hours_not_work_this_month| floatformat:2}}</span> hour(s)</li>
@@ -475,6 +478,7 @@
             <li class="">Work Hours: <span class="primary">{{ hours_work_last_month | floatformat:2}}</span> hour(s)</li>
             <li class="">Not-work Hours: <span class="gray">{{ hours_not_work_last_month| floatformat:2}}</span> hour(s)</li>
             <li class="">Unassigned Hours: <span class="danger">{{ hours_unassigned_last_month | floatformat:2}}</span>  hour(s)</li>
+            <li class="">Holidays Hours: <span class="promary">{{ holidays_last_month | floatformat:2}}</span>  hour(s)</li>
             <li class="list-separator"></li>
             <li class="">Total Hours: <span class="bold">{{ hours_total_last_month|floatformat:2}}</span> hour(s)</li>
           </ul>
@@ -542,15 +546,17 @@
         var bgColorAtime = "#609ae1";
         var bgColorUatime = "#ff836d";
         var bgColorNwtime = "#cccccc";
+        var bgColorHtime = "#8FC2FF"
         //get data from webpage
         var assignedHoursGraph = $('#assigned-hours-graph').text();
         var notWorkHoursGraph = $('#not-work-hours-graph').text();
         var unassignedWorkHoursGraph = $('#unassigned-hours-graph').text();
+        var holidaysHoursGraph = $('#holidays-hours-graph').text();
 
           var ctx = $("#Assigned-Time-Chart");
-          var dataWorkTime = [assignedHoursGraph, unassignedWorkHoursGraph, notWorkHoursGraph];
-          var labelsWorkTime = ["Assigned Hours", "Unassigned Hours", "Not-work hours"];
-          var bgcolorsWorkTime = [bgColorAtime, bgColorUatime, bgColorNwtime];
+          var dataWorkTime = [assignedHoursGraph, unassignedWorkHoursGraph, notWorkHoursGraph, holidaysHoursGraph];
+          var labelsWorkTime = ["Assigned Hours", "Unassigned Hours", "Not-work hours", "Holidays"];
+          var bgcolorsWorkTime = [bgColorAtime, bgColorUatime, bgColorNwtime, bgColorHtime];
 
           var myChart = new Chart(ctx, {
           type: 'doughnut',

@@ -73,3 +73,27 @@ class SessionManager(models.Manager):
 
     def get_open_sessions(self):
         return self.model.objects.filter(~Q(swipe__swipe_type='OUT'))
+        
+class HolidayManager(models.Manager):
+    def get_holidays_month(self, profile, month, year):
+        holidays_all = self.model.objects.filter(
+            profile=profile,
+        )
+        holidays = []
+        for holiday in holidays_all:
+            if (holiday.date_to.month >= month and holiday.date_to.year >= year):
+                if (holiday.date_since.month <= month and holiday.date_since.year <= year):
+                    if holiday.verified:
+                        holidays.append(holiday)
+        return holidays
+        
+    def get_holidays_hours_month(self, profile, month, year):
+        holidays = self.get_holidays_month(profile, month, year)
+        hours = 0
+        for holiday in holidays:
+            hours += holiday.get_hours_month(month = month, year = year)
+        return hours
+        
+    def get_holidays_hours_this_month(self, profile):
+        return self.get_holidays_hours_month(profile, datetime.now().month, datetime.now().year)
+        

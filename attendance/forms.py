@@ -3,7 +3,7 @@ from .models import Session, ProjectSeparation, Swipe, Holiday
 from django.contrib.admin.widgets import AdminDateWidget
 from datetimewidget.widgets import DateTimeWidget
 from datetime import timedelta
-from .utils import get_number_of_work_days_in_daterange
+from .utils import get_number_of_work_days_in_daterange, is_workday
 
 class SessionForm(forms.ModelForm):
     class Meta:
@@ -62,25 +62,32 @@ class SwipeEditForm(forms.ModelForm):
 class HolidayRequestForm(forms.ModelForm):
     class Meta:
         model = Holiday
-        fields = ['date_since','date_to','hours_on_holidays','reason']
+        fields = ['date_since','date_to','work_hours','reason']
         
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super(HolidayRequestForm, self).__init__(*args, **kwargs)
     
         
-    def clean_hours_on_holidays(self):
-        hours_on_holidays = self.cleaned_data["hours_on_holidays"]
+    def clean(self):
         date_since = self.cleaned_data["date_since"]
         date_to = self.cleaned_data["date_to"]
-        min_length = self.user.profile.get_hours_quota()/2
+        quota = self.user.profile.get_hours_quota()
+        hours_on_holidays = 0
+        i = 0
+        date = date_since
+        while date <= date_to:
+            if is_workday(date):
+                hours_on_holidays += quota
+            date += timedelta(days = 1)
+        hours_on_holidays -= self.cleaned_data["work_hours"]
+        min_length = quota/2
         if hours_on_holidays < min_length:
             raise forms.ValidationError("Length of your holiday can't be smaller than " + str(int(min_length)) + " hours")
-        if get_number_of_work_days_in_daterange(date_since, date_to) * self.user.profile.get_hours_quota() - hours_on_holidays > self.user.profile.get_hours_quota():
+        if get_number_of_work_days_in_daterange(date_since, date_to) * quota - hours_on_holidays > quota:
             raise forms.ValidationError("Wanna broke my work? Dont play with js!")
         if self.user.profile.get_hours_of_holidays_aviable_to_take() < hours_on_holidays:
-            raise forms.ValidationError("You can take only " + str(int(self.user.profile.get_hours_of_holidays_aviable_to_take() / self.user.profile.get_hours_quota())) + " days of holidays.")
-        return hours_on_holidays
+            raise forms.ValidationError("You can take only " + str(int(self.user.profile.get_hours_of_holidays_aviable_to_take() / quota)) + " days of holidays.")
         
 class HolidayVerifyForm(forms.ModelForm):
     class Meta:
