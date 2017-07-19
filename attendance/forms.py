@@ -88,6 +88,10 @@ class HolidayRequestForm(forms.ModelForm):
             raise forms.ValidationError("Wanna broke my work? Dont play with js!")
         if self.user.profile.get_hours_of_holidays_aviable_to_take() < hours_on_holidays:
             raise forms.ValidationError("You can take only " + str(int(self.user.profile.get_hours_of_holidays_aviable_to_take() / quota)) + " days of holidays.")
+        for holiday in self.user.profile.holidays.all():
+            if holiday.date_since <= date_to and holiday.date_to >= date_since:
+                raise forms.ValidationError("Confilct with Holiday: " + str(holiday.date_since) + "-" + str(holiday.date_to))
+
         
 class HolidayVerifyForm(forms.ModelForm):
     class Meta:
