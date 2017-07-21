@@ -81,8 +81,7 @@ class HolidayManager(models.Manager):
         )
         holidays = []
         for holiday in holidays_all:
-            if (holiday.date_to.month >= month and holiday.date_to.year >= year):
-                if (holiday.date_since.month <= month and holiday.date_since.year <= year):
+            if holiday.is_in_month(month, year):
                     if holiday.verified:
                         holidays.append(holiday)
         return holidays

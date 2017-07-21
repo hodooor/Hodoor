@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.decorators import login_required
 from rest_framework import permissions
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from .forms import ProjectSeparationForm, SwipeEditForm, HolidayRequestForm, HolidayVerifyForm
 from django.utils import timezone
 from django.db.models import Q
@@ -292,12 +292,20 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
         datetime__year=int(year),
     ).values_list('session', flat=True)
     sessions = Session.objects.filter(pk__in=in_swipes_ids)
-    holidays = Holiday.objects.filter(profile = u.profile, verified=True)
+    holidays = Holiday.objects.filter(profile = u.profile)
     sessions_and_holidays = []
     for session in sessions:
         sessions_and_holidays.append(session)
     for holiday in holidays:
-        sessions_and_holidays.append(holiday)
+        if holiday.is_in_month(int(month), int(year)):
+            sessions_and_holidays.append(holiday)
+            dur = holiday.get_hours_month(month = month, year = year)
+            holiday.time_spend = timedelta(
+                    days = dur//holiday.profile.get_hours_quota(),
+                    hours = dur%holiday.profile.get_hours_quota()
+            ) 
+            holiday.duration = timedelta(hours = dur)
+    sessions_and_holidays.sort(key=lambda x: x.get_date().timestamp())
     separations = ProjectSeparation.objects.filter(session__in=sessions)
     form = ProjectSeparationForm()
     for session in sessions:
@@ -315,15 +323,19 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
             projects[separation.project.name] += separation.time_spend.seconds/3600
         else:
             projects[separation.project.name] = separation.time_spend.seconds/3600
-    if hasattr(User.objects, "profile"):
-        workhours_per_day = User.objects.profile.get_hours_quota()
+    holihours_requested = 0
+    holihours = 0
+    if hasattr(u, "profile"):
+        workhours_per_day = u.profile.get_hours_quota()
+        if workhours_per_day != 0:
+            holihours = Holiday.objects.get_holidays_hours_this_month(u.profile)
     else:
         workhours_per_day = 8
         
     not_work_hours = Session.objects.get_not_work_hours_month(u, month, year)
-    total_hours = Session.objects.get_hours_month(u.id, month, year)
+    total_hours = Session.objects.get_hours_month(u.id, month, year) + holihours
     unassigned_hours = Session.objects.get_unassigned_hours_month(u.id, month, year)
-    work_hours = total_hours - unassigned_hours - not_work_hours
+    work_hours = total_hours - unassigned_hours - not_work_hours - holihours
     context = {
             "sessions_and_holidays": sessions_and_holidays,
             "year": year,
@@ -334,7 +346,8 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
             "not_work_hours": not_work_hours,
             "list_of_projects": projects,
             "hours_quota": get_quota_work_hours(int(year), int(month), workhours_per_day),
-            "form": form
+            "form": form,
+            "holihours": holihours
     }
     return render(request, "attendance/sessions.html", context)
 

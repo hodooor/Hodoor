@@ -83,6 +83,11 @@
         <td>h.</td>
       </tr>
       <tr>
+        <td>Holidays hours:</td>
+        <td>{{holihours|floatformat:2}}</td>
+        <td>h.</td>
+      </tr>
+      <tr>
         <td>Unassigned hours:</td>
         <td>{{ unassigned_hours | floatformat:2}}</td>
         <td>h.</td>
@@ -236,11 +241,15 @@
       </form>
       {%else%}
         <tr>
-         <td>{{session.date_since}}<br>{{session.date_to}}</td>
+         <td>{{session.date_since|date:'D d.m.'}}<br>{{session.date_to|date:'D d.m.'}}</td>
          <td clospan="2">HOLIDAYS</td>
+         <td>{{session.time_spend}}</td>
          <td>{{session.reason}}</td>
+         <td>{{session.duration}}</td>
          <td></td>
          <td></td>
+         <td class="status">{{ session.verified |yesno:"Verified, Required" }}</td>
+         <td>{{session.id}}</td>
          <td></td>
       {%endif%}
   {% endfor %}
@@ -437,6 +446,12 @@ $(document).ready(function(){
     $(this).addClass("green bold");
   });
   $(".status:contains('Open')").each(function() {
+    $(this).addClass("red bold");
+  });
+  $(".status:contains('Verified')").each(function() {
+    $(this).addClass("green bold");
+  });
+  $(".status:contains('Required')").each(function() {
     $(this).addClass("red bold");
   });
   $(".not-assigned:contains('0:00:00')").each(function() {

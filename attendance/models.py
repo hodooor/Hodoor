@@ -352,7 +352,16 @@ class Holiday(models.Model):
                 hours += self.profile.get_hours_quota()
             date += timedelta(days = 1)
         return hours - self.work_hours
-
+        
+    def get_date(self):
+        return datetime(year = self.date_since.year, month = self.date_since.month, day = self.date_since.day)
+    
+    def is_in_month(self, month, year):
+        if (self.date_to.month >= month and self.date_to.year >= year):
+                if (self.date_since.month <= month and self.date_since.year <= year):
+                    return True
+        return False
+        
     def get_model_name(self):
         model_name = 'Holiday'
         return model_name
@@ -361,9 +370,10 @@ class Holiday(models.Model):
         i = 0
         date = self.date_since
         hours = 0
-        while date <= self.date_to and (date.month== month and date.year==year):
-            if is_workday(date):
-                hours += self.profile.get_hours_quota()
+        while date <= self.date_to:
+            if (int(date.month)== int(month) and int(date.year)==int(year)):
+                if is_workday(date):
+                    hours += self.profile.get_hours_quota()
             date += timedelta(days = 1)
         if self.date_to + timedelta(days = 1) == date:
             hours -= self.work_hours
