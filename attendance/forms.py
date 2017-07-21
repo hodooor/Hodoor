@@ -82,12 +82,13 @@ class HolidayRequestForm(forms.ModelForm):
             date += timedelta(days = 1)
         hours_on_holidays -= self.cleaned_data["work_hours"]
         min_length = quota/2
+        max_length = round(self.user.profile.get_hours_of_holidays_aviable_to_take())
         if hours_on_holidays < min_length:
             raise forms.ValidationError("Length of your holiday can't be smaller than " + str(int(min_length)) + " hours")
         if get_number_of_work_days_in_daterange(date_since, date_to) * quota - hours_on_holidays > quota:
             raise forms.ValidationError("Wanna broke my work? Dont play with js!")
-        if self.user.profile.get_hours_of_holidays_aviable_to_take() < hours_on_holidays:
-            raise forms.ValidationError("You can take only " + str(int(self.user.profile.get_hours_of_holidays_aviable_to_take() / quota)) + " days of holidays.")
+        if max_length < hours_on_holidays:
+            raise forms.ValidationError("You can take only " + str(max_length / quota) + " days of holidays.")
         for holiday in self.user.profile.holidays.all():
             if holiday.date_since <= date_to and holiday.date_to >= date_since:
                 raise forms.ValidationError("Confilct with Holiday: " + str(holiday.date_since) + "-" + str(holiday.date_to))

@@ -5,7 +5,7 @@ from django.dispatch import receiver
 from datetime import datetime, timezone, timedelta
 from .managers import SessionManager, HolidayManager
 from django.core.validators import MinValueValidator, MaxValueValidator
-from .utils import is_workday
+from .utils import is_workday, get_number_of_work_days_in_daterange
 
 
 class Project(models.Model):
@@ -65,14 +65,16 @@ class Profile(models.Model):
     def get_hours_of_holidays(self, verified = True, year = None):
         hours = 0
         for holiday in self.holidays.all():
-            if (year == None) or (year == str(holiday.date_since.year)):
+            if (year == None) or (year == holiday.date_since.year):
                 if holiday.verified == verified:
                     hours += holiday.hours_spend()
         return hours
         
     def get_aviable_holidays_this_year(self):
         hours_work_this_year = Session.objects.get_hours_this_year(self.user.id)
-        return hours_work_this_year/(52 * self.get_hours_quota()) * (self.days_of_holidays_per_year/5)
+        hours_work_this_year += self.get_hours_of_holidays(year = datetime.now().year)
+        hours = self.count_holidays_from_num_of_hours(hours_work_this_year)
+        return hours
     
     def need_for_holiday(self):
         i = 0
@@ -87,10 +89,21 @@ class Profile(models.Model):
         return False
     
     def get_hours_of_holidays_aviable_to_take(self):
-        hours = self.get_aviable_holidays_this_year() * self.get_hours_quota() + self.aviable_holidays
+        hours = self.get_aviable_holidays_this_year() + self.aviable_holidays
         hours -= self.get_hours_of_holidays(verified = True)
         hours -= self.get_hours_of_holidays(verified = False)
+        bonus = self.count_holidays_from_num_of_hours(hours)
+        while bonus >= 0.01:
+            hours += bonus
+            bonus = self.count_holidays_from_num_of_hours(bonus)
         return hours
+        
+    def count_holidays_from_num_of_hours(self, hours):
+        days_in_year = get_number_of_work_days_in_daterange(
+                datetime(year = datetime.now().year, month = 1, day=1),
+                datetime(year = datetime.now().year, month = 12, day=31)
+        )
+        return round(hours / 260) * (self.days_of_holidays_per_year)
         
     def __str__(self):
         """Name of owner of profile and his contracts."""

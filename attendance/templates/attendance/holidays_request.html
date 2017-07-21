@@ -71,6 +71,10 @@
                             <td>Total:</td>
                             <td><span id='days_on_holidays' class="bold small">0</span> days (<span id='hours_on_holidays' name='hours_on_holidaysSpan' class="bold small">0</span> hours)</td>
                         </tr>
+                        <tr>
+                            <td>MAX:</td>
+                            <td>{{holidays_aviable|floatformat:2}} days ({{holihours_aviable|floatformat:0}} hours)</td>
+                        </tr>
                     </tbody>
                 </table>
                 {% if not succes %}

@@ -501,9 +501,9 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
         if user["have_profile"]:
             hours_work_this_year = Session.objects.get_hours_this_year(user["user"].id)
             user["months_worked"] = hours_work_this_year / (user["user"].profile.get_hours_quota() * 21)
-            user["this_year_holiday_aviable"] = user["user"].profile.get_aviable_holidays_this_year() 
-            user["overall_holiday_aviable"] = user["this_year_holiday_aviable"] + user["user"].profile.aviable_holidays
-            user["already_taken_holidays"] = user["user"].profile.get_hours_of_holidays(year = year) / user["user"].profile.get_hours_quota()
+            user["this_year_holiday_aviable"] = user["user"].profile.get_aviable_holidays_this_year() / user["user"].profile.get_hours_quota()
+            user["overall_holiday_aviable"] = (user["this_year_holiday_aviable"] + user["user"].profile.aviable_holidays) / user["user"].profile.get_hours_quota()
+            user["already_taken_holidays"] = user["user"].profile.get_hours_of_holidays(year = int(year)) / user["user"].profile.get_hours_quota()
             user["requested_holidays"] = user["user"].profile.get_hours_of_holidays(verified = False) / user["user"].profile.get_hours_quota()
             user["left_to_take_holidays"] = user["user"].profile.get_hours_of_holidays_aviable_to_take() / user["user"].profile.get_hours_quota()
 
@@ -547,14 +547,19 @@ def holidays_request(request, username):
                 
     czech_holidays_for_js = []
     for h in czech_holidays:
-        czech_holidays_for_js.append([h.year, h.month, h.day])   
+        czech_holidays_for_js.append([h.year, h.month, h.day])
+    
+    holihours_aviable = user.profile.get_hours_of_holidays_aviable_to_take()
+    holidays_aviable = holihours_aviable / user.profile.get_hours_quota()
         
     context = {
         "user" : user,
         "czech_holidays" : czech_holidays_for_js,
         "quota" : user.profile.get_hours_quota(),
         "form" : form,
-        "succes": succes
+        "succes": succes,
+        "holidays_aviable": holidays_aviable,
+        "holihours_aviable": holihours_aviable
     }
            
     return render(request, "attendance/holidays_request.html", context)
