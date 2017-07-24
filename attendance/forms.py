@@ -2,7 +2,7 @@ from django import forms
 from .models import Session, ProjectSeparation, Swipe, Holiday
 from django.contrib.admin.widgets import AdminDateWidget
 from datetimewidget.widgets import DateTimeWidget
-from datetime import timedelta
+from datetime import timedelta, datetime
 from .utils import get_number_of_work_days_in_daterange, is_workday
 
 class SessionForm(forms.ModelForm):
@@ -83,6 +83,8 @@ class HolidayRequestForm(forms.ModelForm):
         hours_on_holidays -= self.cleaned_data["work_hours"]
         min_length = quota/2
         max_length = round(self.user.profile.get_hours_of_holidays_aviable_to_take())
+        if (date_since.year != datetime.now().year) or (date_to.year != datetime.now().year):
+            raise forms.ValidationError("You can manage holidays for this year only.")
         if hours_on_holidays < min_length:
             raise forms.ValidationError("Length of your holiday can't be smaller than " + str(int(min_length)) + " hours")
         if get_number_of_work_days_in_daterange(date_since, date_to) * quota - hours_on_holidays > quota:
@@ -92,7 +94,6 @@ class HolidayRequestForm(forms.ModelForm):
         for holiday in self.user.profile.holidays.all():
             if holiday.date_since <= date_to and holiday.date_to >= date_since:
                 raise forms.ValidationError("Confilct with Holiday: " + str(holiday.date_since) + "-" + str(holiday.date_to))
-
         
 class HolidayVerifyForm(forms.ModelForm):
     class Meta:
