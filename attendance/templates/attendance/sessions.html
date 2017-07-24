@@ -76,7 +76,7 @@
     </h3>
   </div>
   <div class="panel-body">
-    <table class="table table-condensed table-noborder">
+       <table class="table table-condensed table-noborder">
       <tr>
         <td>Hours total:</td>
         <td>{{total_hours|floatformat:2}}</td>
@@ -107,7 +107,7 @@
         <td><span>{{ work_hours | floatformat:2}}</span></td>
         <td>h.</td>
       </tr>
-    </table>
+       </table>
   </div>
 </div>
 
@@ -121,42 +121,42 @@
   <div class="panel-body">
   <ul class="nav nav-tabs">
     <li class="active"><a href="#graph-view" data-toggle="tab">Graph</a></li>
-    <li><a href="#table-view" data-toggle="tab">Table</a></li>
-    </ul>
-      <div class="tab-content">
-            <div id="table-view" class="tab-pane fade">
-            <p>&nbsp;</p>
-            <table class="table table-condensed table-primary-inverse" id="projects">
-                <thead>
-                    <td>Name</td>
-                    <td>Hours</td>
-                    <td></td>
-                </thead>
-                {% for key,value in list_of_projects.items %}
-                <tr>
-                    <td id="key">{{key}}</td>
-                    <td id="value">{{value | floatformat:2}}</td>
-                    <td>h.</td>
-                  </tr>
-                {% endfor %}
-              </table>
-        </div>
-        <div id="graph-view" class="tab-pane fade in active">
-        <canvas id="Projects-Chart" class="doughnut-chart" width="150" height="250"></canvas>
-        </div>
-    </div>
+  	<li><a href="#table-view" data-toggle="tab">Table</a></li>
+	</ul>
+	  <div class="tab-content">
+			<div id="table-view" class="tab-pane fade">
+			<p>&nbsp;</p>
+	    	<table class="table table-condensed table-primary-inverse" id="projects">
+	    		<thead>
+	    			<td>Name</td>
+	    			<td>Hours</td>
+	    			<td></td>
+	    		</thead>
+			  	{% for key,value in list_of_projects.items %}
+			  	<tr>
+				  	<td id="key">{{key}}</td>
+				  	<td id="value">{{value | floatformat:2}}</td>
+				  	<td>h.</td>
+				  </tr>
+			  	{% endfor %}
+			  </table>
+	    </div>
+	    <div id="graph-view" class="tab-pane fade in active">
+    	<canvas id="Projects-Chart" class="doughnut-chart" width="150" height="250"></canvas>
+	    </div>
+  	</div>
 
   </div>
 </div>
 
 <div class="visible-md visible-lg">
-    <p>&nbsp;</p>
+       <p>&nbsp;</p>
 </div>
 
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h1><i class="fa fa-cubes"></i> Sessions - <small>assign project and description to your work time here</small></h1>
+       <h1><i class="fa fa-cubes"></i> Sessions - <small>assign project and description to your work time here</small></h1>
 </div>
 <table class="table table-striped table-hover table-bordered table-primary" id="sessions-table">
 <thead class="text-center">
@@ -287,16 +287,13 @@ function post_form_data(data) {
         error: function () {}
     });
 }
-
 $('#submit-all').on('click', function () {
     $('form').each(function () {
         post_form_data($(this).serialize());
     });
     location.reload();
 });
-
 $(document).ready(function(){
-
   /*Option sorting for projects*/
   //set variables
   let my_options = [];
@@ -315,7 +312,6 @@ $(document).ready(function(){
       $(".select-project"+e).empty().append(my_options[e]);
       $(".select-project"+e).val(selected[e]);
   });
-
   /*Timepickers*/
   $('input[name=time_spend]').each(function(e){
     $(this).addClass('timepicker'+e);
@@ -346,79 +342,74 @@ $(document).ready(function(){
   //Make width of content larger in case of larger table
   var Content = $('.content'); //save indetifier to var
   var Table = $('#sessions-table'); //save indetifier to var
-
   Table.data("width", $('#sessions-table').width()); //alocate dynamic var
   Content.data("width", $('.content').width()); //alocate dynamic var
   if(Table.data("width") > Content.data("width")) { //compare widths
     $('.content').css('min-width','100vw'); //if table is wider than content, make content bigger(width to vw)
   }
-
-    /*Year value select display function*/
-    var yearToPrint = 'Year';
-    var url = window.location.href;
-    if(url.indexOf("2015") > -1) {
-        yearToPrint = '2015';
-    } else
-    if(url.indexOf("2016") > -1){
-        yearToPrint = '2016';
-    } else {
-        yearToPrint = '2017';
-    }
-    $('.print-year').text(yearToPrint);
-
-    /*Month value select display function*/
-    var monthToPrint = 'Month';
-    if(url.indexOf("/01") > -1) {
-        monthToPrint = "January";
-    } else
-    if(url.indexOf("/02") > -1) {
-        monthToPrint = "February";
-    } else
-    if(url.indexOf("/03") > -1) {
-        monthToPrint = "March";
-    } else
-    if(url.indexOf("/04") > -1) {
-        monthToPrint = "April";
-    } else
-    if(url.indexOf("/05") > -1) {
-        monthToPrint = "May";
-    } else
-    if(url.indexOf("/06") > -1) {
-        monthToPrint = "June";
-    } else
-    if(url.indexOf("/07") > -1) {
-        monthToPrint = "July";
-    } else
-    if(url.indexOf("/08") > -1) {
-        monthToPrint = "August";
-    } else
-    if(url.indexOf("/09") > -1) {
-        monthToPrint = "September";
-    } else
-    if(url.indexOf("/10") > -1) {
-        monthToPrint = "October";
-    } else
-    if(url.indexOf("/11") > -1) {
-        monthToPrint = "November";
-    } else {
-        monthToPrint = "December";
-    }
+	/*Year value select display function*/
+	var yearToPrint = 'Year';
+	var url = window.location.href;
+	if(url.indexOf("2015") > -1) {
+		yearToPrint = '2015';
+	} else
+	if(url.indexOf("2016") > -1){
+		yearToPrint = '2016';
+	} else {
+		yearToPrint = '2017';
+	}
+	$('.print-year').text(yearToPrint);
+	/*Month value select display function*/
+	var monthToPrint = 'Month';
+	if(url.indexOf("/01") > -1) {
+		monthToPrint = "January";
+	} else
+	if(url.indexOf("/02") > -1) {
+		monthToPrint = "February";
+	} else
+	if(url.indexOf("/03") > -1) {
+		monthToPrint = "March";
+	} else
+	if(url.indexOf("/04") > -1) {
+		monthToPrint = "April";
+	} else
+	if(url.indexOf("/05") > -1) {
+		monthToPrint = "May";
+	} else
+	if(url.indexOf("/06") > -1) {
+		monthToPrint = "June";
+	} else
+	if(url.indexOf("/07") > -1) {
+		monthToPrint = "July";
+	} else
+	if(url.indexOf("/08") > -1) {
+		monthToPrint = "August";
+	} else
+	if(url.indexOf("/09") > -1) {
+		monthToPrint = "September";
+	} else
+	if(url.indexOf("/10") > -1) {
+		monthToPrint = "October";
+	} else
+	if(url.indexOf("/11") > -1) {
+		monthToPrint = "November";
+	} else {
+		monthToPrint = "December";
+	}
   $('.print-month').text(monthToPrint);
-
-
-    /*Chart.JS settings*/
-    //disable legend above chart
-    Chart.defaults.global.legend.display = false;
-    /*Projects Doughnut Chart*/
-    //set bgColors
-    var bgColors = [];
-    bgColors = [
-        '#1f4371',
-        '#2962a9',
-        '#347bd5',
-        '#609ae1',
-        '#76a7e3',
-        '#00AEEF',
+	/*Chart.JS settings*/
+	//disable legend above chart
+	Chart.defaults.global.legend.display = false;
+	/*Projects Doughnut Chart*/
+	//set bgColors
+	var bgColors = [];
+	bgColors = [
+		'#1f4371',
+		'#2962a9',
+		'#347bd5',
+		'#609ae1',
+		'#76a7e3',
+		'#00AEEF',
     '#93194F',
     '#A94772',
     '#89023E',
@@ -428,16 +419,14 @@ $(document).ready(function(){
     '#A7C945',
     '#B7D266',
     '#FFDA38'
-    ];
-    //get data from webpage
-    var ProjectKeys = [];
-    var ProjectValues = [];
-
-    $('#projects tr').each(function(i){
-        ProjectKeys[i] = ($(this).children('#key').text());
-        ProjectValues[i] = ($(this).children('#value').text());
-    });
-
+	];
+	//get data from webpage
+	var ProjectKeys = [];
+	var ProjectValues = [];
+	$('#projects tr').each(function(i){
+		ProjectKeys[i] = ($(this).children('#key').text());
+		ProjectValues[i] = ($(this).children('#value').text());
+	});
   var ctx = $("#Projects-Chart");
   var myChart = new Chart(ctx, {
   type: 'doughnut',
@@ -456,12 +445,6 @@ $(document).ready(function(){
   $(".status:contains('Open')").each(function() {
     $(this).addClass("red bold");
   });
-  $(".status:contains('Verified')").each(function() {
-    $(this).addClass("green bold");
-  });
-  $(".status:contains('Required')").each(function() {
-    $(this).addClass("red bold");
-  });
   $(".not-assigned:contains('0:00:00')").each(function() {
     $(this).addClass("green bold");
     //$(this).text("No unasigned time");
@@ -469,7 +452,6 @@ $(document).ready(function(){
   $('.not-assigned:not(:contains("0:00:00"))').each(function() {
     $(this).addClass("red bold");
   });
-
   /*Edit Bootstrap default form-controls on this page*/
   $('tbody > tr > td > select').each(function() {
     $(this).addClass('form-control');
@@ -481,7 +463,6 @@ $(document).ready(function(){
     $(this).addClass('form-control');
     $(this).attr('rows', '1');
   });
-
 //eof doc.ready
 });
 </script>
