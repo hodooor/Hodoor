@@ -204,7 +204,7 @@
                     <td>{{user.user.last_name}}</td>
                     <td>{{user.user.first_name}}</td>
                     <td>{{user.user.username}}</td>
-                    <td>{{user.hours_work |floatformat:2}}</td>
+                    <td>{{user.hours_worked |floatformat:2}}</td>
                     <td>{{user.this_year_holiday_aviable | floatformat:1}}</td>
                     <td>{{user.already_taken_holidays | floatformat:1}}</td>
                     <td><b>{{user.overall_holiday_aviable | floatformat:1}}</b></td>
@@ -220,7 +220,7 @@
                     {% for holiday in holidays %}  
                         {% if user.requested_holidays > 0 and holiday.profile.user.username == user.user.username %}
                                 <a href="{% url 'h_verification' username=user.user.username id=holiday.id %}"
-                                type="button" class="btn btn-sm btn-warning">Requst</a>
+                                type="button" class="btn btn-sm btn-warning">Request</a>
                         {% endif %}
                     {% endfor %} 
                     </td>

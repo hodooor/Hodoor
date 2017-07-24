@@ -70,10 +70,11 @@ class Profile(models.Model):
                     hours += holiday.hours_spend()
         return hours
         
-    def get_aviable_holidays_this_year(self):
+    def get_aviable_holidays_this_year(self, nonverified = False):
         hours_work_this_year = Session.objects.get_hours_this_year(self.user.id)
+        if nonverified:
+            hours_work_this_year += self.get_hours_of_holidays(year = datetime.now().year, verified = False)
         hours_work_this_year += self.get_hours_of_holidays(year = datetime.now().year)
-        hours_work_this_year += self.get_hours_of_holidays(year = datetime.now().year, verified = False)
         hours = self.count_holidays_from_num_of_hours(hours_work_this_year)
         return hours
     
@@ -90,7 +91,7 @@ class Profile(models.Model):
         return False
     
     def get_hours_of_holidays_aviable_to_take(self):
-        hours = self.get_aviable_holidays_this_year() + self.aviable_holidays
+        hours = self.get_aviable_holidays_this_year(nonverified = True) + self.aviable_holidays
         hours -= self.get_hours_of_holidays(verified = True)
         hours -= self.get_hours_of_holidays(verified = False)
         bonus = self.count_holidays_from_num_of_hours(hours)

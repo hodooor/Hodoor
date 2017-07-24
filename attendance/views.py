@@ -500,12 +500,11 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
             user["looks_ok"] = False
             
     for user in all_users:
-        user["hours_work"] = user["hours_total"] - user["hours_unassigned"] - user["hours_not_work"]
         if user["have_profile"]:
             hours_work_this_year = Session.objects.get_hours_this_year(user["user"].id)
-            user["months_worked"] = hours_work_this_year / (user["user"].profile.get_hours_quota() * 21)
+            user["hours_worked"] = user["user"].profile.get_hours_of_holidays(year = int(year)) + hours_work_this_year
             user["this_year_holiday_aviable"] = user["user"].profile.get_aviable_holidays_this_year() / user["user"].profile.get_hours_quota()
-            user["overall_holiday_aviable"] = (user["this_year_holiday_aviable"] + user["user"].profile.aviable_holidays) / user["user"].profile.get_hours_quota()
+            user["overall_holiday_aviable"] = (user["this_year_holiday_aviable"] * user["user"].profile.get_hours_quota() + user["user"].profile.aviable_holidays) / user["user"].profile.get_hours_quota()
             user["already_taken_holidays"] = user["user"].profile.get_hours_of_holidays(year = int(year)) / user["user"].profile.get_hours_quota()
             user["requested_holidays"] = user["user"].profile.get_hours_of_holidays(verified = False) / user["user"].profile.get_hours_quota()
             user["left_to_take_holidays"] = user["user"].profile.get_hours_of_holidays_aviable_to_take() / user["user"].profile.get_hours_quota()

@@ -250,13 +250,15 @@
         <td></td>
         <td class="status">{{ session.verified |yesno:"Verified, Required" }}</td>
         <td>{{session.id}}</td>
+        <td>
         {% if not session.verified %}
           <form method="POST" action="" onsubmit="return confirm('Are you sure?')">
             {% csrf_token %}
-            <td><input name="cancel_holidays" type="submit" class="btn btn-sm btn-danger pull-right" value="Storno"></td>
+            <input name="cancel_holidays" type="submit" class="btn btn-sm btn-danger pull-right" value="Storno" />
             <input type="hidden" name="id" value={{session.id}} />
           </form>
         {% endif %}
+        </td>
       {%endif%}
   {% endfor %}
     <tr>
