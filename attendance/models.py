@@ -73,6 +73,7 @@ class Profile(models.Model):
     def get_aviable_holidays_this_year(self):
         hours_work_this_year = Session.objects.get_hours_this_year(self.user.id)
         hours_work_this_year += self.get_hours_of_holidays(year = datetime.now().year)
+        hours_work_this_year += self.get_hours_of_holidays(year = datetime.now().year, verified = False)
         hours = self.count_holidays_from_num_of_hours(hours_work_this_year)
         return hours
     
