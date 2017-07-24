@@ -41,7 +41,7 @@
     <ul class="collabsible-list list-group " id="users-at-work">
     {% for user in at_work_users %}
       <li>
-            <table style="width:100%">
+                <table style="width:100%">
         {% if request.user.is_staff or request.user.is_superuser %}
         <form action="{% url 'user' username=user.username %}" method="post" onsubmit="return confirm('Are you sure that you want to swipe {{user.first_name}} {{user.last_name}} out?')">
           {% csrf_token %}
@@ -224,7 +224,7 @@
 <div class="row gutter-small"> <!-- if needed add class: equal-height-panels-->
 
     <div class="col-md-3"><!--first col-->
-        <div class="panel panel-primary"><!--This month quota-->
+         <div class="panel panel-primary"><!--This month quota-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="this-month-quota" title="This month - Quota">
             <i class="fa fa-calendar-check-o" aria-hidden="true"></i> This month - quota <i id="tooltip1" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="bottom"></i>
@@ -271,7 +271,7 @@
         </div>
         <div class="panel-footer">
         {% if quota_difference >= 0 %}
-                                        <div class="alert alert-success" role="alert">
+                                       <div class="alert alert-success" role="alert">
             <div class="title">
               <label>Month Quota:</label>
               <i class="fa fa-smile-o alert-icon" aria-hidden="true"></i>
@@ -281,7 +281,7 @@
             You should work <strong>{{ avg_work_hours_fullfill_qoota | floatformat:2}}</strong> hours per work day to fullfill quota until end of month.</p>
           </div>
         {% else  %}
-                                        <div class="alert alert-danger" role="alert">
+                                       <div class="alert alert-danger" role="alert">
             <div class="title">
               <label>Month Quota:</label>
               <i class="fa fa-frown-o alert-icon" aria-hidden="true"></i>
@@ -323,14 +323,14 @@
             <li class="list-separator"></li>
             <li class="">Unassigned Hours: <span class="danger" id="unassigned-hours-graph">{{ hours_unassigned_this_month | floatformat:2}}</span> ({{unassigned_closed_session_hours | floatformat:2}})</li>
             <li class="list-separator"></li>
-                        <li class="">Not-work Hours: <span class="gray" id="not-work-hours-graph">{{ hours_not_work_this_month| floatformat:2}}</span> hour(s)</li>
+                       <li class="">Not-work Hours: <span class="gray" id="not-work-hours-graph">{{ hours_not_work_this_month| floatformat:2}}</span> hour(s)</li>
             <li class="list-separator"></li>
-                        <li class="">Total Hours: <span class="bold" id="total-work-hours">{{ hours_total_this_month|floatformat:2}}</span> hour(s)</li>
+                       <li class="">Total Hours: <span class="bold" id="total-work-hours">{{ hours_total_this_month|floatformat:2}}</span> hour(s)</li>
           </ul>
           <canvas id="Assigned-Time-Chart" class="doughnut-chart" width="auto" height="250"></canvas>
         </div>
         <div class="panel-footer">
-                                        {% if not hours_unassigned_this_month %}
+                                       {% if not hours_unassigned_this_month %}
           <div class="alert alert-success" role="alert">
             <div class="title">
               <label>This Month:</label>
@@ -340,7 +340,7 @@
             You have all hours assigned to projects. Your attendance can be calculated by administrator.
             </p>
           </div>
-                                        {% else  %}
+                                       {% else  %}
           <div class="alert alert-danger" role="alert">
             <div class="title">
               <label>This Month:</label>
@@ -351,7 +351,7 @@
             </p>
             <a href="{% url 'sessions' user.username %}" class="btn btn-danger btn-block">Go to Session Page</a>
           </div>
-                                        {% endif %}
+                                       {% endif %}
         </div>
       </div><!--/this month assign time-->
     </div><!--/second col-->
@@ -495,7 +495,7 @@
             You have all hours assigned to projects. Your attendance can be calculated by administrator.
             </p>
           </div>
-                                {% else  %}
+                               {% else  %}
           <div class="alert alert-danger" role="alert">
             <div class="title">
               <label>Last Month:</label>
@@ -503,7 +503,7 @@
             </div>
             <p>
             You have <strong>{{ hours_unassigned_last_month | floatformat:2}} </strong>unassigned hours. You have to assign all hours to projects in Sessions page.
-                                                Only assigned hours will be counted as attendance.
+                                               Only assigned hours will be counted as attendance.
             </p>
             <a href="{% url 'sessions' user.username %}" class="btn btn-danger btn-block">Go to Session Page</a>
           </div>
