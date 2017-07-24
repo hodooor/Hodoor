@@ -389,7 +389,7 @@
       <div class="panel panel-primary"><!--holidays info panel-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="holiday-info" title="Holiday-info">
-           <i class="fa fa-plane" aria-hidden="true"></i> Holiday - info <i id="tooltip4" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="bottom"></i>
+           <i class="fa fa-plane" aria-hidden="true"></i> Holidays - info <i id="tooltip2" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="bottom"></i>
           </h2>
         </div>
         <div class="panel-body">
@@ -397,7 +397,7 @@
             <ul class="dash-list-group">
               <li class="">Aviable holidays: <span class="primary" id="aviable-holidays-graph">{{holidays_aviable | floatformat:1}}</span> day(s) ({{holihours_aviable | floatformat:0}} hours)</li>
               <li class="list-separator"></li>
-              <li class="">Already taken holiday: <span class="gray" id="taken-holidays-graph">{{taken_holidays | floatformat:1}} </span> day(s) ({{taken_holihours | floatformat:0}} hours)</li>
+              <li class="">Already taken holidays: <span class="gray" id="taken-holidays-graph">{{taken_holidays | floatformat:1}} </span> day(s) ({{taken_holihours | floatformat:0}} hours)</li>
               <li class="list-separator"></li>
               <li class="">Required holidays: <span class="danger" id="requared-holidays-graph">{{ holidays_requared|floatformat:1}}</span> day(s) ({{holihours_requared | floatformat:0}} hours)</li>
             </ul>
@@ -575,7 +575,7 @@
       
         var ctx = $("#Holiday-Time-Chart");
         var dataHoliTime = [aviableHolidaysGraph, requaredHolidaysGraph, takenHolidaysGraph];
-        var labelsHoliTime = ["Aviable holidays", "Requared holidays", "Taken holidays"];
+        var labelsHoliTime = ["Aviable holidays", "Required holidays", "Taken holidays"];
         var bgcolorsHoliTime = [bgColorAtime, bgColorUatime, bgColorNwtime]; 
         var myChartHoli = new Chart(ctx, {
           type: 'doughnut',
