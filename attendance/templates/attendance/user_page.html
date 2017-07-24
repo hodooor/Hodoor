@@ -537,31 +537,55 @@
 	  }
 	  //if you shouldnt work
 	  if($('#you_should_work_hours').text().includes("-")){
-		$('#you_should_work_hours').text('0.00');
-	  }
-		/*Assigned Time Doughnut Chart*/
-		//set bgColors
-		var bgColorAtime = "#609ae1";
-		var bgColorUatime = "#ff836d";
-		var bgColorNwtime = "#cccccc";
-		//get data from webpage
-		var assignedHoursGraph = $('#assigned-hours-graph').text();
-		var notWorkHoursGraph = $('#not-work-hours-graph').text();
-		var unassignedWorkHoursGraph = $('#unassigned-hours-graph').text();
-		  var ctx = $("#Assigned-Time-Chart");
-		  var dataWorkTime = [assignedHoursGraph, unassignedWorkHoursGraph, notWorkHoursGraph];
-		  var labelsWorkTime = ["Assigned Hours", "Unassigned Hours", "Not-work hours"];
-		  var bgcolorsWorkTime = [bgColorAtime, bgColorUatime, bgColorNwtime];
-		  var myChart = new Chart(ctx, {
-		  type: 'doughnut',
-		  data: {
-			labels: labelsWorkTime,
-			datasets: [{
-			  backgroundColor: bgcolorsWorkTime,
-			  data: dataWorkTime
-			}]
-		  }
-	  });
-	});
+        $('#you_should_work_hours').text('0.00');
+      }
+
+        /*Assigned Time Doughnut Chart*/
+        //set bgColors
+        var bgColorAtime = "#609ae1";
+        var bgColorUatime = "#ff836d";
+        var bgColorNwtime = "#cccccc";
+        var bgColorHtime = "#8FC2FF"
+        //get data from webpage
+        var assignedHoursGraph = $('#assigned-hours-graph').text();
+        var notWorkHoursGraph = $('#not-work-hours-graph').text();
+        var unassignedWorkHoursGraph = $('#unassigned-hours-graph').text();
+        var holidaysHoursGraph = $('#holidays-hours-graph').text();
+
+          var ctx = $("#Assigned-Time-Chart");
+          var dataWorkTime = [assignedHoursGraph, unassignedWorkHoursGraph, notWorkHoursGraph, holidaysHoursGraph];
+          var labelsWorkTime = ["Assigned Hours", "Unassigned Hours", "Not-work hours", "Holidays"];
+          var bgcolorsWorkTime = [bgColorAtime, bgColorUatime, bgColorNwtime, bgColorHtime];
+
+          var myChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: labelsWorkTime,
+            datasets: [{
+              backgroundColor: bgcolorsWorkTime,
+              data: dataWorkTime
+            }]
+          }
+      });
+      
+        var aviableHolidaysGraph = $('#aviable-holidays-graph').text();
+        var takenHolidaysGraph = $('#taken-holidays-graph').text();
+        var requaredHolidaysGraph = $('#requared-holidays-graph').text();
+      
+        var ctx = $("#Holiday-Time-Chart");
+        var dataHoliTime = [aviableHolidaysGraph, requaredHolidaysGraph, takenHolidaysGraph];
+        var labelsHoliTime = ["Aviable holidays", "Requared holidays", "Taken holidays"];
+        var bgcolorsHoliTime = [bgColorAtime, bgColorUatime, bgColorNwtime]; 
+        var myChartHoli = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: labelsHoliTime,
+            datasets: [{
+              backgroundColor: bgcolorsWorkTime,
+              data: dataHoliTime
+            }]
+          }
+      });
+    });
 </script>
 {% endblock %}
