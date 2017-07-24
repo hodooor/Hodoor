@@ -445,6 +445,12 @@ $(document).ready(function(){
   $(".status:contains('Open')").each(function() {
     $(this).addClass("red bold");
   });
+  $(".status:contains('Verified')").each(function() {
+    $(this).addClass("green bold");
+  });
+  $(".status:contains('Required')").each(function() {
+    $(this).addClass("red bold");
+  });
   $(".not-assigned:contains('0:00:00')").each(function() {
     $(this).addClass("green bold");
     //$(this).text("No unasigned time");
