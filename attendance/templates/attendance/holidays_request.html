@@ -38,7 +38,7 @@
                                 <td class="col-md-10">
                                     <div>
                                         <div class="form-group">
-                                            <div class='input-group' id='datetimepicker1'>
+                                            <div class='input-group' id='datepicker1'>
                                                 <input type='text' name='date_since' id='id_date_since' class="form-control" />
                                                  <div class="input-group-addon" data-toggle="tooltip" title="Open Date Picker"><i class="fa fa-clock-o"></i></div>
                                             </div>
@@ -51,7 +51,7 @@
                                 <td class="col-md-10">
                                     <div>
                                         <div class="form-group">
-                                            <div class='input-group' id='datetimepicker2'>
+                                            <div class='input-group' id='datepicker2'>
                                                 <input type='text'  name='date_to' id='date_to' class="form-control"/>
                                                  <div class="input-group-addon" data-toggle="tooltip" title="Open Date Picker"><i class="fa fa-clock-o"></i></div>
                                             </div>
@@ -80,7 +80,7 @@
                 {% if not succes %}
                     {{form.errors}}
                 {% else %}
-                    <td> <div class="badge badge-success"> Holidays has been successfuly requested <i class="fa fa-check"></i></div></td>
+                    <td> <div class="badge badge-success"> Holidays have been successfuly requested <i class="fa fa-check"></i></div></td>
                 {% endif %}
                 <div class="col-md-3">
                 </div>
@@ -102,12 +102,12 @@
 
 <script type="text/javascript">
  $(document).ready(function(){
-    $('#datetimepicker1').datetimepicker({
+    $('#datepicker1').datetimepicker({
         viewMode: 'days',
         format: 'YYYY-MM-DD',
     }), 
      
-    $('#datetimepicker2').datetimepicker({
+    $('#datepicker2').datetimepicker({
         viewMode: 'days',
         format: 'YYYY-MM-DD',
     });
@@ -115,15 +115,15 @@
         TimeDifference();
         });  
     
-    $('#datetimepicker2').on("dp.change", function (e){
+    $('#datepicker2').on("dp.change", function (e){
         TimeDifference();
         });  
-    $('#datetimepicker1').on("dp.change", function (e){
+    $('#datepicker1').on("dp.change", function (e){
         TimeDifference();
     }); 
     function TimeDifference(){
-        var start = $('#datetimepicker1').data("DateTimePicker").date();
-        var end = $('#datetimepicker2').data("DateTimePicker").date();
+        var start = $('#datepicker1').data("DateTimePicker").date();
+        var end = $('#datepicker2').data("DateTimePicker").date();
         if (start!=null && end!=null){
             start = new Date(start);
               start.setHours(0);
