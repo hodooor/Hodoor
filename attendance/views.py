@@ -278,11 +278,15 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
         return HttpResponse("Restricted to " + username)
         
     if request.method == "POST":
-        form = ProjectSeparationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            url = reverse('sessions_month', kwargs={"username": username, "year": year, "month": month})
-            return HttpResponseRedirect(url)
+        if request.POST.get("cancel_holidays"):
+            holidays = Holiday.objects.get(id=(request.POST.get("id")))
+            holidays.delete()
+        else:
+            form = ProjectSeparationForm(request.POST)
+            if form.is_valid():
+                form.save()
+                url = reverse('sessions_month', kwargs={"username": username, "year": year, "month": month})
+                return HttpResponseRedirect(url)
 
     u = User.objects.get(username=username)
     in_swipes_ids = Swipe.objects.filter(
@@ -302,8 +306,8 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
             dur = holiday.get_hours_month(month = month, year = year)
             days = dur//holiday.profile.get_hours_quota()
             hours = dur%holiday.profile.get_hours_quota()
-            holiday.time_spend = timedelta(days = days, hours = hours)
             holiday.duration = timedelta(days = days, hours = hours)
+            holiday.time_spend = timedelta(days = holiday.hours_spend() // holiday.profile.get_hours_quota())
     sessions_and_holidays.sort(key=lambda x: x.get_date().timestamp())
     separations = ProjectSeparation.objects.filter(session__in=sessions)
     form = ProjectSeparationForm()

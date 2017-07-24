@@ -241,16 +241,22 @@
       </form>
       {%else%}
         <tr>
-         <td>{{session.date_since|date:'D d.m.'}}<br>{{session.date_to|date:'D d.m.'}}</td>
-         <td clospan="2">HOLIDAYS</td>
-         <td>{{session.time_spend}}</td>
-         <td>{{session.reason}}</td>
-         <td>{{session.duration}}</td>
-         <td></td>
-         <td></td>
-         <td class="status">{{ session.verified |yesno:"Verified, Required" }}</td>
-         <td>{{session.id}}</td>
-         <td></td>
+        <td>{{session.date_since|date:'D d.m.'}}<br>{{session.date_to|date:'D d.m.'}}</td>
+        <td clospan="2">HOLIDAYS</td>
+        <td>Overall:<br />{{session.time_spend}}</td>
+        <td>{{session.reason}}</td>
+        <td>This month:<br />{{session.duration}}</td>
+        <td></td>
+        <td></td>
+        <td class="status">{{ session.verified |yesno:"Verified, Required" }}</td>
+        <td>{{session.id}}</td>
+        {% if not session.verified %}
+          <form method="POST" action="" onsubmit="return confirm('Are you sure?')">
+            {% csrf_token %}
+            <td><input name="cancel_holidays" type="submit" class="btn btn-sm btn-danger pull-right" value="Storno"></td>
+            <input type="hidden" name="id" value={{session.id}} />
+          </form>
+        {% endif %}
       {%endif%}
   {% endfor %}
     <tr>
