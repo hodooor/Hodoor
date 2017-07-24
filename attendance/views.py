@@ -202,9 +202,9 @@ def user(request, username):
     hours_quota = get_quota_work_hours(datetime.now().year, datetime.now().month, workhours_per_day)
     num_of_elapsed_workdays = get_num_of_elapsed_workdays_in_month(date.today())
     current_quota = num_of_elapsed_workdays * workhours_per_day
-    quota_difference = hours_work_this_month + unassigned_closed_session_hours - current_quota
+    quota_difference = hours_work_this_month + holidays_month + unassigned_closed_session_hours - current_quota
     quota_difference_abs = abs(quota_difference)
-    avg_work_hours_fullfill_quota = daily_hours((hours_quota - unassigned_closed_session_hours - hours_work_this_month) / max(1,num_of_workdays - num_of_elapsed_workdays))
+    avg_work_hours_fullfill_quota = daily_hours((hours_quota - unassigned_closed_session_hours - hours_work_this_month - holidays_month) / max(1,num_of_workdays - num_of_elapsed_workdays))
     
 
     context = {
@@ -300,11 +300,10 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
         if holiday.is_in_month(int(month), int(year)):
             sessions_and_holidays.append(holiday)
             dur = holiday.get_hours_month(month = month, year = year)
-            holiday.time_spend = timedelta(
-                    days = dur//holiday.profile.get_hours_quota(),
-                    hours = dur%holiday.profile.get_hours_quota()
-            ) 
-            holiday.duration = timedelta(hours = dur)
+            days = dur//holiday.profile.get_hours_quota()
+            hours = dur%holiday.profile.get_hours_quota()
+            holiday.time_spend = timedelta(days = days, hours = hours)
+            holiday.duration = timedelta(days = days, hours = hours)
     sessions_and_holidays.sort(key=lambda x: x.get_date().timestamp())
     separations = ProjectSeparation.objects.filter(session__in=sessions)
     form = ProjectSeparationForm()
