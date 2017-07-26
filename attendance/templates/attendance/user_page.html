@@ -132,24 +132,23 @@
 </div>
 
 <div class="panel panel-default">
-  <div class="panel-heading clickable"  id="holiday-users"> <!--panel-collapsed-->
+  <div class="panel-heading clickable" id="holidays-users">
     <h3 class="panel-title">
       <i class="fa fa-plane panel-icon" aria-hidden="true"></i>
       Users on holiday
       <span class="badge pull-right">{{on_holidays_users | length}}</span>
     </h3>
   </div>
-  <div class="panel-body">
+  <div class="collapse in" id="holis">
     <ul class="collabsible-list list-group" id="users-on-holidays">
     {% for user in on_holidays_users %}
       <li>
         <table style="width:100%">
-          {% csrf_token %}
-          <tr>
-            <td>
-             <i class="fa fa-circle-o" aria-hidden="true"></i> {{user.first_name}} {{user.last_name}}
-            </td>
-          </tr>
+         <tr>
+          <td>
+           <i class="fa fa-circle-o" aria-hidden="true"></i> {{user.first_name}} {{user.last_name}}
+          </td>
+         </tr>
         </table>
       </li>
     {%endfor %}
@@ -160,6 +159,7 @@
 <div class="visible-xs visible-sm">
   &nbsp;
 </div>
+
 {% endblock %}
 
 {% block content %}
@@ -515,6 +515,10 @@
 <script type="text/javascript">
     $(document).ready(function () {
 	  /*Update progress bar with actual width*/
+      
+      if({{on_holidays_users | length}} != 0){
+          $('#holis').attr("class", "panel-body");
+      }
 	  var maxWorkDays = {{ num_of_workdays }};
 	  var elapsedWorkDays = {{ num_of_elapsed_workdays }};
 	  var printDaysUpdate = (elapsedWorkDays/maxWorkDays)*100;
@@ -528,6 +532,10 @@
 	  if($('#users-on-trip li').length != 0) {
 		$('#users-on-trip-img').removeAttr('data-philter-grayscale');
 	  }
+      if($('#users-on-holidays li').length != 0) {
+		$('#users-on-holidays-img').removeAttr('data-philter-grayscale');
+	  }
+      
 	  /*Add aditional classes*/
 	  //If you should work less than 0 hours show it green else red
 	  if($('#you_should_work_hours').text() <= {{workhours_per_day}}) {
