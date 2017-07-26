@@ -484,6 +484,7 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
                     "hours_unassigned": Session.objects.get_unassigned_hours_month(user.id, month, int(year), sessions_month=user.session_set.all()),
                     "hours_not_work": Session.objects.get_not_work_hours_month(user.id, month, int(year), sessions_month=user.session_set.all()),
                     "have_profile": have_profile,
+                    "quota": user.profile.get_hours_quota(),
                     "months_worked": 0,
                     "this_year_holiday_aviable": 0,
                     "overall_holiday_aviable": 0,
@@ -500,14 +501,14 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
             user["looks_ok"] = False
             
     for user in all_users:
-        if user["have_profile"]:
+        if (user["have_profile"])and(user["quota"] != 0):
             hours_work_this_year = Session.objects.get_hours_this_year(user["user"].id)
             user["hours_worked"] = user["user"].profile.get_hours_of_holidays(year = int(year)) + hours_work_this_year
-            user["this_year_holiday_aviable"] = user["user"].profile.get_aviable_holidays_this_year() / user["user"].profile.get_hours_quota()
-            user["overall_holiday_aviable"] = (user["this_year_holiday_aviable"] * user["user"].profile.get_hours_quota() + user["user"].profile.aviable_holidays) / user["user"].profile.get_hours_quota()
-            user["already_taken_holidays"] = user["user"].profile.get_hours_of_holidays(year = int(year)) / user["user"].profile.get_hours_quota()
-            user["requested_holidays"] = user["user"].profile.get_hours_of_holidays(verified = False) / user["user"].profile.get_hours_quota()
-            user["left_to_take_holidays"] = user["user"].profile.get_hours_of_holidays_aviable_to_take() / user["user"].profile.get_hours_quota()
+            user["this_year_holiday_aviable"] = user["user"].profile.get_aviable_holidays_this_year() / user["quota"]
+            user["overall_holiday_aviable"] = (user["this_year_holiday_aviable"] * user["quota"] + user["user"].profile.aviable_holidays) / user["quota"]
+            user["already_taken_holidays"] = user["user"].profile.get_hours_of_holidays(year = int(year)) / user["quota"]
+            user["requested_holidays"] = user["user"].profile.get_hours_of_holidays(verified = False) / user["quota"]
+            user["left_to_take_holidays"] = user["user"].profile.get_hours_of_holidays_aviable_to_take() / user["quota"]
 
     locale.setlocale(locale.LC_ALL, "en_US.utf8")
     

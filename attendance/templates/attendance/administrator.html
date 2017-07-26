@@ -199,7 +199,7 @@
           </thead>
           <tbody>
               {% for user in all_users %}
-                {% if user.have_profile %}
+                {% if user.have_profile and user.quota != 0 %}
                   <tr>
                     <td>{{user.user.last_name}}</td>
                     <td>{{user.user.first_name}}</td>
