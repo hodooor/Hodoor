@@ -19,7 +19,7 @@ What can Hodoor do:
 
 # Development
 You need Python 3.4+ and probably [virtual enviroment](https://virtualenv.pypa.io/en/stable/) (if you have more python projects on your machine). You also need [npm](https://www.npmjs.com/) to install dependencies.
-When using ubuntu you may need to install nodejs-legacy. Run `sudo apt install nodejs-legacy` and then install npm dependencies.
+When using ubuntu you may need to install nodejs-legacy. Run `sudo apt install nodejs-legacy` and then install npm dependencies. When using windows you need to manually copy "node_modules" folder from nodejs installation folder to project folder.
 
 You should create similar folder structure:
 ```
