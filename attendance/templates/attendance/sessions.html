@@ -238,6 +238,9 @@
 	 <td>
 	  <input id='submit-all' type='submit' value='Submit All' class="btn btn-sm btn-success" />
 	 </td>
+     <td id='reportid'>
+      <a id='reportid' href="{% url 'work_report_pdf' username=user.username year=year month=month %}" class="btn btn-info btn-block" onclick="return confirm('You really want to print the work report?')">Print Report</a>
+     </td>
 	</tr>
   </tbody>
 </table>
@@ -428,6 +431,7 @@ $(document).ready(function(){
   });
   $(".status:contains('Open')").each(function() {
     $(this).addClass("red bold");
+    document.getElementById('reportid').style.display = 'none';
   });
   $(".not-assigned:contains('0:00:00')").each(function() {
     $(this).addClass("green bold");
@@ -435,6 +439,7 @@ $(document).ready(function(){
   });
   $('.not-assigned:not(:contains("0:00:00"))').each(function() {
     $(this).addClass("red bold");
+    document.getElementById('reportid').style.display = 'none';
   });
 
   /*Edit Bootstrap default form-controls on this page*/

@@ -82,8 +82,12 @@ urlpatterns = [
     url(r'^administrator/$',
         views.administrator,
         name='default_administrator'),
-]
 
+   # /generate/pdf/username/2017/7
+    url(r'^generate/pdf/(?P<username>[\w.@+-]+)/(?P<year>[0-9]{4})/(?P<month>[0-9]{2})/$',
+        views.generate_pdf,
+       name='work_report_pdf'),
+]
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns += [

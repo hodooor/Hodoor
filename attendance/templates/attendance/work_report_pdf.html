@@ -1,0 +1,89 @@
+<html>
+ <head>
+   <title>Test</title>
+   <style>
+     h1 {
+       text-align: center;
+       font-family: "Arail";
+     }
+
+     table {
+       border: 1px solid;
+       border-collapse: collapse;
+     }
+
+     td {
+       text-align: center;
+       border: 1px solid;
+       border-collapse: collapse;
+       font-size: 12px;
+       font-family: "Arail";
+     }
+     
+     th {
+       font-size: 14px;
+       text-align: center;
+       border: 1px solid;
+       border-collapse: collapse;
+       font-family: "Arail";
+     }
+     
+     td.left {
+       border: 1px solid;
+       border-collapse: collapse;
+       font-size: 12px;
+       text-align: left;
+       font-family: "Arail";
+     }
+     
+     td.free {
+       background-color: #B0B0B0
+     }
+   </style>
+   
+ </head>
+ <body>
+   <h1>Výkaz práce</h1>
+   <h3>{{month}}/{{year}}</h3>
+   <h3>{{ user.last_name }} {{ user.first_name }}</h3>
+   <table>
+     <thead>
+       <tr>
+         <th>Day</th>
+         <th>Weekday</th>
+         <th>Entry</th>
+         <th>Exit</th>
+         <th>Workhours</th>
+         <th colspan="2">Project</th>
+         <th colspan="2">Detailed description</th>
+       </tr>
+     </thead>
+     <tbody>
+        {% for day in days %}
+            {% for session in sessions_and_holidays %}
+                {% if day.day == session.day %}
+                 <tr>
+                   <td class="free">{{day.day}}</td>
+                   <td class="free">{{day.date|date:'D'}}</td>
+                   <td>{{session.entry|date:'H:i:s'}}</td>
+                   <td>{{session.exit|date:'H:i:s'}}</td>
+                   <td>{{session.duration}}</td>
+                   <td colspan="2" class="left">{{session.projects}}</td>
+                   <td colspan="2" class="left">{{session.descriptions}}</td>
+                 </tr>
+                 {% endif %} 
+            {% endfor %}
+               <tr>
+                <td class="free">{{day.day}}</td>
+                <td class="free">{{day.date|date:'D'}}</td>
+                <td class="free"></td>
+                <td class="free"></td>
+                <td class="free"></td>
+                <td colspan="2" class="free"></td>
+                <td colspan="2" class="free"></td>
+               </tr>
+        {% endfor %}  
+     </tbody>
+   </table>
+ </body>
+</html>
