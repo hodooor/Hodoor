@@ -148,6 +148,11 @@
         </table>
       </div>
     </div>
+    <div>
+      <form method="POST" action=''>{% csrf_token %}
+        <input type="submit" class="btn btn-sm btn-info" name='csv-UWS' value="Export as csv format">  
+      </form>
+    </div>
   </div>
   <div id="without-sessions" class="tab-pane fade">
     <div class="panel panel-default">
@@ -176,6 +181,11 @@
           </tbody>
         </table>
       </div>
+    </div>
+    <div>
+      <form method="POST" action=''>{% csrf_token %}
+        <input type="submit" class="btn btn-sm btn-info" name='csv-UWNS' value="Export as csv format">  
+      </form>
     </div>
   </div>
 </div>

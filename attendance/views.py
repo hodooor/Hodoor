@@ -15,7 +15,7 @@ from django.db.models import Q
 import locale
 from django.db.models import Prefetch
 from attendance.utils import get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days, last_month, daily_hours
-
+import csv
 
 WORKHOURS_PER_DAY = 8
 
@@ -372,7 +372,6 @@ def swipe_detail(request, username, id):
 
 @login_required(login_url='/login/')
 def administrator(request, year=str(datetime.now().year), month="{0:02d}".format(datetime.now().month-1, '02d')):
-
     if not (request.user.is_superuser or request.user.is_staff):
         return HttpResponse("Restricted to staff.")
     user_data, empty_users = [], []
@@ -415,4 +414,42 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
             "user_data": sorted(user_data, key=lambda dic: (locale.strxfrm(dic["user"].last_name))),
             "empty_users": sorted(empty_users, key=lambda user: (locale.strxfrm(user.last_name))), 
     }
+    if request.method == "POST":
+        if request.POST.get("csv-UWS"): 
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="Hodoor administration report - users with sessions.csv"'
+
+            field_names = ['Date: ' + str(datetime.now().date()),'Last name', 'First name', 'Username', 'Work hours', 'Not work hours',
+                    'Hours unassigned', 'Hours total', 'Status']
+            writer = csv.DictWriter(response, fieldnames=field_names)
+            writer.writeheader()
+            for user in user_data:
+                if user["looks_ok"]:
+                    status = "OK"
+                else:
+                    status = "not OK"
+                writer.writerow({
+                        "Last name":user["user"].username,
+                        "First name": user["user"].first_name,
+                        "Username": user["user"].last_name,
+                        "Work hours": round(user["hours_work"], 3),
+                        "Not work hours": round(user["hours_not_work"], 3),
+                        "Hours unassigned": round(user["hours_unassigned"], 3),
+                        "Hours total": round(user["hours_total"], 3),
+                        "Status": status,
+                })
+        if request.POST.get("csv-UWNS"): 
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="Hodoor administration report - users without sessions.csv"'
+
+            field_names = ['Date: ' + str(datetime.now().date()), 'Last name', 'First name', 'Username']
+            writer = csv.DictWriter(response, fieldnames=field_names)
+            writer.writeheader()
+            for user in empty_users:
+                writer.writerow({
+                        "Username":user.username,
+                        "First name": user.first_name,
+                        "Last name": user.last_name,
+                })
+        return response
     return render(request, "attendance/administrator.html", context)
