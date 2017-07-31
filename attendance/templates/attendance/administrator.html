@@ -65,6 +65,36 @@
   </div>
 </div>
 
+<div id='project-selection' class="panel panel-default" style="display: none">
+  <div class="panel-heading clickable">
+    <h3 class="panel-title">
+      <i class="fa fa-clipboard panel-icon" aria-hidden="true"></i>
+      Projects
+    </h3>
+  </div>
+  <div class="panel-body">
+      <div class="row">
+          <div class="col-xs-4">
+         <p>Projects: </p>
+         </div>
+         <div class="col-xs-8">
+            <div class="btn-group btn-block ">
+                <button type="button" class="btn btn-default btn-block  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="print-project"></span>
+                <span class="caret"></span>
+                </button>
+                    <ul class="dropdown-menu">
+                    {% for project in projects%}
+                        <li><a href="{% url 'default_administrator' %}{{year}}/{{month}}/{{project.name}}">{{project.name}}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+         </div>
+         <div>&nbsp;</div>
+      </div>
+  </div>
+</div>
+
 <div class="panel panel-default">
   <div class="panel-heading clickable">
     <h3 class="panel-title">
@@ -103,6 +133,7 @@
 <ul class="nav nav-tabs">
   <li class="active"><a href="#with-sessions" data-toggle="tab">Users With Sessions</a></li>
   <li><a href="#without-sessions" data-toggle="tab">Users Without Sessions</a></li>
+  <li><a id='projects' href=#project-view data-toggle="tab" onclick>Projects info</a></li>
 </ul>
 <div class="tab-content">
   <div id="with-sessions" class="tab-pane fade in active">
@@ -190,10 +221,38 @@
       </div>
     </div>
   </div>
+  <div id="project-view" class="tab-pane fade">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <table id="project-sort-users" class="table table-striped table-responsive table-default" cellspacing="0" width="100%">
+          <thead class="text-center">
+            <tr class="upper">
+              <th>Last name</th>
+              <th>First name</th>
+              <th>Number of hours in {{year}}/{{month}}</th>
+              <th>Number of hours in total</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr>
+                <td>{{user.last_name}}</td>
+                <td>{{user.first_name}}</td>
+                <td></td>
+                <td></td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
 
 <script type="text/javascript">
+$( "#projects" ).click(function(){
+    document.getElementById('project-selection').style.display = 'block';
+});
+
 $(document).ready(function(){
   /*Year value select display function*/
 	var yearToPrint = 'Year';
@@ -246,6 +305,10 @@ $(document).ready(function(){
 		monthToPrint = "December";
 	}
   $('.print-month').text(monthToPrint);
+
+   /*Project value select display function*/
+   var projectToPrint = "{{project}}";
+   $('.print-project').text(projectToPrint);
 
   //Making tables sortable
   $('#users-with-sessions').DataTable({

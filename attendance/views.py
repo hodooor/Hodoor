@@ -377,10 +377,11 @@ def swipe_detail(request, username, id):
         return HttpResponse("Restricted to " + session.user.username)
 
 @login_required(login_url='/login/')
-def administrator(request, year=str(datetime.now().year), month="{0:02d}".format(datetime.now().month-1, '02d')):
+def administrator(request, year=str(datetime.now().year), month="{0:02d}".format(datetime.now().month-1, '02d'), project=None):
     if not (request.user.is_superuser or request.user.is_staff):
         return HttpResponse("Restricted to staff.")
-    user_data, empty_users = [], []
+    user_data, empty_users, projects = [], [], []
+
     users = User.objects.filter().prefetch_related(
         Prefetch(
             'session_set',
@@ -413,12 +414,15 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
             user["looks_ok"] = False
 
     locale.setlocale(locale.LC_ALL, "en_US.utf8")
+    projects = Project.objects.all()
 
     context = {
+            "project" : project,
+            "projects": projects,
             "month": month,
             "year": year,
             "user_data": sorted(user_data, key=lambda dic: (locale.strxfrm(dic["user"].last_name))),
-            "empty_users": sorted(empty_users, key=lambda user: (locale.strxfrm(user.last_name))), 
+            "empty_users": sorted(empty_users, key=lambda user: (locale.strxfrm(user.last_name))),
     }
     if request.method == "POST":
         if request.POST.get("csv-UWS"): 
