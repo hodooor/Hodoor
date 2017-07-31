@@ -182,7 +182,7 @@
   <div id="users-holidays" class="tab-pane fade">
     <div class="panel panel-default">
       <div class="panel-body">
-        <table id="users-holidays" class="table table-striped table-responsive table-primary" cellspacing="0" width="100%">
+        <table id="users-have-holidays" class="table table-striped table-responsive table-primary" cellspacing="0" width="100%">
           <thead class="text-center">
             <tr class="upper">
               <th>Last name</th>
@@ -304,6 +304,19 @@ $(document).ready(function(){
   $('#users-without-sessions').DataTable({
     "aaSorting": [
     	[0,'asc']
+  	],
+    "columnDefs": [{
+      targets: 'no-sort',
+      orderable: false
+    }],
+    "lengthMenu": [
+    	[-1, 100, 50, 15],
+    	["All", 100, 50, 15]
+    ]
+  });
+  $('#users-have-holidays').DataTable({
+    "aaSorting": [
+        [0,'asc']
   	],
     "columnDefs": [{
       targets: 'no-sort',
