@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.decorators import login_required
 from rest_framework import permissions
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from .forms import ProjectSeparationForm, SwipeEditForm
 from django.utils import timezone
 from django.db.models import Q
@@ -380,7 +380,7 @@ def swipe_detail(request, username, id):
 def administrator(request, year=str(datetime.now().year), month="{0:02d}".format(datetime.now().month-1, '02d'), project=None):
     if not (request.user.is_superuser or request.user.is_staff):
         return HttpResponse("Restricted to staff.")
-    user_data, empty_users, projects = [], [], []
+    user_data, empty_users, projects_data = [], [], []
 
     users = User.objects.filter().prefetch_related(
         Prefetch(
@@ -415,8 +415,27 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
 
     locale.setlocale(locale.LC_ALL, "en_US.utf8")
     projects = Project.objects.all()
+    sessions = Session.objects.all()
+    users = User.objects.all()
+
+    for user in users:
+        duration, overall_duration = timedelta(0), timedelta(0)
+        for session in sessions:
+            separations =  ProjectSeparation.objects.filter(session = session)
+            for sep in separations:
+                if(sep.project.name == project and session.user.username == user.username):
+                    overall_duration += sep.time_spend
+                    date = (session.get_date())
+                    if('{:02d}'.format(date.month) == month and str(date.year) == year):
+                        duration += sep.time_spend
+        projects_data.append({
+                "user": user,
+                "hours": duration,
+                "overall": overall_duration,
+        })
 
     context = {
+            "projects_data":projects_data,
             "project" : project,
             "projects": projects,
             "month": month,

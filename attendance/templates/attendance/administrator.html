@@ -234,12 +234,14 @@
             </tr>
           </thead>
           <tbody>
+              {% for data in projects_data %}
               <tr>
-                <td>{{user.last_name}}</td>
-                <td>{{user.first_name}}</td>
-                <td></td>
-                <td></td>
+                <td>{{data.user.last_name}}</td>
+                <td>{{data.user.first_name}}</td>
+                <td>{{data.hours}}</td>
+                <td>{{data.overall}}</td>
               </tr>
+              {% endfor %}
           </tbody>
         </table>
       </div>
