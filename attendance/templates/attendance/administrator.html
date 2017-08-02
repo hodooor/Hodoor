@@ -223,13 +223,22 @@
           </thead>
           <tbody>
               {% for data in projects_data %}
-              <tr>
-                <td>{{data.user.last_name}}</td>
-                <td>{{data.user.first_name}}</td>
-                <td>{{data.hours}}</td>
-                <td>{{data.overall}}</td>
-              </tr>
+                {% if data.overall != "0:00:00" %}
+                  <tr>
+                    <td>{{data.user.last_name}}</td>
+                    <td>{{data.user.first_name}}</td>
+                    <td>{{data.hours}}</td>
+                    <td>{{data.overall}}</td>
+                  </tr>
+                {% endif %}
               {% endfor %}
+          </tbody>
+          <tbody>
+            <tr class="bold">
+                <td colspan="2">All users</td>
+                <td>{{all_users_month}}</td>
+                <td>{{all_users_overall}}</td>
+            </tr>
           </tbody>
         </table>
       </div>

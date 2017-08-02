@@ -413,6 +413,8 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
     sessions = Session.objects.all()
     users = User.objects.all()
 
+    all_users_month, all_users_overall = timedelta(0), timedelta(0)
+
     for user in users:
         duration, overall_duration = timedelta(0), timedelta(0)
         for session in sessions:
@@ -426,8 +428,10 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
         projects_data.append({
                 "user": user,
                 "hours": duration,
-                "overall": overall_duration,
+                "overall": str(overall_duration),
         })
+        all_users_month += duration
+        all_users_overall += overall_duration
 
     context = {
             "projects_data":projects_data,
@@ -437,5 +441,7 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
             "year": year,
             "user_data": sorted(user_data, key=lambda dic: (locale.strxfrm(dic["user"].last_name))),
             "empty_users": sorted(empty_users, key=lambda user: (locale.strxfrm(user.last_name))),
+            "all_users_month": all_users_month,
+            "all_users_overall": all_users_overall,
     }
     return render(request, "attendance/administrator.html", context)
