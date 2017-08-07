@@ -429,9 +429,9 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
                 else:
                     status = "not OK"
                 writer.writerow({
-                        "Last name":user["user"].username,
+                        "Username":user["user"].username,
                         "First name": user["user"].first_name,
-                        "Username": user["user"].last_name,
+                        "Last name": user["user"].last_name,
                         "Work hours": round(user["hours_work"], 3),
                         "Not work hours": round(user["hours_not_work"], 3),
                         "Hours unassigned": round(user["hours_unassigned"], 3),
