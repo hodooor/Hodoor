@@ -170,9 +170,12 @@ def user(request, username):
     unassigned_closed_session_hours = hours_unassigned_this_month - current_session_work_hours
     hours_quota = get_quota_work_hours(datetime.now().year, datetime.now().month, WORKHOURS_PER_DAY)
     num_of_elapsed_workdays = get_num_of_elapsed_workdays_in_month(date.today())
+    num_of_elapsed_workdays_last_month = get_number_of_work_days(datetime.now().year, last_month_)
     current_quota = num_of_elapsed_workdays * WORKHOURS_PER_DAY
+    hours_quota_last_month = num_of_elapsed_workdays_last_month * WORKHOURS_PER_DAY
     quota_difference = hours_work_this_month + unassigned_closed_session_hours - current_quota
     quota_difference_abs = abs(quota_difference)
+    hours_quota_dif_last_month = hours_work_last_month + hours_unassigned_last_month - hours_quota_last_month
     avg_work_hours_fullfill_quota = daily_hours((hours_quota - unassigned_closed_session_hours - hours_work_this_month) / max(1,num_of_workdays - num_of_elapsed_workdays))
     
     context = {
@@ -201,7 +204,9 @@ def user(request, username):
         "quota_difference": quota_difference,
         "quota_difference_abs": quota_difference_abs,
         "avg_work_hours_fullfill_qoota": avg_work_hours_fullfill_quota,
-        "workhours_per_day": WORKHOURS_PER_DAY
+        "workhours_per_day": WORKHOURS_PER_DAY,
+        "hours_quota_last_month": hours_quota_last_month,
+        "hours_quota_dif_last_month": hours_quota_dif_last_month,
     }
     return render(request, "attendance/user_page.html", context)
 

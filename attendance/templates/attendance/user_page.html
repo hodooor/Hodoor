@@ -413,6 +413,15 @@
             <li class="">Unassigned Hours: <span class="danger">{{ hours_unassigned_last_month | floatformat:2}}</span>  hour(s)</li>
             <li class="list-separator"></li>
             <li class="">Total Hours: <span class="bold">{{ hours_total_last_month|floatformat:2}}</span> hour(s)</li>
+            <li class="list-separator"></li>
+            <li class="">Last month quota: <span class="bold">{{ hours_quota_last_month|floatformat:2}}</span> hour(s)</li>
+            <li class="">Quota difference:
+            {% if hours_guota_dif_last_month >= 0 %}
+            	<span class="success">+{{hours_quota_dif_last_month | floatformat:2}}</span>
+            {% else %}
+            	<span class="danger">{{hours_quota_dif_last_month | floatformat:2}}</span>
+            {% endif %}
+            hour(s)</li>
           </ul>
         </div>
         <div class="panel-footer">
