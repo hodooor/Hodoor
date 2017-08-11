@@ -10,8 +10,11 @@ def make_administration_report(context):
     workbook = xlsxwriter.Workbook(response)
     
     #formats
-    bold = workbook.add_format({'bold': True})
-    float_format = workbook.add_format({'num_format': '0.00'})
+    bold = workbook.add_format({'bold': True, 'bg_color': 'blue', 'font_color': 'white'})
+    float_format = workbook.add_format({'num_format': '0.00', 'bg_color': '#cccccc'})
+    base_format = workbook.add_format({'bg_color': '#cccccc'})
+    good_format = workbook.add_format({'bg_color': '#cccccc', 'font_color': 'green'})
+    bad_format = workbook.add_format({'bg_color': '#cccccc', 'font_color': 'red'})
     
     #First Sheet
     worksheet = workbook.add_worksheet("Date")
@@ -19,11 +22,11 @@ def make_administration_report(context):
     worksheet.set_column("A:A", 15)
     worksheet.set_column("B:B", 30)
     worksheet.write(0, 0, "Showed year:", bold)
-    worksheet.write(0, 1, context["year"])
+    worksheet.write(0, 1, context["year"], base_format)
     worksheet.write(1, 0, "Showed month:", bold)
-    worksheet.write(1, 1, context["month"])
+    worksheet.write(1, 1, context["month"], base_format)
     worksheet.write(2, 0, "Made:", bold)
-    worksheet.write(2, 1, str(datetime.now()))
+    worksheet.write(2, 1, str(datetime.now()), base_format)
     
     #Second Sheet
     worksheet = workbook.add_worksheet("Users with sessions")
@@ -40,17 +43,17 @@ def make_administration_report(context):
     row = 1
     col = 0
     for user in context["user_data"]:
-        worksheet.write(row, col, user["user"].last_name)
-        worksheet.write(row, col + 1, user["user"].first_name)
-        worksheet.write(row, col + 2, user["user"].username)
+        worksheet.write(row, col, user["user"].last_name, base_format)
+        worksheet.write(row, col + 1, user["user"].first_name, base_format)
+        worksheet.write(row, col + 2, user["user"].username, base_format)
         worksheet.write_number(row, col + 3, user["hours_work"], float_format)
         worksheet.write_number(row, col + 4, user["hours_not_work"], float_format)
         worksheet.write_number(row, col + 5, user["hours_unassigned"], float_format)
         worksheet.write_number(row, col + 6, user["hours_total"], float_format)
         if user["looks_ok"]:
-            worksheet.write(row, col + 7, "OK")
+            worksheet.write(row, col + 7, "OK", good_format)
         else:
-            worksheet.write(row, col + 7, "NOT OK")
+            worksheet.write(row, col + 7, "NOT OK", bad_format)
         row += 1        
     
     #Third Sheet
@@ -63,9 +66,9 @@ def make_administration_report(context):
     row = 1
     col = 0
     for user in context["empty_users"]:
-        worksheet.write(row, col, user.last_name)
-        worksheet.write(row, col + 1, user.first_name)
-        worksheet.write(row, col + 2, user.username)
+        worksheet.write(row, col, user.last_name, base_format)
+        worksheet.write(row, col + 1, user.first_name, base_format)
+        worksheet.write(row, col + 2, user.username, base_format)
         row += 1
     
     workbook.close()
