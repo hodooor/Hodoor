@@ -16,6 +16,7 @@ import locale
 from django.db.models import Prefetch
 from attendance.utils import get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days, last_month, daily_hours
 import csv
+from .xlsx_generator import make_administration_report
 
 WORKHOURS_PER_DAY = 8
 
@@ -451,5 +452,7 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
                         "First name": user.first_name,
                         "Last name": user.last_name,
                 })
+        if request.POST.get("xlsx"):
+            response = make_administration_report(context) 
         return response
     return render(request, "attendance/administrator.html", context)
