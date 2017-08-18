@@ -148,7 +148,6 @@ REST_FRAMEWORK = {
 EMAIL_HOST = "smtp.websupport.sk"
 EMAIL_PORT = 25
 EMAIL_HOST_USER = 'ho.door@eledus.cz'
-EMAIL_HOST_PASSWORD = 'r4IITjppr7'
 DEFAULT_FROM_EMAIL = 'ho.door@eledus.cz'
 
 CRISPY_TEMPLATE_PACK = "bootstrap3"
