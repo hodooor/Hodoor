@@ -3,8 +3,7 @@ import xlsxwriter
 from datetime import datetime
 
 def make_administration_report(context):
-    
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response = HttpResponse(content_type='application/ms-excel')
     response['Content-Disposition'] = 'attachment; filename=administration_report.xlsx'
     
     workbook = xlsxwriter.Workbook(response)
