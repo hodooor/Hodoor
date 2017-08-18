@@ -1,12 +1,12 @@
 from django.http import HttpResponse
 import xlsxwriter
 from datetime import datetime
+import io
 
 def make_administration_report(context):
-    response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename=administration_report.xlsx'
+    output = io.BytesIO()
     
-    workbook = xlsxwriter.Workbook(response)
+    workbook = xlsxwriter.Workbook(output)
     
     #formats
     bold = workbook.add_format({'bold': True, 'bg_color': 'blue', 'font_color': 'white'})
@@ -71,5 +71,10 @@ def make_administration_report(context):
         row += 1
     
     workbook.close()
+    
+    # construct response
+    output.seek(0)    
+    response = HttpResponse(output.read(), content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=administration_report.xlsx'
     
     return response
