@@ -67,14 +67,14 @@ def _update_settings(source_folder, site_name):
         email_host_password = input_password("Enter the EMAIL_HOST_PASSWORD: ")
         append(settings_secret_file, "EMAIL_HOST_PASSWORD = '%s'" % (email_host_password, ))
     else:
-        lines = open(settings_secret_file, "r").readlines()
+        lines = open(os.path.join(source_folder, '/ticker/settings_secret.py'), "r").readlines()
         for line in lines:
             if "EMAIL_HOST_PASSWORD" in line:
                 break
         else:
             email_host_password = input_password("Enter the EMAIL_HOST_PASSWORD: ")
             append(settings_secret_file, "EMAIL_HOST_PASSWORD = '%s'" % (email_host_password, ))
-    append(settings_path, '\nfrom .settings_secret import SECRET_KEY')
+    append(settings_path, '\nfrom .settings_secret import SECRET_KEY, EMAIL_HOST_PASSWORD')
 
 def _update_virtualenv(source_folder):
     virtualenv_folder = source_folder + '/../virtualenv'
