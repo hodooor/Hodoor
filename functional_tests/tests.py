@@ -388,3 +388,16 @@ class APITest(FunctionalTest):
         data = {"user": self.user.id, "swipe_type": "IN", "datetime":"2016-06-04T13:40Z"}
         response = self.client.post("/api/swipes/",data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.data)
+
+class ExportTest(FunctionalTest):
+    def adminCanGetXlsxExport(self):
+        print("Hey")
+        user = UserFactory.create(
+                is_staff = True,
+        )
+        self.browser.get(self.server_url)
+        self.login_by_form(user.username, "password", self.browser)
+        self.browser.get(self.server_url + "/administrator/")
+        self.wait_for_element_with_name('xlsx')
+        self.browser.find_element_by_name('xlsx').click()
+        self.assertIn("xlsx", self.browser.page_source)
