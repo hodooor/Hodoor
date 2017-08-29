@@ -427,6 +427,22 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
                 date = (sep.session.get_date())
                 if('{:02d}'.format(date.month) == month and str(date.year) == year):
                     duration += sep.time_spend
+        projects_data.append({
+                "user": user,
+                "hours": duration,
+                "overall": str(overall_duration),
+        })
+        all_users_month += duration
+        all_users_overall += overall_duration
+
+    for user in users:
+        duration, overall_duration = timedelta(0), timedelta(0)
+        for sep in separations:
+            if(sep.project.name == project and sep.session.user.username == user.username):
+                overall_duration += sep.time_spend
+                date = (sep.session.get_date())
+                if('{:02d}'.format(date.month) == month and str(date.year) == year):
+                    duration += sep.time_spend
         duration = timedelta_to_hours(duration)
         overall_duration = timedelta_to_hours(overall_duration)
         projects_data.append({

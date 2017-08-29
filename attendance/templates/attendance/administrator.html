@@ -256,6 +256,41 @@
       </div>
     </div>
   </div>
+  <div id="project-view" class="tab-pane fade">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <table id="project-sort-users" class="table table-striped table-responsive table-default" cellspacing="0" width="100%">
+          <thead class="text-center">
+            <tr class="upper">
+              <th>Last name</th>
+              <th>First name</th>
+              <th>Number of hours in {{year}}/{{month}}</th>
+              <th>Number of hours in total</th>
+            </tr>
+          </thead>
+          <tbody>
+              {% for data in projects_data %}
+                {% if data.overall != "0:00:00" %}
+                  <tr>
+                    <td>{{data.user.last_name}}</td>
+                    <td>{{data.user.first_name}}</td>
+                    <td>{{data.hours}}</td>
+                    <td>{{data.overall}}</td>
+                  </tr>
+                {% endif %}
+              {% endfor %}
+          </tbody>
+          <tbody>
+            <tr class="bold">
+                <td colspan="2">All users</td>
+                <td>{{all_users_month}}</td>
+                <td>{{all_users_overall}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
 
