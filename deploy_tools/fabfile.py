@@ -2,6 +2,7 @@ from fabric.contrib.files import append, exists, sed
 from fabric.api import env, local, run
 import random
 from getpass import getpass
+import os
 
 REPO_URL = 'https://github.com/hodooor/Hodoor/'
 
@@ -27,7 +28,7 @@ def input_password(text):
             print("Error: Your passwords didn't match.")
             continue
         return password
-        
+
 def create_superuser():
     source_folder = '/home/%s/sites/%s/source' % (env.user, env.host)
     run('cd %s && ../virtualenv/bin/python3 manage.py createsuperuser' % (source_folder))
