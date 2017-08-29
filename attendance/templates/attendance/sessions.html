@@ -48,19 +48,19 @@
                 <span class="print-month"></span>
                 <span class="caret"></span>
                 </button>
-                    <ul class="dropdown-menu">
-                    <li><a href="{% url 'sessions' user.username %}{{year}}/01/">January <span class="pull-right">[01]</span></a></li>
-                    <li><a href="{% url 'sessions' user.username %}{{year}}/02/">February <span class="pull-right">[02]</span></a></li>
-                    <li><a href="{% url 'sessions' user.username %}{{year}}/03/">March <span class="pull-right">[03]</span></a></li>
-                    <li><a href="{% url 'sessions' user.username %}{{year}}/04/">April <span class="pull-right">[04]</span></a></li>
-                    <li><a href="{% url 'sessions' user.username %}{{year}}/05/">May <span class="pull-right">[05]</span></a></li>
-                    <li><a href="{% url 'sessions' user.username %}{{year}}/06/">June <span class="pull-right">[06]</span></a></li>
-                    <li><a href="{% url 'sessions' user.username %}{{year}}/07/">July <span class="pull-right">[07]</span></a></li>
-                    <li><a href="{% url 'sessions' user.username %}{{year}}/08/">August <span class="pull-right">[08]</span></a></li>
-                    <li><a href="{% url 'sessions' user.username %}{{year}}/09/">September <span class="pull-right">[09]</span></a></li>
-                    <li><a href="{% url 'sessions' user.username %}{{year}}/10/">October <span class="pull-right">[10]</span></a></li>
-                    <li><a href="{% url 'sessions' user.username %}{{year}}/11/">November <span class="pull-right">[11]</span></a></li>
-                    <li><a href="{% url 'sessions' user.username %}{{year}}/12/">December <span class="pull-right">[12]</span></a></li>
+                <ul class="dropdown-menu">
+                  <li><a href="{% url 'sessions' user.username %}{{year}}/01/">January <span class="pull-right">[01]</span></a></li>
+                  <li><a href="{% url 'sessions' user.username %}{{year}}/02/">February <span class="pull-right">[02]</span></a></li>
+                  <li><a href="{% url 'sessions' user.username %}{{year}}/03/">March <span class="pull-right">[03]</span></a></li>
+                  <li><a href="{% url 'sessions' user.username %}{{year}}/04/">April <span class="pull-right">[04]</span></a></li>
+                  <li><a href="{% url 'sessions' user.username %}{{year}}/05/">May <span class="pull-right">[05]</span></a></li>
+                  <li><a href="{% url 'sessions' user.username %}{{year}}/06/">June <span class="pull-right">[06]</span></a></li>
+                  <li><a href="{% url 'sessions' user.username %}{{year}}/07/">July <span class="pull-right">[07]</span></a></li>
+                  <li><a href="{% url 'sessions' user.username %}{{year}}/08/">August <span class="pull-right">[08]</span></a></li>
+                  <li><a href="{% url 'sessions' user.username %}{{year}}/09/">September <span class="pull-right">[09]</span></a></li>
+                  <li><a href="{% url 'sessions' user.username %}{{year}}/10/">October <span class="pull-right">[10]</span></a></li>
+                  <li><a href="{% url 'sessions' user.username %}{{year}}/11/">November <span class="pull-right">[11]</span></a></li>
+                  <li><a href="{% url 'sessions' user.username %}{{year}}/12/">December <span class="pull-right">[12]</span></a></li>
                 </ul>
             </div>
          </div>
@@ -140,7 +140,6 @@
     	<canvas id="Projects-Chart" class="doughnut-chart" width="150" height="250"></canvas>
 	    </div>
   	</div>
-
   </div>
 </div>
 
@@ -181,11 +180,11 @@
        <tr><td>{{sep.project.name}}</td></tr>
        {% endfor %}
        <tr>
-           <td>
+        <td>
            {% if session.get_not_assigned_duration%}
            {{ session.form.project}}
            {% endif %}
-       </td>
+        </td>
        </tr>
       </table>
      </td>
@@ -195,11 +194,11 @@
        <tr><td>{{sep.time_spend}}</td></tr>
        {% endfor %}
        <tr>
-           <td>
+        <td>
            {% if session.get_not_assigned_duration%}
            {{ session.form.time_spend}}
            {% endif %}
-       </td>
+        </td>
        </tr>
       </table>
      </td>
@@ -214,7 +213,7 @@
            {{ session.form.session}}
            {{ session.form.description}}
            {% endif %}
-     		</td>
+        </td>
        	<td>
           {% if session.get_not_assigned_duration%}
            <input id="btnSubmit" type='submit' class="btn btn-sm btn-success" value ='Submit'/>

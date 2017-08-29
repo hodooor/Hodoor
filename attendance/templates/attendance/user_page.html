@@ -290,9 +290,9 @@
             </span> hour(s)</li>
             <li class="">Unassigned Hours: <span class="danger" id="unassigned-hours-graph">{{ hours_unassigned_this_month | floatformat:2}}</span> ({{unassigned_closed_session_hours | floatformat:2}})</li>
             <li class="list-separator"></li>
-			<li class="">Not-work Hours: <span class="gray" id="not-work-hours-graph">{{ hours_not_work_this_month| floatformat:2}}</span> hour(s)</li>
+            <li class="">Not-work Hours: <span class="gray" id="not-work-hours-graph">{{ hours_not_work_this_month| floatformat:2}}</span> hour(s)</li>
             <li class="list-separator"></li>
-			<li class="">Total Hours: <span class="bold" id="total-work-hours">{{ hours_total_this_month|floatformat:2}}</span> hour(s)</li>
+            <li class="">Total Hours: <span class="bold" id="total-work-hours">{{ hours_total_this_month|floatformat:2}}</span> hour(s)</li>
           </ul>
           <canvas id="Assigned-Time-Chart" class="doughnut-chart" width="auto" height="250"></canvas>
         </div>
@@ -400,7 +400,7 @@
         </div>
       </div><!--/terminal emulator-->
 
-	<div class="panel panel-default"><!--last month-->
+      <div class="panel panel-default"><!--last month-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="last-month" title="Last month info">
             <i class="fa fa-calendar-minus-o" aria-hidden="true"></i> Last month <i id="tooltip6" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="left"></i>

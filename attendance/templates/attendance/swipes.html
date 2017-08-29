@@ -44,18 +44,18 @@
 	<h1><i class="fa fa-cube"></i> Swipes - <small>all of swipe informations are here</small></h1>
 </div>
 <table class="table table-striped table-hover table-bordered table-responsive table-primary" id="swipes-table">
-<thead>
-  <tr class="upper">
-    <th>Date</th>
-    <th>Time</th>
-    <th>Type</th>
-    <th>Session</th>
-    <th>Source</th>
-  	<th>Swipe correction</th>
-  	<th>Id</th>
-  	<th class="text-center no-sort btn-fill"></th>
-  </tr>
-</thead>
+  <thead>
+    <tr class="upper">
+      <th>Date</th>
+      <th>Time</th>
+      <th>Type</th>
+      <th>Session</th>
+      <th>Source</th>
+      <th>Swipe correction</th>
+      <th>Id</th>
+      <th class="text-center no-sort btn-fill"></th>
+    </tr>
+  </thead>
 <tbody>
 
 	{% for swipe in swipes %}
@@ -111,7 +111,7 @@ $(document).ready(function(){
 	$('#swipes-table').DataTable({
     "aaSorting": [
     	[0,'desc'],
-		[1,'desc']
+      [1,'desc']
   	],
     "columnDefs": [{
     	targets: 'no-sort',
