@@ -86,3 +86,9 @@ def daily_hours(hours):
         return 0
     else:
         return hours
+
+def timedelta_to_hours(time_delta):
+    """
+    Convert timedelta to float number representing hours
+    """
+    return (time_delta.days*24)+(time_delta.seconds/3600)

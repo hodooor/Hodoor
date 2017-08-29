@@ -14,9 +14,9 @@ from django.utils import timezone
 from django.db.models import Q
 import locale
 from django.db.models import Prefetch
-from attendance.utils import get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days, last_month, daily_hours
 import csv
 from .xlsx_generator import make_administration_report
+from attendance.utils import get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days, last_month, daily_hours, timedelta_to_hours
 
 WORKHOURS_PER_DAY = 8
 
@@ -417,7 +417,7 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
     projects = Project.objects.all()
     separations =  ProjectSeparation.objects.filter(project__name = project).select_related("session").select_related("session__user").select_related("project")
     users = User.objects.all()
-    all_users_month, all_users_overall = timedelta(0), timedelta(0)
+    all_users_month, all_users_overall = 0,0
 
     for user in users:
         duration, overall_duration = timedelta(0), timedelta(0)
@@ -427,14 +427,15 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
                 date = (sep.session.get_date())
                 if('{:02d}'.format(date.month) == month and str(date.year) == year):
                     duration += sep.time_spend
+        duration = timedelta_to_hours(duration)
+        overall_duration = timedelta_to_hours(overall_duration)
         projects_data.append({
                 "user": user,
                 "hours": duration,
-                "overall": str(overall_duration),
+                "overall": overall_duration,
         })
         all_users_month += duration
         all_users_overall += overall_duration
-
     context = {
             "projects_data":projects_data,
             "project" : project,

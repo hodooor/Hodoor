@@ -235,12 +235,12 @@
           </thead>
           <tbody>
               {% for data in projects_data %}
-                {% if data.overall != "0:00:00" %}
+                {% if data.overall != 0 %}
                   <tr>
                     <td>{{data.user.last_name}}</td>
                     <td>{{data.user.first_name}}</td>
-                    <td>{{data.hours}}</td>
-                    <td>{{data.overall}}</td>
+                    <td>{{data.hours|floatformat:2}}</td>
+                    <td>{{data.overall|floatformat:2}}</td>
                   </tr>
                 {% endif %}
               {% endfor %}
@@ -248,8 +248,8 @@
           <tbody>
             <tr class="bold">
                 <td colspan="2">All users</td>
-                <td>{{all_users_month}}</td>
-                <td>{{all_users_overall}}</td>
+                <td>{{all_users_month|floatformat:2}}</td>
+                <td>{{all_users_overall|floatformat:2}}</td>
             </tr>
           </tbody>
         </table>
