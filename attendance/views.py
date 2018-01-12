@@ -420,12 +420,18 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
             user["looks_ok"] = False
 
     locale.setlocale(locale.LC_ALL, "en_US.utf8")
-
+    
+    this_year = datetime.now().year
+    chooseable_years = []
+    for i in range(this_year, 2014, -1):
+        chooseable_years.append(i)
+    
     context = {
             "month": month,
             "year": year,
             "user_data": sorted(user_data, key=lambda dic: (locale.strxfrm(dic["user"].last_name))),
             "empty_users": sorted(empty_users, key=lambda user: (locale.strxfrm(user.last_name))), 
+            "chooseable_years": chooseable_years, 
     }
     if request.method == "POST":
         if request.POST.get("csv-UWS"): 
