@@ -279,6 +279,12 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
     total_hours = Session.objects.get_hours_month(u.id, month, year)
     unassigned_hours = Session.objects.get_unassigned_hours_month(u.id, month, year)
     work_hours = total_hours - unassigned_hours - not_work_hours
+    
+    this_year = datetime.now().year
+    chooseable_years = []
+    for i in range(this_year, 2014, -1):
+        chooseable_years.append(i)
+    
     context = {
             "sessions": sessions,
             "year": year,
@@ -289,7 +295,8 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
             "not_work_hours": not_work_hours,
             "list_of_projects": projects,
             "hours_quota": get_quota_work_hours(int(year), int(month), WORKHOURS_PER_DAY),
-            "form": form
+            "form": form,
+            "chooseable_years": chooseable_years,
     }
     return render(request, "attendance/sessions.html", context)
 
