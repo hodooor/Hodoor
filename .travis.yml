@@ -6,7 +6,7 @@ python:
 addons:
     apt:
         packages:
-            - google-chrome-60.0
+            - google-chrome-stable-60.0
 install:
     - "pip install -r requirements.txt"
     - "npm install"
