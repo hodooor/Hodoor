@@ -68,7 +68,7 @@ def _update_settings(source_folder, site_name):
         email_host_password = input_password("Enter the EMAIL_HOST_PASSWORD: ")
         append(settings_secret_file, "EMAIL_HOST_PASSWORD = '%s'" % (email_host_password, ))
     else:
-        lines = open(os.path.join(source_folder, '/ticker/settings_secret.py'), "r").readlines()
+        lines = open(settings_secret_file, "r").readlines()
         for line in lines:
             if "EMAIL_HOST_PASSWORD" in line:
                 break
