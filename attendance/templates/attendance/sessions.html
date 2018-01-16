@@ -31,10 +31,10 @@
                 <span class="print-year"></span>
                 <span class="caret"></span>
                 </button>
-                    <ul class="dropdown-menu">
-                    <li><a href="{% url 'sessions' user.username %}2015/{{month}}">2015</a></li>
-                    <li><a href="{% url 'sessions' user.username %}2016/{{month}}">2016</a></li>
-                    <li><a href="{% url 'sessions' user.username %}2017/{{month}}">2017</a></li>
+                <ul class="dropdown-menu">
+                {% for chooseable_year in chooseable_years %}   
+                    <li><a href="{% url 'sessions' user.username %}{{chooseable_year}}/{{month}}">{{chooseable_year}}</a></li>
+                {% endfor %}
                 </ul>
             </div>
          </div>
@@ -329,14 +329,12 @@ $(document).ready(function(){
 	/*Year value select display function*/
 	var yearToPrint = 'Year';
 	var url = window.location.href;
-	if(url.indexOf("2015") > -1) {
-		yearToPrint = '2015';
-	} else
-	if(url.indexOf("2016") > -1){
-		yearToPrint = '2016';
-	} else {
-		yearToPrint = '2017';
-	}
+    var chooseableYears = {{chooseable_years}};
+    for (i = 0; i < chooseableYears.length; ++i) {
+        if(url.indexOf(chooseableYears[i]) > -1) {
+            yearToPrint = chooseableYears[i];
+        } 
+    }
 	$('.print-year').text(yearToPrint);
 
 	/*Month value select display function*/
