@@ -16,6 +16,7 @@ def deploy():
     _update_static_files(source_folder)
     _update_database(source_folder)
     _set_database_permissions(site_folder)
+    _set_restart_apache()
 
 def input_password(text):
     while True:
