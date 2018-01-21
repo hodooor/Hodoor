@@ -16,6 +16,7 @@ def deploy():
     _update_static_files(source_folder)
     _update_database(source_folder)
     _set_database_permissions(site_folder)
+    _set_restart_apache()
 
 def input_password(text):
     while True:
@@ -67,14 +68,6 @@ def _update_settings(source_folder, site_name):
         append(settings_secret_file, "SECRET_KEY = '%s'" % (key, ))
         email_host_password = input_password("Enter the EMAIL_HOST_PASSWORD: ")
         append(settings_secret_file, "EMAIL_HOST_PASSWORD = '%s'" % (email_host_password, ))
-    else:
-        lines = open(os.path.join(source_folder, '/ticker/settings_secret.py'), "r").readlines()
-        for line in lines:
-            if "EMAIL_HOST_PASSWORD" in line:
-                break
-        else:
-            email_host_password = input_password("Enter the EMAIL_HOST_PASSWORD: ")
-            append(settings_secret_file, "EMAIL_HOST_PASSWORD = '%s'" % (email_host_password, ))
     append(settings_path, '\nfrom .settings_secret import SECRET_KEY, EMAIL_HOST_PASSWORD')
 
 def _update_virtualenv(source_folder):

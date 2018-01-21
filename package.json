@@ -19,7 +19,7 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "chart.js": "^2.5.0",
-    "chromedriver": "2.33",
+    "chromedriver": "2.29.0",
     "datatables.net": "^1.10.15",
     "datatables.net-bs": "^1.10.15",
     "eonasdan-bootstrap-datetimepicker": "^4.17.47",

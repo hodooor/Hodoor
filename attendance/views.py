@@ -12,11 +12,16 @@ from datetime import datetime, date
 from .forms import ProjectSeparationForm, SwipeEditForm
 from django.utils import timezone
 from django.db.models import Q
+from calendar import monthrange
 import locale
 from django.db.models import Prefetch
 from attendance.utils import get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days, last_month, daily_hours
 import csv
 from .xlsx_generator import make_administration_report
+from czech_holidays import holidays as czech_holidays
+from django.template.loader import render_to_string
+from weasyprint import HTML
+import tempfile
 
 WORKHOURS_PER_DAY = 8
 
@@ -279,6 +284,12 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
     total_hours = Session.objects.get_hours_month(u.id, month, year)
     unassigned_hours = Session.objects.get_unassigned_hours_month(u.id, month, year)
     work_hours = total_hours - unassigned_hours - not_work_hours
+    
+    this_year = datetime.now().year
+    chooseable_years = []
+    for i in range(this_year, 2014, -1):
+        chooseable_years.append(i)
+    
     context = {
             "sessions": sessions,
             "year": year,
@@ -289,7 +300,8 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
             "not_work_hours": not_work_hours,
             "list_of_projects": projects,
             "hours_quota": get_quota_work_hours(int(year), int(month), WORKHOURS_PER_DAY),
-            "form": form
+            "form": form,
+            "chooseable_years": chooseable_years,
     }
     return render(request, "attendance/sessions.html", context)
 
@@ -413,12 +425,18 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
             user["looks_ok"] = False
 
     locale.setlocale(locale.LC_ALL, "en_US.utf8")
-
+    
+    this_year = datetime.now().year
+    chooseable_years = []
+    for i in range(this_year, 2014, -1):
+        chooseable_years.append(i)
+    
     context = {
             "month": month,
             "year": year,
             "user_data": sorted(user_data, key=lambda dic: (locale.strxfrm(dic["user"].last_name))),
             "empty_users": sorted(empty_users, key=lambda user: (locale.strxfrm(user.last_name))), 
+            "chooseable_years": chooseable_years, 
     }
     if request.method == "POST":
         if request.POST.get("csv-UWS"): 
@@ -461,3 +479,71 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
             response = make_administration_report(context) 
         return response
     return render(request, "attendance/administrator.html", context)
+
+@login_required(login_url='/login/')
+def generate_pdf(request, username, year=datetime.now().year, month = datetime.now().month):
+    if not user_check(request, username):
+        return HttpResponse("Restricted to " + username)
+
+    user = User.objects.get(username=username)
+
+    in_swipes_ids = Swipe.objects.filter(
+        swipe_type="IN",
+        user__username=username,
+        datetime__month=int(month),
+        datetime__year=int(year),
+    ).values_list('session', flat=True)
+    sessions = Session.objects.filter(pk__in=in_swipes_ids)
+    sessions_and_holidays, days, dates = [], [], []
+
+    for session in sessions:
+        swipe_times = []
+        projects = ""
+        descriptions = ""
+        separations =  ProjectSeparation.objects.filter(session = session)
+        swipes = Swipe.objects.filter(session = session)
+
+        for swipe in swipes:
+            swipe_times.append(swipe.datetime)
+
+        first = min(swipe_times)
+        last = max(swipe_times)
+
+        for sep in separations:
+            projects += sep.project.name + "; "
+            descriptions += sep.description + "; "
+        sessions_and_holidays.append({
+                    "date": session.get_date,
+                    "day": session.get_date().day,
+                    "duration": session.duration,
+                    "entry": first,
+                    "exit": last,
+                    "projects": projects,
+                    "descriptions": descriptions,
+        })
+    for i in range(1, monthrange(int(year),int(month))[1]+1):
+        d = datetime (int(year), int(month), i)
+        days.append({
+            "day":i,
+            "date": d,
+        })
+
+    context = {
+        "user": user,
+        "sessions_and_holidays": sessions_and_holidays,
+        "days" : days,
+        "year" : year,
+        "month" : month,
+        "dates" : dates,
+    }
+
+    # Rendered
+    html_string = render_to_string('attendance/work_report_pdf.html', context)
+    html = HTML(string=html_string)
+    result = html.write_pdf()
+
+
+    http_response = HttpResponse(result, content_type='attendance/work_report_pdf.html')
+    http_response['Content-Disposition'] = 'filename='+user.first_name+'_'+user.last_name+'_'+year+'/'+month+'.pdf'
+
+    return http_response
