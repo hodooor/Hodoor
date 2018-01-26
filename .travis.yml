@@ -5,7 +5,9 @@ python:
     - "3.5"
 
 install:
+    - "mkdir ../database"
     - "pip install -r requirements.txt"
+    - "python manage.py migrate"
 script:
     - docker-compose up -d
     - python manage.py test -v 3
