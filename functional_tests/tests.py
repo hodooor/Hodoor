@@ -32,39 +32,17 @@ from .server_tools import reset_database, create_session_on_server
 from .management.commands.create_session import create_pre_authenticated_session
 from django.test.utils import override_settings
 from django.conf import settings
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 class FunctionalTest(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):
-        firefox=False
-        for arg in sys.argv:
-            if ('firefox' in arg)or(arg == '-f'):
-                firefox=True
-        if not firefox:
-            DRIVER_PATH = "./node_modules/chromedriver/lib/chromedriver/chromedriver"
-            options = webdriver.ChromeOptions()
-            options.add_argument("--start-maximized")
-        for arg in sys.argv:
-            if 'liveserver' in arg:
-                if firefox:
-                    cls.browser = webdriver.Firefox()
-                else:
-                    cls.browser = webdriver.Chrome(DRIVER_PATH, chrome_options=options)
-                cls.browser.implicitly_wait(3)
-                cls.server_user, cls.server_host = arg.split('=')[1].split('@')
-                print("server host: " + cls.server_host )
-                print("server user: " + cls.server_user )
-                cls.server_url = 'http://' + cls.server_host
-                print("server url: " + cls.server_url )
-                cls.against_staging = True
-                return
         super(FunctionalTest, cls).setUpClass()
         cls.against_staging = False
-        cls.server_url = cls.live_server_url
-        if firefox:
-            cls.browser = webdriver.Firefox()
-        else:
-            cls.browser = webdriver.Chrome(DRIVER_PATH, chrome_options=options)
+        cls.server_url = "http://hodoor:8000"
+        cls.browser = webdriver.Remote(
+          command_executor='http://localhost:4444/wd/hub',
+          desired_capabilities=DesiredCapabilities.FIREFOX)
         cls.browser.implicitly_wait(3)
 
     @classmethod
@@ -156,12 +134,12 @@ class LoginLogoutTest(FunctionalTest):
 class LayoutStylingTest(FunctionalTest):
 
     def test_admin_layout_and_styling(self):
-        self.browser.get(self.server_url+"/admin/")
+        self.browser.get(cls.server_url + "/admin/")
         self.browser.set_window_size(1024, 768)
 
         color = self.browser.find_element_by_id("header").value_of_css_property('background-color')
 
-        self.assertEqual(color, "rgba(65, 118, 144, 1)")
+        self.assertEqual(color, "rgb(65, 118, 144)")
 
 class PageNavigationTest(FunctionalTest):
 
