@@ -134,7 +134,7 @@ class LoginLogoutTest(FunctionalTest):
 class LayoutStylingTest(FunctionalTest):
 
     def test_admin_layout_and_styling(self):
-        self.browser.get(cls.server_url + "/admin/")
+        self.browser.get(self.server_url + "/admin/")
         self.browser.set_window_size(1024, 768)
 
         color = self.browser.find_element_by_id("header").value_of_css_property('background-color')
