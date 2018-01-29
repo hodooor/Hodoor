@@ -30,20 +30,27 @@ User = get_user_model()
 from .server_tools import reset_database, create_session_on_server
 
 from .management.commands.create_session import create_pre_authenticated_session
-from django.test.utils import override_settings
 from django.conf import settings
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+import socket
+from django.test import override_settings
 
+@override_settings(ALLOWED_HOSTS=['*'])
 class FunctionalTest(StaticLiveServerTestCase):
+    host = '0.0.0.0'
+
     @classmethod
     def setUpClass(cls):
-        super(FunctionalTest, cls).setUpClass()
+        super().setUpClass()
         cls.against_staging = False
-        cls.server_url = "http://hodoor:8000"
+        cls.host = socket.gethostbyname(socket.gethostname())
+        print("host", cls.host)
+        print("live_server_url", cls.live_server_url)
+        cls.server_url = cls.live_server_url
         cls.browser = webdriver.Remote(
-          command_executor='http://localhost:4444/wd/hub',
+          command_executor='http://firefox:4444/wd/hub',
           desired_capabilities=DesiredCapabilities.FIREFOX)
-        cls.browser.implicitly_wait(3)
+        cls.browser.implicitly_wait(5)
 
     @classmethod
     def tearDownClass(cls):
@@ -134,7 +141,7 @@ class LoginLogoutTest(FunctionalTest):
 class LayoutStylingTest(FunctionalTest):
 
     def test_admin_layout_and_styling(self):
-        self.browser.get(self.server_url + "/admin/")
+        self.browser.get(self.live_server_url)
         self.browser.set_window_size(1024, 768)
 
         color = self.browser.find_element_by_id("header").value_of_css_property('background-color')

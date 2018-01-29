@@ -1,12 +1,19 @@
-hodoor:
-  build: .
-  ports:
-  - 8000:8000
+version: '3'
+services:
+  hodoor:
+    command: python3 manage.py test --noinput
+    depends_on:
+    - firefox
+    build: .
+    ports:
+      - "8000:8000"
+    links:
+    - firefox
+    volumes:
+    - ".:/usr/src/app"
 
-firefox:
-  image: selenium/standalone-firefox-debug
-  ports:
-  - 4444:4444
-  - 5900:5900
-  links:
-  - hodoor
+  firefox:
+    image: selenium/standalone-firefox-debug
+    ports:
+    - 4444:4444
+    - 5900:5900

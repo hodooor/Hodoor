@@ -4,6 +4,8 @@ WORKDIR /usr/src/app
 
 COPY . .
 
+VOLUME /usr/src/app
+
 RUN dnf install npm -y
 RUN npm install
 RUN dnf install gcc redhat-rpm-config python3-devel libffi-devel cairo pango -y
