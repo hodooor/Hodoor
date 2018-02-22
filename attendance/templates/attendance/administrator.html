@@ -131,9 +131,9 @@
   <h1><i class="fa fa-diamond" aria-hidden="true"></i> Admin <small>- for administrators only</small></h1>
 </div>
 <ul class="nav nav-tabs">
-  <li class="active"><a href="#with-sessions" data-toggle="tab">Users With Sessions</a></li>
-  <li><a href="#without-sessions" data-toggle="tab">Users Without Sessions</a></li>
-  <li><a id='projects' href=#project-view data-toggle="tab" onclick>Projects info</a></li>
+  <li class="active"><a id='with-sessions-link' href="#with-sessions" data-toggle="tab">Users With Sessions</a></li>
+  <li><a id="without-sessions-link" href="#without-sessions" data-toggle="tab">Users Without Sessions</a></li>
+  <li><a id="projects-link" href=#project-view data-toggle="tab">Projects info</a></li>
 </ul>
 <div class="tab-content">
   <div id="with-sessions" class="tab-pane fade in active">
@@ -295,11 +295,20 @@
 
 
 <script type="text/javascript">
-$( "#projects" ).click(function(){
+$( "#projects-link" ).click(function(){
     document.getElementById('project-selection').style.display = 'block';
+});
+$( "#without-sessions-link" ).click(function(){
+    document.getElementById('project-selection').style.display = 'none';
+});
+$( "#with-sessions-link" ).click(function(){
+    document.getElementById('project-selection').style.display = 'none';
 });
 
 $(document).ready(function(){
+    {% if project != None %}
+        $( "#projects-link" ).click();
+    {% endif %}
   /*Year value select display function*/
 	var yearToPrint = 'Year';
 	var url = window.location.href;
