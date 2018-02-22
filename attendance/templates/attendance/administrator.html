@@ -30,7 +30,7 @@
                 </button>
                 <ul class="dropdown-menu">
                     {% for chooseable_year in chooseable_years %}   
-                        <li><a href="{% url 'sessions' user.username %}{{chooseable_year}}/{{month}}">{{chooseable_year}}</a></li>
+                        <li><a href="{% url 'default_administrator' %}{{chooseable_year}}/{{month}}/{{project}}">{{chooseable_year}}</a></li>
                     {% endfor %}
                 </ul>
             </div>
@@ -46,18 +46,18 @@
                 <span class="caret"></span>
                 </button>
                     <ul class="dropdown-menu">
-                    <li><a href="{% url 'default_administrator' %}{{year}}/01/">January <span class="pull-right">[01]</span></a></li>
-                    <li><a href="{% url 'default_administrator' %}{{year}}/02/">February <span class="pull-right">[02]</span></a></li>
-                    <li><a href="{% url 'default_administrator' %}{{year}}/03/">March <span class="pull-right">[03]</span></a></li>
-                    <li><a href="{% url 'default_administrator' %}{{year}}/04/">April <span class="pull-right">[04]</span></a></li>
-                    <li><a href="{% url 'default_administrator' %}{{year}}/05/">May <span class="pull-right">[05]</span></a></li>
-                    <li><a href="{% url 'default_administrator' %}{{year}}/06/">June <span class="pull-right">[06]</span></a></li>
-                    <li><a href="{% url 'default_administrator' %}{{year}}/07/">July <span class="pull-right">[07]</span></a></li>
-                    <li><a href="{% url 'default_administrator' %}{{year}}/08/">August <span class="pull-right">[08]</span></a></li>
-                    <li><a href="{% url 'default_administrator' %}{{year}}/09/">September <span class="pull-right">[09]</span></a></li>
-                    <li><a href="{% url 'default_administrator' %}{{year}}/10/">October <span class="pull-right">[10]</span></a></li>
-                    <li><a href="{% url 'default_administrator' %}{{year}}/11/">November <span class="pull-right">[11]</span></a></li>
-                    <li><a href="{% url 'default_administrator' %}{{year}}/12/">December <span class="pull-right">[12]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/01/{{project}}">January <span class="pull-right">[01]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/02/{{project}}">February <span class="pull-right">[02]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/03/{{project}}">March <span class="pull-right">[03]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/04/{{project}}">April <span class="pull-right">[04]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/05/{{project}}">May <span class="pull-right">[05]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/06/{{project}}">June <span class="pull-right">[06]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/07/{{project}}">July <span class="pull-right">[07]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/08/{{project}}">August <span class="pull-right">[08]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/09/{{project}}">September <span class="pull-right">[09]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/10/{{project}}">October <span class="pull-right">[10]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/11/{{project}}">November <span class="pull-right">[11]</span></a></li>
+                    <li><a href="{% url 'default_administrator' %}{{year}}/12/{{project}}">December <span class="pull-right">[12]</span></a></li>
                 </ul>
             </div>
          </div>
@@ -84,8 +84,8 @@
                 <span class="caret"></span>
                 </button>
                     <ul class="dropdown-menu">
-                    {% for project in projects%}
-                        <li><a href="{% url 'default_administrator' %}{{year}}/{{month}}/{{project.name}}">{{project.name}}</a></li>
+                    {% for p in projects%}
+                        <li><a href="{% url 'default_administrator' %}{{year}}/{{month}}/{{p.name}}">{{p.name}}</a></li>
                     {% endfor %}
                 </ul>
             </div>
@@ -163,7 +163,7 @@
               {% endif %}>
                 <td>{{user.user.last_name}}</td>
                 <td>{{user.user.first_name}}</td>
-                <td>{{user.user.username}}</a></td>
+                <td>{{user.user.username}}</a></td>2015
                 <td><strong>{{user.hours_work |floatformat:2}}</strong></td>
                  <td>{{user.hours_not_work |floatformat:2}}</td>
                 <td>{{user.hours_unassigned |floatformat:2}}</td>
@@ -204,7 +204,7 @@
                 <td>{{user.last_name}}</td>
                 <td>{{user.first_name}}</td>
                 <td>{{user.username}}</a></td>
-                <td class="btn-fill text-center">
+                <td class="btn-fill text-center">2015
                   <a href="{% url 'sessions_month' username=user.username year=year month=month %}"
                   type="button" class="btn btn-sm btn-info">Detail</a>
                 </td>
@@ -275,7 +275,7 @@
                     <td>{{data.user.last_name}}</td>
                     <td>{{data.user.first_name}}</td>
                     <td>{{data.hours}}</td>
-                    <td>{{data.overall}}</td>
+                    <td>{{data.overall}}</td>2015
                   </tr>
                 {% endif %}
               {% endfor %}
@@ -297,18 +297,32 @@
 <script type="text/javascript">
 $( "#projects-link" ).click(function(){
     document.getElementById('project-selection').style.display = 'block';
+    document.cookie = "tabSelection=projects-link";
 });
 $( "#without-sessions-link" ).click(function(){
     document.getElementById('project-selection').style.display = 'none';
+    document.cookie = "tabSelection=without-sessions-link";
 });
 $( "#with-sessions-link" ).click(function(){
     document.getElementById('project-selection').style.display = 'none';
+    document.cookie = "tabSelection=with-sessions-link";
 });
 
 $(document).ready(function(){
-    {% if project != None %}
-        $( "#projects-link" ).click();
-    {% endif %}
+    var tabSelection = document.cookie.match('(^|;) ?' + "tabSelection" + '=([^;]*)(;|$)');
+    if (tabSelection){ 
+        switch(tabSelection[2]) {
+            case "projects-link":
+                $( "#projects-link" ).click();
+                break;
+            case "without-sessions-link":
+                $( "#without-sessions-link" ).click();
+                break;
+            case "with-sessions-link":
+                $( "#with-sessions-link" ).click();
+                break;
+        }
+    }
   /*Year value select display function*/
     var chooseableYears = {{chooseable_years}};
 	var yearToPrint = chooseableYears[0];

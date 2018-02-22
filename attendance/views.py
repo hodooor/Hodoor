@@ -389,7 +389,7 @@ def swipe_detail(request, username, id):
         return HttpResponse("Restricted to " + session.user.username)
 
 @login_required(login_url='/login/')
-def administrator(request, year=str(datetime.now().year), month="{0:02d}".format(datetime.now().month-1, '02d'), project=None):
+def administrator(request, year=str(datetime.now().year), month="{0:02d}".format(datetime.now().month-1, '02d'), project=""):
     if not (request.user.is_superuser or request.user.is_staff):
         return HttpResponse("Restricted to staff.")
     user_data, empty_users, projects_data = [], [], []
