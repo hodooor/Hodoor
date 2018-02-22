@@ -9,7 +9,7 @@ class Command(BaseCommand):
 
     users = User.objects.all()
     for user in users:
-        if not user.last_login: #was never loged in
+        if not user.last_login: # was never loged in
             print("Sending invite email to " + user.email)
             send_mail(
                     subject = "Welcome to Hodoor",
@@ -17,7 +17,6 @@ class Command(BaseCommand):
                     from_email = "ho.door@eledus.cz",
                     recipient_list = [user.email],
                     auth_user = "ho.door@eledus.cz",
-                    auth_password = "r4IITjppr7",
                     fail_silently = False,
                     html_message = msg_html,
             )
