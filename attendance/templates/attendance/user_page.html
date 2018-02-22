@@ -262,7 +262,7 @@
             Quota difference:
             {% if quota_difference >= 0 %}
              	<span class="success">+{{quota_difference | floatformat:2}}</span>
-						{% else %}
+            {% else %}
             	<span class="danger">{{quota_difference | floatformat:2}}</span>
             {% endif %}
             hour(s)
@@ -271,7 +271,7 @@
         </div>
         <div class="panel-footer">
         {% if quota_difference >= 0 %}
-                                       <div class="alert alert-success" role="alert">
+            <div class="alert alert-success" role="alert">
             <div class="title">
               <label>Month Quota:</label>
               <i class="fa fa-smile-o alert-icon" aria-hidden="true"></i>
@@ -319,8 +319,10 @@
                                 });
                 </script>
             </span> hour(s)</li>
-            <li class="">Holidays Hours: <span class="primary" id="holidays-hours-graph">{{ holidays_month| floatformat:2}}</span> hour(s)</li>
-            <li class="list-separator"></li>
+            {% if user.profile.get_hours_quota != 0 %}
+                <li class="">Holidays Hours: <span class="primary" id="holidays-hours-graph">{{ holidays_month| floatformat:2}}</span> hour(s)</li>
+                <li class="list-separator"></li>
+            {% endif %}
             <li class="">Unassigned Hours: <span class="danger" id="unassigned-hours-graph">{{ hours_unassigned_this_month | floatformat:2}}</span> ({{unassigned_closed_session_hours | floatformat:2}})</li>
             <li class="list-separator"></li>
                        <li class="">Not-work Hours: <span class="gray" id="not-work-hours-graph">{{ hours_not_work_this_month| floatformat:2}}</span> hour(s)</li>
@@ -479,7 +481,9 @@
             <li class="">Work Hours: <span class="primary">{{ hours_work_last_month | floatformat:2}}</span> hour(s)</li>
             <li class="">Not-work Hours: <span class="gray">{{ hours_not_work_last_month| floatformat:2}}</span> hour(s)</li>
             <li class="">Unassigned Hours: <span class="danger">{{ hours_unassigned_last_month | floatformat:2}}</span>  hour(s)</li>
-            <li class="">Holidays Hours: <span class="promary">{{ holidays_last_month | floatformat:2}}</span>  hour(s)</li>
+            {% if user.profile.get_hours_quota != 0 %}
+                <li class="">Holidays Hours: <span class="promary">{{ holidays_last_month | floatformat:2}}</span>  hour(s)</li>
+            {% endif %}
             <li class="list-separator"></li>
             <li class="">Total Hours: <span class="bold">{{ hours_total_last_month|floatformat:2}}</span> hour(s)</li>
           </ul>
@@ -561,9 +565,9 @@
         var holidaysHoursGraph = $('#holidays-hours-graph').text();
 
           var ctx = $("#Assigned-Time-Chart");
-          var dataWorkTime = [assignedHoursGraph, unassignedWorkHoursGraph, notWorkHoursGraph, holidaysHoursGraph];
-          var labelsWorkTime = ["Assigned Hours", "Unassigned Hours", "Not-work hours", "Holidays"];
-          var bgcolorsWorkTime = [bgColorAtime, bgColorUatime, bgColorNwtime, bgColorHtime];
+          var dataWorkTime = [assignedHoursGraph, unassignedWorkHoursGraph, notWorkHoursGraph{% if user.profile.get_hours_quota != 0 %}, holidaysHoursGraph{% endif %}];
+          var labelsWorkTime = ["Assigned Hours", "Unassigned Hours", "Not-work hours"{% if user.profile.get_hours_quota != 0 %}, "Holidays"{% endif %}];
+          var bgcolorsWorkTime = [bgColorAtime, bgColorUatime, bgColorNwtime{% if user.profile.get_hours_quota != 0 %}, bgColorHtime{% endif %}];
 
           var myChart = new Chart(ctx, {
           type: 'doughnut',

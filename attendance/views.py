@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from rest_framework import viewsets
 from .serializers import SwipeSerializer,UserSerializer,KeySerializer
-from .models import Swipe, Key, Session,ProjectSeparation, Project, Holiday
+from .models import Swipe, Key, Session,ProjectSeparation, Project, Holiday, Profile
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.decorators import login_required
@@ -36,11 +36,19 @@ class KeyViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
 
 def user_check(request, username):
+    profile_check(username)
     #superuser should be able to see all profiles
     if request.user.get_username() == username or request.user.is_superuser or request.user.is_staff:
         return True
     else:
         return False
+
+def profile_check(username):
+    user = User.objects.get(username=username)
+    try:
+        user.profile
+    except:
+        Profile.objects.create(user = user).save()
 
 @login_required(login_url='/login/')
 def user(request, username):
@@ -438,7 +446,7 @@ def swipe_detail(request, username, id):
 
 @login_required(login_url='/login/')
 def administrator(request, year=str(datetime.now().year), month="{0:02d}".format(datetime.now().month-1, '02d')):
-
+    profile_check(request.user.username)
     if not (request.user.is_superuser or request.user.is_staff):
         return HttpResponse("Restricted to staff.")
     all_users, user_data, empty_users = [], [], []
@@ -569,6 +577,7 @@ def holidays_request(request, username):
     
 @login_required(login_url='/login/')
 def holidays_verification(request, username, id):
+    profile_check(request.user.username)
     if not (request.user.is_superuser or request.user.is_staff):
         return HttpResponse("Restricted to staff.")
     holidays = get_object_or_404(Holiday, pk = int(id))
