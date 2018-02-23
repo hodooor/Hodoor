@@ -58,7 +58,9 @@ class Profile(models.Model):
 
     def get_hours_quota(self):
         hours = 0
-        for contract in self.contracts.all():
+        contracts = self.contracts.all()
+        if len(contracts) == 0: return 8
+        for contract in contracts:
             hours += contract.hours_quota
         return hours
         
