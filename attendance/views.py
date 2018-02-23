@@ -321,14 +321,15 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
     sessions_and_holidays = []
     for session in sessions:
         sessions_and_holidays.append(session)
-    for holiday in holidays:
-        if holiday.is_in_month(int(month), int(year)):
-            sessions_and_holidays.append(holiday)
-            dur = holiday.get_hours_month(month = month, year = year)
-            days = dur//holiday.profile.get_hours_quota()
-            hours = dur%holiday.profile.get_hours_quota()
-            holiday.duration = timedelta(days = days, hours = hours)
-            holiday.time_spend = timedelta(days = holiday.hours_spend() // holiday.profile.get_hours_quota())
+    if u.profile.get_hours_quota() != 0:
+        for holiday in holidays:
+            if holiday.is_in_month(int(month), int(year)):
+                sessions_and_holidays.append(holiday)
+                dur = holiday.get_hours_month(month = month, year = year)
+                days = dur//holiday.profile.get_hours_quota()
+                hours = dur%holiday.profile.get_hours_quota()
+                holiday.duration = timedelta(days = days, hours = hours)
+                holiday.time_spend = timedelta(days = holiday.hours_spend() // holiday.profile.get_hours_quota())
     sessions_and_holidays.sort(key=lambda x: x.get_date().timestamp())
     separations = ProjectSeparation.objects.filter(session__in=sessions)
     form = ProjectSeparationForm()
