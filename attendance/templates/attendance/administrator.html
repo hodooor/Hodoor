@@ -28,10 +28,10 @@
                 <span class="print-year"></span>
                 <span class="caret"></span>
                 </button>
-                    <ul class="dropdown-menu">
-                    <li><a href="{% url 'default_administrator' %}2015/{{month}}">2015</a></li>
-                    <li><a href="{% url 'default_administrator' %}2016/{{month}}">2016</a></li>
-                    <li><a href="{% url 'default_administrator' %}2017/{{month}}">2017</a></li>
+                <ul class="dropdown-menu">
+                    {% for chooseable_year in chooseable_years %}   
+                        <li><a href="{% url 'sessions' user.username %}{{chooseable_year}}/{{month}}">{{chooseable_year}}</a></li>
+                    {% endfor %}
                 </ul>
             </div>
          </div>
@@ -147,6 +147,12 @@
             {% endfor %}
           </tbody>
         </table>
+        <div>
+          <form method="POST" action=''>{% csrf_token %}
+            <input type="submit" class="btn btn-sm btn-info" name='csv-UWS' value="Export as csv format">  
+            <input type="submit" class="btn btn-sm btn-info" name='xlsx' value="Export all as xlsx format">  
+          </form>
+        </div>
       </div>
     </div>
   </div>
@@ -176,6 +182,12 @@
             {% endfor %}
           </tbody>
         </table>
+        <div>
+          <form method="POST" action=''>{% csrf_token %}
+            <input type="submit" class="btn btn-sm btn-info" name='csv-UWNS' value="Export as csv format">  
+            <input type="submit" class="btn btn-sm btn-info" name='xlsx' value="Export all as xlsx format"> 
+          </form>
+        </div>
       </div>
     </div>
   </div>
@@ -238,16 +250,14 @@
 <script type="text/javascript">
 $(document).ready(function(){
   /*Year value select display function*/
-	var yearToPrint = 'Year';
+    var chooseableYears = {{chooseable_years}};
+	var yearToPrint = chooseableYears[0];
 	var url = window.location.href;
-	if(url.indexOf("2015") > -1) {
-		yearToPrint = '2015';
-	} else
-	if(url.indexOf("2016") > -1){
-		yearToPrint = '2016';
-	} else {
-		yearToPrint = '2017';
-	}
+    for (i = 0; i < chooseableYears.length; ++i) {
+        if(url.indexOf(chooseableYears[i]) > -1) {
+            yearToPrint = chooseableYears[i];
+        } 
+    }
 	$('.print-year').text(yearToPrint);
 	/*Month value select display function*/
 	var monthToPrint = 'Month';

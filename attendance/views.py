@@ -12,10 +12,18 @@ from datetime import datetime, date, timedelta
 from .forms import ProjectSeparationForm, SwipeEditForm, HolidayRequestForm, HolidayVerifyForm
 from django.utils import timezone
 from django.db.models import Q
+from calendar import monthrange
 import locale
 from django.db.models import Prefetch
 from attendance.utils import get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days, last_month, daily_hours
 from czech_holidays import holidays as czech_holidays
+import csv
+from .xlsx_generator import make_administration_report
+from czech_holidays import holidays as czech_holidays
+from django.template.loader import render_to_string
+from weasyprint import HTML
+import tempfile
+
 
 @login_required(login_url='/login/')
 def home_page(request):
@@ -209,9 +217,12 @@ def user(request, username):
     unassigned_closed_session_hours = hours_unassigned_this_month - current_session_work_hours
     hours_quota = get_quota_work_hours(datetime.now().year, datetime.now().month, workhours_per_day)
     num_of_elapsed_workdays = get_num_of_elapsed_workdays_in_month(date.today())
+    num_of_elapsed_workdays_last_month = get_number_of_work_days(datetime.now().year, last_month_)
     current_quota = num_of_elapsed_workdays * workhours_per_day
+    hours_quota_last_month = num_of_elapsed_workdays_last_month * workhours_per_day
     quota_difference = hours_work_this_month + holidays_month + unassigned_closed_session_hours - current_quota
     quota_difference_abs = abs(quota_difference)
+    hours_quota_dif_last_month = hours_work_last_month + hours_unassigned_last_month - hours_quota_last_month
     avg_work_hours_fullfill_quota = daily_hours((hours_quota - unassigned_closed_session_hours - hours_work_this_month - holidays_month) / max(1,num_of_workdays - num_of_elapsed_workdays))
     
 
@@ -253,7 +264,9 @@ def user(request, username):
         "curent_user_have_profile": curent_user_have_profile,
         "holiday_alert": holiday_alert,
         "holidays_month": holidays_month,
-        "holidays_last_month": holidays_last_month
+        "holidays_last_month": holidays_last_month,
+        "hours_quota_last_month": hours_quota_last_month,
+        "hours_quota_dif_last_month": hours_quota_dif_last_month,
     }
     return render(request, "attendance/user_page.html", context)
 
@@ -347,6 +360,12 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
     total_hours = Session.objects.get_hours_month(u.id, month, year) + holihours
     unassigned_hours = Session.objects.get_unassigned_hours_month(u.id, month, year)
     work_hours = total_hours - unassigned_hours - not_work_hours - holihours
+    
+    this_year = datetime.now().year
+    chooseable_years = []
+    for i in range(this_year, 2014, -1):
+        chooseable_years.append(i)
+    
     context = {
             "sessions_and_holidays": sessions_and_holidays,
             "year": year,
@@ -358,7 +377,8 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
             "list_of_projects": projects,
             "hours_quota": get_quota_work_hours(int(year), int(month), workhours_per_day),
             "form": form,
-            "holihours": holihours
+            "holihours": holihours,
+            "chooseable_years": chooseable_years,
     }
     return render(request, "attendance/sessions.html", context)
 
@@ -523,6 +543,11 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
     holidays = Holiday.objects.filter(
             verified = False,
     )
+    this_year = datetime.now().year
+    chooseable_years = []
+    for i in range(this_year, 2014, -1):
+        chooseable_years.append(i)
+    
     context = {
             "holidays" : holidays,
             "month": month,
@@ -530,7 +555,48 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
             "user_data": sorted(user_data, key=lambda dic: (locale.strxfrm(dic["user"].last_name))),
             "empty_users": sorted(empty_users, key=lambda user: (locale.strxfrm(user.last_name))), 
             "all_users": sorted(all_users, key=lambda dic: (locale.strxfrm(dic["user"].last_name))),
+            "chooseable_years": chooseable_years, 
     }
+    if request.method == "POST":
+        if request.POST.get("csv-UWS"): 
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="Hodoor administration report - users with sessions.csv"'
+
+            field_names = ['Date: ' + str(datetime.now().date()),'Last name', 'First name', 'Username', 'Work hours', 'Not work hours',
+                    'Hours unassigned', 'Hours total', 'Status']
+            writer = csv.DictWriter(response, fieldnames=field_names)
+            writer.writeheader()
+            for user in user_data:
+                if user["looks_ok"]:
+                    status = "OK"
+                else:
+                    status = "not OK"
+                writer.writerow({
+                        "Username":user["user"].username,
+                        "First name": user["user"].first_name,
+                        "Last name": user["user"].last_name,
+                        "Work hours": round(user["hours_work"], 3),
+                        "Not work hours": round(user["hours_not_work"], 3),
+                        "Hours unassigned": round(user["hours_unassigned"], 3),
+                        "Hours total": round(user["hours_total"], 3),
+                        "Status": status,
+                })
+        if request.POST.get("csv-UWNS"): 
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="Hodoor administration report - users without sessions.csv"'
+
+            field_names = ['Date: ' + str(datetime.now().date()), 'Last name', 'First name', 'Username']
+            writer = csv.DictWriter(response, fieldnames=field_names)
+            writer.writeheader()
+            for user in empty_users:
+                writer.writerow({
+                        "Username":user.username,
+                        "First name": user.first_name,
+                        "Last name": user.last_name,
+                })
+        if request.POST.get("xlsx"):
+            response = make_administration_report(context) 
+        return response
     return render(request, "attendance/administrator.html", context)
 
 @login_required(login_url='/login/')
@@ -601,3 +667,70 @@ def holidays_verification(request, username, id):
     } 
            
     return render(request, "attendance/holidays_verification.html", context)
+    
+def generate_pdf(request, username, year=datetime.now().year, month = datetime.now().month):
+    if not user_check(request, username):
+        return HttpResponse("Restricted to " + username)
+
+    user = User.objects.get(username=username)
+
+    in_swipes_ids = Swipe.objects.filter(
+        swipe_type="IN",
+        user__username=username,
+        datetime__month=int(month),
+        datetime__year=int(year),
+    ).values_list('session', flat=True)
+    sessions = Session.objects.filter(pk__in=in_swipes_ids)
+    sessions_and_holidays, days, dates = [], [], []
+
+    for session in sessions:
+        swipe_times = []
+        projects = ""
+        descriptions = ""
+        separations =  ProjectSeparation.objects.filter(session = session)
+        swipes = Swipe.objects.filter(session = session)
+
+        for swipe in swipes:
+            swipe_times.append(swipe.datetime)
+
+        first = min(swipe_times)
+        last = max(swipe_times)
+
+        for sep in separations:
+            projects += sep.project.name + "; "
+            descriptions += sep.description + "; "
+        sessions_and_holidays.append({
+                    "date": session.get_date,
+                    "day": session.get_date().day,
+                    "duration": session.duration,
+                    "entry": first,
+                    "exit": last,
+                    "projects": projects,
+                    "descriptions": descriptions,
+        })
+    for i in range(1, monthrange(int(year),int(month))[1]+1):
+        d = datetime (int(year), int(month), i)
+        days.append({
+            "day":i,
+            "date": d,
+        })
+
+    context = {
+        "user": user,
+        "sessions_and_holidays": sessions_and_holidays,
+        "days" : days,
+        "year" : year,
+        "month" : month,
+        "dates" : dates,
+    }
+
+    # Rendered
+    html_string = render_to_string('attendance/work_report_pdf.html', context)
+    html = HTML(string=html_string)
+    result = html.write_pdf()
+
+
+    http_response = HttpResponse(result, content_type='attendance/work_report_pdf.html')
+    http_response['Content-Disposition'] = 'filename='+user.first_name+'_'+user.last_name+'_'+year+'/'+month+'.pdf'
+
+    return http_response
