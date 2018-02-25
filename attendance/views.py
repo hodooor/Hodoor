@@ -8,16 +8,16 @@ from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.decorators import login_required
 from rest_framework import permissions
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from .forms import ProjectSeparationForm, SwipeEditForm
 from django.utils import timezone
 from django.db.models import Q
 from calendar import monthrange
 import locale
 from django.db.models import Prefetch
-from attendance.utils import get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days, last_month, daily_hours
 import csv
 from .xlsx_generator import make_administration_report
+from attendance.utils import get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days, last_month, daily_hours, timedelta_to_hours
 from czech_holidays import holidays as czech_holidays
 from django.template.loader import render_to_string
 from weasyprint import HTML
@@ -389,10 +389,11 @@ def swipe_detail(request, username, id):
         return HttpResponse("Restricted to " + session.user.username)
 
 @login_required(login_url='/login/')
-def administrator(request, year=str(datetime.now().year), month="{0:02d}".format(datetime.now().month-1, '02d')):
+def administrator(request, year=str(datetime.now().year), month="{0:02d}".format(datetime.now().month-1, '02d'), project=""):
     if not (request.user.is_superuser or request.user.is_staff):
         return HttpResponse("Restricted to staff.")
-    user_data, empty_users = [], []
+    user_data, empty_users, projects_data = [], [], []
+
     users = User.objects.filter().prefetch_related(
         Prefetch(
             'session_set',
@@ -425,6 +426,28 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
             user["looks_ok"] = False
 
     locale.setlocale(locale.LC_ALL, "en_US.utf8")
+    projects = Project.objects.all()
+    separations =  ProjectSeparation.objects.filter(project__name = project).select_related("session").select_related("session__user").select_related("project")
+    users = User.objects.all()
+
+    all_users_month, all_users_overall = 0,0
+    for user in users:
+        duration, overall_duration = timedelta(0), timedelta(0)
+        for sep in separations:
+            if(sep.project.name == project and sep.session.user.username == user.username):
+                overall_duration += sep.time_spend
+                date = (sep.session.get_date())
+                if('{:02d}'.format(date.month) == month and str(date.year) == year):
+                    duration += sep.time_spend
+        duration = timedelta_to_hours(duration)
+        overall_duration = timedelta_to_hours(overall_duration)
+        projects_data.append({
+                "user": user,
+                "hours": duration,
+                "overall": overall_duration,
+        })
+        all_users_month += duration
+        all_users_overall += overall_duration
     
     this_year = datetime.now().year
     chooseable_years = []
@@ -432,10 +455,15 @@ def administrator(request, year=str(datetime.now().year), month="{0:02d}".format
         chooseable_years.append(i)
     
     context = {
+            "projects_data":projects_data,
+            "project" : project,
+            "projects": projects,
             "month": month,
             "year": year,
             "user_data": sorted(user_data, key=lambda dic: (locale.strxfrm(dic["user"].last_name))),
-            "empty_users": sorted(empty_users, key=lambda user: (locale.strxfrm(user.last_name))), 
+            "empty_users": sorted(empty_users, key=lambda user: (locale.strxfrm(user.last_name))),
+            "all_users_month": all_users_month,
+            "all_users_overall": all_users_overall,
             "chooseable_years": chooseable_years, 
     }
     if request.method == "POST":
