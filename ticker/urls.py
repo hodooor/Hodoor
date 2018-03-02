@@ -77,6 +77,9 @@ urlpatterns = [
         password_reset_complete),
 
      # /administrator/2016/09
+    url(r'^administrator/(?P<year>[0-9]{4})/(?P<month>[0-9]{2})/(?P<project>[\w.@+-]+)$',
+        views.administrator,
+        name='administrator'),
     url(r'^administrator/(?P<year>[0-9]{4})/(?P<month>[0-9]{2})/$',
         views.administrator,
         name='administrator'),

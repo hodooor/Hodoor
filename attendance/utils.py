@@ -90,3 +90,9 @@ def daily_hours(hours):
 def get_number_of_work_days_in_daterange(start_date, end_date):
     dates = daterange(start_date, end_date)
     return sum(1 for d in dates if is_workday(d))
+
+def timedelta_to_hours(time_delta):
+    """
+    Convert timedelta to float number representing hours
+    """
+    return (time_delta.days*24)+(time_delta.seconds/3600)
