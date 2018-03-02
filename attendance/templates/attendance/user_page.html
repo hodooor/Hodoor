@@ -41,7 +41,7 @@
     <ul class="collabsible-list list-group " id="users-at-work">
     {% for user in at_work_users %}
       <li>
-		<table style="width:100%">
+                <table style="width:100%">
         {% if request.user.is_staff or request.user.is_superuser %}
         <form action="{% url 'user' username=user.username %}" method="post" onsubmit="return confirm('Are you sure that you want to swipe {{user.first_name}} {{user.last_name}} out?')">
           {% csrf_token %}
@@ -131,9 +131,35 @@
   </div>
 </div>
 
+<div class="panel panel-default">
+  <div class="panel-heading clickable" id="holidays-users">
+    <h3 class="panel-title">
+      <i class="fa fa-plane panel-icon" aria-hidden="true"></i>
+      Users on holiday
+      <span class="badge pull-right">{{on_holidays_users | length}}</span>
+    </h3>
+  </div>
+  <div class="collapse in" id="holis">
+    <ul class="collabsible-list list-group" id="users-on-holidays">
+    {% for user in on_holidays_users %}
+      <li>
+        <table style="width:100%">
+         <tr>
+          <td>
+           <i class="fa fa-circle-o" aria-hidden="true"></i> {{user.first_name}} {{user.last_name}}
+          </td>
+         </tr>
+        </table>
+      </li>
+    {%endfor %}
+    </ul>
+  </div>
+</div>
+
 <div class="visible-xs visible-sm">
   &nbsp;
 </div>
+
 {% endblock %}
 
 {% block content %}
@@ -198,7 +224,7 @@
 <div class="row gutter-small"> <!-- if needed add class: equal-height-panels-->
 
     <div class="col-md-3"><!--first col-->
-	  <div class="panel panel-primary"><!--This month quota-->
+         <div class="panel panel-primary"><!--This month quota-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="this-month-quota" title="This month - Quota">
             <i class="fa fa-calendar-check-o" aria-hidden="true"></i> This month - quota <i id="tooltip1" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="bottom"></i>
@@ -218,11 +244,14 @@
             <div class="col-xs-1">{{ num_of_workdays }}</div>
           </div>
           <ul class="dash-list-group">
-            <li class="">You should work: <span class="" id="you_should_work_hours">{{ avg_work_hours_fullfill_qoota | floatformat:2}} </span>hour(s)/day</li>
+            {% if user.profile.get_hours_quota == 0 %}
+                <li class="">You might work as you need to.</li>
+            {% else %}
+                <li class="">You should work: <span class="" id="you_should_work_hours">{{ avg_work_hours_fullfill_qoota | floatformat:2}} </span>hour(s)/day</li>
           </ul>
           <div class="separator"></div>
           <ul class="dash-list-group">
-            <li class="">Full-time quota: <span class="primary">{{workhours_per_day}} </span>hours/day</li>
+            <li class="">Your quota: <span class="primary">{{workhours_per_day}} </span>hours/day</li>
             <li class="">Month quota hours: <span class="bold">{{ hours_quota }}</span> hours</li>
             <li class="">Work days: <span class="bold">{{ num_of_workdays }}</span> days</li>
           </ul>
@@ -232,8 +261,8 @@
             <li class="">
             Quota difference:
             {% if quota_difference >= 0 %}
-            	<span class="success">+{{quota_difference | floatformat:2}}</span>
-						{% else %}
+             	<span class="success">+{{quota_difference | floatformat:2}}</span>
+            {% else %}
             	<span class="danger">{{quota_difference | floatformat:2}}</span>
             {% endif %}
             hour(s)
@@ -242,7 +271,7 @@
         </div>
         <div class="panel-footer">
         {% if quota_difference >= 0 %}
-					<div class="alert alert-success" role="alert">
+            <div class="alert alert-success" role="alert">
             <div class="title">
               <label>Month Quota:</label>
               <i class="fa fa-smile-o alert-icon" aria-hidden="true"></i>
@@ -252,7 +281,7 @@
             You should work <strong>{{ avg_work_hours_fullfill_qoota | floatformat:2}}</strong> hours per work day to fullfill quota until end of month.</p>
           </div>
         {% else  %}
-					<div class="alert alert-danger" role="alert">
+                                       <div class="alert alert-danger" role="alert">
             <div class="title">
               <label>Month Quota:</label>
               <i class="fa fa-frown-o alert-icon" aria-hidden="true"></i>
@@ -261,6 +290,7 @@
             hours below quota (<strong>{{current_quota}}</strong> hours).
             You should work <strong>{{ avg_work_hours_fullfill_qoota | floatformat:2}}</strong> hours per work day to fullfill quota until end of month.</p>
           </div>
+        {% endif %}
         {% endif %}
         </div>
       </div><!--this month quota-->
@@ -278,26 +308,31 @@
         <div class="panel-body">
           <ul class="dash-list-group">
             <li class="">Assigned Hours: <span class="primary" id="assigned-hours-graph">
-            	<script type="text/javascript">
-            	$(document).ready(function(){
-            		var workHours = $('#total-work-hours').text();
-            		var unassignedHours = $('#unassigned-hours-graph').text();
-            		var assignedHours = workHours - unassignedHours;
-            		$('#assigned-hours-graph').text(assignedHours.toFixed(2));
-							//end of document.ready()
-							});
-            	</script>
+                <script type="text/javascript">
+                $(document).ready(function(){
+                        var workHours = $('#total-work-hours').text();
+                        var unassignedHours = $('#unassigned-hours-graph').text();
+                        var holidayHours = $('#holidays-hours-graph').text();
+                        var assignedHours = workHours - unassignedHours - holidayHours;
+                        $('#assigned-hours-graph').text(assignedHours.toFixed(2));
+                                //end of document.ready()
+                                });
+                </script>
             </span> hour(s)</li>
+            {% if user.profile.get_hours_quota != 0 %}
+                <li class="">Holidays Hours: <span class="primary" id="holidays-hours-graph">{{ holidays_month| floatformat:2}}</span> hour(s)</li>
+                <li class="list-separator"></li>
+            {% endif %}
             <li class="">Unassigned Hours: <span class="danger" id="unassigned-hours-graph">{{ hours_unassigned_this_month | floatformat:2}}</span> ({{unassigned_closed_session_hours | floatformat:2}})</li>
             <li class="list-separator"></li>
-			<li class="">Not-work Hours: <span class="gray" id="not-work-hours-graph">{{ hours_not_work_this_month| floatformat:2}}</span> hour(s)</li>
+                       <li class="">Not-work Hours: <span class="gray" id="not-work-hours-graph">{{ hours_not_work_this_month| floatformat:2}}</span> hour(s)</li>
             <li class="list-separator"></li>
-			<li class="">Total Hours: <span class="bold" id="total-work-hours">{{ hours_total_this_month|floatformat:2}}</span> hour(s)</li>
+                       <li class="">Total Hours: <span class="bold" id="total-work-hours">{{ hours_total_this_month|floatformat:2}}</span> hour(s)</li>
           </ul>
           <canvas id="Assigned-Time-Chart" class="doughnut-chart" width="auto" height="250"></canvas>
         </div>
         <div class="panel-footer">
-					{% if not hours_unassigned_this_month %}
+                                       {% if not hours_unassigned_this_month %}
           <div class="alert alert-success" role="alert">
             <div class="title">
               <label>This Month:</label>
@@ -307,7 +342,7 @@
             You have all hours assigned to projects. Your attendance can be calculated by administrator.
             </p>
           </div>
-					{% else  %}
+                                       {% else  %}
           <div class="alert alert-danger" role="alert">
             <div class="title">
               <label>This Month:</label>
@@ -318,14 +353,13 @@
             </p>
             <a href="{% url 'sessions' user.username %}" class="btn btn-danger btn-block">Go to Session Page</a>
           </div>
-					{% endif %}
+                                       {% endif %}
         </div>
       </div><!--/this month assign time-->
     </div><!--/second col-->
 
     <div class="col-md-3"><!--third col-->
-
-	  <div class="panel panel-primary"><!--todays info panel-->
+      <div class="panel panel-primary"><!--todays info panel-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="today-info" title="Today - info">
            <i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Today - info <i id="tooltip4" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="bottom"></i>
@@ -352,13 +386,48 @@
           </div>
           {%endif%}
       </div><!--/todays info panel-->
-
-
+      
+     {% if user.profile.get_hours_quota > 0 and curent_user_have_profile %}
+      <div class="panel panel-primary"><!--holidays info panel-->
+        <div class="panel-heading">
+          <h2 class="panel-title navigable" id="holiday-info" title="Holiday-info">
+           <i class="fa fa-plane" aria-hidden="true"></i> Holidays - info <i id="tooltip2" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="bottom"></i>
+          </h2>
+        </div>
+        <div class="panel-body">
+          <div>
+            <ul class="dash-list-group">
+              <li class="">Aviable holidays: <span class="primary" id="aviable-holidays-graph">{{holidays_aviable | floatformat:1}}</span> day(s) ({{holihours_aviable | floatformat:0}} hours)</li>
+              <li class="list-separator"></li>
+              <li class="">Already taken holidays: <span class="gray" id="taken-holidays-graph">{{taken_holidays | floatformat:1}} </span> day(s) ({{taken_holihours | floatformat:0}} hours)</li>
+              <li class="list-separator"></li>
+              <li class="">Required holidays: <span class="danger" id="requared-holidays-graph">{{ holidays_requared|floatformat:1}}</span> day(s) ({{holihours_requared | floatformat:0}} hours)</li>
+            </ul>
+            <canvas id="Holiday-Time-Chart" class="doughnut-chart" width="auto" height="250"></canvas>
+          </div>
+            {% if not holiday_alert %}  
+              <div>
+                <a href="{% url 'h_request' username=user.username %}" class="btn btn-info btn-block">Manage Holidays</a>
+              </div>
+            {% else %}
+              <div class="alert alert-danger" role="alert">
+                <div class="title">
+                  <label>This Month:</label>
+                  <i class="fa fa-frown-o alert-icon" aria-hidden="true"></i>
+                </div>
+                <p>
+                  You have <strong>{{ holidays_aviable | floatformat:1}}</strong> days of untaken holidays. You have to take them until end of year.
+                </p>
+                <a href="{% url 'h_request' username=user.username %}" class="btn btn-danger btn-block">Manage Holidays</a>
+              </div>
+            {% endif %}
+        </div>
+      </div><!--/holiday info panel-->
+      {% endif %}
     </div><!--/third col-->
-
-	<div class="col-md-3"><!--fourth col-->
-
-	  <div class="panel panel-default hidden-sm hidden-xs"><!--terminal emulator-->
+    
+    <div class="col-md-3"><!--fourth col-->
+      <div class="panel panel-default hidden-sm hidden-xs"><!--terminal emulator-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="terminal-emulator" title="Terminal Emulator">
            <i class="fa fa-calculator" aria-hidden="true"></i> Terminal emulator <i id="tooltip5" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="left"></i>
@@ -400,8 +469,9 @@
         </div>
       </div><!--/terminal emulator-->
 
-	<div class="panel panel-default"><!--last month-->
-        <div class="panel-heading">
+
+        <div class="panel panel-default"><!--last month-->
+         <div class="panel-heading">
           <h2 class="panel-title navigable" id="last-month" title="Last month info">
             <i class="fa fa-calendar-minus-o" aria-hidden="true"></i> Last month <i id="tooltip6" class="fa fa-question-circle question pull-right" aria-hidden="true" data-toggle="popover" data-placement="left"></i>
           </h2>
@@ -411,6 +481,9 @@
             <li class="">Work Hours: <span class="primary">{{ hours_work_last_month | floatformat:2}}</span> hour(s)</li>
             <li class="">Not-work Hours: <span class="gray">{{ hours_not_work_last_month| floatformat:2}}</span> hour(s)</li>
             <li class="">Unassigned Hours: <span class="danger">{{ hours_unassigned_last_month | floatformat:2}}</span>  hour(s)</li>
+            {% if user.profile.get_hours_quota != 0 %}
+                <li class="">Holidays Hours: <span class="promary">{{ holidays_last_month | floatformat:2}}</span>  hour(s)</li>
+            {% endif %}
             <li class="list-separator"></li>
             <li class="">Total Hours: <span class="bold">{{ hours_total_last_month|floatformat:2}}</span> hour(s)</li>
             <li class="list-separator"></li>
@@ -435,7 +508,7 @@
             You have all hours assigned to projects. Your attendance can be calculated by administrator.
             </p>
           </div>
-				{% else  %}
+                               {% else  %}
           <div class="alert alert-danger" role="alert">
             <div class="title">
               <label>Last Month:</label>
@@ -443,25 +516,26 @@
             </div>
             <p>
             You have <strong>{{ hours_unassigned_last_month | floatformat:2}} </strong>unassigned hours. You have to assign all hours to projects in Sessions page.
-						Only assigned hours will be counted as attendance.
+                                               Only assigned hours will be counted as attendance.
             </p>
             <a href="{% url 'sessions' user.username %}" class="btn btn-danger btn-block">Go to Session Page</a>
           </div>
         {% endif %}
         </div>
       </div> <!--/last month-->
-
     </div><!--/fourth col-->
-
   </div><!--//row equal panels-->
 <script type="text/javascript">
-	$(document).ready(function () {
+    $(document).ready(function () {
 	  /*Update progress bar with actual width*/
+      
+      if({{on_holidays_users | length}} != 0){
+          $('#holis').attr("class", "panel-body");
+      }
 	  var maxWorkDays = {{ num_of_workdays }};
 	  var elapsedWorkDays = {{ num_of_elapsed_workdays }};
 	  var printDaysUpdate = (elapsedWorkDays/maxWorkDays)*100;
 	  $('#Elapsed-Work-Days-Bar').css('width', printDaysUpdate+'%');
-
 	  if($('#users-at-work li').length != 0) {
 		$('#users-at-work-img').removeAttr('data-philter-grayscale');
 	  }
@@ -471,7 +545,10 @@
 	  if($('#users-on-trip li').length != 0) {
 		$('#users-on-trip-img').removeAttr('data-philter-grayscale');
 	  }
-
+      if($('#users-on-holidays li').length != 0) {
+		$('#users-on-holidays-img').removeAttr('data-philter-grayscale');
+	  }
+      
 	  /*Add aditional classes*/
 	  //If you should work less than 0 hours show it green else red
 	  if($('#you_should_work_hours').text() <= {{workhours_per_day}}) {
@@ -481,34 +558,55 @@
 	  }
 	  //if you shouldnt work
 	  if($('#you_should_work_hours').text().includes("-")){
-		$('#you_should_work_hours').text('0.00');
-	  }
+        $('#you_should_work_hours').text('0.00');
+      }
 
-		/*Assigned Time Doughnut Chart*/
-		//set bgColors
-		var bgColorAtime = "#609ae1";
-		var bgColorUatime = "#ff836d";
-		var bgColorNwtime = "#cccccc";
-		//get data from webpage
-		var assignedHoursGraph = $('#assigned-hours-graph').text();
-		var notWorkHoursGraph = $('#not-work-hours-graph').text();
-		var unassignedWorkHoursGraph = $('#unassigned-hours-graph').text();
+        /*Assigned Time Doughnut Chart*/
+        //set bgColors
+        var bgColorAtime = "#609ae1";
+        var bgColorUatime = "#ff836d";
+        var bgColorNwtime = "#cccccc";
+        var bgColorHtime = "#8FC2FF"
+        //get data from webpage
+        var assignedHoursGraph = $('#assigned-hours-graph').text();
+        var notWorkHoursGraph = $('#not-work-hours-graph').text();
+        var unassignedWorkHoursGraph = $('#unassigned-hours-graph').text();
+        var holidaysHoursGraph = $('#holidays-hours-graph').text();
 
-		  var ctx = $("#Assigned-Time-Chart");
-		  var dataWorkTime = [assignedHoursGraph, unassignedWorkHoursGraph, notWorkHoursGraph];
-		  var labelsWorkTime = ["Assigned Hours", "Unassigned Hours", "Not-work hours"];
-		  var bgcolorsWorkTime = [bgColorAtime, bgColorUatime, bgColorNwtime];
+          var ctx = $("#Assigned-Time-Chart");
+          var dataWorkTime = [assignedHoursGraph, unassignedWorkHoursGraph, notWorkHoursGraph{% if user.profile.get_hours_quota != 0 %}, holidaysHoursGraph{% endif %}];
+          var labelsWorkTime = ["Assigned Hours", "Unassigned Hours", "Not-work hours"{% if user.profile.get_hours_quota != 0 %}, "Holidays"{% endif %}];
+          var bgcolorsWorkTime = [bgColorAtime, bgColorUatime, bgColorNwtime{% if user.profile.get_hours_quota != 0 %}, bgColorHtime{% endif %}];
 
-		  var myChart = new Chart(ctx, {
-		  type: 'doughnut',
-		  data: {
-			labels: labelsWorkTime,
-			datasets: [{
-			  backgroundColor: bgcolorsWorkTime,
-			  data: dataWorkTime
-			}]
-		  }
-	  });
-	});
+          var myChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: labelsWorkTime,
+            datasets: [{
+              backgroundColor: bgcolorsWorkTime,
+              data: dataWorkTime
+            }]
+          }
+      });
+      
+        var aviableHolidaysGraph = $('#aviable-holidays-graph').text();
+        var takenHolidaysGraph = $('#taken-holidays-graph').text();
+        var requaredHolidaysGraph = $('#requared-holidays-graph').text();
+      
+        var ctx = $("#Holiday-Time-Chart");
+        var dataHoliTime = [aviableHolidaysGraph, requaredHolidaysGraph, takenHolidaysGraph];
+        var labelsHoliTime = ["Aviable holidays", "Required holidays", "Taken holidays"];
+        var bgcolorsHoliTime = [bgColorAtime, bgColorUatime, bgColorNwtime]; 
+        var myChartHoli = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: labelsHoliTime,
+            datasets: [{
+              backgroundColor: bgcolorsWorkTime,
+              data: dataHoliTime
+            }]
+          }
+      });
+    });
 </script>
 {% endblock %}

@@ -1,0 +1,179 @@
+{% extends 'attendance/base.html' %}
+{% load static %}
+
+{% block scripts %}
+<!--Moment.js: used for timepicker-->
+<script src="{% static 'moment/moment.js'%}"></script>
+<!--bootstrap-DateTimePicker-->
+<script type="text/javascript" language="javascript" src="{% static 'eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}">
+{% endblock %}
+
+{% block title %}Holidays Assignment{% endblock %}
+{% block aside %}
+
+{% endblock %}
+{% block content %}
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content modal-primary">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">
+            Holidays assignment - {{user.username}}<span class="modal-icon fa fa-plane pull-right"></span>
+        </h4>
+      </div>
+      <div class="modal-body">
+                <table class="table table-primary-inverse">
+                    <thead>
+                    <tr class="upper">
+                      <th class="col-md-2">Parameter</th>
+                      <th class="col-md-4">Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                            <tr>
+                                <td data-field="key" class="key">Date since:</td>
+                                <form method='POST' action=''>{% csrf_token %}
+                                <td class="col-md-10">
+                                    <div>
+                                        <div class="form-group">
+                                            <div class='input-group' id='datepicker1'>
+                                                <input type='text' name='date_since' id='id_date_since' class="form-control" />
+                                                 <div class="input-group-addon" data-toggle="tooltip" title="Open Date Picker"><i class="fa fa-clock-o"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-field="key" class="key">Date To:</td>
+                                <td class="col-md-10">
+                                    <div>
+                                        <div class="form-group">
+                                            <div class='input-group' id='datepicker2'>
+                                                <input type='text'  name='date_to' id='date_to' class="form-control"/>
+                                                 <div class="input-group-addon" data-toggle="tooltip" title="Open Date Picker"><i class="fa fa-clock-o"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                        <tr>
+                            <td data-field="key" class="key">Reason</td>
+                            <td><input type='text' name='reason' id='id_reason' class="form-control" /></td>
+                        </tr>
+                            </tr>
+                        <tr>
+                            <td>Workhours during this time:</td>
+                            <td><input type="number" name='work_hours' id='work_hours' min="0" max="{{ quota }}" value = 0></td>
+                        </tr>
+                        <tr>
+                            <td>Total:</td>
+                            <td><span id='days_on_holidays' class="bold small">0</span> days (<span id='hours_on_holidays' name='hours_on_holidaysSpan' class="bold small">0</span> hours)</td>
+                        </tr>
+                        <tr>
+                            <td>MAX:</td>
+                            <td>{{holidays_aviable|floatformat:2}} days ({{holihours_aviable|floatformat:0}} hours)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                {% if not succes %}
+                    {{form.errors}}
+                {% else %}
+                    <td> <div class="badge badge-success"> Holidays have been successfuly requested <i class="fa fa-check"></i></div></td>
+                {% endif %}
+                <div class="col-md-3">
+                </div>
+      </div><!--/modal body-->
+      <div class="modal-footer">
+      <div class="row">
+        <div class="col-md-3">
+            <a class="btn btn-danger" href="{% url 'user' user.username %}"><i class="fa fa-arrow-left"></i> Back to Dashboard</a>
+        </div>
+        <div class="col-md-4 col-md-offset-5">
+            <button id="submit" type='submit' class="btn btn-primary" value='Send request'>Send Request</button>
+        </div>
+        </form>
+      </div>
+      </div>
+    </div><!--/modal-->
+  </div>
+</div>
+
+<script type="text/javascript">
+ $(document).ready(function(){
+    $('#datepicker1').datetimepicker({
+        viewMode: 'days',
+        format: 'YYYY-MM-DD',
+    }), 
+     
+    $('#datepicker2').datetimepicker({
+        viewMode: 'days',
+        format: 'YYYY-MM-DD',
+    });
+    $('#work_hours').on("change", function (e){
+        TimeDifference();
+        });  
+    
+    $('#datepicker2').on("dp.change", function (e){
+        TimeDifference();
+        });  
+    $('#datepicker1').on("dp.change", function (e){
+        TimeDifference();
+    }); 
+    function TimeDifference(){
+        var start = $('#datepicker1').data("DateTimePicker").date();
+        var end = $('#datepicker2').data("DateTimePicker").date();
+        if (start!=null && end!=null){
+            start = new Date(start);
+              start.setHours(0);
+              start.setMinutes(0);
+              start.setSeconds(0);
+              start.setMilliseconds(0);
+            end = new Date(end);
+              end.setHours(0);
+              end.setMinutes(0);
+              end.setSeconds(0);
+              end.setMilliseconds(0);
+            var dateDiff = DateRange(start,end);
+            timeDiff = dateDiff * {{ quota|safe }};
+            timeDiff -= parseInt(document.getElementById("work_hours").value);
+            $('#days_on_holidays').text((timeDiff / {{ quota|safe }}).toPrecision(3));
+            $('#hours_on_holidays').text(timeDiff);
+        }
+    }
+        
+    function DateRange(timeFrom, timeTo){
+        var czechHolidaysFromDJango = {{ czech_holidays|safe }};
+        var czechHolidays = [];
+        for (var i = 0; i< czechHolidaysFromDJango.length; i++){
+            czechHolidays.push((new Date(czechHolidaysFromDJango[i][0],czechHolidaysFromDJango[i][1]-1,czechHolidaysFromDJango[i][2])).toDateString());
+        }
+        var currentDate = timeFrom;
+        var result = 0;
+        var weekDay = 0; 
+        while (currentDate.getTime() <= timeTo.getTime()){
+            weekDay = currentDate.getDay();
+            if (weekDay != 0 && weekDay != 6){
+                var holiday = false;
+                for (var i = 0; i< czechHolidays.length; i++){
+                    if (currentDate.toDateString() === czechHolidays[i]){
+                        holiday = true;
+                    }
+                }
+                if (holiday == false){
+                    result ++;
+                }
+            }
+            currentDate.setDate(currentDate.getDate()+1); 
+        }
+        return result;
+    }
+             
+    setTimeout(function(){ //set timeout for modal to be shown -like delay
+        $('#myModal').modal('show');
+      }, 1000);
+  });
+    /*Add class to see fontawesomes in swipe infos*/
+</script>
+{% endblock %}

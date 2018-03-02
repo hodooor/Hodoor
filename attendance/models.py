@@ -3,7 +3,9 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from datetime import datetime, timezone, timedelta
-from .managers import SessionManager
+from .managers import SessionManager, HolidayManager
+from django.core.validators import MinValueValidator, MaxValueValidator
+from .utils import is_workday, get_number_of_work_days_in_daterange
 
 
 class Project(models.Model):
@@ -20,7 +22,100 @@ class Project(models.Model):
     def __str__(self):
         """Just name of project."""
         return self.name
+        
+        
+class Contract(models.Model):
+    contract_type = models.CharField(
+        max_length=20,
+        null=False,
+        blank=False
+    )
+    hours_quota = models.IntegerField(
+        default=0,
+        validators=[
+            MaxValueValidator(8),
+            MinValueValidator(0)
+        ]
+     )
+    
+    def __str__(self):
+        """Just contract type."""
+        return self.contract_type
+        
+        
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    contracts = models.ManyToManyField(Contract)
+    aviable_holidays = models.FloatField("Already aviable holidays in hours", default=0)
+    days_of_holidays_per_year = models.IntegerField(default=20)
 
+    def create_profile(sender, **kwargs):
+        user = kwargs["instance"]
+        if kwargs["created"]:
+            user_profile = Profile(user=user, aviable_holidays = 0, )
+            user_profile.save()
+    post_save.connect(create_profile, sender=User)
+
+    def get_hours_quota(self):
+        hours = 0
+        contracts = self.contracts.all()
+        if len(contracts) == 0: return 8
+        for contract in contracts:
+            hours += contract.hours_quota
+        return hours
+        
+    def get_hours_of_holidays(self, verified = True, year = None):
+        hours = 0
+        for holiday in self.holidays.all():
+            if (year == None) or (year == holiday.date_since.year):
+                if holiday.verified == verified:
+                    hours += holiday.hours_spend()
+        return hours
+        
+    def get_aviable_holidays_this_year(self, nonverified = False):
+        hours_work_this_year = Session.objects.get_hours_this_year(self.user.id)
+        if nonverified:
+            hours_work_this_year += self.get_hours_of_holidays(year = datetime.now().year, verified = False)
+        hours_work_this_year += self.get_hours_of_holidays(year = datetime.now().year)
+        hours = self.count_holidays_from_num_of_hours(hours_work_this_year)
+        return hours
+    
+    def need_for_holiday(self):
+        i = 0
+        dangerous_date = datetime(year = datetime.now().year, month = 12, day = 31)
+        num_of_days = (self.get_hours_of_holidays_aviable_to_take()/self.get_hours_quota())+5
+        while (i < num_of_days) or (dangerous_date.weekday() != 0):
+            dangerous_date -= timedelta(days = 1)
+            if is_workday(dangerous_date):
+                i += 1
+        if datetime.now() > dangerous_date:
+            return True
+        return False
+    
+    def get_hours_of_holidays_aviable_to_take(self):
+        hours = self.get_aviable_holidays_this_year(nonverified = True) + self.aviable_holidays
+        hours -= self.get_hours_of_holidays(verified = True)
+        hours -= self.get_hours_of_holidays(verified = False)
+        bonus = self.count_holidays_from_num_of_hours(hours)
+        while bonus >= 0.01:
+            hours += bonus
+            bonus = self.count_holidays_from_num_of_hours(bonus)
+        return hours
+        
+    def count_holidays_from_num_of_hours(self, hours):
+        days_in_year = get_number_of_work_days_in_daterange(
+                datetime(year = datetime.now().year, month = 1, day=1),
+                datetime(year = datetime.now().year, month = 12, day=31)
+        )
+        return round(hours / 260) * (self.days_of_holidays_per_year)
+        
+    def __str__(self):
+        """Name of owner of profile and his contracts."""
+        text = self.user.username + ":"
+        for contract in self.contracts.all():
+            text += " " + contract.contract_type + ","
+        return text[:-1]
+    
 
 class Session(models.Model):
     user = models.ForeignKey(User)
@@ -109,7 +204,9 @@ class Session(models.Model):
                 if "unsupported operand type(s) for" not in str(err):
                     raise
         return time_spend_sum
-
+    def get_model_name(self):
+        model_name = 'Session'
+        return model_name
     def __str__(self):
         """Id and User."""
         return str(self.id) + " " + str(self.user)
@@ -250,7 +347,57 @@ class Key(models.Model):
 
     def __str__(self):
         return self.id + " " + self.user.username + " " + self.key_type
+        
+class Holiday(models.Model):
+    '''
+    Saves information data about time spended on holidays
+    ''' 
+    profile = models.ForeignKey(Profile, related_name="holidays")
+    date_since = models.DateField(default = None)
+    date_to = models.DateField(default = None)
+    work_hours = models.FloatField(default = 0)
+    verified = models.BooleanField(default = False)
+    reason = models.CharField(max_length = 50, null = True, blank = True)
+    objects = HolidayManager()
+    
+    def hours_spend(self):
+        hours = 0
+        i = 0
+        date = self.date_since
+        while date <= self.date_to:
+            if is_workday(date):
+                hours += self.profile.get_hours_quota()
+            date += timedelta(days = 1)
+        return hours - self.work_hours
+        
+    def get_date(self):
+        return datetime(year = self.date_since.year, month = self.date_since.month, day = self.date_since.day)
+    
+    def is_in_month(self, month, year):
+        if (self.date_to.month >= month and self.date_to.year >= year):
+                if (self.date_since.month <= month and self.date_since.year <= year):
+                    return True
+        return False
+        
+    def get_model_name(self):
+        model_name = 'Holiday'
+        return model_name
+        
+    def get_hours_month(self, month, year):
+        i = 0
+        date = self.date_since
+        hours = 0
+        while date <= self.date_to:
+            if (int(date.month)== int(month) and int(date.year)==int(year)):
+                if is_workday(date):
+                    hours += self.profile.get_hours_quota()
+            date += timedelta(days = 1)
+        if self.date_to + timedelta(days = 1) == date:
+            hours -= self.work_hours
+        return hours
 
+    def __str__(self):
+        return self.profile.user.username + " " + str(self.date_since) + " to " + str(self.date_to) + ": " + str(int(self.hours_spend())) + " hours"
 
 
 

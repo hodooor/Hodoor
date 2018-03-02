@@ -29,7 +29,22 @@ class SessionManager(models.Manager):
             return new_dur.total_seconds()/3600
         else:
             return 0
-
+            
+    def get_hours_this_year(self, user):
+        """Return number of hours this year (already finished sessions)."""
+        hours_year = 0;
+        for i in range(1, 12):
+            hours_year += self.get_hours_month(user, i, datetime.now().year)
+        return hours_year   
+    
+    def get_hours_last_year(self, user):
+        """Return number of hours this year (already finished sessions)."""
+        hours_year = 0;
+        for i in range(1, 12):
+            hours_year += self.get_hours_month(user, i, datetime.now().year - 1)
+        return hours_year       
+    
+        
     def get_hours_this_month(self, user):
         """Return number of hours this month (already finished sessions)."""
         return self.get_hours_month(user, datetime.now().month, datetime.now().year)
@@ -58,3 +73,26 @@ class SessionManager(models.Manager):
 
     def get_open_sessions(self):
         return self.model.objects.filter(~Q(swipe__swipe_type='OUT'))
+        
+class HolidayManager(models.Manager):
+    def get_holidays_month(self, profile, month, year):
+        holidays_all = self.model.objects.filter(
+            profile=profile,
+        )
+        holidays = []
+        for holiday in holidays_all:
+            if holiday.is_in_month(month, year):
+                    if holiday.verified:
+                        holidays.append(holiday)
+        return holidays
+        
+    def get_holidays_hours_month(self, profile, month, year):
+        holidays = self.get_holidays_month(profile, month, year)
+        hours = 0
+        for holiday in holidays:
+            hours += holiday.get_hours_month(month = month, year = year)
+        return hours
+        
+    def get_holidays_hours_this_month(self, profile):
+        return self.get_holidays_hours_month(profile, datetime.now().month, datetime.now().year)
+        

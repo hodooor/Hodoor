@@ -54,6 +54,7 @@ urlpatterns = [
     url(r'^sessions/(?P<username>[\w.@+-]+)/id(?P<id>\d+)/$',
         views.session_detail,
         name='session_detail'),
+        
     url(r'^swipes/(?P<username>[\w.@+-]+)/id(?P<id>\d+)/$',
         views.swipe_detail,
         name='swipe_detail'),
@@ -85,6 +86,16 @@ urlpatterns = [
     url(r'^administrator/$',
         views.administrator,
         name='default_administrator'),
+    
+    # /h_request/username/
+    url(r'^h_request/(?P<username>[\w.@+-]+)/$',
+        views.holidays_request,
+        name='h_request'),
+    
+    # /h_verification/username/id1/
+    url(r'^h_verification/(?P<username>[\w.@+-]+)/id(?P<id>\d+)/$',
+        views.holidays_verification,
+        name='h_verification'),
 
    # /generate/pdf/username/2017/7
     url(r'^generate/pdf/(?P<username>[\w.@+-]+)/(?P<year>[0-9]{4})/(?P<month>[0-9]{2})/$',

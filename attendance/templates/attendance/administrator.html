@@ -103,7 +103,7 @@
     </h3>
   </div>
   <div class="panel-body">
-  	<p class="text-justify">Table in main content is sortable. You can sort any column you need, by clicking on sorting icons. Description of icons is shown in table below.</p>
+   	<p class="text-justify">Table in main content is sortable. You can sort any column you need, by clicking on sorting icons. Description of icons is shown in table below.</p>
   	<table class="table table-condensed table-primary-inverse">
   		<thead>
   			<th>Icon</th>
@@ -133,6 +133,7 @@
 <ul class="nav nav-tabs">
   <li class="active"><a id='with-sessions-link' href="#with-sessions" data-toggle="tab">Users With Sessions</a></li>
   <li><a id="without-sessions-link" href="#without-sessions" data-toggle="tab">Users Without Sessions</a></li>
+  <li><a id="holidays-link" href="#users-holidays" data-toggle="tab">Users holidays</a></li>
   <li><a id="projects-link" href=#project-view data-toggle="tab">Projects info</a></li>
 </ul>
 <div class="tab-content">
@@ -221,41 +222,7 @@
       </div>
     </div>
   </div>
-  <div id="project-view" class="tab-pane fade">
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <table id="project-sort-users" class="table table-striped table-responsive table-default" cellspacing="0" width="100%">
-          <thead class="text-center">
-            <tr class="upper">
-              <th>Last name</th>
-              <th>First name</th>
-              <th>Number of hours in {{year}}/{{month}}</th>
-              <th>Number of hours in total</th>
-            </tr>
-          </thead>
-          <tbody>
-              {% for data in projects_data %}
-                {% if data.overall != 0 %}
-                  <tr>
-                    <td>{{data.user.last_name}}</td>
-                    <td>{{data.user.first_name}}</td>
-                    <td>{{data.hours|floatformat:2}}</td>
-                    <td>{{data.overall|floatformat:2}}</td>
-                  </tr>
-                {% endif %}
-              {% endfor %}
-          </tbody>
-          <tbody>
-            <tr class="bold">
-                <td colspan="2">All users</td>
-                <td>{{all_users_month|floatformat:2}}</td>
-                <td>{{all_users_overall|floatformat:2}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+  
   <div id="project-view" class="tab-pane fade">
     <div class="panel panel-default">
       <div class="panel-body">
@@ -291,6 +258,57 @@
       </div>
     </div>
   </div>
+    <div id="users-holidays" class="tab-pane fade">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <table id="users-have-holidays" class="table table-striped table-responsive table-primary" cellspacing="0" width="100%">
+              <th>Last name</th>
+              <th>First name</th>
+              <th>Username</th>
+              <th>Hours Worked</th>
+              <th>Holiday entitlement </br> this year</th>
+              <th>Already taken</th>
+              <th>Holiday entitlement </br> overall</th>
+              <th>Left to take</th>
+              <th>Requested</th>
+              <th class="btn-fill no-sort text-center">Requests</th>
+            </tr>
+          </thead>
+          <tbody>
+              {% for user in all_users %}
+                {% if user.have_profile and user.quota != 0 %}
+                  <tr>
+                    <td>{{user.user.last_name}}</td>
+                    <td>{{user.user.first_name}}</td>
+                    <td>{{user.user.username}}</td>
+                    <td>{{user.hours_worked |floatformat:2}}</td>
+                    <td>{{user.this_year_holiday_aviable | floatformat:1}}</td>
+                    <td>{{user.already_taken_holidays | floatformat:1}}</td>
+                    <td><b>{{user.overall_holiday_aviable | floatformat:1}}</b></td>
+                    <td><b>{{user.left_to_take_holidays | floatformat:1}}</b></td>
+                    <td>
+                    {% if user.requested_holidays > 0%}
+                      <span class="bold text-danger">{{user.requested_holidays | floatformat:1}}</span>
+                    {% else %}
+                        {{user.requested_holidays | floatformat:1}}
+                    {% endif %}
+                    </td>
+                    <td>
+                    {% for holiday in holidays %}  
+                        {% if user.requested_holidays > 0 and holiday.profile.user.username == user.user.username %}
+                                <a href="{% url 'h_verification' username=user.user.username id=holiday.id %}"
+                                type="button" class="btn btn-sm btn-warning">Request</a>
+                        {% endif %}
+                    {% endfor %} 
+                    </td>
+                  </tr>
+                {% endif %} 
+              {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
 
@@ -307,6 +325,10 @@ $( "#with-sessions-link" ).click(function(){
     document.getElementById('project-selection').style.display = 'none';
     document.cookie = "tabSelection=with-sessions-link";
 });
+$( "#holidays-link" ).click(function(){
+    document.getElementById('project-selection').style.display = 'none';
+    document.cookie = "tabSelection=holidays-link";
+});
 
 $(document).ready(function(){
     var tabSelection = document.cookie.match('(^|;) ?' + "tabSelection" + '=([^;]*)(;|$)');
@@ -321,6 +343,9 @@ $(document).ready(function(){
             case "with-sessions-link":
                 $( "#with-sessions-link" ).click();
                 break;
+            case "holidays-link":
+                $( "#holidays-link" ).click();
+                break;
         }
     }
   /*Year value select display function*/
@@ -333,7 +358,6 @@ $(document).ready(function(){
         } 
     }
 	$('.print-year').text(yearToPrint);
-
 	/*Month value select display function*/
 	var monthToPrint = 'Month';
 	if(url.indexOf("/01") > -1) {
@@ -372,7 +396,7 @@ $(document).ready(function(){
 		monthToPrint = "December";
 	}
   $('.print-month').text(monthToPrint);
-
+  
    /*Project value select display function*/
    var projectToPrint = "{{project}}";
    $('.print-project').text(projectToPrint);
@@ -394,6 +418,19 @@ $(document).ready(function(){
   $('#users-without-sessions').DataTable({
     "aaSorting": [
     	[0,'asc']
+  	],
+    "columnDefs": [{
+      targets: 'no-sort',
+      orderable: false
+    }],
+    "lengthMenu": [
+    	[-1, 100, 50, 15],
+    	["All", 100, 50, 15]
+    ]
+  });
+  $('#users-have-holidays').DataTable({
+    "aaSorting": [
+        [0,'asc']
   	],
     "columnDefs": [{
       targets: 'no-sort',
