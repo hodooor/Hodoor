@@ -342,7 +342,7 @@ class UtilsTestCase(TestCase):
         self.assertEqual(f(date(2016, 11, 1)), 0)
         self.assertEqual(f(date(2016, 11, 2)), 1)
         self.assertEqual(f(date(2016, 11, 3)), 2)
-        self.assertEqual(f(date(2016, 11, 30)), 21)
+        self.assertEqual(f(date(2016, 11, 30)), 20)
         self.assertEqual(f(date(2017, 1, 1)), 0)
         self.assertEqual(f(date(2017, 1, 2)), 0)
         self.assertEqual(f(date(2017, 1, 3)), 1)
