@@ -63,7 +63,6 @@ class SwipeEditForm(forms.ModelForm):
 
 class PasswordResetFormForKnownEmail(PasswordResetForm):
     def clean_email(self):
-        print("\n\nHello\n\n")
         data = self.cleaned_data["email"]
         try:
             User.objects.get(email=data)
