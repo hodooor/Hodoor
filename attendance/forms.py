@@ -3,6 +3,8 @@ from .models import Session, ProjectSeparation, Swipe
 from django.contrib.admin.widgets import AdminDateWidget
 from datetimewidget.widgets import DateTimeWidget
 from datetime import timedelta
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.models import User
 
 class SessionForm(forms.ModelForm):
     class Meta:
@@ -57,3 +59,15 @@ class SwipeEditForm(forms.ModelForm):
                 raise forms.ValidationError("Conflict with next swipe " + str(next_swipe))
 
         return  data
+
+
+class PasswordResetFormForKnownEmail(PasswordResetForm):
+    def clean_email(self):
+        print("\n\nHello\n\n")
+        data = self.cleaned_data["email"]
+        try:
+            User.objects.get(email=data)
+        except User.DoesNotExist:
+            raise forms.ValidationError("Email does not belong to any user")
+
+        return data
