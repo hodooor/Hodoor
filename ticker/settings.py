@@ -151,7 +151,6 @@ EMAIL_HOST_USER = 'ho.door@eledus.cz'
 DEFAULT_FROM_EMAIL = 'ho.door@eledus.cz'
 
 CRISPY_TEMPLATE_PACK = "bootstrap3"
-# Here will be from .settings_secret import SECRET_KEY, EMAIL_HOST_PASSWORD after deployment script
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -183,4 +182,8 @@ COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'django_libsass.SassCompiler'),
 )
 
-
+try:
+    from .settings_secret import *
+except ImportError:
+    print("\nWARNING: ticker/settings_secret.py does not exist, that means you are \
+    not able to send any emails. File will be created by deploy script.\n")
