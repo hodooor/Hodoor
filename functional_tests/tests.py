@@ -44,12 +44,15 @@ class FunctionalTest(StaticLiveServerTestCase):
             DRIVER_PATH = "./node_modules/chromedriver/lib/chromedriver/chromedriver"
             options = webdriver.ChromeOptions()
             options.add_argument("--start-maximized")
+            options.add_argument("--no-sandbox");
+            options.add_argument("--disable-dev-shm-usage");
         for arg in sys.argv:
             if 'liveserver' in arg:
                 if firefox:
                     cls.browser = webdriver.Firefox()
                 else:
                     cls.browser = webdriver.Chrome(DRIVER_PATH, chrome_options=options)
+                cls.browser.set_page_load_timeout(60)
                 cls.browser.implicitly_wait(3)
                 cls.server_user, cls.server_host = arg.split('=')[1].split('@')
                 print("server host: " + cls.server_host )
