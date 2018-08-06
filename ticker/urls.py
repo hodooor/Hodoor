@@ -10,6 +10,7 @@ from django.contrib.auth.views import (
     password_reset_complete
 )
 from rest_framework import routers
+from attendance.forms import PasswordResetFormForKnownEmail
 
 swipes_router = routers.DefaultRouter()
 swipes_router.register(r'api/swipes', views.SwipeViewSet)
@@ -63,7 +64,8 @@ urlpatterns = [
     # password reset section
     url(r'^user/password/reset/$',
         password_reset,
-        {'post_reset_redirect': '/user/password/reset/done/'},
+        {'post_reset_redirect': '/user/password/reset/done/',
+        'password_reset_form': PasswordResetFormForKnownEmail},
         name="password_reset"),
 
     url(r'^user/password/reset/done/$', password_reset_done),
@@ -76,14 +78,21 @@ urlpatterns = [
         password_reset_complete),
 
      # /administrator/2016/09
+    url(r'^administrator/(?P<year>[0-9]{4})/(?P<month>[0-9]{2})/(?P<project>[\w.@+-]+)$',
+        views.administrator,
+        name='administrator'),
     url(r'^administrator/(?P<year>[0-9]{4})/(?P<month>[0-9]{2})/$',
         views.administrator,
         name='administrator'),
     url(r'^administrator/$',
         views.administrator,
         name='default_administrator'),
-]
 
+   # /generate/pdf/username/2017/7
+    url(r'^generate/pdf/(?P<username>[\w.@+-]+)/(?P<year>[0-9]{4})/(?P<month>[0-9]{2})/$',
+        views.generate_pdf,
+       name='work_report_pdf'),
+]
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns += [

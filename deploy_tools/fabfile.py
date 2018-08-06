@@ -1,6 +1,8 @@
 from fabric.contrib.files import append, exists, sed
 from fabric.api import env, local, run
 import random
+from getpass import getpass
+import os
 
 REPO_URL = 'https://github.com/hodooor/Hodoor/'
 
@@ -14,6 +16,19 @@ def deploy():
     _update_static_files(source_folder)
     _update_database(source_folder)
     _set_database_permissions(site_folder)
+    _set_restart_apache()
+
+def input_password(text):
+    while True:
+        password = getpass(text)
+        again = getpass("password (again): ")
+        if (len(password) < 8):
+            print("This password is too short. It must contain at least 9 characters.")
+            continue
+        if (password != again):
+            print("Error: Your passwords didn't match.")
+            continue
+        return password
 
 def create_superuser():
     source_folder = '/home/%s/sites/%s/source' % (env.user, env.host)
@@ -51,7 +66,8 @@ def _update_settings(source_folder, site_name):
         chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
         key = ''.join(random.SystemRandom().choice(chars) for _ in range(50))
         append(settings_secret_file, "SECRET_KEY = '%s'" % (key, ))
-    append(settings_path, '\nfrom .settings_secret import SECRET_KEY')
+        email_host_password = input_password("Enter the EMAIL_HOST_PASSWORD: ")
+        append(settings_secret_file, "EMAIL_HOST_PASSWORD = '%s'" % (email_host_password, ))
 
 def _update_virtualenv(source_folder):
     virtualenv_folder = source_folder + '/../virtualenv'

@@ -44,12 +44,15 @@ class FunctionalTest(StaticLiveServerTestCase):
             DRIVER_PATH = "./node_modules/chromedriver/lib/chromedriver/chromedriver"
             options = webdriver.ChromeOptions()
             options.add_argument("--start-maximized")
+            options.add_argument("--no-sandbox");
+            options.add_argument("--disable-dev-shm-usage");
         for arg in sys.argv:
             if 'liveserver' in arg:
                 if firefox:
                     cls.browser = webdriver.Firefox()
                 else:
                     cls.browser = webdriver.Chrome(DRIVER_PATH, chrome_options=options)
+                cls.browser.set_page_load_timeout(60)
                 cls.browser.implicitly_wait(3)
                 cls.server_user, cls.server_host = arg.split('=')[1].split('@')
                 print("server host: " + cls.server_host )
@@ -388,3 +391,16 @@ class APITest(FunctionalTest):
         data = {"user": self.user.id, "swipe_type": "IN", "datetime":"2016-06-04T13:40Z"}
         response = self.client.post("/api/swipes/",data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.data)
+
+class ExportTest(FunctionalTest):
+    def adminCanGetXlsxExport(self):
+        print("Hey")
+        user = UserFactory.create(
+                is_staff = True,
+        )
+        self.browser.get(self.server_url)
+        self.login_by_form(user.username, "password", self.browser)
+        self.browser.get(self.server_url + "/administrator/")
+        self.wait_for_element_with_name('xlsx')
+        self.browser.find_element_by_name('xlsx').click()
+        self.assertIn("xlsx", self.browser.page_source)

@@ -10,6 +10,7 @@ addons:
 install:
     - "pip install -r requirements.txt"
     - "npm install"
+    - "npm install chromedriver@latest"
     - "mkdir ../database"
     - "python manage.py migrate"
 before_script:
