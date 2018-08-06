@@ -46,8 +46,11 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     contracts = models.ManyToManyField(Contract)
     
-    def get_hours_quota(self):
+    @property
+    def day_hours_quota(self):
         hours = 0
+        if self.contracts.count() == 0:
+            return 8  # with no contract hours quota will be set to default
         for contract in self.contracts.all():
             hours += contract.hours_quota
         return hours

@@ -17,7 +17,7 @@ import locale
 from django.db.models import Prefetch
 import csv
 from .xlsx_generator import make_administration_report
-from attendance.utils import get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days, last_month, daily_hours, timedelta_to_hours
+from attendance.utils import get_day_hours_quota, get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days, last_month, daily_hours, timedelta_to_hours
 from czech_holidays import holidays as czech_holidays
 from django.template.loader import render_to_string
 from weasyprint import HTML
@@ -161,10 +161,7 @@ def user(request, username):
     else:
         year = datetime.now().year
     
-    if hasattr(u, "profile"):
-        workhours_per_day = u.profile.get_hours_quota()
-    else:
-        workhours_per_day = 8
+    workhours_per_day = get_day_hours_quota(u)
     
     hours_total_last_month = Session.objects.get_hours_month(u.id, last_month_, year)
     hours_unassigned_last_month = Session.objects.get_unassigned_hours_month(u.id, last_month_, year)
@@ -287,10 +284,6 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
     total_hours = Session.objects.get_hours_month(u.id, month, year)
     unassigned_hours = Session.objects.get_unassigned_hours_month(u.id, month, year)
     work_hours = total_hours - unassigned_hours - not_work_hours
-    if hasattr(u, "profile"):
-        workhours_per_day = u.profile.get_hours_quota()
-    else:
-        workhours_per_day = 8
     
     this_year = datetime.now().year
     chooseable_years = []
@@ -306,7 +299,7 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
             "work_hours": work_hours,
             "not_work_hours": not_work_hours,
             "list_of_projects": projects,
-            "hours_quota": get_quota_work_hours(int(year), int(month), workhours_per_day),
+            "hours_quota": get_quota_work_hours(int(year), int(month), get_day_hours_quota(u)),
             "form": form,
             "chooseable_years": chooseable_years,
     }

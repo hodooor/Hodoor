@@ -92,3 +92,14 @@ def timedelta_to_hours(time_delta):
     Convert timedelta to float number representing hours
     """
     return (time_delta.days*24)+(time_delta.seconds/3600)
+
+
+def get_day_hours_quota(user):
+    """
+    Return users hours quota for one day
+    """
+    if hasattr(user, "profile"):
+        return user.profile.day_hours_quota
+    else:
+        return 8
+
