@@ -9,6 +9,8 @@
 <!--bootstrap-DateTimePicker-->
 <script type="text/javascript" language="javascript" src="{% static 'eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
 <link rel="stylesheet" href="{% static 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}">
+<!--js-Cookie-->
+<script src="{% static 'js-cookie/src/js.cookie.js' %}"></script>
 {% endblock %}
 
 {% block title %}Sessions{% endblock %}
@@ -264,16 +266,7 @@ function post_form_data(data) {
     });
 }
 
-$('#submit-all').on('click', function () {
-    $('form').each(function () {
-        post_form_data($(this).serialize());
-    });
-    location.reload();
-});
-
-$(document).ready(function(){
-
-  /*Option sorting for projects*/
+function sort_projects_in_selects(first_project) {
   //set variables
   let my_options = [];
   let selected = [];
@@ -287,9 +280,38 @@ $(document).ready(function(){
           if (a.text < b.text) return -1;
           return 0
       })
+      my_options[e].sort(function(a,b) {
+          if (b.text == first_project) return 1;
+          return -1;
+      })
       //rebuild list of select options
       $(".select-project"+e).empty().append(my_options[e]);
       $(".select-project"+e).val(selected[e]);
+  });
+}
+
+function set_last_chosen_project(project){
+  sort_projects_in_selects(project);
+  Cookies.set('last_chosen_project', project, { expires: 7 }); //one-week-cookie
+}
+
+$('#submit-all').on('click', function () {
+    $('form').each(function () {
+        post_form_data($(this).serialize());
+    });
+    location.reload();
+});
+
+$(document).ready(function(){
+
+  /*Option sorting for projects*/
+  sort_projects_in_selects(Cookies.get('last_chosen_project'));
+
+  /*set selects to sort projects with last chosen on top*/
+  $('select').each(function(e){
+    $(this).change(function(){
+      set_last_chosen_project($(this).children("option").filter(":selected").text())
+    });
   });
 
   /*Timepickers*/
@@ -451,6 +473,7 @@ $(document).ready(function(){
     $(this).addClass('form-control');
     $(this).attr('rows', '1');
   });
+
 
 //eof doc.ready
 });
