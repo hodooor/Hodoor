@@ -1,18 +1,23 @@
 FROM datagovsg/python-node
 
-RUN mkdir /app
-WORKDIR /app
+RUN mkdir -p /app/src /app/database
+WORKDIR /app/src
 
-RUN apt-get update
-RUN apt-get install locales -y
+RUN apt-get update && apt-get install -y \
+    locales
+
 COPY package.json .
+
 RUN npm install
+
 COPY requirements.txt .
+
 RUN pip3 install -r requirements.txt
+RUN pip3 install gunicorn
 
 COPY . .
-RUN mkdir ../database
+
 RUN python3 manage.py migrate
 RUN python3 manage.py collectstatic --noinput
 
-CMD python manage.py runserver 0.0.0.0:8000
+CMD gunicorn --bind 0.0.0.0:8000 ticker.wsgi:application

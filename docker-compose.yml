@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    volumes:
+      - static_volume:/app/static
+
+  nginx:
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./config/nginx/conf.d:/etc/nginx/conf.d
+      - static_volume:/app/static
+    depends_on:
+      - app
+
+volumes:
+  static_volume:
