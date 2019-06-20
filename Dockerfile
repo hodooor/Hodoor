@@ -1,4 +1,4 @@
-FROM datagovsg/python-node
+FROM nikolaik/python-nodejs
 
 RUN mkdir -p /app/src /app/database
 WORKDIR /app/src
@@ -19,5 +19,6 @@ COPY . .
 
 RUN python3 manage.py migrate
 RUN python3 manage.py collectstatic --noinput
+
 
 CMD gunicorn --bind 0.0.0.0:8000 ticker.wsgi:application

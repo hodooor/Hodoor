@@ -2,7 +2,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
-
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -19,62 +19,54 @@ from rest_framework.authtoken.models import Token
 
 from django.contrib.auth.hashers import check_password
 from selenium.common.exceptions import NoSuchElementException
+from django.test import override_settings
 from django.utils import timezone
 from datetime import timedelta, datetime
 import time
+import socket
 
 from django.contrib.sessions.backends.db import SessionStore
-from django.contrib.auth import BACKEND_SESSION_KEY, SESSION_KEY, get_user_model
+from django.contrib.auth import get_user_model
 from django.conf import settings
 User = get_user_model()
 from .server_tools import reset_database, create_session_on_server
 
+from django.test import override_settings
 from .management.commands.create_session import create_pre_authenticated_session
 from django.test.utils import override_settings
 from django.conf import settings
 
+
+@override_settings(ALLOWED_HOSTS=['*'])
 class FunctionalTest(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):
-        firefox=False
+        firefox, live_server = False, False
         for arg in sys.argv:
-            if ('firefox' in arg)or(arg == '-f'):
-                firefox=True
-        if not firefox:
-            DRIVER_PATH = "./node_modules/chromedriver/lib/chromedriver/chromedriver"
-            options = webdriver.ChromeOptions()
-            options.add_argument("--start-maximized")
-            options.add_argument("--no-sandbox");
-            options.add_argument("--disable-dev-shm-usage");
-        for arg in sys.argv:
-            if 'liveserver' in arg:
-                if firefox:
-                    cls.browser = webdriver.Firefox()
-                else:
-                    cls.browser = webdriver.Chrome(DRIVER_PATH, chrome_options=options)
-                cls.browser.set_page_load_timeout(60)
-                cls.browser.implicitly_wait(3)
-                cls.server_user, cls.server_host = arg.split('=')[1].split('@')
-                print("server host: " + cls.server_host )
-                print("server user: " + cls.server_user )
-                cls.server_url = 'http://' + cls.server_host
-                print("server url: " + cls.server_url )
-                cls.against_staging = True
-                return
-        super(FunctionalTest, cls).setUpClass()
-        cls.against_staging = False
-        cls.server_url = cls.live_server_url
+            if ('forefox' in arg) or (arg == "-f"):
+                firefox = True
+
         if firefox:
-            cls.browser = webdriver.Firefox()
+            cls.browser = webdriver.Remote(
+                command_executor='http://selenium_hub:4444/wd/hub',
+                desired_capabilities=DesiredCapabilities.FIREFOX
+            )
         else:
-            cls.browser = webdriver.Chrome(DRIVER_PATH, chrome_options=options)
-        cls.browser.implicitly_wait(3)
+            cls.browser = webdriver.Remote(
+                command_executor='http://selenium_hub:4444/wd/hub',
+                desired_capabilities=DesiredCapabilities.CHROME
+            )
+
+        super().setUpClass()
+        cls.against_staging = False
+        cls.server_url = 'http://10.0.75.1:8081'  # cls.live_server_url
+        cls.browser.implicitly_wait(10)
 
     @classmethod
     def tearDownClass(cls):
-        cls.browser.close()
+        cls.browser.quit()
         if not cls.against_staging:
-            super(FunctionalTest, cls).tearDownClass()
+            super().tearDownClass()
 
     def setUp(self):
         if self.against_staging:
@@ -96,6 +88,7 @@ class FunctionalTest(StaticLiveServerTestCase):
                 element_id, self.browser.find_element_by_tag_name("body").text
                 )
         )
+
     def wait_for_element_with_name(self, element_name):
         WebDriverWait(self.browser, timeout = 30).until(
                 lambda b: b.find_element_by_name(element_name),
@@ -103,8 +96,8 @@ class FunctionalTest(StaticLiveServerTestCase):
         )
         
     def wait_for_element_to_be_clickable_with_css_selector_click(self, css_selector):
-        element = WebDriverWait(self.browser, timeout = 30).until(EC.element_to_be_clickable((By.CSS_SELECTOR, css_selector)));
-        element.click();
+        element = WebDriverWait(self.browser, timeout = 30).until(EC.element_to_be_clickable((By.CSS_SELECTOR, css_selector)))
+        element.click()
         
     def wait_to_be_logged_in(self, user):
         self.wait_for_element_with_id('main-username')
@@ -126,8 +119,7 @@ class FunctionalTest(StaticLiveServerTestCase):
                 value=session_key,
                 path='/',
         ))
-    
-        
+
 
 class LoginLogoutTest(FunctionalTest):
     def test_login_and_logout_users(self):
@@ -156,6 +148,8 @@ class LoginLogoutTest(FunctionalTest):
 
         self.browser.get(self.server_url)
         self.wait_to_be_logged_in(user)
+
+
 class LayoutStylingTest(FunctionalTest):
 
     def test_admin_layout_and_styling(self):
@@ -166,6 +160,7 @@ class LayoutStylingTest(FunctionalTest):
 
         self.assertEqual(color, "rgba(65, 118, 144, 1)")
 
+
 class PageNavigationTest(FunctionalTest):
 
     def test_click_on_logo_returns_home_page(self):
@@ -173,7 +168,7 @@ class PageNavigationTest(FunctionalTest):
         user = UserFactory.create()
         self.browser.get(self.server_url)
 
-        self.login_by_form(user.username,"password", self.browser)
+        self.login_by_form(user.username, "password", self.browser)
         self.assertEqual(
                 self.server_url + "/user/" + user.username + "/",
                 self.browser.current_url
@@ -201,7 +196,6 @@ class PageNavigationTest(FunctionalTest):
         self.browser.find_element_by_class_name('menu-icon').click()
         self.wait_for_element_to_be_clickable_with_css_selector_click("i[class='fa fa-power-off']")
         self.assertIn(self.server_url + "/login/",self.browser.current_url)
-
 
     def test_click_on_sessions(self):
         user = UserFactory.create()
@@ -278,7 +272,7 @@ class SessionTest(FunctionalTest):
         SESSION_URL = self.server_url + "/sessions/" + user.username + "/2014/06/"
 
         self.browser.get(SESSION_URL)
-        self.assertEqual(SESSION_URL,self.browser.current_url)
+        self.assertEqual(SESSION_URL, self.browser.current_url)
         try:
             element = self.browser.find_element_by_link_text("Detail")
         except NoSuchElementException:
@@ -291,7 +285,6 @@ class SessionTest(FunctionalTest):
 
     def test_user_can_look_up_his_sessions_months(self):
         user = UserFactory.create()
-
 
         swipe = SwipeFactory(
                 user = user,
@@ -349,7 +342,7 @@ class SessionTest(FunctionalTest):
         actions.move_to_element(element)
         actions.click(element)
         self.wait_for_element_with_id('myDropdown')
-        self.browser.refresh();
+        self.browser.refresh()
         self.wait_for_element_with_id('myDropdown')
         self.assertIn(self.server_url + "/user/", self.browser.current_url)
     
@@ -369,10 +362,11 @@ class SessionTest(FunctionalTest):
         self.login_by_form(user2.username,"password", self.browser)
         self.wait_for_element_with_name("IN")
 
+
 class APITest(FunctionalTest):
-    '''
+    """
     Testing API for posting and receiving swipes - for clients
-    '''
+    """
     def setUp(self):
         self.user = UserFactory.create()
         self.token = Token.objects.create(user=self.user)
@@ -391,6 +385,7 @@ class APITest(FunctionalTest):
         data = {"user": self.user.id, "swipe_type": "IN", "datetime":"2016-06-04T13:40Z"}
         response = self.client.post("/api/swipes/",data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.data)
+
 
 class ExportTest(FunctionalTest):
     def adminCanGetXlsxExport(self):
