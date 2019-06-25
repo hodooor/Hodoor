@@ -39,6 +39,9 @@ from django.conf import settings
 
 @override_settings(ALLOWED_HOSTS=['*'])
 class FunctionalTest(StaticLiveServerTestCase):
+
+    host = '0.0.0.0'
+
     @classmethod
     def setUpClass(cls):
         firefox, live_server = False, False
@@ -46,6 +49,12 @@ class FunctionalTest(StaticLiveServerTestCase):
             if ('forefox' in arg) or (arg == "-f"):
                 firefox = True
 
+        super().setUpClass()
+        cls.host = socket.gethostbyname(socket.gethostname())
+        cls.against_staging = False
+        cls.server_url = cls.live_server_url
+        print("\nhost:", cls.host)
+        print("live_server_url:", cls.server_url)
         if firefox:
             cls.browser = webdriver.Remote(
                 command_executor='http://selenium_hub:4444/wd/hub',
@@ -56,17 +65,12 @@ class FunctionalTest(StaticLiveServerTestCase):
                 command_executor='http://selenium_hub:4444/wd/hub',
                 desired_capabilities=DesiredCapabilities.CHROME
             )
-
-        super().setUpClass()
-        cls.against_staging = False
-        cls.server_url = 'http://10.0.75.1:8081'  # cls.live_server_url
         cls.browser.implicitly_wait(10)
 
     @classmethod
     def tearDownClass(cls):
         cls.browser.quit()
-        if not cls.against_staging:
-            super().tearDownClass()
+        super().tearDownClass()
 
     def setUp(self):
         if self.against_staging:
@@ -152,18 +156,19 @@ class LoginLogoutTest(FunctionalTest):
 
 class LayoutStylingTest(FunctionalTest):
 
-    def test_admin_layout_and_styling(self):
+    def test_admin_layout_and_styling(self):         # sometimes fails on mozilla
         self.browser.get(self.server_url+"/admin/")
         self.browser.set_window_size(1024, 768)
 
         color = self.browser.find_element_by_id("header").value_of_css_property('background-color')
+        # firefox gives rgb value while chrome gives rgba
 
         self.assertEqual(color, "rgba(65, 118, 144, 1)")
 
 
 class PageNavigationTest(FunctionalTest):
 
-    def test_click_on_logo_returns_home_page(self):
+    def test_click_on_logo_returns_home_page(self):  # sometimes fails on mozilla
 
         user = UserFactory.create()
         self.browser.get(self.server_url)
@@ -234,7 +239,7 @@ class PageNavigationTest(FunctionalTest):
 
 
 class PageAccessTest(FunctionalTest):
-    def test_user_cant_access_another_profile(self):
+    def test_user_cant_access_another_profile(self):   # not working on mozilla
         user1 = UserFactory.create()
         user2 = UserFactory.create()
         self.browser.get(self.server_url)

@@ -1,4 +1,4 @@
-FROM nikolaik/python-nodejs
+FROM nikolaik/python-nodejs:python3.6-nodejs12
 
 RUN mkdir -p /app/src /app/database
 WORKDIR /app/src

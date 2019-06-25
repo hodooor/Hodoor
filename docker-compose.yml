@@ -8,6 +8,8 @@ services:
       - static_volume:/app/static
     links:
       - selenium-hub
+    ports:
+      - "8000:8000"
 
   nginx:
     container_name: nginx
