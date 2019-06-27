@@ -2,11 +2,17 @@ version: '3'
 
 services:
   app:
+    container_name: django
     build: .
     volumes:
       - static_volume:/app/static
+    links:
+      - selenium-hub
+    ports:
+      - "8000:8000"
 
   nginx:
+    container_name: nginx
     image: nginx
     ports:
       - 80:80
@@ -15,6 +21,34 @@ services:
       - static_volume:/app/static
     depends_on:
       - app
+
+  selenium-hub:
+    container_name: selenium_hub
+    image: selenium/hub
+    ports:
+      - 4444:4444
+
+  selenium-firefox:
+    container_name: selenium_fox
+    image: selenium/node-firefox-debug
+    environment:
+      - HUB_PORT_4444_TCP_ADDR=selenium_hub
+      - HUB_PORT_4444_TCP_PORT=4444
+    ports:
+      - 5901:5900
+    depends_on:
+      - selenium-hub
+
+  selenium-chrome:
+    container_name: selenium_chrome
+    image: selenium/node-chrome-debug:3.7.1
+    environment:
+      - HUB_PORT_4444_TCP_ADDR=selenium_hub
+      - HUB_PORT_4444_TCP_PORT=4444
+    ports:
+      - 5900:5900
+    depends_on:
+      - selenium-hub
 
 volumes:
   static_volume:
