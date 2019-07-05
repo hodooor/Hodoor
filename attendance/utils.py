@@ -1,5 +1,5 @@
 from datetime import timedelta, date, datetime
-from czech_holidays import holidays
+from czech_holidays import Holidays
 import calendar
 
 
@@ -19,7 +19,7 @@ def is_weekend(datetime):
 
 def is_holiday(datetime):
     """True if given day is holiday in Czech republic."""
-    return datetime in holidays
+    return datetime in Holidays(datetime.year)
 
 
 def is_workday(datetime):
