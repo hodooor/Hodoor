@@ -7,7 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from attendance.models import Key, Swipe, Session
+from attendance.models import Key, Swipe, Session, Contract
 from attendance.factories import UserFactory, SwipeFactory
 
 from rest_framework import status
@@ -237,6 +237,36 @@ class PageNavigationTest(FunctionalTest):
         self.browser.find_element_by_class_name('menu-icon').click()
         self.wait_for_element_to_be_clickable_with_css_selector_click("i[class='fa fa-power-off']")
         self.assertIn(self.server_url + "/login/",self.browser.current_url)
+
+    def test_user_have_correct_hours_quota(self):
+        user = UserFactory.create()
+        contract_DPP = Contract.objects.create(contract_type="DPP", hours_quota=0)
+        contract_HPP = Contract.objects.create(contract_type="HPP", hours_quota=8)
+        contract_HPP_half = Contract.objects.create(contract_type="HPP_Half", hours_quota=4)
+
+        self.browser.get(self.server_url)
+        self.login_by_form(user.username,"password", self.browser)
+        self.wait_for_element_with_id('full-time-quota')
+        quota = self.browser.find_element_by_id('full-time-quota').get_attribute('innerHTML')
+        self.assertEqual(quota, "8 ")
+
+        user.profile.contracts.add(contract_DPP)
+        self.browser.get(self.server_url + "/user/" + user.username + "/")
+        self.wait_for_element_with_id('full-time-quota')
+        quota = self.browser.find_element_by_id('full-time-quota').get_attribute('innerHTML')
+        self.assertEqual(quota, "0 ")
+
+        user.profile.contracts.add(contract_HPP)
+        self.browser.get(self.server_url + "/user/" + user.username + "/")
+        self.wait_for_element_with_id('full-time-quota')
+        quota = self.browser.find_element_by_id('full-time-quota').get_attribute('innerHTML')
+        self.assertEqual(quota, "8 ")
+
+        user.profile.contracts.add(contract_HPP_half)
+        self.browser.get(self.server_url + "/user/" + user.username + "/")
+        self.wait_for_element_with_id('full-time-quota')
+        quota = self.browser.find_element_by_id('full-time-quota').get_attribute('innerHTML')
+        self.assertEqual(quota, "12 ")
 
 
 class PageAccessTest(FunctionalTest):

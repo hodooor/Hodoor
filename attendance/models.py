@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from datetime import datetime, timezone, timedelta
 from .managers import SessionManager
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Project(models.Model):
@@ -20,7 +21,54 @@ class Project(models.Model):
     def __str__(self):
         """Just name of project."""
         return self.name
-
+        
+        
+class Contract(models.Model):
+    contract_type = models.CharField(
+        max_length=20,
+        null=False,
+        blank=False
+    )
+    hours_quota = models.IntegerField(
+        default=0,
+        validators=[
+            MaxValueValidator(8),
+            MinValueValidator(0)
+        ]
+     )
+    
+    def __str__(self):
+        """Just contract type."""
+        return self.contract_type
+        
+        
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    contracts = models.ManyToManyField(Contract)
+    
+    @property
+    def day_hours_quota(self):
+        hours = 0
+        if self.contracts.count() == 0:
+            return 8  # with no contract hours quota will be set to default
+        for contract in self.contracts.all():
+            hours += contract.hours_quota
+        return hours
+    
+    def create_profile(sender,**kwargs):
+        user = kwargs["instance"]
+        if kwargs["created"]:
+            user_profile = Profile(user = user)
+            user_profile.save()
+        
+    def __str__(self):
+        """Name of owner of profile and his contracts."""
+        text = self.user.username + ":"
+        for contract in self.contracts.all():
+            text += " " + contract.contract_type + ","
+        return text[:-1]
+    
+    post_save.connect(create_profile, sender = User)
 
 class Session(models.Model):
     user = models.ForeignKey(User)
@@ -250,9 +298,6 @@ class Key(models.Model):
 
     def __str__(self):
         return self.id + " " + self.user.username + " " + self.key_type
-
-
-
 
 @receiver(post_save, sender = Swipe)
 def post_process_swipes(sender=Swipe, **kwargs):

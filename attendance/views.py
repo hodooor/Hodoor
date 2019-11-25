@@ -17,13 +17,11 @@ import locale
 from django.db.models import Prefetch
 import csv
 from .xlsx_generator import make_administration_report
-from attendance.utils import get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days, last_month, daily_hours, timedelta_to_hours
+from attendance.utils import get_day_hours_quota, get_quota_work_hours, get_num_of_elapsed_workdays_in_month, get_number_of_work_days, last_month, daily_hours, timedelta_to_hours
 from czech_holidays import holidays as czech_holidays
 from django.template.loader import render_to_string
 from weasyprint import HTML
 import tempfile
-
-WORKHOURS_PER_DAY = 8
 
 @login_required(login_url='/login/')
 def home_page(request):
@@ -162,7 +160,9 @@ def user(request, username):
         year = datetime.now().year - 1
     else:
         year = datetime.now().year
-
+    
+    workhours_per_day = get_day_hours_quota(u)
+    
     hours_total_last_month = Session.objects.get_hours_month(u.id, last_month_, year)
     hours_unassigned_last_month = Session.objects.get_unassigned_hours_month(u.id, last_month_, year)
     hours_total_this_month = Session.objects.get_hours_this_month(u.id)
@@ -174,11 +174,11 @@ def user(request, username):
 
     num_of_workdays = get_number_of_work_days(date.today().year, date.today().month)
     unassigned_closed_session_hours = hours_unassigned_this_month - current_session_work_hours
-    hours_quota = get_quota_work_hours(datetime.now().year, datetime.now().month, WORKHOURS_PER_DAY)
+    hours_quota = get_quota_work_hours(datetime.now().year, datetime.now().month, workhours_per_day)
     num_of_elapsed_workdays = get_num_of_elapsed_workdays_in_month(date.today())
     num_of_elapsed_workdays_last_month = get_number_of_work_days(datetime.now().year, last_month_)
-    current_quota = num_of_elapsed_workdays * WORKHOURS_PER_DAY
-    hours_quota_last_month = num_of_elapsed_workdays_last_month * WORKHOURS_PER_DAY
+    current_quota = num_of_elapsed_workdays * workhours_per_day
+    hours_quota_last_month = num_of_elapsed_workdays_last_month * workhours_per_day
     quota_difference = hours_work_this_month + unassigned_closed_session_hours - current_quota
     quota_difference_abs = abs(quota_difference)
     hours_quota_dif_last_month = hours_work_last_month + hours_unassigned_last_month - hours_quota_last_month
@@ -210,7 +210,7 @@ def user(request, username):
         "quota_difference": quota_difference,
         "quota_difference_abs": quota_difference_abs,
         "avg_work_hours_fullfill_qoota": avg_work_hours_fullfill_quota,
-        "workhours_per_day": WORKHOURS_PER_DAY,
+        "workhours_per_day": workhours_per_day,
         "hours_quota_last_month": hours_quota_last_month,
         "hours_quota_dif_last_month": hours_quota_dif_last_month,
     }
@@ -299,7 +299,7 @@ def sessions_month(request, username, year=datetime.now().year, month = datetime
             "work_hours": work_hours,
             "not_work_hours": not_work_hours,
             "list_of_projects": projects,
-            "hours_quota": get_quota_work_hours(int(year), int(month), WORKHOURS_PER_DAY),
+            "hours_quota": get_quota_work_hours(int(year), int(month), get_day_hours_quota(u)),
             "form": form,
             "chooseable_years": chooseable_years,
     }

@@ -218,13 +218,14 @@
             <div class="col-xs-1">{{ num_of_workdays }}</div>
           </div>
           <ul class="dash-list-group">
-            <li class="">You should work: <span class="" id="you_should_work_hours">{{ avg_work_hours_fullfill_qoota | floatformat:2}} </span>hour(s)/day</li>
+			{% if user.profile.get_hours_quota != 0 %}
+				<li class="">You should work: <span class="" id="you_should_work_hours">{{ avg_work_hours_fullfill_qoota | floatformat:2}} </span>hour(s)/day</li>
           </ul>
           <div class="separator"></div>
           <ul class="dash-list-group">
-            <li class="">Full-time quota: <span class="primary">{{workhours_per_day}} </span>hours/day</li>
-            <li class="">Month quota hours: <span class="bold">{{ hours_quota }}</span> hours</li>
-            <li class="">Work days: <span class="bold">{{ num_of_workdays }}</span> days</li>
+            <li class="">Full-time quota: <span class="primary" id="full-time-quota">{{workhours_per_day}} </span>hours/day</li>
+            <li class="">Month quota hours: <span class="bold" id="month-quota-hours">{{ hours_quota }}</span> hours</li>
+            <li class="">Work days: <span class="bold" id="work-days">{{ num_of_workdays }}</span> days</li>
           </ul>
           <ul class="dash-list-group">
             <!--<li class="">You worked: <span class="primary">0 </span>hour(s)</li>-->
@@ -261,6 +262,7 @@
             hours below quota (<strong>{{current_quota}}</strong> hours).
             You should work <strong>{{ avg_work_hours_fullfill_qoota | floatformat:2}}</strong> hours per work day to fullfill quota until end of month.</p>
           </div>
+        {% endif %}
         {% endif %}
         </div>
       </div><!--this month quota-->
@@ -324,7 +326,6 @@
     </div><!--/second col-->
 
     <div class="col-md-3"><!--third col-->
-
 	  <div class="panel panel-primary"><!--todays info panel-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="today-info" title="Today - info">
@@ -352,12 +353,9 @@
           </div>
           {%endif%}
       </div><!--/todays info panel-->
-
-
     </div><!--/third col-->
-
+    
 	<div class="col-md-3"><!--fourth col-->
-
 	  <div class="panel panel-default hidden-sm hidden-xs"><!--terminal emulator-->
         <div class="panel-heading">
           <h2 class="panel-title navigable" id="terminal-emulator" title="Terminal Emulator">
@@ -450,9 +448,7 @@
         {% endif %}
         </div>
       </div> <!--/last month-->
-
     </div><!--/fourth col-->
-
   </div><!--//row equal panels-->
 <script type="text/javascript">
 	$(document).ready(function () {
@@ -461,7 +457,6 @@
 	  var elapsedWorkDays = {{ num_of_elapsed_workdays }};
 	  var printDaysUpdate = (elapsedWorkDays/maxWorkDays)*100;
 	  $('#Elapsed-Work-Days-Bar').css('width', printDaysUpdate+'%');
-
 	  if($('#users-at-work li').length != 0) {
 		$('#users-at-work-img').removeAttr('data-philter-grayscale');
 	  }
@@ -471,7 +466,6 @@
 	  if($('#users-on-trip li').length != 0) {
 		$('#users-on-trip-img').removeAttr('data-philter-grayscale');
 	  }
-
 	  /*Add aditional classes*/
 	  //If you should work less than 0 hours show it green else red
 	  if($('#you_should_work_hours').text() <= {{workhours_per_day}}) {
@@ -483,7 +477,6 @@
 	  if($('#you_should_work_hours').text().includes("-")){
 		$('#you_should_work_hours').text('0.00');
 	  }
-
 		/*Assigned Time Doughnut Chart*/
 		//set bgColors
 		var bgColorAtime = "#609ae1";
@@ -493,12 +486,10 @@
 		var assignedHoursGraph = $('#assigned-hours-graph').text();
 		var notWorkHoursGraph = $('#not-work-hours-graph').text();
 		var unassignedWorkHoursGraph = $('#unassigned-hours-graph').text();
-
 		  var ctx = $("#Assigned-Time-Chart");
 		  var dataWorkTime = [assignedHoursGraph, unassignedWorkHoursGraph, notWorkHoursGraph];
 		  var labelsWorkTime = ["Assigned Hours", "Unassigned Hours", "Not-work hours"];
 		  var bgcolorsWorkTime = [bgColorAtime, bgColorUatime, bgColorNwtime];
-
 		  var myChart = new Chart(ctx, {
 		  type: 'doughnut',
 		  data: {
