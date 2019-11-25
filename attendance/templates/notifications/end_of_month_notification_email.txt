@@ -1,0 +1,10 @@
+Hi, {{ user.first_name }} {{ user.last_name }}.
+
+You have {% if hours >= 0.01 %}about {{ hours|floatformat }}{% else %}few{% endif %} unassigned hours this month and month is going to end.
+
+Please, go to {% url 'sessions' user.username %} and assign your hours.
+
+With love,
+Your Hodoor
+
+{{date.year}} - {{date.month}} - {{date.day}}

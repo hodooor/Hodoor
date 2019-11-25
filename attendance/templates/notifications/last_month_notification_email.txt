@@ -1,0 +1,10 @@
+Hello, {{ user.first_name }} {{ user.last_name }}.
+
+You have {% if hours >= 0.01 %}about {{ hours|floatformat }}{% else %} few {% endif %} unassigned hours in last month.
+
+Please, go to {% url 'sessions' user.username %} and assign all you can.
+
+With love,
+Your Hodoor
+
+{{date.year}} - {{date.month}} - {{date.day}}

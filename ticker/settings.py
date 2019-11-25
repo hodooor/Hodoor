@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'functional_tests',
     'debug_toolbar',
     'compressor',
+    'django_crontab',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -54,6 +55,10 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+]
+
+CRONJOBS = [
+    ('0 0 * * *', 'attendance.cron.send_notifications')
 ]
 
 ROOT_URLCONF = 'ticker.urls'
