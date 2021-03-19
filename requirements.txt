@@ -4,7 +4,7 @@ django-crispy-forms==1.6.0
 django-datetime-widget==0.9.3
 django-debug-toolbar==1.6
 django-spaghetti-and-meatballs==0.2.0
-djangorestframework==3.3.3
+djangorestframework==3.11.2
 factory-boy==2.7.0
 fake-factory==0.5.7
 python-dateutil==2.5.3
